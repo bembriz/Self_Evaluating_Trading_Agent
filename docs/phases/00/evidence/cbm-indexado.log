@@ -1,0 +1,13 @@
+# evidencia: cbm-indexado
+fecha: 2026-08-22T15:19:33-06:00
+fase: 00
+comando: /home/xuum/.local/bin/codebase-memory-mcp cli --progress index_repository --repo-path /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent --name self-evaluating-trading-agent
+Preparing one-shot local CBM command...
+level=info msg=version_cohort.claimed_unheld build=1175645cb30560e7e47d78611cd1bcb509478eaf6d4e51f72fe18327ee9c1351
+level=info msg=mem.allocator.owned classes=all
+level=info msg=mem.init budget_mb=3788 total_ram_mb=15154 source=ram_fraction
+Running index_repository locally...
+hint: this command started a temporary CBM daemon. `codebase-memory-mcp daemon start` keeps one warm and removes this startup cost from every CLI command.
+Completed index_repository (12796 ms)
+{"project":"self-evaluating-trading-agent","excluded":{"dirs":[".ruff_cache",".git","harness/.ruff_cache","harness/.pytest_cache","harness/.venv"],"count":7,"truncated":true},"not_indexed_files_count":8,"not_indexed_files":{"files":[{"path":".coverage","reason":"gitignore"},{"path":"docs/phases/00/evidence/cbm-instalacion.log","reason":"gitignore"},{"path":"docs/phases/00/evidence/cbm-indexado.log","reason":"gitignore"},{"path":"docs/phases/00/evidence/lint.log","reason":"gitignore"},{"path":"docs/phases/00/evidence/typing.log","reason":"gitignore"}],"count":8,"truncated":true,"note":"Excluded by design (gitignore/.cbmignore/skip-lists); examples only — full list in 'logfile'."},"skipped_count":0,"parse_partial_count":0,"nodes":944,"edges":1632,"expected_nodes":944,"expected_edges":1632,"adr_present":false,"adr_hint":"Project indexed. Consider creating an Architecture Decision Record: explore the codebase with get_architecture(aspects=['all']), then use manage_adr(mode='update') to persist architectural insights across sessions.","artifact_present":false,"status":"indexed"}
+exit=0

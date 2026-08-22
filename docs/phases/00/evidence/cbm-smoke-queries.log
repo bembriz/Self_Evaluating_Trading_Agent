@@ -1,0 +1,123 @@
+# evidencia: cbm-smoke-queries
+fecha: 2026-08-22T15:20:03-06:00
+fase: 00
+comando: bash -c ~/.local/bin/codebase-memory-mcp cli get_architecture "{\"project\": \"self-evaluating-trading-agent\"}" && ~/.local/bin/codebase-memory-mcp cli search_graph "{\"project\": \"self-evaluating-trading-agent\", \"name_pattern\": \".*gate.*\"}"
+level=info msg=version_cohort.claimed_unheld build=1175645cb30560e7e47d78611cd1bcb509478eaf6d4e51f72fe18327ee9c1351
+level=info msg=mem.allocator.owned classes=all
+level=info msg=mem.init budget_mb=3788 total_ram_mb=15154 source=ram_fraction
+warning: passing raw JSON to 'cli get_architecture' is deprecated and will be removed in a future release; use flags (run 'cli get_architecture --help'), --args-file <path>, or piped stdin.
+hint: this command started a temporary CBM daemon. `codebase-memory-mcp daemon start` keeps one warm and removes this startup cost from every CLI command.
+project: self-evaluating-trading-agent
+aspects_hint: "Summary view (default). More on request via aspects:[...] — structure, dependencies, routes, hotspots, boundaries, layers, clusters, file_tree — or [\"all\"] for everything."
+total_nodes: 944
+total_edges: 1632
+node_labels: 11  (cols: label count)
+  Section 511
+  Variable 168
+  Function 91
+  File 57
+  Module 57
+  Folder 37
+  Class 14
+  Method 5
+  Decorator 2
+  Branch 1
+  Project 1
+edge_types: 14  (cols: type count)
+  DEFINES 990
+  CALLS 271
+  TESTS 109
+  CONTAINS_FILE 57
+  USAGE 47
+  CONFIGURES 37
+  CONTAINS_FOLDER 35
+  SEMANTICALLY_RELATED 35
+  WRITES 21
+  IMPORTS 12
+  RAISES 12
+  SIMILAR_TO 3
+  DECORATES 2
+  HAS_BRANCH 1
+languages: 4  (cols: language files)
+  Python 13
+  TOML 1
+  YAML 1
+  Bash 1
+packages: 10  (cols: name nodes fan_in fan_out)
+  tests 57 0 0
+  scripts 33 0 0
+  pyproject 8 0 0
+  str 3 0 0
+  list 3 0 0
+  dict 2 0 0
+  int 1 0 0
+  range 1 0 0
+  len 1 0 0
+  print 1 0 0
+entry_points: 5  (cols: qn file)
+  self-evaluating-trading-agent.harness.scripts.gate_check.main harness/scripts/gate_check.py
+  self-evaluating-trading-agent.harness.scripts.gen_pdf.main harness/scripts/gen_pdf.py
+  self-evaluating-trading-agent.harness.scripts.gen_report.main harness/scripts/gen_report.py
+  self-evaluating-trading-agent.harness.scripts.new_phase.main harness/scripts/new_phase.py
+  self-evaluating-trading-agent.harness.scripts.progress.main harness/scripts/progress.py
+
+level=info msg=version_cohort.claimed_unheld build=1175645cb30560e7e47d78611cd1bcb509478eaf6d4e51f72fe18327ee9c1351
+level=info msg=mem.allocator.owned classes=all
+level=info msg=mem.init budget_mb=3788 total_ram_mb=15154 source=ram_fraction
+warning: passing raw JSON to 'cli search_graph' is deprecated and will be removed in a future release; use flags (run 'cli search_graph --help'), --args-file <path>, or piped stdin.
+hint: this command started a temporary CBM daemon. `codebase-memory-mcp daemon start` keeps one warm and removes this startup cost from every CLI command.
+total: 30
+results: 30  (rows: name label lines in out; qn = group prefix + "." + name)
+self-evaluating-trading-agent.AGENTS.10 (AGENTS.md):
+  -Gate-de-fase-(PRD-§77) Section 187-188 0 0
+self-evaluating-trading-agent.docs.PRD — Self-Evaluating Trading Agent.47 (docs/PRD — Self-Evaluating Trading Agent.md):
+  -Gate-estadístico-para-LIVE Section 1344-1345 0 0
+self-evaluating-trading-agent.docs.PRD — Self-Evaluating Trading Agent.70 (docs/PRD — Self-Evaluating Trading Agent.md):
+  -Coverage-Gate Section 2026-2027 0 0
+self-evaluating-trading-agent.docs.PRD — Self-Evaluating Trading Agent.77 (docs/PRD — Self-Evaluating Trading Agent.md):
+  -Gate-de-fase Section 2206-2207 0 0
+self-evaluating-trading-agent.docs.design.harness-design.5 (docs/design/harness-design.md):
+  1-Gate-de-fase-(producto) Section 115-116 0 0
+  2-Gates-internos-del-arnés Section 124-125 0 0
+self-evaluating-trading-agent.docs.phases.00.DP-001-harness-dev-dependencies (docs/phases/00/DP-001-harness-dev-dependencies.md):
+  DRY-RUN-ejecutado-(pre-gate) Section 65-66 0 0
+self-evaluating-trading-agent.docs.phases.00.DP-002-codebase-memory-mcp (docs/phases/00/DP-002-codebase-memory-mcp.md):
+  DRY-RUN-ejecutado-(pre-gate) Section 56-57 0 0
+self-evaluating-trading-agent.docs.phases.00.evidence.coverage.harness/scripts/gate_check (docs/phases/00/evidence/coverage.json):
+  py Variable 1-1 0 0
+self-evaluating-trading-agent.docs.phases.00.evidence.coverage (docs/phases/00/evidence/coverage.json):
+  request_gate Variable 1-1 0 0
+  resolve_gate Variable 1-1 0 0
+self-evaluating-trading-agent.harness.scripts (harness/scripts/gate_check.py):
+  gate_check Module 1-226 0 2
+self-evaluating-trading-agent.harness.scripts.gate_check.py (harness/scripts/gate_check.py):
+  __file__ File  0 0
+self-evaluating-trading-agent.harness.scripts.ledger (harness/scripts/ledger.py):
+  DEFAULT_CAP_SIN_GATE Variable 20-20 2 0
+  GATE_STATES Variable 18-18 1 0
+  request_gate Function 209-219 2 4
+  resolve_gate Function 222-239 4 4
+self-evaluating-trading-agent.harness.templates.dependency-proposal (harness/templates/dependency-proposal.md):
+  DRY-RUN-ejecutado-(pre-gate) Section 50-51 0 0
+self-evaluating-trading-agent.harness.tests (harness/tests/test_gate_check.py):
+  test_gate_check Module 1-165 0 0
+self-evaluating-trading-agent.harness.tests.test_gate_check.py (harness/tests/test_gate_check.py):
+  __file__ File  0 0
+self-evaluating-trading-agent.harness.tests.test_ledger (harness/tests/test_ledger.py):
+  test_request_gate_exige_todo_done Function 114-121 0 4
+  test_resolve_gate_approve_exige_todo_done Function 124-127 0 3
+  test_resolve_gate_reject_y_approve Function 130-140 0 3
+  test_stats_cap_sin_gate Function 154-167 0 4
+  test_stats_gate_aprobado_da_100 Function 170-177 0 3
+  test_validate_gate_aprobado_con_pendientes Function 47-51 0 2
+self-evaluating-trading-agent.harness.tests.test_progress_cli (harness/tests/test_progress_cli.py):
+  test_fase_status_gate_flow Function 66-121 0 3
+self-evaluating-trading-agent.opencode.skills.infra-control.SKILL (.opencode/skills/infra-control/SKILL.md):
+  infra-control-—-DISCOVER-→-PLAN-→-REPORT-→-USER-GATE-→-APPLY-→-VALIDATE-→-EVIDENCE Section 6-7 0 0
+self-evaluating-trading-agent.opencode.skills.release-readiness.SKILL (.opencode/skills/release-readiness/SKILL.md):
+  Los-8-gates-obligatorios-(PRD-§15) Section 20-21 0 0
+self-evaluating-trading-agent.opencode.skills.validacion-estadistica.SKILL (.opencode/skills/validacion-estadistica/SKILL.md):
+  Gate-estadístico-LIVE-(resumen-§47) Section 33-34 0 0
+has_more: false
+
+exit=0

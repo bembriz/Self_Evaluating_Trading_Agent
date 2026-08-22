@@ -1,0 +1,889 @@
+meta:
+  proyecto: Self-Evaluating Trading Agent
+  prd: docs/PRD — Self-Evaluating Trading Agent.md
+  diseno_arnes: docs/design/harness-design.md
+  creado: '2026-08-22'
+  actualizado: '2026-08-22'
+  reglas:
+    peso_fase_igual: true
+    peso_entregable_igual: true
+    cap_fase_sin_gate: 0.9
+    mutacion_solo_scripts: true
+    coverage_minima_por_fase:
+      '00': 80
+phases:
+  '00':
+    titulo: Governance & Agent Bootstrap (Arnés)
+    estado: done
+    iniciada: '2026-08-22'
+    cerrada: '2026-08-22'
+    entregables:
+    - id: repositorio-inicial
+      descripcion: Git init + .gitignore + .env.example + estructura docs/
+      estado: done
+      evidencia:
+      - .gitignore
+      - .env.example
+    - id: agents-md-orquestador
+      descripcion: AGENTS.md con ciclo operativo, routing y reglas críticas
+      estado: done
+      evidencia:
+      - AGENTS.md
+    - id: politica-de-commits
+      descripcion: Flujo commits con autorización + Commit Candidate Report (skill
+        flujo-commits)
+      estado: done
+      evidencia:
+      - .opencode/skills/flujo-commits/SKILL.md
+      - harness/templates/commit-candidate.md
+    - id: politica-de-dependencias
+      descripcion: Flujo infra-control DISCOVER→…→EVIDENCE + Dependency Proposal (skill)
+      estado: done
+      evidencia:
+      - .opencode/skills/infra-control/SKILL.md
+      - docs/phases/00/DP-001-harness-dev-dependencies.md
+      - harness/templates/dependency-proposal.md
+    - id: reporte-template
+      descripcion: Plantilla reporte de fase 30 secciones (PRD §76)
+      estado: done
+      evidencia:
+      - harness/templates/reporte-fase.md
+    - id: uat-template
+      descripcion: Plantilla checklist UAT/HITL (PRD §74)
+      estado: done
+      evidencia:
+      - harness/templates/uat-checklist.md
+    - id: adr-template
+      descripcion: Plantilla ADR (PRD §82)
+      estado: done
+      evidencia:
+      - harness/templates/adr.md
+    - id: git-strategy
+      descripcion: Trunk-based simplificado documentado en AGENTS.md §7 (PRD §64-66)
+      estado: done
+      evidencia:
+      - AGENTS.md
+    - id: integracion-codebase-memory-mcp
+      descripcion: Skill de integración + Dependency Proposal gated (PRD §12)
+      estado: done
+      evidencia:
+      - .opencode/skills/codebase-memory-mcp/SKILL.md
+      - docs/phases/00/DP-002-codebase-memory-mcp.md
+    - id: enforcement-opencode-json
+      descripcion: Permission rules ask/deny para git/installaciones/destructivos
+      estado: done
+      evidencia:
+      - opencode.json
+    - id: scripts-harness-tests
+      descripcion: ledger/progress/gate_check/evidence/gen_report/gen_pdf/new_phase
+        + tests ≥80%
+      estado: done
+      evidencia:
+      - docs/phases/00/evidence/lint-format.log
+      - docs/phases/00/evidence/lint.log
+      - docs/phases/00/evidence/unit-tests-arnes.log
+    - id: catalogo-skills-22
+      descripcion: Skills del catálogo aprobado en G1 dentro de .opencode/skills/
+      estado: done
+      evidencia:
+      - .opencode/skills
+      - docs/skill-gap/SKILL_GAP.md
+    gate_fase:
+      estado: approved
+      solicitado: null
+      resuelto: '2026-08-22'
+      comentario: Aprobación explícita del usuario en sesión (gate final Fase 00)
+  '01':
+    titulo: Python Project Foundation
+    estado: pending
+    iniciada: null
+    cerrada: null
+    entregables:
+    - id: estructura-del-proyecto
+      descripcion: Estructura hexagonal src/
+      estado: pending
+      evidencia: []
+    - id: uv-gestion-dependencias
+      descripcion: uv como gestor; uv.lock versionado
+      estado: pending
+      evidencia: []
+    - id: pyproject-toml
+      descripcion: pyproject.toml completo
+      estado: pending
+      evidencia: []
+    - id: lint-ruff
+      descripcion: ruff check configurado y verde
+      estado: pending
+      evidencia: []
+    - id: formatting-ruff
+      descripcion: ruff format configurado y verde
+      estado: pending
+      evidencia: []
+    - id: typing-mypy
+      descripcion: mypy configurado y verde
+      estado: pending
+      evidencia: []
+    - id: pytest-suite
+      descripcion: pytest operativo
+      estado: pending
+      evidencia: []
+    - id: coverage-config
+      descripcion: coverage ≥90% gate (--cov-fail-under)
+      estado: pending
+      evidencia: []
+    - id: pre-commit-hooks
+      descripcion: hooks pre-commit instalados
+      estado: pending
+      evidencia: []
+    - id: ci-inicial-github-actions
+      descripcion: workflow CI (lint+typing+tests+build)
+      estado: pending
+      evidencia: []
+    - id: dockerfile-inicial
+      descripcion: Dockerfile base reproducible
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
+  '02':
+    titulo: PostgreSQL & Application Skeleton
+    estado: pending
+    iniciada: null
+    cerrada: null
+    entregables:
+    - id: postgresql-pgvector
+      descripcion: Contenedores postgres+pgvector operativos
+      estado: pending
+      evidencia: []
+    - id: sqlalchemy
+      descripcion: SQLAlchemy 2.x integrado
+      estado: pending
+      evidencia: []
+    - id: alembic
+      descripcion: Alembic operativo con upgrade/downgrade tests
+      estado: pending
+      evidencia: []
+    - id: fastapi-app
+      descripcion: Aplicación FastAPI base
+      estado: pending
+      evidencia: []
+    - id: health-readiness
+      descripcion: Endpoints /health /ready
+      estado: pending
+      evidencia: []
+    - id: configuracion-yaml-env
+      descripcion: config/*.yaml + .env sin secretos versionados
+      estado: pending
+      evidencia: []
+    - id: repository-pattern-ports
+      descripcion: Puertos/adaptadores de persistencia
+      estado: pending
+      evidencia: []
+    - id: migraciones-iniciales
+      descripcion: Esquema inicial migrado
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
+  '03':
+    titulo: Historical Market Data
+    estado: pending
+    iniciada: null
+    cerrada: null
+    entregables:
+    - id: bybit-historical-adapter
+      descripcion: Adapter REST histórico Bybit
+      estado: pending
+      evidencia: []
+    - id: descarga-eth-btc
+      descripcion: Descarga ETHUSDT+BTCUSDT
+      estado: pending
+      evidencia: []
+    - id: candles-multi-timeframe
+      descripcion: Candles 15m/1h/4h persistidas
+      estado: pending
+      evidencia: []
+    - id: validacion-datos
+      descripcion: Validación calidad/completitud
+      estado: pending
+      evidencia: []
+    - id: dataset-manifest
+      descripcion: Manifest con fuente/rango/filas/schema
+      estado: pending
+      evidencia: []
+    - id: checksums-sha256
+      descripcion: SHA-256 por archivo
+      estado: pending
+      evidencia: []
+    - id: dataset-congelado-36m
+      descripcion: Dataset oficial congelado ≥36 meses
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
+  '04':
+    titulo: Real-Time Market Data
+    estado: pending
+    iniciada: null
+    cerrada: null
+    entregables:
+    - id: websocket-produccion
+      descripcion: Cliente WS Bybit producción
+      estado: pending
+      evidencia: []
+    - id: candles-tiempo-real
+      descripcion: Candles en vivo confirmadas al cierre
+      estado: pending
+      evidencia: []
+    - id: order-book-local
+      descripcion: Order book local sincronizado
+      estado: pending
+      evidencia: []
+    - id: snapshots-deltas
+      descripcion: Snapshot+deltas con reconciliación de secuencia
+      estado: pending
+      evidencia: []
+    - id: reconexion-automatica
+      descripcion: Reconexión automática resiliente
+      estado: pending
+      evidencia: []
+    - id: deteccion-stale
+      descripcion: Detección STALE bloquea decisiones
+      estado: pending
+      evidencia: []
+    - id: contexto-btc-realtime
+      descripcion: BTC/USDT solo lectura
+      estado: pending
+      evidencia: []
+    - id: agregacion
+      descripcion: Agregación a features persistentes
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
+  '05':
+    titulo: Feature Engine & Market State
+    estado: pending
+    iniciada: null
+    cerrada: null
+    entregables:
+    - id: indicadores-basicos
+      descripcion: RSI/MACD/EMA/ATR/VWAP internos
+      estado: pending
+      evidencia: []
+    - id: features-orderbook
+      descripcion: Features orderbook (spread/imbalance/depth)
+      estado: pending
+      evidencia: []
+    - id: contexto-btc-features
+      descripcion: Features contexto BTC
+      estado: pending
+      evidencia: []
+    - id: market-state-multitimeframe
+      descripcion: Estado multi-timeframe 15m/1h/4h
+      estado: pending
+      evidencia: []
+    - id: clasificacion-regimenes
+      descripcion: Régimen determinista versionado
+      estado: pending
+      evidencia: []
+    - id: no-lookahead-tests
+      descripcion: Tests anti-lookahead
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
+  '06':
+    titulo: Backtesting & Deterministic Baseline
+    estado: pending
+    iniciada: null
+    cerrada: null
+    entregables:
+    - id: backtest-event-driven
+      descripcion: Motor backtest determinista
+      estado: pending
+      evidencia: []
+    - id: estrategia-baseline-determinista
+      descripcion: Estrategia reglas versionada
+      estado: pending
+      evidencia: []
+    - id: portfolio-accounting
+      descripcion: Contabilidad portfolio exacta
+      estado: pending
+      evidencia: []
+    - id: motor-fills
+      descripcion: Simulación fills
+      estado: pending
+      evidencia: []
+    - id: modelo-fees
+      descripcion: Fees reales Bybit parametrizados
+      estado: pending
+      evidencia: []
+    - id: modelo-slippage
+      descripcion: Slippage conservador modelado
+      estado: pending
+      evidencia: []
+    - id: metricas-rendimiento
+      descripcion: Métricas PRD §45 completas
+      estado: pending
+      evidencia: []
+    - id: benchmark-buyhold
+      descripcion: Buy & Hold comparable
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
+  '07':
+    titulo: ML Baseline
+    estado: pending
+    iniciada: null
+    cerrada: null
+    entregables:
+    - id: regresion-logistica
+      descripcion: Logistic Regression baseline
+      estado: pending
+      evidencia: []
+    - id: pipeline-features-ml
+      descripcion: Pipeline reproducible sin fuga
+      estado: pending
+      evidencia: []
+    - id: walk-forward-ml
+      descripcion: Ventanas walk-forward
+      estado: pending
+      evidencia: []
+    - id: metricas-modelo
+      descripcion: Métricas comparables al baseline
+      estado: pending
+      evidencia: []
+    - id: experiment-tracking
+      descripcion: Tracking experiment_id inmutable
+      estado: pending
+      evidencia: []
+    - id: leakage-tests-ml
+      descripcion: Tests leakage ML
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
+  08:
+    titulo: LLM Decision Agent
+    estado: pending
+    iniciada: null
+    cerrada: null
+    entregables:
+    - id: contrato-llmprovider
+      descripcion: Protocol LLMProvider dominio puro
+      estado: pending
+      evidencia: []
+    - id: adapter-deepseek
+      descripcion: DeepSeekProvider operativo
+      estado: pending
+      evidencia: []
+    - id: salida-estructurada
+      descripcion: Contrato JSON decisión (PRD §19)
+      estado: pending
+      evidencia: []
+    - id: validacion-pydantic
+      descripcion: Validación estricta schema
+      estado: pending
+      evidencia: []
+    - id: monitoreo-costos
+      descripcion: Registro tokens/costo por llamada
+      estado: pending
+      evidencia: []
+    - id: budget-control
+      descripcion: Presupuestos experiment/mensual con alertas
+      estado: pending
+      evidencia: []
+    - id: fallback-hold
+      descripcion: Fail-safe HOLD ante cualquier error (PRD §20)
+      estado: pending
+      evidencia: []
+    - id: versionado-prompts
+      descripcion: prompts/ versionados inmutables
+      estado: pending
+      evidencia: []
+    - id: versionado-experimentos
+      descripcion: Metadatos reproducibilidad PRD §38-39
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
+  09:
+    titulo: Trading Memory / RAG
+    estado: pending
+    iniciada: null
+    cerrada: null
+    entregables:
+    - id: esquema-pgvector
+      descripcion: Tablas memoria + índice vectorial
+      estado: pending
+      evidencia: []
+    - id: contrato-embeddingprovider
+      descripcion: Protocol EmbeddingProvider
+      estado: pending
+      evidencia: []
+    - id: embeddings-locales
+      descripcion: e5-small local operativo
+      estado: pending
+      evidencia: []
+    - id: busqueda-similaridad
+      descripcion: Recuperación top-k similar
+      estado: pending
+      evidencia: []
+    - id: filtrado-temporal
+      descripcion: outcome_timestamp < decision_timestamp
+      estado: pending
+      evidencia: []
+    - id: almacenamiento-reflexiones
+      descripcion: Reflexiones estructuradas persistidas
+      estado: pending
+      evidencia: []
+    - id: proteccion-leakage
+      descripcion: Guards anti-leakage en recuperación
+      estado: pending
+      evidencia: []
+    - id: experimento-llm-vs-memoria
+      descripcion: Comparativa LLM vs LLM+Memory
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
+  '10':
+    titulo: Risk & Paper Execution
+    estado: pending
+    iniciada: null
+    cerrada: null
+    entregables:
+    - id: risk-engine
+      descripcion: Risk Engine determinista autoridad absoluta
+      estado: pending
+      evidencia: []
+    - id: sizing-hibrido
+      descripcion: Sizing intensity→monto vía risk budget+ATR
+      estado: pending
+      evidencia: []
+    - id: stops-atr
+      descripcion: Stop loss basado ATR/volatilidad
+      estado: pending
+      evidencia: []
+    - id: take-profit
+      descripcion: Take profit parametrizado
+      estado: pending
+      evidencia: []
+    - id: trailing-stop
+      descripcion: Trailing stop operativo
+      estado: pending
+      evidencia: []
+    - id: restricciones-portfolio
+      descripcion: max positions/allocation/leverage=0
+      estado: pending
+      evidencia: []
+    - id: limite-perdida-diaria
+      descripcion: Daily loss guard 2%
+      estado: pending
+      evidencia: []
+    - id: guard-drawdown
+      descripcion: Max drawdown guard 5%
+      estado: pending
+      evidencia: []
+    - id: kill-switch
+      descripcion: Kill switch dominio/API/CLI/dashboard auditado
+      estado: pending
+      evidencia: []
+    - id: paper-engine
+      descripcion: Paper Engine sobre datos reales
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
+  '11':
+    titulo: Evaluation & Reflection
+    estado: pending
+    iniciada: null
+    cerrada: null
+    entregables:
+    - id: evaluador-outcomes
+      descripcion: Trade Evaluator outcomes
+      estado: pending
+      evidencia: []
+    - id: mfe
+      descripcion: Maximum Favorable Excursion
+      estado: pending
+      evidencia: []
+    - id: mae
+      descripcion: Maximum Adverse Excursion
+      estado: pending
+      evidencia: []
+    - id: reflexiones
+      descripcion: Reflection Engine estructurado (PRD §35)
+      estado: pending
+      evidencia: []
+    - id: insercion-memoria
+      descripcion: Reflexión→memoria solo trade cerrado
+      estado: pending
+      evidencia: []
+    - id: propuestas-mejora
+      descripcion: Improvement proposals sin auto-aplicar
+      estado: pending
+      evidencia: []
+    - id: flujo-aprobacion-humana
+      descripcion: Workflow aprobación humana mejoras
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
+  '12':
+    titulo: Bybit Testnet
+    estado: pending
+    iniciada: null
+    cerrada: null
+    entregables:
+    - id: autenticacion-testnet
+      descripcion: Firma/auth API testnet
+      estado: pending
+      evidencia: []
+    - id: creacion-ordenes
+      descripcion: Creación órdenes spot
+      estado: pending
+      evidencia: []
+    - id: cancelacion-ordenes
+      descripcion: Cancelación órdenes
+      estado: pending
+      evidencia: []
+    - id: manejo-fills
+      descripcion: Procesamiento fills
+      estado: pending
+      evidencia: []
+    - id: manejo-errores
+      descripcion: Errores/rate limiting manejados
+      estado: pending
+      evidencia: []
+    - id: reconciliacion
+      descripcion: Reconciliación estados órdenes
+      estado: pending
+      evidencia: []
+    - id: recuperacion-conexion
+      descripcion: Recovery de desconexiones
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
+  '13':
+    titulo: Dashboard & Observability
+    estado: pending
+    iniciada: null
+    cerrada: null
+    entregables:
+    - id: vistas-jinja2
+      descripcion: Vistas Jinja2
+      estado: pending
+      evidencia: []
+    - id: integracion-htmx
+      descripcion: HTMX polling updates
+      estado: pending
+      evidencia: []
+    - id: dashboard-trading
+      descripcion: Dashboard PRD §52 completo
+      estado: pending
+      evidencia: []
+    - id: opentelemetry
+      descripcion: OTel tracing integrado
+      estado: pending
+      evidencia: []
+    - id: prometheus
+      descripcion: Prometheus métricas técnicas §62
+      estado: pending
+      evidencia: []
+    - id: grafana
+      descripcion: Grafana dashboards
+      estado: pending
+      evidencia: []
+    - id: metricas-tecnicas
+      descripcion: Latencias/errores/reconnects expuestos
+      estado: pending
+      evidencia: []
+    - id: audit-ui
+      descripcion: UI eventos auditoría
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
+  '14':
+    titulo: Robustness Evaluation
+    estado: pending
+    iniciada: null
+    cerrada: null
+    entregables:
+    - id: walk-forward-completo
+      descripcion: Walk-forward integral
+      estado: pending
+      evidencia: []
+    - id: bootstrap
+      descripcion: Bootstrap estadístico
+      estado: pending
+      evidencia: []
+    - id: monte-carlo
+      descripcion: Monte Carlo secuencia trades
+      estado: pending
+      evidencia: []
+    - id: intervalos-confianza
+      descripcion: Confidence intervals
+      estado: pending
+      evidencia: []
+    - id: sensibilidad-fees
+      descripcion: Sensibilidad fees
+      estado: pending
+      evidencia: []
+    - id: sensibilidad-slippage
+      descripcion: Sensibilidad slippage
+      estado: pending
+      evidencia: []
+    - id: sensibilidad-parametros
+      descripcion: Sensibilidad parámetros
+      estado: pending
+      evidencia: []
+    - id: analisis-regimenes
+      descripcion: Estabilidad ≥2 regímenes
+      estado: pending
+      evidencia: []
+    - id: comparacion-baselines
+      descripcion: vs determinista+ML
+      estado: pending
+      evidencia: []
+    - id: comparacion-buyhold
+      descripcion: vs Buy & Hold
+      estado: pending
+      evidencia: []
+    - id: protocolo-holdout
+      descripcion: Holdout congelado respetado
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
+  '15':
+    titulo: Local Release Candidate
+    estado: pending
+    iniciada: null
+    cerrada: null
+    entregables:
+    - id: gate-backtest-pass
+      descripcion: BACKTEST=PASS verificado
+      estado: pending
+      evidencia: []
+    - id: gate-replay-pass
+      descripcion: REPLAY=PASS verificado
+      estado: pending
+      evidencia: []
+    - id: gate-paper-pass
+      descripcion: PAPER=PASS verificado
+      estado: pending
+      evidencia: []
+    - id: gate-testnet-pass
+      descripcion: TESTNET=PASS verificado
+      estado: pending
+      evidencia: []
+    - id: gate-observability-pass
+      descripcion: OBSERVABILITY=PASS verificado
+      estado: pending
+      evidencia: []
+    - id: gate-security-pass
+      descripcion: SECURITY=PASS verificado
+      estado: pending
+      evidencia: []
+    - id: gate-ci-pass
+      descripcion: CI=PASS verificado
+      estado: pending
+      evidencia: []
+    - id: gate-uat-pass
+      descripcion: UAT=PASS verificado
+      estado: pending
+      evidencia: []
+    - id: local-release-report-md-pdf
+      descripcion: LOCAL_RELEASE_REPORT MD+PDF
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
+  '16':
+    titulo: Paper Trading Certification
+    estado: pending
+    iniciada: null
+    cerrada: null
+    entregables:
+    - id: certificacion-30-dias
+      descripcion: ≥30 días calendario
+      estado: pending
+      evidencia: []
+    - id: certificacion-200-trades
+      descripcion: ≥200 trades reales paper
+      estado: pending
+      evidencia: []
+    - id: certificacion-2-regimenes
+      descripcion: ≥2 regímenes de mercado
+      estado: pending
+      evidencia: []
+    - id: informes-periodicos
+      descripcion: Informes periódicos generados
+      estado: pending
+      evidencia: []
+    - id: inmutabilidad-certificacion
+      descripcion: Cambio estrategia invalida certificación
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
+  '17':
+    titulo: LIVE Readiness Review
+    estado: pending
+    iniciada: null
+    cerrada: null
+    entregables:
+    - id: gate-estadistico-live
+      descripcion: Statistical gate §47 evaluado
+      estado: pending
+      evidencia: []
+    - id: confiabilidad-operacional
+      descripcion: Reliability operativa verificada
+      estado: pending
+      evidencia: []
+    - id: controles-riesgo-revision
+      descripcion: Risk controls revisados
+      estado: pending
+      evidencia: []
+    - id: auditoria-killswitch
+      descripcion: Kill switch auditado end-to-end
+      estado: pending
+      evidencia: []
+    - id: revision-seguridad-live
+      descripcion: Seguridad credenciales/LIVE revisada
+      estado: pending
+      evidencia: []
+    - id: estabilidad-modelo
+      descripcion: Estabilidad modelos verificada
+      estado: pending
+      evidencia: []
+    - id: revision-costos-live
+      descripcion: Costos LLM justificados
+      estado: pending
+      evidencia: []
+    - id: dictamen-readiness
+      descripcion: Dictamen NOT_READY|LIVE_CANDIDATE
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
+  '18':
+    titulo: Cloud Evaluation
+    estado: pending
+    iniciada: null
+    cerrada: null
+    entregables:
+    - id: documento-evaluacion-cloud
+      descripcion: Documento independiente necesidad/costo/latency
+      estado: pending
+      evidencia: []
+    - id: evaluacion-operacion-seguridad-dr
+      descripcion: Operación 24/7/secrets/disaster recovery
+      estado: pending
+      evidencia: []
+    - id: decision-go-nogo-cloud
+      descripcion: Decisión (DO_NOT_MOVE válido)
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
+time_log:
+- fecha: '2026-08-22'
+  fase: '00'
+  evento: done
+  detalle: repositorio-inicial
+- fecha: '2026-08-22'
+  fase: '00'
+  evento: done
+  detalle: agents-md-orquestador
+- fecha: '2026-08-22'
+  fase: '00'
+  evento: done
+  detalle: reporte-template
+- fecha: '2026-08-22'
+  fase: '00'
+  evento: done
+  detalle: uat-template
+- fecha: '2026-08-22'
+  fase: '00'
+  evento: done
+  detalle: adr-template
+- fecha: '2026-08-22'
+  fase: '00'
+  evento: done
+  detalle: git-strategy
+- fecha: '2026-08-22'
+  fase: '00'
+  evento: done
+  detalle: enforcement-opencode-json
+- fecha: '2026-08-22'
+  fase: '01'
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-08-22'
+  fase: '00'
+  evento: done
+  detalle: scripts-harness-tests
+- fecha: '2026-08-22'
+  fase: '00'
+  evento: done
+  detalle: politica-de-commits
+- fecha: '2026-08-22'
+  fase: '00'
+  evento: done
+  detalle: politica-de-dependencias
+- fecha: '2026-08-22'
+  fase: '00'
+  evento: done
+  detalle: integracion-codebase-memory-mcp
+- fecha: '2026-08-22'
+  fase: '00'
+  evento: done
+  detalle: catalogo-skills-22
+- fecha: '2026-08-22'
+  fase: '00'
+  evento: gate_approved
+  detalle: Aprobación explícita del usuario en sesión (gate final Fase 00)
+blockers: []

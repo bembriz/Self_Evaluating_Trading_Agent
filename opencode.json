@@ -1,0 +1,78 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "read": {
+      "*": "allow",
+      "*.env": "deny",
+      ".env.*": "deny",
+      "**/*.env": "deny",
+      "**/*.env.*": "deny",
+      "*.pem": "deny",
+      "*.key": "deny",
+      "*api_key*": "deny"
+    },
+    "edit": {
+      "*": "allow",
+      ".env": "deny",
+      ".env.*": "deny",
+      "**/*.env": "deny",
+      "**/*.env.*": "deny",
+      "datasets/**": "deny"
+    },
+    "bash": {
+      "*": "allow",
+
+      "rm -rf /": "deny",
+      "rm -rf /*": "deny",
+      "rm -rf ~": "deny",
+      "rm -rf ~/*": "deny",
+      "sudo *": "ask",
+      "chmod 777 *": "deny",
+
+      "git commit": "ask",
+      "git commit *": "ask",
+      "git push": "ask",
+      "git push *": "ask",
+      "git merge": "ask",
+      "git merge *": "ask",
+      "git tag": "ask",
+      "git tag *": "ask",
+      "git reset --hard *": "ask",
+      "git clean *": "ask",
+      "gh release create *": "ask",
+      "gh repo delete *": "deny",
+
+      "uv add": "ask",
+      "uv add *": "ask",
+      "uv remove *": "ask",
+      "uv pip install": "ask",
+      "uv pip install *": "ask",
+      "uv tool install *": "ask",
+      "pip install": "ask",
+      "pip install *": "ask",
+      "pip3 install *": "ask",
+      "npm install": "ask",
+      "npm install *": "ask",
+      "apt install *": "ask",
+      "apt-get install *": "ask",
+      "snap install *": "ask",
+
+      "docker pull": "ask",
+      "docker pull *": "ask",
+      "docker compose up": "ask",
+      "docker compose up *": "ask",
+      "docker compose down": "ask",
+      "docker compose down *": "ask",
+      "docker rm *": "ask",
+      "docker rmi *": "ask",
+      "docker volume rm *": "ask",
+      "docker system prune": "deny",
+      "docker system prune *": "deny",
+
+      "curl * | sh": "deny",
+      "curl * | bash": "deny",
+      "wget * | sh": "deny",
+      "wget * | bash": "deny"
+    }
+  }
+}

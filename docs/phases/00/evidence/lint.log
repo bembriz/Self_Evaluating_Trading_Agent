@@ -1,0 +1,6 @@
+# evidencia: lint
+fecha: 2026-08-22T11:58:34-06:00
+fase: 00
+comando: uv run --project harness ruff check harness/scripts harness/tests
+All checks passed!
+exit=0

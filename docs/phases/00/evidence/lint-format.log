@@ -1,0 +1,6 @@
+# evidencia: lint-format
+fecha: 2026-08-22T11:11:51-06:00
+fase: 00
+comando: uv run --project harness ruff format --check harness/scripts harness/tests
+13 files already formatted
+exit=0

@@ -1,0 +1,45 @@
+# ===== Secretos (nunca versionar) =====
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*_api_key*
+credentials*.json
+
+# ===== Datasets grandes (PRD §40: fuera del versionado) =====
+datasets/
+data/raw/
+data/processed/
+*.parquet
+*.feather
+
+# ===== Evidencia cruda / artefactos efímeros =====
+harness/artifacts/
+*.log
+!docs/phases/**/evidence/*.log
+logs/
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+dist/
+build/
+
+# ===== Entornos y editores =====
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# ===== WeasyPrint intermedios =====
+*.pdf.tmp.html

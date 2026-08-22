@@ -1,0 +1,5 @@
+# evidencia: typing
+fecha: 2026-08-22T11:08:18-06:00
+fase: 00
+comando: python3 -m compileall -q harness/scripts
+exit=0

@@ -1,0 +1,57 @@
+# evidencia: cbm-instalacion
+fecha: 2026-08-22T15:17:42-06:00
+fase: 00
+comando: /tmp/opencode/install.sh
+codebase-memory-mcp installer
+  os:      linux
+  arch:    amd64
+  target:  /home/xuum/.local/bin/codebase-memory-mcp
+
+Downloading codebase-memory-mcp-linux-amd64-portable.tar.gz...
+#=#=#                                                                          ##O#-#                                                                         ##O=#  #                                                                       #=#=-#  #                                                                                                                                                 0.2%                                                                           0.4%                                                                           1.4%#                                                                          2.6%###                                                                        4.2%####                                                                       6.0%#####                                                                      8.2%#######                                                                   10.6%#########                                                                 13.2%############                                                              16.7%###############                                                           20.8%##################                                                        25.9%#######################                                                   32.0%############################                                              39.0%#################################                                         46.7%########################################                                  56.1%###############################################                           65.6%########################################################                  77.9%##############################################################            87.4%######################################################################## 100.0%
+Checksum verified.
+Extracting...
+Verified candidate: codebase-memory-mcp 0.10.8
+codebase-memory-mcp install 0.10.8
+
+Stopping active CBM sessions and operations for install...
+Installed binary -> /home/xuum/.local/bin/codebase-memory-mcp
+
+Detected agents: OpenCode VS-Code Kimi Code CLI
+
+OpenCode:
+  mcp: /home/xuum/.config/opencode/opencode.jsonc
+  instructions: /home/xuum/.config/opencode/AGENTS.md
+  skill: /home/xuum/.config/opencode/skills/codebase-memory/SKILL.md (1 installed)
+  agent: /home/xuum/.config/opencode/agents/codebase-memory-scout.md
+  agent: /home/xuum/.config/opencode/agents/codebase-memory.md
+  agent: /home/xuum/.config/opencode/agents/codebase-memory-auditor.md
+  extension: /home/xuum/.config/opencode/plugins/cbm-augment.ts
+VS Code:
+  mcp: /home/xuum/.config/Code/User/mcp.json
+  skill: /home/xuum/.copilot/skills/codebase-memory/SKILL.md (1 installed)
+  agent: /home/xuum/.copilot/agents/codebase-memory-scout.agent.md
+  agent: /home/xuum/.copilot/agents/codebase-memory.agent.md
+  agent: /home/xuum/.copilot/agents/codebase-memory-auditor.agent.md
+  hooks: SessionStart + SubagentStart (dynamic graph context)
+Kimi Code CLI:
+  mcp: /home/xuum/.kimi-code/mcp.json
+  instructions: /home/xuum/.kimi-code/AGENTS.md
+  skill: /home/xuum/.kimi-code/skills/codebase-memory/SKILL.md (1 installed)
+  hook: /home/xuum/.kimi-code/config.toml (UserPromptSubmit)
+
+Added /home/xuum/.local/bin to PATH in /home/xuum/.bashrc
+
+Install complete. Please restart your coding-agent sessions to properly take this into account.
+Restart your shell or run:
+  source /home/xuum/.bashrc
+Installed updater -> /home/xuum/.local/bin/install.sh
+Installed: codebase-memory-mcp 0.10.8
+
+NOTE: /home/xuum/.local/bin is not in your PATH.
+Add it to your shell config:
+
+  echo 'export PATH="/home/xuum/.local/bin:$PATH"' >> ~/.zshrc
+
+Done! Restart your coding agent to start using codebase-memory-mcp.
+exit=0

@@ -1,0 +1,6 @@
+# evidencia: pdf-reporte-fase-00
+fecha: 2026-08-22T15:21:14-06:00
+fase: 00
+comando: uv run --project harness python harness/scripts/gen_pdf.py docs/phases/phase-00-report.md
+PDF generado: docs/phases/phase-00-report.pdf
+exit=0
