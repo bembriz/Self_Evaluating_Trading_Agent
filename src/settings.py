@@ -35,6 +35,10 @@ class Settings(BaseSettings):
     postgres_user: str = "trading"
     postgres_password: SecretStr = SecretStr("")
 
+    bybit_base_url: str = "https://api.bybit.com"
+    bybit_request_timeout: float = 10.0
+    dataset_dir: str = "datasets"
+
     @classmethod
     def settings_customise_sources(
         cls,

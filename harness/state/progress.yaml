@@ -212,42 +212,50 @@ phases:
       comentario: UAT APPROVED por usuario vía OpenCode
   '03':
     titulo: Historical Market Data
-    estado: pending
-    iniciada: null
-    cerrada: null
+    estado: done
+    iniciada: '2026-08-23'
+    cerrada: '2026-08-23'
     entregables:
     - id: bybit-historical-adapter
       descripcion: Adapter REST histórico Bybit
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/03/evidence/unit-tests.log
     - id: descarga-eth-btc
       descripcion: Descarga ETHUSDT+BTCUSDT
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/03/evidence/download.log
     - id: candles-multi-timeframe
       descripcion: Candles 15m/1h/4h persistidas
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/03/evidence/download.log
     - id: validacion-datos
       descripcion: Validación calidad/completitud
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/03/evidence/unit-tests.log
     - id: dataset-manifest
       descripcion: Manifest con fuente/rango/filas/schema
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/datasets/BYBIT_ETHBTC_V001.manifest.json
     - id: checksums-sha256
       descripcion: SHA-256 por archivo
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/03/evidence/verify.log
     - id: dataset-congelado-36m
       descripcion: Dataset oficial congelado ≥36 meses
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/03/evidence/verify.log
     gate_fase:
-      estado: pending
-      solicitado: null
-      resuelto: null
+      estado: approved
+      solicitado: '2026-08-23'
+      resuelto: '2026-08-23'
+      comentario: UAT APPROVED por usuario vía OpenCode
   '04':
     titulo: Real-Time Market Data
     estado: pending
@@ -1005,6 +1013,46 @@ time_log:
   detalle: ''
 - fecha: '2026-08-23'
   fase: '02'
+  evento: gate_approved
+  detalle: UAT APPROVED por usuario vía OpenCode
+- fecha: '2026-08-23'
+  fase: '03'
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-08-23'
+  fase: '03'
+  evento: done
+  detalle: bybit-historical-adapter
+- fecha: '2026-08-23'
+  fase: '03'
+  evento: done
+  detalle: descarga-eth-btc
+- fecha: '2026-08-23'
+  fase: '03'
+  evento: done
+  detalle: candles-multi-timeframe
+- fecha: '2026-08-23'
+  fase: '03'
+  evento: done
+  detalle: validacion-datos
+- fecha: '2026-08-23'
+  fase: '03'
+  evento: done
+  detalle: dataset-manifest
+- fecha: '2026-08-23'
+  fase: '03'
+  evento: done
+  detalle: checksums-sha256
+- fecha: '2026-08-23'
+  fase: '03'
+  evento: done
+  detalle: dataset-congelado-36m
+- fecha: '2026-08-23'
+  fase: '03'
+  evento: gate_requested
+  detalle: ''
+- fecha: '2026-08-23'
+  fase: '03'
   evento: gate_approved
   detalle: UAT APPROVED por usuario vía OpenCode
 blockers: []

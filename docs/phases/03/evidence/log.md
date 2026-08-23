@@ -1,0 +1,12 @@
+- `2026-08-23T11:39:06-06:00` **lint** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/03/evidence/lint.log
+- `2026-08-23T11:39:06-06:00` **typing** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/03/evidence/typing.log
+- `2026-08-23T11:39:06-06:00` **format** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/03/evidence/format.log
+- `2026-08-23T11:39:14-06:00` **unit-tests** → `uv run pytest --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/03/evidence/unit-tests.log
+- `2026-08-23T11:41:41-06:00` **download** → `uv run python -m main download --dataset-version BYBIT_ETHBTC_V001` · exit=`1` · artifact: docs/phases/03/evidence/download.log
+- `2026-08-23T11:47:47-06:00` **download** → `uv run python -m main download --dataset-version BYBIT_ETHBTC_V001` · exit=`0` · artifact: docs/phases/03/evidence/download.log
+- `2026-08-23T11:48:02-06:00` **verify** → `uv run python -m main verify --dataset-version BYBIT_ETHBTC_V001` · exit=`0` · artifact: docs/phases/03/evidence/verify.log
+- `2026-08-23T11:48:15-06:00` **lint** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/03/evidence/lint.log
+- `2026-08-23T11:48:16-06:00` **typing** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/03/evidence/typing.log
+- `2026-08-23T11:48:16-06:00` **format** → `uv run ruff format --check .` · exit=`1` · artifact: docs/phases/03/evidence/format.log
+- `2026-08-23T11:48:26-06:00` **unit-tests** → `uv run pytest --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/03/evidence/unit-tests.log
+- `2026-08-23T11:48:45-06:00` **format** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/03/evidence/format.log

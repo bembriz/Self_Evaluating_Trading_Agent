@@ -5,7 +5,15 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Any
 
-from sqlalchemy import DateTime, String
+from sqlalchemy import (
+    BigInteger,
+    DateTime,
+    Float,
+    Index,
+    String,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -27,3 +35,43 @@ class SystemState(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=_utcnow, onupdate=_utcnow
     )
+
+
+class MarketCandle(Base):
+    """Vela OHLCV persistida (PRD §55 market_candles)."""
+
+    __tablename__ = "market_candles"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    symbol: Mapped[str] = mapped_column(String(16), nullable=False)
+    timeframe: Mapped[str] = mapped_column(String(8), nullable=False)
+    timestamp_ms: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    open: Mapped[float] = mapped_column(Float, nullable=False)
+    high: Mapped[float] = mapped_column(Float, nullable=False)
+    low: Mapped[float] = mapped_column(Float, nullable=False)
+    close: Mapped[float] = mapped_column(Float, nullable=False)
+    volume: Mapped[float] = mapped_column(Float, nullable=False)
+    turnover: Mapped[float] = mapped_column(Float, nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint(
+            "symbol", "timeframe", "timestamp_ms", name="uq_market_candles_symbol_tf_ts"
+        ),
+        Index("ix_market_candles_symbol_tf_ts", "symbol", "timeframe", "timestamp_ms"),
+    )
+
+
+class DatasetManifestRecord(Base):
+    """Registro de manifest del dataset congelado (PRD §55 dataset_manifests)."""
+
+    __tablename__ = "dataset_manifests"
+
+    dataset_version: Mapped[str] = mapped_column(String(64), primary_key=True)
+    source: Mapped[str] = mapped_column(Text, nullable=False)
+    schema_version: Mapped[str] = mapped_column(String(16), nullable=False)
+    symbols: Mapped[list[str]] = mapped_column(JSONB, nullable=False)
+    timeframes: Mapped[list[str]] = mapped_column(JSONB, nullable=False)
+    downloaded_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    download_command: Mapped[str] = mapped_column(Text, nullable=False)
+    files: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)

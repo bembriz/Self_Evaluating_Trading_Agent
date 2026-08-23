@@ -13,3 +13,15 @@ def test_system_state_defaults() -> None:
     # updated_at es un default a nivel de columna: se aplica en el flush/INSERT,
     # no en la construcción del objeto (se verifica en el test de integración).
     assert st.updated_at is None
+
+
+def test_market_candle_tabla() -> None:
+    from infrastructure.database.models import MarketCandle
+
+    assert MarketCandle.__tablename__ == "market_candles"
+
+
+def test_dataset_manifest_record_tabla() -> None:
+    from infrastructure.database.models import DatasetManifestRecord
+
+    assert DatasetManifestRecord.__tablename__ == "dataset_manifests"

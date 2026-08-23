@@ -11,3 +11,7 @@ postgres_port: 5433
 postgres_db: trading_agent
 postgres_user: trading
 postgres_password: ""
+
+bybit_base_url: https://api.bybit.com
+bybit_request_timeout: 10.0
+dataset_dir: datasets

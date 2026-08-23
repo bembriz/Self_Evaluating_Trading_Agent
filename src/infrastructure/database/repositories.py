@@ -2,12 +2,20 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any
 
-from sqlalchemy import select, text
+from sqlalchemy import func, select, text
+from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from infrastructure.database.models import SystemState
+from domain.market.candle import Candle, Timeframe
+from domain.market.dataset import CandleFileEntry, DatasetManifest
+from infrastructure.database.models import (
+    DatasetManifestRecord,
+    MarketCandle,
+    SystemState,
+)
 
 
 class SqlAlchemySystemStateRepository:
@@ -34,3 +42,112 @@ class SqlAlchemySystemStateRepository:
         except Exception:
             return False
         return True
+
+
+class SqlAlchemyMarketCandleRepository:
+    """Implementación de MarketCandleRepository con upsert idempotente."""
+
+    BATCH_SIZE = 1000
+
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def upsert(self, symbol: str, timeframe: Timeframe, candles: list[Candle]) -> int:
+        inserted = 0
+        for offset in range(0, len(candles), self.BATCH_SIZE):
+            batch = candles[offset : offset + self.BATCH_SIZE]
+            rows = [
+                {
+                    "symbol": symbol,
+                    "timeframe": timeframe.label,
+                    "timestamp_ms": c.timestamp_ms,
+                    "open": c.open,
+                    "high": c.high,
+                    "low": c.low,
+                    "close": c.close,
+                    "volume": c.volume,
+                    "turnover": c.turnover,
+                }
+                for c in batch
+            ]
+            stmt = (
+                pg_insert(MarketCandle)
+                .values(rows)
+                .on_conflict_do_nothing(index_elements=["symbol", "timeframe", "timestamp_ms"])
+                .returning(MarketCandle.id)
+            )
+            result = await self._session.execute(stmt)
+            inserted += len(result.scalars().all())
+        return inserted
+
+    async def count(self, symbol: str, timeframe: Timeframe) -> int:
+        stmt = (
+            select(func.count())
+            .select_from(MarketCandle)
+            .where(MarketCandle.symbol == symbol, MarketCandle.timeframe == timeframe.label)
+        )
+        return int(await self._session.scalar(stmt) or 0)
+
+    async def range(
+        self, symbol: str, timeframe: Timeframe, start_ms: int, end_ms: int
+    ) -> list[Candle]:
+        stmt = (
+            select(MarketCandle)
+            .where(
+                MarketCandle.symbol == symbol,
+                MarketCandle.timeframe == timeframe.label,
+                MarketCandle.timestamp_ms >= start_ms,
+                MarketCandle.timestamp_ms <= end_ms,
+            )
+            .order_by(MarketCandle.timestamp_ms)
+        )
+        rows = (await self._session.scalars(stmt)).all()
+        return [self._to_domain(r) for r in rows]
+
+    @staticmethod
+    def _to_domain(row: MarketCandle) -> Candle:
+        return Candle(
+            row.timestamp_ms,
+            row.open,
+            row.high,
+            row.low,
+            row.close,
+            row.volume,
+            row.turnover,
+        )
+
+
+class SqlAlchemyDatasetManifestRepository:
+    """Implementación de DatasetManifestRepository (upsert por dataset_version)."""
+
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def upsert(self, manifest: DatasetManifest) -> None:
+        row = await self._session.get(DatasetManifestRecord, manifest.dataset_version)
+        if row is None:
+            row = DatasetManifestRecord(dataset_version=manifest.dataset_version)
+            self._session.add(row)
+        row.source = manifest.source
+        row.schema_version = manifest.schema_version
+        row.symbols = list(manifest.symbols)
+        row.timeframes = list(manifest.timeframes)
+        row.downloaded_at = datetime.fromisoformat(manifest.downloaded_at)
+        row.download_command = manifest.download_command
+        row.files = [f.to_dict() for f in manifest.files]
+        await self._session.flush()
+
+    async def get(self, version: str) -> DatasetManifest | None:
+        row = await self._session.get(DatasetManifestRecord, version)
+        if row is None:
+            return None
+        return DatasetManifest(
+            dataset_version=row.dataset_version,
+            source=row.source,
+            schema_version=row.schema_version,
+            symbols=tuple(row.symbols),
+            timeframes=tuple(row.timeframes),
+            downloaded_at=row.downloaded_at.isoformat(),
+            download_command=row.download_command,
+            files=tuple(CandleFileEntry.from_dict(f) for f in row.files),
+        )

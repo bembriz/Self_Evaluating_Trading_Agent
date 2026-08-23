@@ -8,7 +8,7 @@
 credentials*.json
 
 # ===== Datasets grandes (PRD §40: fuera del versionado) =====
-datasets/
+/datasets/
 data/raw/
 data/processed/
 *.parquet
@@ -31,6 +31,7 @@ venv/
 .ruff_cache/
 .coverage
 coverage.xml
+/coverage.json
 htmlcov/
 dist/
 build/

@@ -1,0 +1,52 @@
+# evidencia: download
+fecha: 2026-08-23T11:42:35-06:00
+fase: 03
+comando: uv run python -m main download --dataset-version BYBIT_ETHBTC_V001
+{
+  "dataset_version": "BYBIT_ETHBTC_V001",
+  "files": [
+    {
+      "symbol": "ETHUSDT",
+      "timeframe": "15m",
+      "rows": 103680,
+      "sha256": "f561207c018d0f4ade1afdaca3d349a53faec49d732bb5f50933db64e2cbb31d",
+      "warnings": []
+    },
+    {
+      "symbol": "ETHUSDT",
+      "timeframe": "1h",
+      "rows": 25920,
+      "sha256": "8c2079e3ab0cb1b25d29982029134010325ee844bede616a5ac3ac58a241d2ed",
+      "warnings": []
+    },
+    {
+      "symbol": "ETHUSDT",
+      "timeframe": "4h",
+      "rows": 6480,
+      "sha256": "c77888726fc886f3c7f2a7e4818b4f750745a890eb1da77efae7f5b5f59471b3",
+      "warnings": []
+    },
+    {
+      "symbol": "BTCUSDT",
+      "timeframe": "15m",
+      "rows": 103680,
+      "sha256": "ef39b08dcca27438592141ca3a2233165f016ebcb3bc063235df0e00c9809f52",
+      "warnings": []
+    },
+    {
+      "symbol": "BTCUSDT",
+      "timeframe": "1h",
+      "rows": 25920,
+      "sha256": "adb14c2780fc0f872c47e3195dad63a10d4051ed8c838b48dfd9114492dccb6d",
+      "warnings": []
+    },
+    {
+      "symbol": "BTCUSDT",
+      "timeframe": "4h",
+      "rows": 6480,
+      "sha256": "4b804f20035dcd45560581883b1d90aa5a40587fb807b977ac652fc6932081ae",
+      "warnings": []
+    }
+  ]
+}
+exit=0

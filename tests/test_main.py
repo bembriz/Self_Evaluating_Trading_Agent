@@ -1,5 +1,6 @@
 import re
 
+import pytest
 from pytest import CaptureFixture
 
 from main import main
@@ -15,3 +16,10 @@ def test_main_returns_zero(capsys: CaptureFixture[str]) -> None:
     out = capsys.readouterr().out
     assert "self-evaluating-trading-agent" in out
     assert __version__ in out
+
+
+@pytest.mark.parametrize("command", ["download", "verify"])
+def test_subcommand_help_exits_zero(command: str) -> None:
+    with pytest.raises(SystemExit) as exc:
+        main([command, "--help"])
+    assert exc.value.code == 0

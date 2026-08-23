@@ -1,0 +1,72 @@
+{
+  "dataset_version": "BYBIT_ETHBTC_V001",
+  "download_command": "python -m main download --dataset-version BYBIT_ETHBTC_V001",
+  "downloaded_at": "2026-08-23T17:47:47.502236+00:00",
+  "files": [
+    {
+      "end_ms": 1787506200000,
+      "path": "datasets/BYBIT_ETHBTC_V001/ETHUSDT_15m.csv",
+      "row_count": 103680,
+      "sha256": "f561207c018d0f4ade1afdaca3d349a53faec49d732bb5f50933db64e2cbb31d",
+      "start_ms": 1694195100000,
+      "symbol": "ETHUSDT",
+      "timeframe": "15m"
+    },
+    {
+      "end_ms": 1787504400000,
+      "path": "datasets/BYBIT_ETHBTC_V001/ETHUSDT_1h.csv",
+      "row_count": 25920,
+      "sha256": "8c2079e3ab0cb1b25d29982029134010325ee844bede616a5ac3ac58a241d2ed",
+      "start_ms": 1694196000000,
+      "symbol": "ETHUSDT",
+      "timeframe": "1h"
+    },
+    {
+      "end_ms": 1787500800000,
+      "path": "datasets/BYBIT_ETHBTC_V001/ETHUSDT_4h.csv",
+      "row_count": 6480,
+      "sha256": "c77888726fc886f3c7f2a7e4818b4f750745a890eb1da77efae7f5b5f59471b3",
+      "start_ms": 1694203200000,
+      "symbol": "ETHUSDT",
+      "timeframe": "4h"
+    },
+    {
+      "end_ms": 1787506200000,
+      "path": "datasets/BYBIT_ETHBTC_V001/BTCUSDT_15m.csv",
+      "row_count": 103680,
+      "sha256": "ef39b08dcca27438592141ca3a2233165f016ebcb3bc063235df0e00c9809f52",
+      "start_ms": 1694195100000,
+      "symbol": "BTCUSDT",
+      "timeframe": "15m"
+    },
+    {
+      "end_ms": 1787504400000,
+      "path": "datasets/BYBIT_ETHBTC_V001/BTCUSDT_1h.csv",
+      "row_count": 25920,
+      "sha256": "adb14c2780fc0f872c47e3195dad63a10d4051ed8c838b48dfd9114492dccb6d",
+      "start_ms": 1694196000000,
+      "symbol": "BTCUSDT",
+      "timeframe": "1h"
+    },
+    {
+      "end_ms": 1787500800000,
+      "path": "datasets/BYBIT_ETHBTC_V001/BTCUSDT_4h.csv",
+      "row_count": 6480,
+      "sha256": "4b804f20035dcd45560581883b1d90aa5a40587fb807b977ac652fc6932081ae",
+      "start_ms": 1694203200000,
+      "symbol": "BTCUSDT",
+      "timeframe": "4h"
+    }
+  ],
+  "schema_version": "1.0",
+  "source": "Bybit REST v5 /v5/market/kline (spot)",
+  "symbols": [
+    "ETHUSDT",
+    "BTCUSDT"
+  ],
+  "timeframes": [
+    "15m",
+    "1h",
+    "4h"
+  ]
+}
