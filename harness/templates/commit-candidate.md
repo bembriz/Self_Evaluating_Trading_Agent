@@ -29,6 +29,11 @@
 
 > Módulos y contratos tocados; blast radius (codebase-memory-mcp si está disponible).
 
+## Índice del grafo
+
+- [ ] Índice re-indexado tras el commit (`index_repository`)
+- [ ] Cobertura verificada sobre archivos tocados (`check_index_coverage`)
+
 ## Tests ejecutados
 
 | Suite | Resultado | Evidencia |

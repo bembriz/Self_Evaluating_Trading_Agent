@@ -46,7 +46,10 @@ El estado oficial NO se edita aquí: lo calcula `harness/scripts/progress.py`.
 
 ```text
 1. SCAFFOLD    python3 harness/scripts/new_phase.py --phase XX
-2. ENTENDER    codebase-memory-mcp: Index → Understand → Impact Analysis
+2. ENTENDER    codebase-memory-mcp: confirmar índice VIGENTE (index_status +
+               check_index_coverage sobre los archivos a tocar) y re-indexar si está
+               desactualizado; luego Understand → Impact Analysis (get_architecture,
+               search_graph, trace_path).
                (instalado v0.10.8; si no responde: grep/glob y registrar incidencia)
 3. PLANIFICAR  superpowers:writing-plans si la fase es multi-paso
 4. IMPLEMENTAR skill del dominio correspondiente (ver §5) +
@@ -78,6 +81,10 @@ El estado oficial NO se edita aquí: lo calcula `harness/scripts/progress.py`.
 10. PnL bruto nunca es métrica de éxito: fees + slippage + coste LLM incluidos.
 11. Un backtest positivo ≠ rentabilidad demostrada.
 12. Antes de declarar cualquier PASS: superpowers:verification-before-completion.
+13. **Grafo de codebase-memory a la par de los commits**: el índice se re-indexa tras
+    cada commit autorizado (o al arrancar la sesión si quedó obsoleto) y se verifica su
+    cobertura sobre los archivos tocados. Prohibido avanzar a la fase N+1 o hacer
+    análisis de impacto sobre un índice desactualizado.
 
 ---
 
@@ -143,6 +150,10 @@ Antes de pedir autorización de un commit, completar `harness/templates/commit-c
 (Commit Candidate Report): objetivo, rama, archivos, diff, arquitectura afectada, tests,
 cobertura exacta, calidad (ruff/mypy/pytest), seguridad (sin secretos), riesgos, deuda,
 y mensaje propuesto. Solo entonces presentar al usuario.
+
+Tras cada commit autorizado: re-indexar el grafo (codebase-memory-mcp, `index_repository`)
+y verificar cobertura de los archivos tocados (`check_index_coverage`), para que la memoria
+estructural avance en paralelo al historial (regla crítica §4.13).
 
 Estrategia: trunk-based simplificado; `main` protegida; commits pequeños y atómicos.
 

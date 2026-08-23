@@ -30,9 +30,13 @@ Garantizar que **ningún commit, push, merge, tag o release ocurra sin aprobaci�
 3. Ejecutar calidad completa y registrar evidencia con `harness/scripts/evidence.sh`:
    `ruff check`, `ruff format --check`, `mypy` (Fase 01+), `pytest --cov`.
 4. Escanear diff buscando secretos/credenciales/rutas `.env` (debe ser cero).
-5. Completar TODAS las secciones de `harness/templates/commit-candidate.md`.
-6. Presentar resumen ejecutivo al usuario y **esperar decisión explícita**.
-7. Solo con "APPROVED": ejecutar el commit con el mensaje propuesto.
+5. Blast radius con codebase-memory-mcp: `detect_changes` + `check_index_coverage`
+   (skill `codebase-memory-mcp`); registrar símbolos afectados en el reporte.
+6. Completar TODAS las secciones de `harness/templates/commit-candidate.md`.
+7. Presentar resumen ejecutivo al usuario y **esperar decisión explícita**.
+8. Solo con "APPROVED": ejecutar el commit con el mensaje propuesto.
+9. Tras el commit: re-indexar el grafo (`index_repository`) y verificar cobertura de los
+   archivos tocados, para mantener la memoria estructural en paralelo al historial.
 
 ## Permitido / Prohibido
 
