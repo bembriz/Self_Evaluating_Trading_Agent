@@ -1,0 +1,13 @@
+# evidencia: alembic-roundtrip
+fecha: 2026-08-23T09:54:43-06:00
+fase: 02
+comando: bash -c uv run alembic upgrade head && uv run alembic downgrade base && uv run alembic upgrade head
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running downgrade 0001 -> , esquema inicial: extensión vector + tabla system_state
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 0001, esquema inicial: extensión vector + tabla system_state
+exit=0

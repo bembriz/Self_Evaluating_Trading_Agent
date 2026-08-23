@@ -1,0 +1,6 @@
+# evidencia: compose-up
+fecha: 2026-08-23T09:54:51-06:00
+fase: 02
+comando: sudo docker compose up -d postgres
+ Container self-evaluating_trading_agent-postgres-1 Running 
+exit=0

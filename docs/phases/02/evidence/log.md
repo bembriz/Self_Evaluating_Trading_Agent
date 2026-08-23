@@ -1,0 +1,10 @@
+- `2026-08-23T09:54:15-06:00` **lint** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/02/evidence/lint.log
+- `2026-08-23T09:54:15-06:00` **format** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/02/evidence/format.log
+- `2026-08-23T09:54:16-06:00` **typing** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/02/evidence/typing.log
+- `2026-08-23T09:54:26-06:00` **unit-tests** → `uv run pytest --cov=src --cov-branch --cov-fail-under=90 --cov-report=json:docs/phases/02/evidence/coverage.json` · exit=`0` · artifact: docs/phases/02/evidence/unit-tests.log
+- `2026-08-23T09:54:37-06:00` **pip-audit** → `uv run pip-audit` · exit=`0` · artifact: docs/phases/02/evidence/pip-audit.log
+- `2026-08-23T09:54:37-06:00` **structure** → `bash -c find src config migrations -type f | sort` · exit=`0` · artifact: docs/phases/02/evidence/structure.log
+- `2026-08-23T09:54:50-06:00` **alembic-roundtrip** → `bash -c uv run alembic upgrade head && uv run alembic downgrade base && uv run alembic upgrade head` · exit=`0` · artifact: docs/phases/02/evidence/alembic-roundtrip.log
+- `2026-08-23T09:54:51-06:00` **docker-build** → `sudo docker build -t self-evaluating-trading-agent:dev .` · exit=`0` · artifact: docs/phases/02/evidence/docker-build.log
+- `2026-08-23T09:54:51-06:00` **compose-up** → `sudo docker compose up -d postgres` · exit=`0` · artifact: docs/phases/02/evidence/compose-up.log
+- `2026-08-23T09:55:01-06:00` **e2e** → `bash -c set -e; uv run uvicorn interfaces.api.app:app --host 127.0.0.1 --port 8000 & UVPID=$!; sleep 3; curl -s http://127.0.0.1:8000/health; echo; curl -s http://127.0.0.1:8000/ready; echo; curl -s http://127.0.0.1:8000/api/v1/system/state; echo; kill $UVPID` · exit=`0` · artifact: docs/phases/02/evidence/e2e.log

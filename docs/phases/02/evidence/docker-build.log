@@ -1,0 +1,62 @@
+# evidencia: docker-build
+fecha: 2026-08-23T09:54:50-06:00
+fase: 02
+comando: sudo docker build -t self-evaluating-trading-agent:dev .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 566B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.12-slim
+#2 DONE 0.5s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 220B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 3.43kB 0.0s done
+#4 DONE 0.0s
+
+#5 [builder 1/5] FROM docker.io/library/python:3.12-slim@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a
+#5 resolve docker.io/library/python:3.12-slim@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a 0.1s done
+#5 DONE 0.1s
+
+#6 [stage-1 6/7] COPY alembic.ini ./
+#6 CACHED
+
+#7 [builder 2/5] WORKDIR /app
+#7 CACHED
+
+#8 [builder 4/5] COPY pyproject.toml uv.lock ./
+#8 CACHED
+
+#9 [stage-1 4/7] COPY src ./src
+#9 CACHED
+
+#10 [builder 3/5] RUN pip install --no-cache-dir uv==0.11.25
+#10 CACHED
+
+#11 [builder 5/5] RUN uv sync --frozen --no-dev --no-install-project
+#11 CACHED
+
+#12 [stage-1 5/7] COPY migrations ./migrations
+#12 CACHED
+
+#13 [stage-1 3/7] COPY --from=builder /app/.venv /app/.venv
+#13 CACHED
+
+#14 [stage-1 7/7] COPY config ./config
+#14 CACHED
+
+#15 exporting to image
+#15 exporting layers 0.0s done
+#15 exporting manifest sha256:cbb84f3186eded33bedc7a590609b309e020f1c4006d68a4e9c4d39ed15453b0 done
+#15 exporting config sha256:9525037d174181b5f4e62be4f6db91eedaebf9166ddc746b88831caf70553c98 done
+#15 exporting attestation manifest sha256:715a292057f213aa76e9d7a27aabc5593861fc5762e27797a3617963851f0455 0.0s done
+#15 exporting manifest list sha256:05c220227630862e6045551e0e1d5e29ed96d2f0ee59967290973f46607a9553 0.0s done
+#15 naming to docker.io/library/self-evaluating-trading-agent:dev done
+#15 unpacking to docker.io/library/self-evaluating-trading-agent:dev 0.0s done
+#15 DONE 0.2s
+exit=0

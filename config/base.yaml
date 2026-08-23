@@ -1,0 +1,13 @@
+# Configuración base (defaults seguros). Se sobrescribe con .env (secrets) y,
+# en fases posteriores, con config/<modo>.yaml según TRADING_MODE.
+
+environment: base
+app_name: self-evaluating-trading-agent
+trading_mode: backtest
+live_trading_enabled: false
+
+postgres_host: localhost
+postgres_port: 5433
+postgres_db: trading_agent
+postgres_user: trading
+postgres_password: ""

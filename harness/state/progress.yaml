@@ -161,46 +161,55 @@ phases:
       comentario: UAT APPROVED por usuario vía OpenCode
   '02':
     titulo: PostgreSQL & Application Skeleton
-    estado: pending
-    iniciada: null
-    cerrada: null
+    estado: done
+    iniciada: '2026-08-23'
+    cerrada: '2026-08-23'
     entregables:
     - id: postgresql-pgvector
       descripcion: Contenedores postgres+pgvector operativos
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/02/evidence/compose-up.log
     - id: sqlalchemy
       descripcion: SQLAlchemy 2.x integrado
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/02/evidence/unit-tests.log
     - id: alembic
       descripcion: Alembic operativo con upgrade/downgrade tests
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/02/evidence/alembic-roundtrip.log
     - id: fastapi-app
       descripcion: Aplicación FastAPI base
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/02/evidence/e2e.log
     - id: health-readiness
       descripcion: Endpoints /health /ready
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/02/evidence/e2e.log
     - id: configuracion-yaml-env
       descripcion: config/*.yaml + .env sin secretos versionados
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/02/evidence/structure.log
     - id: repository-pattern-ports
       descripcion: Puertos/adaptadores de persistencia
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/02/evidence/unit-tests.log
     - id: migraciones-iniciales
       descripcion: Esquema inicial migrado
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/02/evidence/alembic-roundtrip.log
     gate_fase:
-      estado: pending
-      solicitado: null
-      resuelto: null
+      estado: approved
+      solicitado: '2026-08-23'
+      resuelto: '2026-08-23'
+      comentario: UAT APPROVED por usuario vía OpenCode
   '03':
     titulo: Historical Market Data
     estado: pending
@@ -952,6 +961,50 @@ time_log:
   detalle: ''
 - fecha: '2026-08-23'
   fase: '01'
+  evento: gate_approved
+  detalle: UAT APPROVED por usuario vía OpenCode
+- fecha: '2026-08-23'
+  fase: '02'
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-08-23'
+  fase: '02'
+  evento: done
+  detalle: postgresql-pgvector
+- fecha: '2026-08-23'
+  fase: '02'
+  evento: done
+  detalle: sqlalchemy
+- fecha: '2026-08-23'
+  fase: '02'
+  evento: done
+  detalle: alembic
+- fecha: '2026-08-23'
+  fase: '02'
+  evento: done
+  detalle: fastapi-app
+- fecha: '2026-08-23'
+  fase: '02'
+  evento: done
+  detalle: health-readiness
+- fecha: '2026-08-23'
+  fase: '02'
+  evento: done
+  detalle: configuracion-yaml-env
+- fecha: '2026-08-23'
+  fase: '02'
+  evento: done
+  detalle: repository-pattern-ports
+- fecha: '2026-08-23'
+  fase: '02'
+  evento: done
+  detalle: migraciones-iniciales
+- fecha: '2026-08-23'
+  fase: '02'
+  evento: gate_requested
+  detalle: ''
+- fecha: '2026-08-23'
+  fase: '02'
   evento: gate_approved
   detalle: UAT APPROVED por usuario vía OpenCode
 blockers: []

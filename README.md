@@ -10,7 +10,8 @@ Sistema de trading cuantitativo, observable, reproducible y auditable donde un *
 |---|---|---|
 | 00 | Governance & Agent Bootstrap (**arnés**) | done |
 | 01 | Python Project Foundation | done |
-| 02–18 | PostgreSQL Skeleton → Cloud Evaluation | pending |
+| 02 | PostgreSQL & Application Skeleton | done |
+| 03–18 | Historical Market Data → Cloud Evaluation | pending |
 
 Progreso objetivo y ETA:
 
@@ -66,18 +67,30 @@ docs/
 Python 3.12 gestionado con `uv`. El código vive en `src/` (layout hexagonal: `domain`, `application`, `infrastructure`, `interfaces`) y los tests en `tests/`.
 
 ```bash
-uv sync                                                    # instalar dependencias + entorno (.venv)
-uv run pytest --cov=src --cov-branch --cov-fail-under=90   # tests + cobertura ≥90%
-uv run ruff check .                                        # lint
-uv run ruff format --check .                               # formato
-uv run mypy src tests                                      # typing (strict)
-uv run pre-commit install                                  # hooks git (una vez)
-uv run pip-audit                                           # auditoría de CVEs
-docker build -t self-evaluating-trading-agent:dev .        # imagen reproducible
-docker run --rm self-evaluating-trading-agent:dev          # ejecutar el entry point
+# 1) Entorno + dependencias
+uv sync
+
+# 2) PostgreSQL + pgvector (puerto 5433) — requiere .env con POSTGRES_PASSWORD
+docker compose up -d postgres
+uv run alembic upgrade head                  # migraciones
+
+# 3) Calidad y tests (los tests de integración necesitan el postgres arriba)
+uv run pytest --cov=src --cov-branch --cov-fail-under=90
+uv run ruff check . && uv run ruff format --check .
+uv run mypy src tests
+uv run pip-audit
+
+# 4) Ejecutar la API localmente
+uv run uvicorn interfaces.api.app:app --reload
+#   GET /health  GET /ready  GET /api/v1/system/state
+
+# 5) Imagen reproducible
+docker build -t self-evaluating-trading-agent:dev .
 ```
 
-CI (GitHub Actions, `.github/workflows/ci.yml`) ejecuta la misma secuencia (`uv sync --frozen` + lint + typing + tests/coverage + secret scanning + dependency audit + build de imagen) y queda activa desde el primer push autorizado a `main`.
+Configuración: `config/*.yaml` (base + modos) con defaults seguros; secretos solo en `.env` (nunca versionado). Variables de Postgres en `.env`: `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`.
+
+CI (GitHub Actions, `.github/workflows/ci.yml`) ejecuta: `quality` (ruff + mypy), `integration` (postgres + migraciones up/down + tests/cobertura ≥90%), `security` (gitleaks + pip-audit) y `docker` (build).
 
 ## Comandos del arnés
 

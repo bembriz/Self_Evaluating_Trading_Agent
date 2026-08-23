@@ -4,7 +4,15 @@ version = "0.1.0"
 description = "Self-Evaluating Trading Agent — ETH/USDT spot, long-only"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
-dependencies = []
+dependencies = [
+    "alembic>=1.19.1",
+    "fastapi>=0.141.1",
+    "psycopg[binary]>=3.3.4",
+    "pydantic-settings>=2.15.0",
+    "pyyaml>=6.0.3",
+    "sqlalchemy[asyncio]>=2.0.52",
+    "uvicorn[standard]>=0.52.4",
+]
 
 [dependency-groups]
 dev = [
@@ -14,6 +22,8 @@ dev = [
     "mypy>=1.11",
     "pre-commit>=4.0",
     "pip-audit>=2.7",
+    "httpx>=0.28.1",
+    "pytest-asyncio>=1.4.0",
 ]
 
 [build-system]
@@ -26,6 +36,7 @@ packages = ["src/domain", "src/application", "src/infrastructure", "src/interfac
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+asyncio_mode = "auto"
 markers = [
     "unit: unit tests (dominio puro)",
     "integration: integration tests",

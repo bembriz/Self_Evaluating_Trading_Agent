@@ -1,0 +1,2 @@
+# Modo backtest — cableado en Fase 06 (Backtesting & Deterministic Baseline).
+# Por ahora hereda de base.yaml; aquí irán overrides específicos de backtest.

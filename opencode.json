@@ -9,7 +9,9 @@
       "**/*.env.*": "deny",
       "*.pem": "deny",
       "*.key": "deny",
-      "*api_key*": "deny"
+      "*api_key*": "deny",
+      ".env.example": "allow",
+      "**/*.env.example": "allow"
     },
     "edit": {
       "*": "allow",
@@ -17,7 +19,9 @@
       ".env.*": "deny",
       "**/*.env": "deny",
       "**/*.env.*": "deny",
-      "datasets/**": "deny"
+      "datasets/**": "deny",
+      ".env.example": "allow",
+      "**/*.env.example": "allow"
     },
     "bash": {
       "*": "allow",
