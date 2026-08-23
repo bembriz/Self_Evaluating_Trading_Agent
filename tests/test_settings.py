@@ -4,7 +4,15 @@ from pytest import MonkeyPatch
 from settings import Settings, load_settings
 
 
-def test_load_settings_tiene_defaults() -> None:
+def test_load_settings_tiene_defaults(monkeypatch: MonkeyPatch) -> None:
+    for var in (
+        "POSTGRES_HOST",
+        "POSTGRES_PORT",
+        "POSTGRES_DB",
+        "POSTGRES_USER",
+        "POSTGRES_PASSWORD",
+    ):
+        monkeypatch.delenv(var, raising=False)
     s = load_settings()
     assert s.app_name == "self-evaluating-trading-agent"
     assert s.trading_mode == "backtest"
