@@ -3,7 +3,7 @@ meta:
   prd: docs/PRD — Self-Evaluating Trading Agent.md
   diseno_arnes: docs/design/harness-design.md
   creado: '2026-08-22'
-  actualizado: '2026-08-22'
+  actualizado: '2026-08-23'
   reglas:
     peso_fase_igual: true
     peso_entregable_igual: true
@@ -95,58 +95,70 @@ phases:
       comentario: Aprobación explícita del usuario en sesión (gate final Fase 00)
   '01':
     titulo: Python Project Foundation
-    estado: pending
-    iniciada: null
-    cerrada: null
+    estado: done
+    iniciada: '2026-08-23'
+    cerrada: '2026-08-23'
     entregables:
     - id: estructura-del-proyecto
       descripcion: Estructura hexagonal src/
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/01/evidence/structure.log
     - id: uv-gestion-dependencias
       descripcion: uv como gestor; uv.lock versionado
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/01/evidence/uv-lock.log
     - id: pyproject-toml
       descripcion: pyproject.toml completo
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/01/evidence/uv-lock.log
     - id: lint-ruff
       descripcion: ruff check configurado y verde
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/01/evidence/lint.log
     - id: formatting-ruff
       descripcion: ruff format configurado y verde
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/01/evidence/format.log
     - id: typing-mypy
       descripcion: mypy configurado y verde
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/01/evidence/typing.log
     - id: pytest-suite
       descripcion: pytest operativo
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/01/evidence/unit-tests.log
     - id: coverage-config
       descripcion: coverage ≥90% gate (--cov-fail-under)
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/01/evidence/coverage.json
     - id: pre-commit-hooks
       descripcion: hooks pre-commit instalados
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/01/evidence/pre-commit.log
     - id: ci-inicial-github-actions
       descripcion: workflow CI (lint+typing+tests+build)
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/01/evidence/ci-local.log
     - id: dockerfile-inicial
       descripcion: Dockerfile base reproducible
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/01/evidence/docker-build.log
     gate_fase:
-      estado: pending
-      solicitado: null
-      resuelto: null
+      estado: approved
+      solicitado: '2026-08-23'
+      resuelto: '2026-08-23'
+      comentario: UAT APPROVED por usuario vía OpenCode
   '02':
     titulo: PostgreSQL & Application Skeleton
     estado: pending
@@ -886,4 +898,60 @@ time_log:
   fase: '00'
   evento: gate_approved
   detalle: Aprobación explícita del usuario en sesión (gate final Fase 00)
+- fecha: '2026-08-23'
+  fase: '01'
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-08-23'
+  fase: '01'
+  evento: done
+  detalle: estructura-del-proyecto
+- fecha: '2026-08-23'
+  fase: '01'
+  evento: done
+  detalle: uv-gestion-dependencias
+- fecha: '2026-08-23'
+  fase: '01'
+  evento: done
+  detalle: pyproject-toml
+- fecha: '2026-08-23'
+  fase: '01'
+  evento: done
+  detalle: lint-ruff
+- fecha: '2026-08-23'
+  fase: '01'
+  evento: done
+  detalle: formatting-ruff
+- fecha: '2026-08-23'
+  fase: '01'
+  evento: done
+  detalle: typing-mypy
+- fecha: '2026-08-23'
+  fase: '01'
+  evento: done
+  detalle: pytest-suite
+- fecha: '2026-08-23'
+  fase: '01'
+  evento: done
+  detalle: coverage-config
+- fecha: '2026-08-23'
+  fase: '01'
+  evento: done
+  detalle: pre-commit-hooks
+- fecha: '2026-08-23'
+  fase: '01'
+  evento: done
+  detalle: ci-inicial-github-actions
+- fecha: '2026-08-23'
+  fase: '01'
+  evento: done
+  detalle: dockerfile-inicial
+- fecha: '2026-08-23'
+  fase: '01'
+  evento: gate_requested
+  detalle: ''
+- fecha: '2026-08-23'
+  fase: '01'
+  evento: gate_approved
+  detalle: UAT APPROVED por usuario vía OpenCode
 blockers: []

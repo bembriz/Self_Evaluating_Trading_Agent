@@ -56,7 +56,7 @@ Salida de cada comando (pasos 1–9) y captura del árbol de `src/` (paso 10).
 
 ---
 
-## VEREDICTO UAT: PENDING
+## VEREDICTO UAT: APPROVED
 <!-- Sustituir PENDING por APPROVED o REJECTED. gate_check exige el veredicto APPROVED visible (los comentarios HTML no cuentan) al check uat-approved -->
-Decisor: ________________  Fecha: ________
-Comentario:
+Decisor: usuario  Fecha: 2026-08-23
+Comentario: aprobado vía selector OpenCode

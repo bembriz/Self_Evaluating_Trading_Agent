@@ -9,7 +9,7 @@ Sistema de trading cuantitativo, observable, reproducible y auditable donde un *
 | Fase | Título | Estado |
 |---|---|---|
 | 00 | Governance & Agent Bootstrap (**arnés**) | done |
-| 01 | Python Project Foundation | in_progress |
+| 01 | Python Project Foundation | done |
 | 02–18 | PostgreSQL Skeleton → Cloud Evaluation | pending |
 
 Progreso objetivo y ETA:

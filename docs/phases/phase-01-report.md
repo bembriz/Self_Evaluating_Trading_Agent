@@ -1,9 +1,9 @@
 # Reporte de Fase 01 — Python Project Foundation
 
 **Fecha:** 2026-08-23
-**Estado de fase:** in_progress (pendiente UAT + aprobación humana)
-**Avance fase:** 90.0% (cap aplicado hasta APPROVED) · **Avance global:** 10.0%
-**Gate:** pending
+**Estado de fase:** done
+**Avance fase:** 100.0% · **Avance global:** 10.53%
+**Gate:** approved
 
 ---
 
@@ -98,7 +98,7 @@ Snapshot fiel del estado a commitear (`git write-tree` + `git archive` → `/tmp
 ## 17. UAT
 
 - Checklist: `docs/uat/phase-01-uat.md`
-- Veredicto: PENDIENTE (lo ejecuta y decide el usuario)
+- Veredicto: APPROVED
 
 ## 18. Evidencias
 
@@ -157,5 +157,5 @@ Workflow `ci.yml` creado y validado localmente paso a paso (quality + security +
 ## 30. Solicitud de aprobación
 
 - [x] Presentado al usuario (junto con instructivo UAT `docs/uat/phase-01-uat.md`)
-- **DECISIÓN DEL USUARIO:** ☐ APPROVED ☐ REJECTED
-- Comentario:
+- **DECISIÓN DEL USUARIO:** ☑ APPROVED ☐ REJECTED
+- Comentario: aprobado vía selector OpenCode (UAT APPROVED, gate approved)
