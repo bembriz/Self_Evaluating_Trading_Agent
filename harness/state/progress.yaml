@@ -258,46 +258,55 @@ phases:
       comentario: UAT APPROVED por usuario vía OpenCode
   '04':
     titulo: Real-Time Market Data
-    estado: pending
-    iniciada: null
-    cerrada: null
+    estado: done
+    iniciada: '2026-08-23'
+    cerrada: '2026-08-23'
     entregables:
     - id: websocket-produccion
       descripcion: Cliente WS Bybit producción
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/04/evidence/ws-smoke.log
     - id: candles-tiempo-real
       descripcion: Candles en vivo confirmadas al cierre
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/04/evidence/unit-tests.log
     - id: order-book-local
       descripcion: Order book local sincronizado
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/04/evidence/unit-tests.log
     - id: snapshots-deltas
       descripcion: Snapshot+deltas con reconciliación de secuencia
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/04/evidence/unit-tests.log
     - id: reconexion-automatica
       descripcion: Reconexión automática resiliente
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/04/evidence/unit-tests.log
     - id: deteccion-stale
       descripcion: Detección STALE bloquea decisiones
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/04/evidence/unit-tests.log
     - id: contexto-btc-realtime
       descripcion: BTC/USDT solo lectura
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/04/evidence/ws-smoke.log
     - id: agregacion
       descripcion: Agregación a features persistentes
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/04/evidence/ws-smoke.log
     gate_fase:
-      estado: pending
-      solicitado: null
-      resuelto: null
+      estado: approved
+      solicitado: '2026-08-23'
+      resuelto: '2026-08-23'
+      comentario: UAT APPROVED por usuario vía OpenCode
   '05':
     titulo: Feature Engine & Market State
     estado: pending
@@ -1053,6 +1062,50 @@ time_log:
   detalle: ''
 - fecha: '2026-08-23'
   fase: '03'
+  evento: gate_approved
+  detalle: UAT APPROVED por usuario vía OpenCode
+- fecha: '2026-08-23'
+  fase: '04'
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-08-23'
+  fase: '04'
+  evento: done
+  detalle: websocket-produccion
+- fecha: '2026-08-23'
+  fase: '04'
+  evento: done
+  detalle: candles-tiempo-real
+- fecha: '2026-08-23'
+  fase: '04'
+  evento: done
+  detalle: order-book-local
+- fecha: '2026-08-23'
+  fase: '04'
+  evento: done
+  detalle: snapshots-deltas
+- fecha: '2026-08-23'
+  fase: '04'
+  evento: done
+  detalle: reconexion-automatica
+- fecha: '2026-08-23'
+  fase: '04'
+  evento: done
+  detalle: deteccion-stale
+- fecha: '2026-08-23'
+  fase: '04'
+  evento: done
+  detalle: contexto-btc-realtime
+- fecha: '2026-08-23'
+  fase: '04'
+  evento: done
+  detalle: agregacion
+- fecha: '2026-08-23'
+  fase: '04'
+  evento: gate_requested
+  detalle: ''
+- fecha: '2026-08-23'
+  fase: '04'
   evento: gate_approved
   detalle: UAT APPROVED por usuario vía OpenCode
 blockers: []

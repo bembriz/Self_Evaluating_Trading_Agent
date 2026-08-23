@@ -18,8 +18,23 @@ def test_main_returns_zero(capsys: CaptureFixture[str]) -> None:
     assert __version__ in out
 
 
-@pytest.mark.parametrize("command", ["download", "verify"])
+@pytest.mark.parametrize("command", ["download", "verify", "market-worker"])
 def test_subcommand_help_exits_zero(command: str) -> None:
     with pytest.raises(SystemExit) as exc:
         main([command, "--help"])
     assert exc.value.code == 0
+
+
+@pytest.mark.parametrize(
+    ("command", "target"),
+    [
+        ("download", "interfaces.cli.download.download"),
+        ("verify", "interfaces.cli.download.verify"),
+        ("market-worker", "interfaces.cli.market_worker.market_worker"),
+    ],
+)
+def test_subcommand_dispatch_returns_zero(
+    monkeypatch: pytest.MonkeyPatch, command: str, target: str
+) -> None:
+    monkeypatch.setattr(target, lambda argv: 0)
+    assert main([command]) == 0

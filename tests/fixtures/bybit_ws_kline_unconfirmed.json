@@ -1,0 +1,20 @@
+{
+  "type": "snapshot",
+  "topic": "kline.15.ETHUSDT",
+  "data": [
+    {
+      "start": 1787527800000,
+      "end": 1787528699999,
+      "interval": "15",
+      "open": "2458.58",
+      "close": "2470.49",
+      "high": "2471.65",
+      "low": "2457.95",
+      "volume": "813.3763",
+      "turnover": "2005351.8010932",
+      "confirm": false,
+      "timestamp": 1787527918818
+    }
+  ],
+  "ts": 1787527918818
+}

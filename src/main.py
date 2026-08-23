@@ -9,18 +9,22 @@ from version import __version__
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Imprime la identidad o despacha subcomandos (download/verify)."""
+    """Imprime la identidad o despacha subcomandos (download/verify/market-worker)."""
     from interfaces.cli import download as cli
+    from interfaces.cli import market_worker as worker
 
     parser = argparse.ArgumentParser(prog="self-evaluating-trading-agent")
     sub = parser.add_subparsers(dest="command")
     sub.add_parser("download")
     sub.add_parser("verify")
+    sub.add_parser("market-worker")
     args, rest = parser.parse_known_args(argv if argv is not None else [])
     if args.command == "download":
         return cli.download(rest)
     if args.command == "verify":
         return cli.verify(rest)
+    if args.command == "market-worker":
+        return worker.market_worker(rest)
     print(f"self-evaluating-trading-agent {__version__}")
     return 0
 

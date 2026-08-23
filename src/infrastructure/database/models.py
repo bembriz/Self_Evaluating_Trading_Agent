@@ -75,3 +75,26 @@ class DatasetManifestRecord(Base):
     download_command: Mapped[str] = mapped_column(Text, nullable=False)
     files: Mapped[list[dict[str, Any]]] = mapped_column(JSONB, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
+
+
+class OrderBookFeatureWindow(Base):
+    """Features agregadas del order book (PRD §55 orderbook_feature_windows)."""
+
+    __tablename__ = "orderbook_feature_windows"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    symbol: Mapped[str] = mapped_column(String(16), nullable=False)
+    window_start_ms: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    window_end_ms: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    best_bid: Mapped[float | None] = mapped_column(Float, nullable=True)
+    best_ask: Mapped[float | None] = mapped_column(Float, nullable=True)
+    spread: Mapped[float | None] = mapped_column(Float, nullable=True)
+    spread_pct: Mapped[float | None] = mapped_column(Float, nullable=True)
+    bid_depth: Mapped[float] = mapped_column(Float, nullable=False)
+    ask_depth: Mapped[float] = mapped_column(Float, nullable=False)
+    imbalance: Mapped[float | None] = mapped_column(Float, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
+
+    __table_args__ = (
+        Index("ix_orderbook_feature_windows_symbol_start", "symbol", "window_start_ms"),
+    )

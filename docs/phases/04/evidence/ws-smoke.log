@@ -1,0 +1,6 @@
+# evidencia: ws-smoke
+fecha: 2026-08-23T17:51:56-06:00
+fase: 04
+comando: bash -c POSTGRES_PASSWORD=trading uv run python -m main market-worker --symbols ETHUSDT BTCUSDT --timeframes 15m 1h --seconds 15
+[market-worker] health final: healthy
+exit=0

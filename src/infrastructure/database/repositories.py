@@ -11,9 +11,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from domain.market.candle import Candle, Timeframe
 from domain.market.dataset import CandleFileEntry, DatasetManifest
+from domain.market.features import OrderBookFeatureSnapshot
 from infrastructure.database.models import (
     DatasetManifestRecord,
     MarketCandle,
+    OrderBookFeatureWindow,
     SystemState,
 )
 
@@ -151,3 +153,27 @@ class SqlAlchemyDatasetManifestRepository:
             download_command=row.download_command,
             files=tuple(CandleFileEntry.from_dict(f) for f in row.files),
         )
+
+
+class SqlAlchemyOrderBookFeatureRepository:
+    """Implementación de OrderBookFeatureRepository (insert de ventanas de features)."""
+
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def insert(self, feature: OrderBookFeatureSnapshot) -> None:
+        self._session.add(
+            OrderBookFeatureWindow(
+                symbol=feature.symbol,
+                window_start_ms=feature.window_start_ms,
+                window_end_ms=feature.window_end_ms,
+                best_bid=feature.best_bid,
+                best_ask=feature.best_ask,
+                spread=feature.spread,
+                spread_pct=feature.spread_pct,
+                bid_depth=feature.bid_depth,
+                ask_depth=feature.ask_depth,
+                imbalance=feature.imbalance,
+            )
+        )
+        await self._session.flush()

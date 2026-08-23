@@ -1,0 +1,5 @@
+- `2026-08-23T17:51:41-06:00` **lint** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/04/evidence/lint.log
+- `2026-08-23T17:51:42-06:00` **typing** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/04/evidence/typing.log
+- `2026-08-23T17:51:42-06:00` **format** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/04/evidence/format.log
+- `2026-08-23T17:51:51-06:00` **unit-tests** → `uv run pytest --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/04/evidence/unit-tests.log
+- `2026-08-23T17:52:22-06:00` **ws-smoke** → `bash -c POSTGRES_PASSWORD=trading uv run python -m main market-worker --symbols ETHUSDT BTCUSDT --timeframes 15m 1h --seconds 15` · exit=`0` · artifact: docs/phases/04/evidence/ws-smoke.log

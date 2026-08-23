@@ -39,6 +39,11 @@ class Settings(BaseSettings):
     bybit_request_timeout: float = 10.0
     dataset_dir: str = "datasets"
 
+    bybit_ws_url: str = "wss://stream.bybit.com/v5/public/spot"
+    bybit_orderbook_depth: int = 50
+    stale_timeout_seconds: float = 10.0
+    feature_window_seconds: int = 5
+
     @classmethod
     def settings_customise_sources(
         cls,
