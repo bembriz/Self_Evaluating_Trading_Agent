@@ -1,0 +1,6 @@
+# evidencia: push-inicial
+fecha: 2026-08-22T15:31:22-06:00
+fase: 00
+comando: git log --oneline -1
+8db96e2 chore(governance): bootstrap agentic harness — Phase 00 APPROVED
+exit=0

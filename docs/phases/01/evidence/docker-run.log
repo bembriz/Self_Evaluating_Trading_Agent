@@ -1,0 +1,6 @@
+# evidencia: docker-run
+fecha: 2026-08-23T09:03:17-06:00
+fase: 01
+comando: sudo docker run --rm self-evaluating-trading-agent:dev
+self-evaluating-trading-agent 0.1.0
+exit=0

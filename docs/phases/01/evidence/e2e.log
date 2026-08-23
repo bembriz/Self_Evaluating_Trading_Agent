@@ -1,0 +1,44 @@
+# evidencia: e2e
+fecha: 2026-08-23T09:04:54-06:00
+fase: 01
+comando: bash -c set -e; echo "== clean-checkout snapshot: git write-tree + git archive (tree c025e8b040031a7c2ad6802584246b429ed050f2) =="; echo "== E2E (PRD Fase 01): clone -> uv sync --frozen -> tests =="; cd /tmp/opencode/phase01-e2e.QNErwC && uv sync --frozen && uv run pytest --cov=src --cov-branch --cov-fail-under=90
+== clean-checkout snapshot: git write-tree + git archive (tree c025e8b040031a7c2ad6802584246b429ed050f2) ==
+== E2E (PRD Fase 01): clone -> uv sync --frozen -> tests ==
+Checked 49 packages in 0.86ms
+..                                                                       [100%]
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                                           Stmts   Miss Branch BrPart  Cover   Missing
+------------------------------------------------------------------------------------------
+src/application/__init__.py                        0      0      0      0   100%
+src/application/commands/__init__.py               0      0      0      0   100%
+src/application/ports/__init__.py                  0      0      0      0   100%
+src/application/queries/__init__.py                0      0      0      0   100%
+src/application/services/__init__.py               0      0      0      0   100%
+src/domain/__init__.py                             0      0      0      0   100%
+src/domain/evaluation/__init__.py                  0      0      0      0   100%
+src/domain/experiments/__init__.py                 0      0      0      0   100%
+src/domain/market/__init__.py                      0      0      0      0   100%
+src/domain/memory/__init__.py                      0      0      0      0   100%
+src/domain/portfolio/__init__.py                   0      0      0      0   100%
+src/domain/risk/__init__.py                        0      0      0      0   100%
+src/domain/trading/__init__.py                     0      0      0      0   100%
+src/infrastructure/__init__.py                     0      0      0      0   100%
+src/infrastructure/bybit/__init__.py               0      0      0      0   100%
+src/infrastructure/database/__init__.py            0      0      0      0   100%
+src/infrastructure/embeddings/__init__.py          0      0      0      0   100%
+src/infrastructure/execution/__init__.py           0      0      0      0   100%
+src/infrastructure/llm/__init__.py                 0      0      0      0   100%
+src/infrastructure/observability/__init__.py       0      0      0      0   100%
+src/interfaces/__init__.py                         0      0      0      0   100%
+src/interfaces/api/__init__.py                     0      0      0      0   100%
+src/interfaces/cli/__init__.py                     0      0      0      0   100%
+src/interfaces/web/__init__.py                     0      0      0      0   100%
+src/main.py                                        6      0      0      0   100%
+src/version.py                                     1      0      0      0   100%
+------------------------------------------------------------------------------------------
+TOTAL                                              7      0      0      0   100%
+Required test coverage of 90% reached. Total coverage: 100.00%
+2 passed in 0.14s
+exit=0

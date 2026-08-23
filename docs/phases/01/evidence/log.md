@@ -1,0 +1,15 @@
+- `2026-08-23T08:58:43-06:00` **lint** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/01/evidence/lint.log
+- `2026-08-23T08:58:43-06:00` **format** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/01/evidence/format.log
+- `2026-08-23T08:59:11-06:00` **typing** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/01/evidence/typing.log
+- `2026-08-23T09:00:23-06:00` **unit-tests** → `uv run pytest --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/01/evidence/unit-tests.log
+- `2026-08-23T09:00:23-06:00` **lint** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/01/evidence/lint.log
+- `2026-08-23T09:00:23-06:00` **format** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/01/evidence/format.log
+- `2026-08-23T09:00:24-06:00` **typing** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/01/evidence/typing.log
+- `2026-08-23T09:01:49-06:00` **pre-commit** → `uv run pre-commit run --all-files` · exit=`0` · artifact: docs/phases/01/evidence/pre-commit.log
+- `2026-08-23T09:03:17-06:00` **docker-build** → `sudo docker build -t self-evaluating-trading-agent:dev .` · exit=`0` · artifact: docs/phases/01/evidence/docker-build.log
+- `2026-08-23T09:03:18-06:00` **docker-run** → `sudo docker run --rm self-evaluating-trading-agent:dev` · exit=`0` · artifact: docs/phases/01/evidence/docker-run.log
+- `2026-08-23T09:03:20-06:00` **pip-audit** → `uv run pip-audit` · exit=`0` · artifact: docs/phases/01/evidence/pip-audit.log
+- `2026-08-23T09:04:55-06:00` **e2e** → `bash -c set -e; echo "== clean-checkout snapshot: git write-tree + git archive (tree c025e8b040031a7c2ad6802584246b429ed050f2) =="; echo "== E2E (PRD Fase 01): clone -> uv sync --frozen -> tests =="; cd /tmp/opencode/phase01-e2e.QNErwC && uv sync --frozen && uv run pytest --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/01/evidence/e2e.log
+- `2026-08-23T09:05:19-06:00` **structure** → `bash -c find src -type f | sort` · exit=`0` · artifact: docs/phases/01/evidence/structure.log
+- `2026-08-23T09:05:19-06:00` **uv-lock** → `uv lock --check` · exit=`0` · artifact: docs/phases/01/evidence/uv-lock.log
+- `2026-08-23T09:05:22-06:00` **ci-local** → `bash -c set -e; echo "== secuencia CI (quality job) validada localmente =="; uv sync --frozen && uv run ruff check . && uv run ruff format --check . && uv run mypy src tests && uv run pytest --cov=src --cov-branch --cov-fail-under=90 && uv run pip-audit` · exit=`0` · artifact: docs/phases/01/evidence/ci-local.log

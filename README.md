@@ -8,8 +8,9 @@ Sistema de trading cuantitativo, observable, reproducible y auditable donde un *
 
 | Fase | Título | Estado |
 |---|---|---|
-| 00 | Governance & Agent Bootstrap (**arnés**) | in_progress |
-| 01–18 | Python Foundation → Cloud Evaluation | pending |
+| 00 | Governance & Agent Bootstrap (**arnés**) | done |
+| 01 | Python Project Foundation | in_progress |
+| 02–18 | PostgreSQL Skeleton → Cloud Evaluation | pending |
 
 Progreso objetivo y ETA:
 
@@ -34,6 +35,18 @@ Reglas de oro: nada se instala ni se commitea sin autorización explícita; ning
 ```text
 AGENTS.md            # Orquestador del agente (leer primero)
 opencode.json        # Permission rules de enforcement
+pyproject.toml       # Config del producto (uv, ruff, mypy, pytest, coverage)
+uv.lock              # Lockfile versionado
+Dockerfile           # Imagen reproducible (python:3.12-slim)
+.github/workflows/   # CI (quality + security + docker)
+src/                 # Código del producto (layout hexagonal)
+│   ├── domain/      #   entidades y reglas puras (market, trading, portfolio, risk, ...)
+│   ├── application/ #   servicios y puertos
+│   ├── infrastructure/  # adaptadores (bybit, database, llm, ...)
+│   ├── interfaces/  #   api, web, cli
+│   ├── main.py      #   entry point
+│   └── version.py   #   versión única
+tests/               # Suite del producto (cobertura ≥90%)
 .opencode/skills/    # Catálogo de skills del proyecto
 harness/
 ├── scripts/         # progress / gate_check / evidence / gen_report / gen_pdf / new_phase
@@ -47,6 +60,24 @@ docs/
 ├── uat/             # Instructivos UAT por fase
 └── adr/             # Decisiones arquitectónicas
 ```
+
+## Desarrollo del producto
+
+Python 3.12 gestionado con `uv`. El código vive en `src/` (layout hexagonal: `domain`, `application`, `infrastructure`, `interfaces`) y los tests en `tests/`.
+
+```bash
+uv sync                                                    # instalar dependencias + entorno (.venv)
+uv run pytest --cov=src --cov-branch --cov-fail-under=90   # tests + cobertura ≥90%
+uv run ruff check .                                        # lint
+uv run ruff format --check .                               # formato
+uv run mypy src tests                                      # typing (strict)
+uv run pre-commit install                                  # hooks git (una vez)
+uv run pip-audit                                           # auditoría de CVEs
+docker build -t self-evaluating-trading-agent:dev .        # imagen reproducible
+docker run --rm self-evaluating-trading-agent:dev          # ejecutar el entry point
+```
+
+CI (GitHub Actions, `.github/workflows/ci.yml`) ejecuta la misma secuencia (`uv sync --frozen` + lint + typing + tests/coverage + secret scanning + dependency audit + build de imagen) y queda activa desde el primer push autorizado a `main`.
 
 ## Comandos del arnés
 

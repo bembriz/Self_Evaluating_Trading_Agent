@@ -1,0 +1,37 @@
+# evidencia: structure
+fecha: 2026-08-23T09:05:19-06:00
+fase: 01
+comando: bash -c find src -type f | sort
+src/application/commands/__init__.py
+src/application/__init__.py
+src/application/ports/__init__.py
+src/application/__pycache__/__init__.cpython-312.pyc
+src/application/queries/__init__.py
+src/application/services/__init__.py
+src/domain/evaluation/__init__.py
+src/domain/experiments/__init__.py
+src/domain/__init__.py
+src/domain/market/__init__.py
+src/domain/memory/__init__.py
+src/domain/portfolio/__init__.py
+src/domain/__pycache__/__init__.cpython-312.pyc
+src/domain/risk/__init__.py
+src/domain/trading/__init__.py
+src/infrastructure/bybit/__init__.py
+src/infrastructure/database/__init__.py
+src/infrastructure/embeddings/__init__.py
+src/infrastructure/execution/__init__.py
+src/infrastructure/__init__.py
+src/infrastructure/llm/__init__.py
+src/infrastructure/observability/__init__.py
+src/infrastructure/__pycache__/__init__.cpython-312.pyc
+src/interfaces/api/__init__.py
+src/interfaces/cli/__init__.py
+src/interfaces/__init__.py
+src/interfaces/__pycache__/__init__.cpython-312.pyc
+src/interfaces/web/__init__.py
+src/main.py
+src/__pycache__/main.cpython-312.pyc
+src/__pycache__/version.cpython-312.pyc
+src/version.py
+exit=0

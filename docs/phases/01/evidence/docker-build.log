@@ -1,0 +1,45 @@
+# evidencia: docker-build
+fecha: 2026-08-23T09:03:16-06:00
+fase: 01
+comando: sudo docker build -t self-evaluating-trading-agent:dev .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 226B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.12-slim
+#2 DONE 0.2s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 220B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 2.29kB 0.0s done
+#4 DONE 0.0s
+
+#5 [1/4] FROM docker.io/library/python:3.12-slim@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a
+#5 resolve docker.io/library/python:3.12-slim@sha256:2c941e860699f878900b0edc2403613c234d4b32eda3cc9fa7036991a2a63c4a 0.1s done
+#5 DONE 0.1s
+
+#6 [3/4] COPY src ./src
+#6 CACHED
+
+#7 [2/4] WORKDIR /app
+#7 CACHED
+
+#8 [4/4] COPY pyproject.toml ./
+#8 CACHED
+
+#9 exporting to image
+#9 exporting layers done
+#9 exporting manifest sha256:8944b092ae9e7dee609dfaca6cc42e94620d363ec3c8588a350d7684a2e19195 done
+#9 exporting config sha256:d8a67b9c588b4e02dfede6dadc54e20bc0cc635c4ae67c84a17f675a1ecab9f1 done
+#9 exporting attestation manifest sha256:4542ab0fe9602800f4503caba3b3d3012656149ab296301839a5f63c1f5ab9f2 0.0s done
+#9 exporting manifest list sha256:213021ee6dd8eec52f5a4f24a90b9fab3a8d409668ef9b5ff2ca89cbac75d0c5 0.0s done
+#9 naming to docker.io/library/self-evaluating-trading-agent:dev
+#9 naming to docker.io/library/self-evaluating-trading-agent:dev done
+#9 unpacking to docker.io/library/self-evaluating-trading-agent:dev 0.0s done
+#9 DONE 0.2s
+exit=0

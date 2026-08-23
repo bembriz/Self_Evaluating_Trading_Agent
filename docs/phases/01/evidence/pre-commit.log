@@ -1,0 +1,13 @@
+# evidencia: pre-commit
+fecha: 2026-08-23T09:01:48-06:00
+fase: 01
+comando: uv run pre-commit run --all-files
+ruff (legacy alias)......................................................Passed
+ruff format..............................................................Passed
+trim trailing whitespace.................................................Passed
+fix end of files.........................................................Passed
+check yaml...............................................................Passed
+check for added large files..............................................Passed
+detect private key.......................................................Passed
+mypy.....................................................................Passed
+exit=0
