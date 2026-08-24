@@ -11,7 +11,9 @@ Sistema de trading cuantitativo, observable, reproducible y auditable donde un *
 | 00 | Governance & Agent Bootstrap (**arnés**) | done |
 | 01 | Python Project Foundation | done |
 | 02 | PostgreSQL & Application Skeleton | done |
-| 03–18 | Historical Market Data → Cloud Evaluation | pending |
+| 03 | Historical Market Data | done |
+| 04 | Real-Time Market Data | done |
+| 05–18 | Feature Engine → Cloud Evaluation | pending |
 
 Progreso objetivo y ETA:
 
