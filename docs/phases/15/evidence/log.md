@@ -1,0 +1,5 @@
+- `2026-08-24T09:00:30-06:00` **release-check** → `python3 harness/scripts/release_check.py` · exit=`0` · artifact: docs/phases/15/evidence/release-check.log
+- `2026-08-24T09:00:33-06:00` **pip-audit** → `uv run pip-audit --desc off` · exit=`0` · artifact: docs/phases/15/evidence/pip-audit.log
+- `2026-08-24T09:03:02-06:00` **lint** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/15/evidence/lint.log
+- `2026-08-24T09:03:02-06:00` **format-check** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/15/evidence/format-check.log
+- `2026-08-24T09:03:03-06:00` **mypy** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/15/evidence/mypy.log

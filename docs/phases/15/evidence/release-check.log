@@ -1,0 +1,16 @@
+# evidencia: release-check
+fecha: 2026-08-24T08:59:05-06:00
+fase: 15
+comando: python3 harness/scripts/release_check.py
+PENDING  BACKTEST: dataset congelado presente pero falta la corrida oficial de backtest con métricas §45 registrada com
+PENDING  REPLAY: replay determinista reproducible pendiente de corrida oficial
+PENDING  PAPER: paper trading operativo (Paper Engine Fase 10) pero sin sesión de paper evaluada con fees/slippage/c
+PENDING  TESTNET: lifecycle de órdenes implementado (Fase 12) pero no validado contra Testnet real (requiere BYBIT_API
+PASS     OBSERVABILITY: métricas y dashboard verificados (-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings
+PASS     SECURITY: pip-audit limpio; 0 vulnerabilidades; .env fuera del repo; hooks anti-secretos activos
+PASS     CI: equivalente local del pipeline verde (ruff+format+mypy+pytest+coverage>=90%); CI remoto en GitHub Ac
+PENDING  UAT: UAT de la fase 15 pendiente de decisión humana
+
+Reporte: /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/docs/phases/15/LOCAL_RELEASE_REPORT.md
+VEREDICTO: NOT_ACCEPTED
+exit=0

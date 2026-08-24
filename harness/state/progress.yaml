@@ -819,46 +819,57 @@ phases:
       comentario: ''
   '15':
     titulo: Local Release Candidate
-    estado: pending
-    iniciada: null
+    estado: in_progress
+    iniciada: '2026-08-24'
     cerrada: null
     entregables:
     - id: gate-backtest-pass
       descripcion: BACKTEST=PASS verificado
-      estado: pending
+      estado: blocked
       evidencia: []
+      motivo_bloqueo: Requiere corrida oficial de backtest sobre dataset congelado
+        con métricas §45 registradas como evidencia
     - id: gate-replay-pass
       descripcion: REPLAY=PASS verificado
-      estado: pending
+      estado: blocked
       evidencia: []
+      motivo_bloqueo: Requiere replay determinista reproducible ejecutado y registrado
     - id: gate-paper-pass
       descripcion: PAPER=PASS verificado
-      estado: pending
+      estado: blocked
       evidencia: []
+      motivo_bloqueo: Requiere sesión de paper trading evaluada con fees/slippage/coste
+        LLM
     - id: gate-testnet-pass
       descripcion: TESTNET=PASS verificado
-      estado: pending
+      estado: blocked
       evidencia: []
+      motivo_bloqueo: Requiere BYBIT_API_KEY/BYBIT_API_SECRET de testnet para validar
+        lifecycle de órdenes real
     - id: gate-observability-pass
       descripcion: OBSERVABILITY=PASS verificado
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/15/evidence/log.md
     - id: gate-security-pass
       descripcion: SECURITY=PASS verificado
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/15/evidence/log.md
     - id: gate-ci-pass
       descripcion: CI=PASS verificado
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/15/evidence/log.md
     - id: gate-uat-pass
       descripcion: UAT=PASS verificado
       estado: pending
       evidencia: []
     - id: local-release-report-md-pdf
       descripcion: LOCAL_RELEASE_REPORT MD+PDF
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/15/evidence/log.md
     gate_fase:
       estado: pending
       solicitado: null
@@ -1626,4 +1637,44 @@ time_log:
   fase: '14'
   evento: gate_approved
   detalle: ''
+- fecha: '2026-08-24'
+  fase: '15'
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-08-24'
+  fase: '15'
+  evento: done
+  detalle: gate-observability-pass
+- fecha: '2026-08-24'
+  fase: '15'
+  evento: done
+  detalle: gate-security-pass
+- fecha: '2026-08-24'
+  fase: '15'
+  evento: done
+  detalle: gate-ci-pass
+- fecha: '2026-08-24'
+  fase: '15'
+  evento: done
+  detalle: local-release-report-md-pdf
+- fecha: '2026-08-24'
+  fase: '15'
+  evento: blocked
+  detalle: 'gate-backtest-pass: Requiere corrida oficial de backtest sobre dataset
+    congelado con métricas §45 registradas como evidencia'
+- fecha: '2026-08-24'
+  fase: '15'
+  evento: blocked
+  detalle: 'gate-replay-pass: Requiere replay determinista reproducible ejecutado
+    y registrado'
+- fecha: '2026-08-24'
+  fase: '15'
+  evento: blocked
+  detalle: 'gate-paper-pass: Requiere sesión de paper trading evaluada con fees/slippage/coste
+    LLM'
+- fecha: '2026-08-24'
+  fase: '15'
+  evento: blocked
+  detalle: 'gate-testnet-pass: Requiere BYBIT_API_KEY/BYBIT_API_SECRET de testnet
+    para validar lifecycle de órdenes real'
 blockers: []
