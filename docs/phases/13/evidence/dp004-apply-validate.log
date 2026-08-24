@@ -1,0 +1,6 @@
+# evidencia: dp004-apply-validate
+fecha: 2026-08-24T07:25:37-06:00
+fase: 13
+comando: bash -c uv run python -c "import jinja2, prometheus_client, opentelemetry.sdk; print(\"imports OK\")"
+imports OK
+exit=0

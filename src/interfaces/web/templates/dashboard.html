@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Dashboard — {{ view.strategy.get('version', '—') }} · LLM {{ view.llm_model.get('name', '—') }}</h1>
+<div hx-get="/dashboard/summary" hx-trigger="load, every 5s" hx-swap="innerHTML">
+  <p>Cargando…</p>
+</div>
+{% endblock %}

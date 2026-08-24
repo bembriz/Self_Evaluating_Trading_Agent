@@ -1,0 +1,5 @@
+- `2026-08-24T07:25:38-06:00` **dp004-apply-validate** → `bash -c uv run python -c "import jinja2, prometheus_client, opentelemetry.sdk; print(\"imports OK\")"` · exit=`0` · artifact: docs/phases/13/evidence/dp004-apply-validate.log
+- `2026-08-24T07:44:43-06:00` **tests-unit** → `uv run pytest tests --ignore=tests/integration --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/13/evidence/tests-unit.log
+- `2026-08-24T07:44:43-06:00` **lint** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/13/evidence/lint.log
+- `2026-08-24T07:44:43-06:00` **format-check** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/13/evidence/format-check.log
+- `2026-08-24T07:44:44-06:00` **mypy** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/13/evidence/mypy.log

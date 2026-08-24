@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>SETA — Self-Evaluating Trading Agent</title>
+  <script src="/static/htmx.min.js"></script>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 2rem; background: #0f1115; color: #e6e6e6; }
+    table { border-collapse: collapse; width: 100%; max-width: 900px; }
+    td, th { border: 1px solid #333; padding: .4rem .6rem; text-align: left; }
+    th { background: #1a1d24; }
+    .badge { padding: .1rem .5rem; border-radius: .3rem; font-weight: 600; }
+    .ok { background: #143d1f; } .warn { background: #4d3a12; } .bad { background: #4d1212; }
+    nav a { color: #7ab7ff; margin-right: 1rem; }
+  </style>
+</head>
+<body>
+  <nav><a href="/dashboard">Dashboard</a><a href="/audit">Auditoría</a><a href="/metrics">Metrics</a></nav>
+  {% block content %}{% endblock %}
+</body>
+</html>

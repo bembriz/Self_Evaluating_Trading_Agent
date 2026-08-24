@@ -56,6 +56,9 @@ class Settings(BaseSettings):
     llm_monthly_budget_usd: float = 50.0
     prompts_dir: str = "prompts"
 
+    otel_enabled: bool = False
+    otel_endpoint: str = ""
+
     @classmethod
     def settings_customise_sources(
         cls,

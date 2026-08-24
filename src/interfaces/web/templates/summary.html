@@ -1,0 +1,23 @@
+<table>
+  <tr><th>Mercado</th><th>Valor</th></tr>
+  <tr><td>Precio ETH</td><td>{{ view.prices.get('ETHUSDT', '—') }}</td></tr>
+  <tr><td>Precio BTC</td><td>{{ view.prices.get('BTCUSDT', '—') }}</td></tr>
+  <tr><td>Order book</td><td>{{ view.orderbook.get('state', '—') }}</td></tr>
+  <tr><td>Salud stream</td><td>{{ view.health.get('state', '—') }}</td></tr>
+  <tr><td>Conexión Bybit</td><td>{{ view.bybit.get('state', '—') }}</td></tr>
+  <tr><td>Régimen</td><td>{{ view.regime.get('current', '—') }}</td></tr>
+  <tr><th>Decisión actual</th><th></th></tr>
+  <tr><td>Acción / confianza / intensidad</td>
+      <td>{{ view.decision.action }} · {{ view.decision.confidence }} · {{ view.decision.intensity }}</td></tr>
+  <tr><th>Riesgo</th><th></th></tr>
+  <tr><td>Posición</td><td>{{ view.position.get('qty', '—') }}</td></tr>
+  <tr><td>PnL / Drawdown</td><td>{{ view.pnl.get('net_usd', '—') }} / {{ view.drawdown.get('current', '—') }}</td></tr>
+  <tr><td>Trades / Rechazadas por riesgo</td><td>{{ view.trades_count.get('total', '—') }} / {{ view.risk_rejected.get('total', '—') }}</td></tr>
+  <tr><td>Kill switch</td><td>{% if view.kill_switch.active == true %}<span class="badge bad">ACTIVE</span>{% elif view.kill_switch.active == false %}<span class="badge ok">inactive</span>{% else %}{{ view.kill_switch.active }}{% endif %}</td></tr>
+  <tr><td>LIVE readiness</td><td>{{ view.live_readiness.status }}</td></tr>
+  <tr><th>Costos LLM</th><td>{{ view.llm_cost_usd.get('total_usd', '—') }} USD</td></tr>
+  <tr><th>Reflexiones recientes</th>
+      <td>{% for r in view.reflections[:3] %}{{ r }}<br>{% else %}—{% endfor %}</td></tr>
+  <tr><th>Experimentos</th><td>{% for e in view.experiments[:3] %}{{ e }}<br>{% else %}—{% endfor %}</td></tr>
+</table>
+<p><small>HTMX polling cada 5s{% if not view.db_available %} · BD no disponible (valores en espera){% endif %}</small></p>

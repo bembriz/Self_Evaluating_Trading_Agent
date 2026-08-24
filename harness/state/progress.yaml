@@ -702,46 +702,55 @@ phases:
       comentario: ''
   '13':
     titulo: Dashboard & Observability
-    estado: pending
-    iniciada: null
-    cerrada: null
+    estado: done
+    iniciada: '2026-08-24'
+    cerrada: '2026-08-24'
     entregables:
     - id: vistas-jinja2
       descripcion: Vistas Jinja2
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/13/evidence/log.md
     - id: integracion-htmx
       descripcion: HTMX polling updates
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/13/evidence/log.md
     - id: dashboard-trading
       descripcion: Dashboard PRD §52 completo
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/13/evidence/log.md
     - id: opentelemetry
       descripcion: OTel tracing integrado
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/13/evidence/log.md
     - id: prometheus
       descripcion: Prometheus métricas técnicas §62
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/13/evidence/log.md
     - id: grafana
       descripcion: Grafana dashboards
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/13/evidence/log.md
     - id: metricas-tecnicas
       descripcion: Latencias/errores/reconnects expuestos
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/13/evidence/log.md
     - id: audit-ui
       descripcion: UI eventos auditoría
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/13/evidence/log.md
     gate_fase:
-      estado: pending
-      solicitado: null
-      resuelto: null
+      estado: approved
+      solicitado: '2026-08-24'
+      resuelto: '2026-08-24'
+      comentario: ''
   '14':
     titulo: Robustness Evaluation
     estado: pending
@@ -1503,6 +1512,50 @@ time_log:
   detalle: ''
 - fecha: '2026-08-24'
   fase: '12'
+  evento: gate_approved
+  detalle: ''
+- fecha: '2026-08-24'
+  fase: '13'
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-08-24'
+  fase: '13'
+  evento: done
+  detalle: vistas-jinja2
+- fecha: '2026-08-24'
+  fase: '13'
+  evento: done
+  detalle: integracion-htmx
+- fecha: '2026-08-24'
+  fase: '13'
+  evento: done
+  detalle: dashboard-trading
+- fecha: '2026-08-24'
+  fase: '13'
+  evento: done
+  detalle: opentelemetry
+- fecha: '2026-08-24'
+  fase: '13'
+  evento: done
+  detalle: prometheus
+- fecha: '2026-08-24'
+  fase: '13'
+  evento: done
+  detalle: grafana
+- fecha: '2026-08-24'
+  fase: '13'
+  evento: done
+  detalle: metricas-tecnicas
+- fecha: '2026-08-24'
+  fase: '13'
+  evento: done
+  detalle: audit-ui
+- fecha: '2026-08-24'
+  fase: '13'
+  evento: gate_requested
+  detalle: ''
+- fecha: '2026-08-24'
+  fase: '13'
   evento: gate_approved
   detalle: ''
 blockers: []

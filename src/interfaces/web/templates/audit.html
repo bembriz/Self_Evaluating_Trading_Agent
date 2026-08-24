@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Auditoría</h1>
+<table>
+  <tr><th>Timestamp (ms)</th><th>Evento</th><th>Detalle</th></tr>
+  {% for e in events %}
+  <tr><td>{{ e.ts_ms }}</td><td>{{ e.kind }}</td><td><code>{{ e.payload }}</code></td></tr>
+  {% else %}
+  <tr><td colspan="3">Sin eventos.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}
