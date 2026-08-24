@@ -656,42 +656,50 @@ phases:
       comentario: ''
   '12':
     titulo: Bybit Testnet
-    estado: pending
-    iniciada: null
-    cerrada: null
+    estado: done
+    iniciada: '2026-08-24'
+    cerrada: '2026-08-24'
     entregables:
     - id: autenticacion-testnet
       descripcion: Firma/auth API testnet
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/12/evidence/log.md
     - id: creacion-ordenes
       descripcion: Creación órdenes spot
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/12/evidence/log.md
     - id: cancelacion-ordenes
       descripcion: Cancelación órdenes
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/12/evidence/log.md
     - id: manejo-fills
       descripcion: Procesamiento fills
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/12/evidence/log.md
     - id: manejo-errores
       descripcion: Errores/rate limiting manejados
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/12/evidence/log.md
     - id: reconciliacion
       descripcion: Reconciliación estados órdenes
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/12/evidence/log.md
     - id: recuperacion-conexion
       descripcion: Recovery de desconexiones
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/12/evidence/log.md
     gate_fase:
-      estado: pending
-      solicitado: null
-      resuelto: null
+      estado: approved
+      solicitado: '2026-08-24'
+      resuelto: '2026-08-24'
+      comentario: ''
   '13':
     titulo: Dashboard & Observability
     estado: pending
@@ -1455,6 +1463,46 @@ time_log:
   detalle: ''
 - fecha: '2026-08-24'
   fase: '11'
+  evento: gate_approved
+  detalle: ''
+- fecha: '2026-08-24'
+  fase: '12'
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-08-24'
+  fase: '12'
+  evento: done
+  detalle: autenticacion-testnet
+- fecha: '2026-08-24'
+  fase: '12'
+  evento: done
+  detalle: creacion-ordenes
+- fecha: '2026-08-24'
+  fase: '12'
+  evento: done
+  detalle: cancelacion-ordenes
+- fecha: '2026-08-24'
+  fase: '12'
+  evento: done
+  detalle: manejo-fills
+- fecha: '2026-08-24'
+  fase: '12'
+  evento: done
+  detalle: manejo-errores
+- fecha: '2026-08-24'
+  fase: '12'
+  evento: done
+  detalle: reconciliacion
+- fecha: '2026-08-24'
+  fase: '12'
+  evento: done
+  detalle: recuperacion-conexion
+- fecha: '2026-08-24'
+  fase: '12'
+  evento: gate_requested
+  detalle: ''
+- fecha: '2026-08-24'
+  fase: '12'
   evento: gate_approved
   detalle: ''
 blockers: []
