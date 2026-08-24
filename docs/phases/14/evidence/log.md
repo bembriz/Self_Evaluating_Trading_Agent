@@ -1,0 +1,4 @@
+- `2026-08-24T08:28:03-06:00` **lint** → `uv run ruff check .` · exit=`1` · artifact: docs/phases/14/evidence/lint.log
+- `2026-08-24T08:28:03-06:00` **format-check** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/14/evidence/format-check.log
+- `2026-08-24T08:28:04-06:00` **mypy** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/14/evidence/mypy.log
+- `2026-08-24T08:29:05-06:00` **lint** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/14/evidence/lint.log

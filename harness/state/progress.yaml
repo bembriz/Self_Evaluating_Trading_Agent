@@ -753,58 +753,70 @@ phases:
       comentario: ''
   '14':
     titulo: Robustness Evaluation
-    estado: pending
-    iniciada: null
-    cerrada: null
+    estado: done
+    iniciada: '2026-08-24'
+    cerrada: '2026-08-24'
     entregables:
     - id: walk-forward-completo
       descripcion: Walk-forward integral
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/14/evidence/log.md
     - id: bootstrap
       descripcion: Bootstrap estadístico
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/14/evidence/log.md
     - id: monte-carlo
       descripcion: Monte Carlo secuencia trades
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/14/evidence/log.md
     - id: intervalos-confianza
       descripcion: Confidence intervals
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/14/evidence/log.md
     - id: sensibilidad-fees
       descripcion: Sensibilidad fees
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/14/evidence/log.md
     - id: sensibilidad-slippage
       descripcion: Sensibilidad slippage
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/14/evidence/log.md
     - id: sensibilidad-parametros
       descripcion: Sensibilidad parámetros
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/14/evidence/log.md
     - id: analisis-regimenes
       descripcion: Estabilidad ≥2 regímenes
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/14/evidence/log.md
     - id: comparacion-baselines
       descripcion: vs determinista+ML
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/14/evidence/log.md
     - id: comparacion-buyhold
       descripcion: vs Buy & Hold
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/14/evidence/log.md
     - id: protocolo-holdout
       descripcion: Holdout congelado respetado
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/14/evidence/log.md
     gate_fase:
-      estado: pending
-      solicitado: null
-      resuelto: null
+      estado: approved
+      solicitado: '2026-08-24'
+      resuelto: '2026-08-24'
+      comentario: ''
   '15':
     titulo: Local Release Candidate
     estado: pending
@@ -1556,6 +1568,62 @@ time_log:
   detalle: ''
 - fecha: '2026-08-24'
   fase: '13'
+  evento: gate_approved
+  detalle: ''
+- fecha: '2026-08-24'
+  fase: '14'
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-08-24'
+  fase: '14'
+  evento: done
+  detalle: walk-forward-completo
+- fecha: '2026-08-24'
+  fase: '14'
+  evento: done
+  detalle: bootstrap
+- fecha: '2026-08-24'
+  fase: '14'
+  evento: done
+  detalle: monte-carlo
+- fecha: '2026-08-24'
+  fase: '14'
+  evento: done
+  detalle: intervalos-confianza
+- fecha: '2026-08-24'
+  fase: '14'
+  evento: done
+  detalle: sensibilidad-fees
+- fecha: '2026-08-24'
+  fase: '14'
+  evento: done
+  detalle: sensibilidad-slippage
+- fecha: '2026-08-24'
+  fase: '14'
+  evento: done
+  detalle: sensibilidad-parametros
+- fecha: '2026-08-24'
+  fase: '14'
+  evento: done
+  detalle: analisis-regimenes
+- fecha: '2026-08-24'
+  fase: '14'
+  evento: done
+  detalle: comparacion-baselines
+- fecha: '2026-08-24'
+  fase: '14'
+  evento: done
+  detalle: comparacion-buyhold
+- fecha: '2026-08-24'
+  fase: '14'
+  evento: done
+  detalle: protocolo-holdout
+- fecha: '2026-08-24'
+  fase: '14'
+  evento: gate_requested
+  detalle: ''
+- fecha: '2026-08-24'
+  fase: '14'
   evento: gate_approved
   detalle: ''
 blockers: []
