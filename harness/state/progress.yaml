@@ -498,46 +498,55 @@ phases:
       comentario: ''
   09:
     titulo: Trading Memory / RAG
-    estado: pending
-    iniciada: null
-    cerrada: null
+    estado: done
+    iniciada: '2026-08-23'
+    cerrada: '2026-08-23'
     entregables:
     - id: esquema-pgvector
       descripcion: Tablas memoria + índice vectorial
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/09/evidence/log.md
     - id: contrato-embeddingprovider
       descripcion: Protocol EmbeddingProvider
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/09/evidence/log.md
     - id: embeddings-locales
       descripcion: e5-small local operativo
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/09/evidence/log.md
     - id: busqueda-similaridad
       descripcion: Recuperación top-k similar
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/09/evidence/log.md
     - id: filtrado-temporal
       descripcion: outcome_timestamp < decision_timestamp
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/09/evidence/log.md
     - id: almacenamiento-reflexiones
       descripcion: Reflexiones estructuradas persistidas
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/09/evidence/log.md
     - id: proteccion-leakage
       descripcion: Guards anti-leakage en recuperación
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/09/evidence/log.md
     - id: experimento-llm-vs-memoria
       descripcion: Comparativa LLM vs LLM+Memory
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/09/evidence/log.md
     gate_fase:
-      estado: pending
-      solicitado: null
-      resuelto: null
+      estado: approved
+      solicitado: '2026-08-23'
+      resuelto: '2026-08-23'
+      comentario: ''
   '10':
     titulo: Risk & Paper Execution
     estado: pending
@@ -1291,6 +1300,50 @@ time_log:
   detalle: ''
 - fecha: '2026-08-23'
   fase: 08
+  evento: gate_approved
+  detalle: ''
+- fecha: '2026-08-23'
+  fase: 09
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-08-23'
+  fase: 09
+  evento: done
+  detalle: esquema-pgvector
+- fecha: '2026-08-23'
+  fase: 09
+  evento: done
+  detalle: contrato-embeddingprovider
+- fecha: '2026-08-23'
+  fase: 09
+  evento: done
+  detalle: embeddings-locales
+- fecha: '2026-08-23'
+  fase: 09
+  evento: done
+  detalle: busqueda-similaridad
+- fecha: '2026-08-23'
+  fase: 09
+  evento: done
+  detalle: filtrado-temporal
+- fecha: '2026-08-23'
+  fase: 09
+  evento: done
+  detalle: almacenamiento-reflexiones
+- fecha: '2026-08-23'
+  fase: 09
+  evento: done
+  detalle: proteccion-leakage
+- fecha: '2026-08-23'
+  fase: 09
+  evento: done
+  detalle: experimento-llm-vs-memoria
+- fecha: '2026-08-23'
+  fase: 09
+  evento: gate_requested
+  detalle: ''
+- fecha: '2026-08-23'
+  fase: 09
   evento: gate_approved
   detalle: ''
 blockers: []

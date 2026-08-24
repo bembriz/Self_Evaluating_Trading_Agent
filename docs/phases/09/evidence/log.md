@@ -1,0 +1,6 @@
+- `2026-08-23T22:18:02-06:00` **dp003-apply-validate** → `bash -c uv pip list 2>/dev/null | grep -Ei "^(pgvector|fastembed) " ; uv run python -c "from pgvector.sqlalchemy import Vector; from fastembed import TextEmbedding; print(\"imports OK\")"` · exit=`0` · artifact: docs/phases/09/evidence/dp003-apply-validate.log
+- `2026-08-23T22:35:31-06:00` **tests-unit** → `uv run pytest tests --ignore=tests/integration --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/09/evidence/tests-unit.log
+- `2026-08-23T22:35:31-06:00` **lint** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/09/evidence/lint.log
+- `2026-08-23T22:35:32-06:00` **format-check** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/09/evidence/format-check.log
+- `2026-08-23T22:35:32-06:00` **mypy** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/09/evidence/mypy.log
+- `2026-08-23T22:35:46-06:00` **embeddings-locales-smoke** → `env RUN_MODEL_SMOKE=1 uv run pytest tests/test_fastembed_provider.py::test_smoke_real_model_downloads_and_embeds -v` · exit=`0` · artifact: docs/phases/09/evidence/embeddings-locales-smoke.log
