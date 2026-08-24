@@ -309,9 +309,9 @@ phases:
       comentario: UAT APPROVED por usuario vía OpenCode
   '05':
     titulo: Feature Engine & Market State
-    estado: in_progress
+    estado: done
     iniciada: '2026-08-23'
-    cerrada: null
+    cerrada: '2026-08-23'
     entregables:
     - id: indicadores-basicos
       descripcion: RSI/MACD/EMA/ATR/VWAP internos
@@ -344,51 +344,61 @@ phases:
       evidencia:
       - docs/phases/05/evidence/unit-tests.log
     gate_fase:
-      estado: pending
+      estado: approved
       solicitado: null
-      resuelto: null
+      resuelto: '2026-08-23'
+      comentario: UAT APPROVED por usuario vía OpenCode (4/4 pasos coinciden)
   '06':
     titulo: Backtesting & Deterministic Baseline
-    estado: pending
-    iniciada: null
-    cerrada: null
+    estado: done
+    iniciada: '2026-08-23'
+    cerrada: '2026-08-23'
     entregables:
     - id: backtest-event-driven
       descripcion: Motor backtest determinista
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/06/evidence/unit-tests.log
     - id: estrategia-baseline-determinista
       descripcion: Estrategia reglas versionada
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/06/evidence/unit-tests.log
     - id: portfolio-accounting
       descripcion: Contabilidad portfolio exacta
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/06/evidence/unit-tests.log
     - id: motor-fills
       descripcion: Simulación fills
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/06/evidence/unit-tests.log
     - id: modelo-fees
       descripcion: Fees reales Bybit parametrizados
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/06/evidence/unit-tests.log
     - id: modelo-slippage
       descripcion: Slippage conservador modelado
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/06/evidence/unit-tests.log
     - id: metricas-rendimiento
       descripcion: Métricas PRD §45 completas
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/06/evidence/unit-tests.log
     - id: benchmark-buyhold
       descripcion: Buy & Hold comparable
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/06/evidence/unit-tests.log
     gate_fase:
-      estado: pending
+      estado: approved
       solicitado: null
-      resuelto: null
+      resuelto: '2026-08-23'
+      comentario: UAT APPROVED por usuario vía OpenCode (demo + suite coinciden)
   '07':
     titulo: ML Baseline
     estado: pending
@@ -1142,4 +1152,48 @@ time_log:
   fase: '05'
   evento: done
   detalle: no-lookahead-tests
+- fecha: '2026-08-23'
+  fase: '05'
+  evento: gate_approved
+  detalle: UAT APPROVED por usuario vía OpenCode (4/4 pasos coinciden)
+- fecha: '2026-08-23'
+  fase: '06'
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-08-23'
+  fase: '06'
+  evento: done
+  detalle: backtest-event-driven
+- fecha: '2026-08-23'
+  fase: '06'
+  evento: done
+  detalle: estrategia-baseline-determinista
+- fecha: '2026-08-23'
+  fase: '06'
+  evento: done
+  detalle: portfolio-accounting
+- fecha: '2026-08-23'
+  fase: '06'
+  evento: done
+  detalle: motor-fills
+- fecha: '2026-08-23'
+  fase: '06'
+  evento: done
+  detalle: modelo-fees
+- fecha: '2026-08-23'
+  fase: '06'
+  evento: done
+  detalle: modelo-slippage
+- fecha: '2026-08-23'
+  fase: '06'
+  evento: done
+  detalle: metricas-rendimiento
+- fecha: '2026-08-23'
+  fase: '06'
+  evento: done
+  detalle: benchmark-buyhold
+- fecha: '2026-08-23'
+  fase: '06'
+  evento: gate_approved
+  detalle: UAT APPROVED por usuario vía OpenCode (demo + suite coinciden)
 blockers: []

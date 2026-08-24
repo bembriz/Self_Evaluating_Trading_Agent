@@ -1,8 +1,8 @@
-# Reporte de Fase 05 — Feature Engine & Market State
+# Reporte de Fase 06 — Backtesting & Deterministic Baseline
 
 **Fecha:** 2026-08-23
 **Estado de fase:** done
-**Avance fase:** 100.0% · **Avance global:** 31.58%
+**Avance fase:** 100.0% · **Avance global:** 36.84%
 **Gate:** approved
 
 ---
@@ -77,12 +77,12 @@
 
 ## 17. UAT
 
-- Checklist: `docs/uat/phase-05-uat.md`
+- Checklist: `docs/uat/phase-06-uat.md`
 - Veredicto: PENDIENTE / APPROVED / REJECTED
 
 ## 18. Evidencias
 
-> Índice completo en `docs/phases/05/evidence/log.md`.
+> Índice completo en `docs/phases/06/evidence/log.md`.
 
 ## 19. Métricas
 

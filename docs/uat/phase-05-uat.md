@@ -58,18 +58,17 @@ Salida del Paso 3 (regime, ts, rsi) y el resumen de pytest de los Pasos 1–2.
 
 | Paso | Resultado observado | ¿Coincide? (SÍ/NO) | Notas |
 |---|---|---|---|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
+| 1 | 36 passed | SÍ | |
+| 2 | 128 passed · 94.84% | SÍ | |
+| 3 | regime=trend_up · h1 rsi=100.0 · btc rsi=100.0 | SÍ | |
+| 4 | All checks passed · Success: no issues | SÍ | |
 
 ## Incidencias encontradas
 
-> Desviaciones, errores o comportamientos inesperados.
+Ninguna.
 
 ---
 
-## VEREDICTO UAT: PENDING
-<!-- Sustituir PENDING por APPROVED o REJECTED. gate_check exige el veredicto APPROVED visible (los comentarios HTML no cuentan) al check uat-approved -->
-Decisor: ________________  Fecha: ________
-Comentario:
+## VEREDICTO UAT: APPROVED
+Decisor: usuario  Fecha: 2026-08-23
+Comentario: Los 4 pasos coinciden con lo esperado; aprobación explícita del usuario vía OpenCode.
