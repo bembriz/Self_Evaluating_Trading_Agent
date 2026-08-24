@@ -1,0 +1,17 @@
+# evidencia: format-check
+fecha: 2026-08-23T23:28:10-06:00
+fase: 11
+comando: uv run ruff format --check .
+unformatted: File would be reformatted
+  --> tests/test_memory_writer.py:25:15
+   |
+24 |
+   -     def embed(
+   -         self, texts: Sequence[str], *, is_query: bool = False
+   -     ) -> list[list[float]]:
+25 +     def embed(self, texts: Sequence[str], *, is_query: bool = False) -> list[list[float]]:
+26 |         return [[0.1, 0.2, 0.3, 0.4] for _ in texts]
+   |
+
+1 file would be reformatted, 191 files already formatted
+exit=1

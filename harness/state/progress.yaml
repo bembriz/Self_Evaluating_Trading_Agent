@@ -3,7 +3,7 @@ meta:
   prd: docs/PRD — Self-Evaluating Trading Agent.md
   diseno_arnes: docs/design/harness-design.md
   creado: '2026-08-22'
-  actualizado: '2026-08-23'
+  actualizado: '2026-08-24'
   reglas:
     peso_fase_igual: true
     peso_entregable_igual: true
@@ -610,42 +610,50 @@ phases:
       comentario: ''
   '11':
     titulo: Evaluation & Reflection
-    estado: pending
-    iniciada: null
-    cerrada: null
+    estado: done
+    iniciada: '2026-08-23'
+    cerrada: '2026-08-24'
     entregables:
     - id: evaluador-outcomes
       descripcion: Trade Evaluator outcomes
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/11/evidence/log.md
     - id: mfe
       descripcion: Maximum Favorable Excursion
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/11/evidence/log.md
     - id: mae
       descripcion: Maximum Adverse Excursion
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/11/evidence/log.md
     - id: reflexiones
       descripcion: Reflection Engine estructurado (PRD §35)
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/11/evidence/log.md
     - id: insercion-memoria
       descripcion: Reflexión→memoria solo trade cerrado
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/11/evidence/log.md
     - id: propuestas-mejora
       descripcion: Improvement proposals sin auto-aplicar
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/11/evidence/log.md
     - id: flujo-aprobacion-humana
       descripcion: Workflow aprobación humana mejoras
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/11/evidence/log.md
     gate_fase:
-      estado: pending
-      solicitado: null
-      resuelto: null
+      estado: approved
+      solicitado: '2026-08-24'
+      resuelto: '2026-08-24'
+      comentario: ''
   '12':
     titulo: Bybit Testnet
     estado: pending
@@ -1407,6 +1415,46 @@ time_log:
   detalle: ''
 - fecha: '2026-08-23'
   fase: '10'
+  evento: gate_approved
+  detalle: ''
+- fecha: '2026-08-23'
+  fase: '11'
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-08-23'
+  fase: '11'
+  evento: done
+  detalle: evaluador-outcomes
+- fecha: '2026-08-23'
+  fase: '11'
+  evento: done
+  detalle: mfe
+- fecha: '2026-08-23'
+  fase: '11'
+  evento: done
+  detalle: mae
+- fecha: '2026-08-23'
+  fase: '11'
+  evento: done
+  detalle: reflexiones
+- fecha: '2026-08-23'
+  fase: '11'
+  evento: done
+  detalle: insercion-memoria
+- fecha: '2026-08-23'
+  fase: '11'
+  evento: done
+  detalle: propuestas-mejora
+- fecha: '2026-08-23'
+  fase: '11'
+  evento: done
+  detalle: flujo-aprobacion-humana
+- fecha: '2026-08-24'
+  fase: '11'
+  evento: gate_requested
+  detalle: ''
+- fecha: '2026-08-24'
+  fase: '11'
   evento: gate_approved
   detalle: ''
 blockers: []

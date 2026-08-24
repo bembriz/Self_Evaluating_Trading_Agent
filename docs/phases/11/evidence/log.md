@@ -1,0 +1,4 @@
+- `2026-08-23T23:28:10-06:00` **tests-unit** → `uv run pytest tests --ignore=tests/integration --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/11/evidence/tests-unit.log
+- `2026-08-23T23:28:10-06:00` **lint** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/11/evidence/lint.log
+- `2026-08-23T23:28:10-06:00` **format-check** → `uv run ruff format --check .` · exit=`1` · artifact: docs/phases/11/evidence/format-check.log
+- `2026-08-23T23:28:11-06:00` **mypy** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/11/evidence/mypy.log
