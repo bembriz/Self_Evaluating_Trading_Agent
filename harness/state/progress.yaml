@@ -401,38 +401,45 @@ phases:
       comentario: UAT APPROVED por usuario vía OpenCode (demo + suite coinciden)
   '07':
     titulo: ML Baseline
-    estado: pending
-    iniciada: null
-    cerrada: null
+    estado: done
+    iniciada: '2026-08-23'
+    cerrada: '2026-08-23'
     entregables:
     - id: regresion-logistica
       descripcion: Logistic Regression baseline
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/07/evidence/unit-tests.log
     - id: pipeline-features-ml
       descripcion: Pipeline reproducible sin fuga
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/07/evidence/unit-tests.log
     - id: walk-forward-ml
       descripcion: Ventanas walk-forward
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/07/evidence/unit-tests.log
     - id: metricas-modelo
       descripcion: Métricas comparables al baseline
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/07/evidence/unit-tests.log
     - id: experiment-tracking
       descripcion: Tracking experiment_id inmutable
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/07/evidence/unit-tests.log
     - id: leakage-tests-ml
       descripcion: Tests leakage ML
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/07/evidence/unit-tests.log
     gate_fase:
-      estado: pending
+      estado: approved
       solicitado: null
-      resuelto: null
+      resuelto: '2026-08-23'
+      comentario: UAT APPROVED por usuario vía OpenCode
   08:
     titulo: LLM Decision Agent
     estado: pending
@@ -1196,4 +1203,36 @@ time_log:
   fase: '06'
   evento: gate_approved
   detalle: UAT APPROVED por usuario vía OpenCode (demo + suite coinciden)
+- fecha: '2026-08-23'
+  fase: '07'
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-08-23'
+  fase: '07'
+  evento: done
+  detalle: regresion-logistica
+- fecha: '2026-08-23'
+  fase: '07'
+  evento: done
+  detalle: pipeline-features-ml
+- fecha: '2026-08-23'
+  fase: '07'
+  evento: done
+  detalle: walk-forward-ml
+- fecha: '2026-08-23'
+  fase: '07'
+  evento: done
+  detalle: metricas-modelo
+- fecha: '2026-08-23'
+  fase: '07'
+  evento: done
+  detalle: experiment-tracking
+- fecha: '2026-08-23'
+  fase: '07'
+  evento: done
+  detalle: leakage-tests-ml
+- fecha: '2026-08-23'
+  fase: '07'
+  evento: gate_approved
+  detalle: UAT APPROVED por usuario vía OpenCode
 blockers: []

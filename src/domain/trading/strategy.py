@@ -9,6 +9,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Protocol
 
@@ -119,3 +120,18 @@ class EmaRsiBaseline:
         if crossed_down or rsi > self._config.rsi_exit:
             return Signal(timestamp_ms, Action.SELL, reason="ema_cross_down_or_rsi_exit")
         return Signal(timestamp_ms, Action.HOLD)
+
+
+class PrecomputedStrategy:
+    """Estrategia que repite una secuencia precalculada de acciones (p. ej. ML)."""
+
+    version = "precomputed"
+
+    def __init__(self, actions: Sequence[Action]) -> None:
+        self._actions = list(actions)
+        self._i = 0
+
+    def on_candle(self, candle: Candle) -> Signal:
+        action = self._actions[self._i] if self._i < len(self._actions) else Action.HOLD
+        self._i += 1
+        return Signal(candle.timestamp_ms, action)
