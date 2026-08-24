@@ -1,0 +1,6 @@
+# evidencia: format-check
+fecha: 2026-08-23T23:08:40-06:00
+fase: 10
+comando: uv run ruff format --check .
+183 files already formatted
+exit=0

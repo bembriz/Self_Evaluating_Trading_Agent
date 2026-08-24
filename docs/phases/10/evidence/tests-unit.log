@@ -1,0 +1,127 @@
+# evidencia: tests-unit
+fecha: 2026-08-23T23:07:31-06:00
+fase: 10
+comando: uv run pytest tests --ignore=tests/integration --cov=src --cov-branch --cov-fail-under=90
+........................................................................ [ 23%]
+.............s.......................................................... [ 46%]
+........................................................................ [ 69%]
+........................................................................ [ 92%]
+......................                                                   [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                                                  Stmts   Miss Branch BrPart  Cover   Missing
+-------------------------------------------------------------------------------------------------
+src/application/__init__.py                               0      0      0      0   100%
+src/application/commands/__init__.py                      0      0      0      0   100%
+src/application/ports/__init__.py                         0      0      0      0   100%
+src/application/ports/dataset_store.py                   11      0      0      0   100%
+src/application/ports/embeddings.py                       5      0      0      0   100%
+src/application/ports/llm.py                             18      0      0      0   100%
+src/application/ports/market_data.py                      5      0      0      0   100%
+src/application/ports/market_repositories.py              8      0      0      0   100%
+src/application/ports/market_stream.py                    8      0      0      0   100%
+src/application/ports/memory_repository.py               16      0      0      0   100%
+src/application/ports/orderbook_features.py               4      0      0      0   100%
+src/application/ports/repositories.py                     6      0      0      0   100%
+src/application/queries/__init__.py                       0      0      0      0   100%
+src/application/services/__init__.py                      0      0      0      0   100%
+src/application/services/backtest_engine.py              58      0     16      0   100%
+src/application/services/cost_monitor.py                 19      1      0      0    95%   42
+src/application/services/decision_agent.py               30      0      2      0   100%
+src/application/services/historical_data.py              63      0      6      0   100%
+src/application/services/market_data_service.py         113      5     28      5    93%   66, 102, 140-141, 155->exit, 164, 165->exit
+src/application/services/memory_comparison.py            51      0      4      0   100%
+src/application/services/ml_pipeline.py                  80      0     12      0   100%
+src/application/services/paper_engine.py                125      1     24      1    99%   135
+src/application/services/validation.py                   27      1     12      0    97%   17
+src/domain/__init__.py                                    0      0      0      0   100%
+src/domain/evaluation/__init__.py                         0      0      0      0   100%
+src/domain/evaluation/buy_hold.py                        19      0      2      0   100%
+src/domain/evaluation/metrics.py                         87      0     24      0   100%
+src/domain/experiments/__init__.py                        0      0      0      0   100%
+src/domain/experiments/experiment.py                     26      0      0      0   100%
+src/domain/experiments/features.py                       33      0      4      0   100%
+src/domain/experiments/logistic_regression.py            46      0     16      0   100%
+src/domain/experiments/walk_forward.py                   24      0      6      0   100%
+src/domain/llm/__init__.py                                0      0      0      0   100%
+src/domain/llm/budget.py                                 44      0     10      0   100%
+src/domain/llm/call.py                                   19      0      0      0   100%
+src/domain/llm/cost.py                                    6      0      0      0   100%
+src/domain/llm/prompt.py                                 13      0      0      0   100%
+src/domain/market/__init__.py                             0      0      0      0   100%
+src/domain/market/candle.py                              42      0     12      0   100%
+src/domain/market/dataset.py                             32      0      0      0   100%
+src/domain/market/feature_engine.py                      63      0      6      0   100%
+src/domain/market/features.py                            14      0      0      0   100%
+src/domain/market/indicators.py                         148      0     48      0   100%
+src/domain/market/orderbook.py                           72      4     16      4    91%   77, 83, 89, 103
+src/domain/market/regime.py                              79      0     26      0   100%
+src/domain/market/state.py                               36      0      0      0   100%
+src/domain/market/stream.py                              34      0      2      0   100%
+src/domain/memory/__init__.py                             0      0      0      0   100%
+src/domain/memory/guards.py                              10      0      4      0   100%
+src/domain/memory/memory.py                              22      0      0      0   100%
+src/domain/memory/reflection.py                          15      0      0      0   100%
+src/domain/memory/space.py                                4      0      0      0   100%
+src/domain/portfolio/__init__.py                          0      0      0      0   100%
+src/domain/portfolio/portfolio.py                        73      0     10      0   100%
+src/domain/risk/__init__.py                               0      0      0      0   100%
+src/domain/risk/config.py                                25      0      4      0   100%
+src/domain/risk/engine.py                                74      0     24      0   100%
+src/domain/risk/guards.py                                36      0      8      0   100%
+src/domain/risk/sizing.py                                34      0      8      0   100%
+src/domain/risk/stops.py                                 11      0      2      0   100%
+src/domain/trading/__init__.py                            0      0      0      0   100%
+src/domain/trading/decision.py                           26      0      0      0   100%
+src/domain/trading/fees.py                               12      0      0      0   100%
+src/domain/trading/fill.py                               37      0      4      0   100%
+src/domain/trading/signal.py                             17      0      0      0   100%
+src/domain/trading/slippage.py                           11      0      0      0   100%
+src/domain/trading/strategy.py                          100      0     18      0   100%
+src/infrastructure/__init__.py                            0      0      0      0   100%
+src/infrastructure/bybit/__init__.py                      0      0      0      0   100%
+src/infrastructure/bybit/client.py                       53      3     18      5    89%   54->66, 61->60, 64, 88, 94
+src/infrastructure/bybit/schemas.py                      11      0      0      0   100%
+src/infrastructure/bybit/ws.py                           77      6     16      4    89%   53, 65, 70, 73-74, 82
+src/infrastructure/bybit/ws_schemas.py                   30      0      0      0   100%
+src/infrastructure/database/__init__.py                   0      0      0      0   100%
+src/infrastructure/database/base.py                       3      0      0      0   100%
+src/infrastructure/database/memory_repository.py         44     44      8      0     0%   8-113
+src/infrastructure/database/models.py                    87      1      0      0    99%   27
+src/infrastructure/database/repositories.py              78     41      8      0    43%   30-31, 34-39, 46, 58-83, 86-91, 96-107, 111, 126, 129-140, 143-146, 165-179
+src/infrastructure/database/session.py                    6      0      0      0   100%
+src/infrastructure/embeddings/__init__.py                 0      0      0      0   100%
+src/infrastructure/embeddings/fastembed_provider.py      45      7      8      1    81%   26-33, 68
+src/infrastructure/execution/__init__.py                  0      0      0      0   100%
+src/infrastructure/llm/__init__.py                        0      0      0      0   100%
+src/infrastructure/llm/deepseek.py                       87      3      8      2    95%   102->133, 138-139, 151
+src/infrastructure/llm/prompts.py                        13      0      2      0   100%
+src/infrastructure/llm/schemas.py                        26      0      0      0   100%
+src/infrastructure/observability/__init__.py              0      0      0      0   100%
+src/infrastructure/storage/dataset_store.py              34      0      6      0   100%
+src/interfaces/__init__.py                                0      0      0      0   100%
+src/interfaces/api/__init__.py                            0      0      0      0   100%
+src/interfaces/api/app.py                                22     22      0      0     0%   3-35
+src/interfaces/api/deps.py                               13      4      0      0    69%   19-21, 26
+src/interfaces/api/routers/__init__.py                    0      0      0      0   100%
+src/interfaces/api/routers/health.py                     15      1      2      0    94%   19
+src/interfaces/api/routers/system.py                     11      0      0      0   100%
+src/interfaces/cli/__init__.py                            0      0      0      0   100%
+src/interfaces/cli/download.py                           75     36      4      0    54%   41-93, 97-100, 119-127, 131-134
+src/interfaces/cli/market_worker.py                      63      5      8      3    89%   57, 75, 80, 99, 103
+src/interfaces/web/__init__.py                            0      0      0      0   100%
+src/main.py                                              21      0      6      0   100%
+src/settings.py                                          44      0      0      0   100%
+src/version.py                                            1      0      0      0   100%
+-------------------------------------------------------------------------------------------------
+TOTAL                                                  2850    185    452     25    93%
+Required test coverage of 90% reached. Total coverage: 93.10%
+309 passed, 1 skipped, 1 warning in 63.86s (0:01:03)
+exit=0

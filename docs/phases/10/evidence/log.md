@@ -1,0 +1,5 @@
+- `2026-08-23T23:08:40-06:00` **tests-unit** → `uv run pytest tests --ignore=tests/integration --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/10/evidence/tests-unit.log
+- `2026-08-23T23:08:40-06:00` **lint** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/10/evidence/lint.log
+- `2026-08-23T23:08:40-06:00` **format-check** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/10/evidence/format-check.log
+- `2026-08-23T23:08:41-06:00` **mypy** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/10/evidence/mypy.log
+- `2026-08-23T23:08:51-06:00` **risk-100-branch** → `bash -c uv run pytest tests/test_risk_engine.py tests/test_risk_sizing.py tests/test_risk_guards.py tests/test_risk_stops.py --cov=domain.risk --cov-branch --cov-report=term 2>/dev/null | grep TOTAL` · exit=`0` · artifact: docs/phases/10/evidence/risk-100-branch.log
