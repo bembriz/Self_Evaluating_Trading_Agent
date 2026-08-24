@@ -20,3 +20,15 @@ bybit_ws_url: wss://stream.bybit.com/v5/public/spot
 bybit_orderbook_depth: 50
 stale_timeout_seconds: 10.0
 feature_window_seconds: 5
+
+llm_provider: deepseek
+llm_model: deepseek-v4-flash
+llm_base_url: https://api.deepseek.com
+llm_api_key: ""
+llm_timeout: 30.0
+llm_temperature: 0.0
+llm_price_input_mtok: 0.27
+llm_price_output_mtok: 1.10
+llm_experiment_budget_usd: 5.0
+llm_monthly_budget_usd: 50.0
+prompts_dir: prompts

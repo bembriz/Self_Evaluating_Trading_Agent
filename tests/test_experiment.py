@@ -8,6 +8,12 @@ def _meta(
     feature_config_version: str = "v1",
     fees_model_version: str = "bybit-spot-v1",
     slippage_model_version: str = "conservative-v1",
+    prompt_version: str = "",
+    llm_provider: str = "",
+    llm_model: str = "",
+    embedding_provider: str = "",
+    embedding_model: str = "",
+    risk_config_version: str = "",
     random_seed: int = 42,
     params: tuple[tuple[str, str], ...] = (),
     started_at: str = "",
@@ -20,6 +26,12 @@ def _meta(
         feature_config_version=feature_config_version,
         fees_model_version=fees_model_version,
         slippage_model_version=slippage_model_version,
+        prompt_version=prompt_version,
+        llm_provider=llm_provider,
+        llm_model=llm_model,
+        embedding_provider=embedding_provider,
+        embedding_model=embedding_model,
+        risk_config_version=risk_config_version,
         random_seed=random_seed,
         params=params,
         started_at=started_at,
@@ -53,3 +65,17 @@ def test_id_is_hex16() -> None:
     eid = build_experiment_id(_meta())
     assert len(eid) == 16
     assert all(c in "0123456789abcdef" for c in eid)
+
+
+def test_llm_fields_affect_id() -> None:
+    base = build_experiment_id(_meta())
+    assert build_experiment_id(_meta(prompt_version="v002")) != base
+    assert build_experiment_id(_meta(llm_provider="openai")) != base
+    assert build_experiment_id(_meta(llm_model="deepseek-v4-pro")) != base
+
+
+def test_new_fields_default_to_empty() -> None:
+    m = _meta()
+    assert m.prompt_version == ""
+    assert m.llm_provider == ""
+    assert m.risk_config_version == ""

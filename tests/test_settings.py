@@ -47,3 +47,20 @@ def test_env_override_de_yaml(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setenv("POSTGRES_PORT", "6543")
     s = load_settings()
     assert s.postgres_port == 6543
+
+
+def test_llm_settings_defaults(monkeypatch: MonkeyPatch) -> None:
+    for var in ("LLM_MODEL", "LLM_PROVIDER", "LLM_API_KEY"):
+        monkeypatch.delenv(var, raising=False)
+    s = load_settings()
+    assert s.llm_provider == "deepseek"
+    assert s.llm_model == "deepseek-v4-flash"
+    assert s.llm_api_key.get_secret_value() == ""
+
+
+def test_llm_settings_from_env(monkeypatch: MonkeyPatch) -> None:
+    monkeypatch.setenv("LLM_MODEL", "deepseek-v4-pro")
+    monkeypatch.setenv("LLM_EXPERIMENT_BUDGET_USD", "7.5")
+    s = load_settings()
+    assert s.llm_model == "deepseek-v4-pro"
+    assert s.llm_experiment_budget_usd == 7.5

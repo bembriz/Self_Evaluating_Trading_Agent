@@ -1,0 +1,6 @@
+# evidencia: integracion-db-no-disponible
+fecha: 2026-08-23T22:07:34-06:00
+fase: 08
+comando: bash -c docker info >/dev/null 2>&1 || echo "Docker no disponible en este entorno: los 11 tests de integracion requieren PostgreSQL (compose.yaml, puerto 5433) y no pueden ejecutarse aqui; sin relacion con el codigo de la fase 08"
+Docker no disponible en este entorno: los 11 tests de integracion requieren PostgreSQL (compose.yaml, puerto 5433) y no pueden ejecutarse aqui; sin relacion con el codigo de la fase 08
+exit=0

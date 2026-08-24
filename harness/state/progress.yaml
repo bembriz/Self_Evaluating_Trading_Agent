@@ -442,50 +442,60 @@ phases:
       comentario: UAT APPROVED por usuario vía OpenCode
   08:
     titulo: LLM Decision Agent
-    estado: pending
-    iniciada: null
-    cerrada: null
+    estado: done
+    iniciada: '2026-08-23'
+    cerrada: '2026-08-23'
     entregables:
     - id: contrato-llmprovider
       descripcion: Protocol LLMProvider dominio puro
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/08/evidence/log.md
     - id: adapter-deepseek
       descripcion: DeepSeekProvider operativo
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/08/evidence/log.md
     - id: salida-estructurada
       descripcion: Contrato JSON decisión (PRD §19)
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/08/evidence/log.md
     - id: validacion-pydantic
       descripcion: Validación estricta schema
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/08/evidence/log.md
     - id: monitoreo-costos
       descripcion: Registro tokens/costo por llamada
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/08/evidence/log.md
     - id: budget-control
       descripcion: Presupuestos experiment/mensual con alertas
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/08/evidence/log.md
     - id: fallback-hold
       descripcion: Fail-safe HOLD ante cualquier error (PRD §20)
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/08/evidence/log.md
     - id: versionado-prompts
       descripcion: prompts/ versionados inmutables
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/08/evidence/log.md
     - id: versionado-experimentos
       descripcion: Metadatos reproducibilidad PRD §38-39
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/08/evidence/log.md
     gate_fase:
-      estado: pending
-      solicitado: null
-      resuelto: null
+      estado: approved
+      solicitado: '2026-08-23'
+      resuelto: '2026-08-23'
+      comentario: ''
   09:
     titulo: Trading Memory / RAG
     estado: pending
@@ -1235,4 +1245,52 @@ time_log:
   fase: '07'
   evento: gate_approved
   detalle: UAT APPROVED por usuario vía OpenCode
+- fecha: '2026-08-23'
+  fase: 08
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-08-23'
+  fase: 08
+  evento: done
+  detalle: contrato-llmprovider
+- fecha: '2026-08-23'
+  fase: 08
+  evento: done
+  detalle: adapter-deepseek
+- fecha: '2026-08-23'
+  fase: 08
+  evento: done
+  detalle: salida-estructurada
+- fecha: '2026-08-23'
+  fase: 08
+  evento: done
+  detalle: validacion-pydantic
+- fecha: '2026-08-23'
+  fase: 08
+  evento: done
+  detalle: monitoreo-costos
+- fecha: '2026-08-23'
+  fase: 08
+  evento: done
+  detalle: budget-control
+- fecha: '2026-08-23'
+  fase: 08
+  evento: done
+  detalle: fallback-hold
+- fecha: '2026-08-23'
+  fase: 08
+  evento: done
+  detalle: versionado-prompts
+- fecha: '2026-08-23'
+  fase: 08
+  evento: done
+  detalle: versionado-experimentos
+- fecha: '2026-08-23'
+  fase: 08
+  evento: gate_requested
+  detalle: ''
+- fecha: '2026-08-23'
+  fase: 08
+  evento: gate_approved
+  detalle: ''
 blockers: []

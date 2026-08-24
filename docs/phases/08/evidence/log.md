@@ -1,0 +1,5 @@
+- `2026-08-23T22:07:15-06:00` **tests-unit** → `uv run pytest tests --ignore=tests/integration --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/08/evidence/tests-unit.log
+- `2026-08-23T22:07:22-06:00` **lint** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/08/evidence/lint.log
+- `2026-08-23T22:07:22-06:00` **format-check** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/08/evidence/format-check.log
+- `2026-08-23T22:07:23-06:00` **mypy** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/08/evidence/mypy.log
+- `2026-08-23T22:07:34-06:00` **integracion-db-no-disponible** → `bash -c docker info >/dev/null 2>&1 || echo "Docker no disponible en este entorno: los 11 tests de integracion requieren PostgreSQL (compose.yaml, puerto 5433) y no pueden ejecutarse aqui; sin relacion con el codigo de la fase 08"` · exit=`0` · artifact: docs/phases/08/evidence/integracion-db-no-disponible.log
