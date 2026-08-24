@@ -1,0 +1,6 @@
+# evidencia: typing
+fecha: 2026-08-23T18:23:07-06:00
+fase: 05
+comando: uv run mypy src tests
+Success: no issues found in 87 source files
+exit=0

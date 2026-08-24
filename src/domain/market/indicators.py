@@ -1,0 +1,193 @@
+"""Indicadores técnicos puros (PRD §15): implementados en stdlib, sin TA-Lib/numpy.
+
+Todas las funciones son causales: el valor en el índice ``i`` depende únicamente de
+``values[0..i]`` (o ``candles[0..i]``). El warmup se representa con ``None``.
+Convenciones:
+- ``ema`` se siembra con la SMA de los primeros ``period`` valores.
+- ``rsi``/``atr`` usan suavizado de Wilder y su primer valor en el índice ``period``.
+- ``vwap`` es acumulado de sesión sobre la serie recibida.
+"""
+
+from __future__ import annotations
+
+from collections.abc import Sequence
+from dataclasses import dataclass
+
+from domain.market.candle import Candle
+
+
+def _require_positive_period(period: int) -> None:
+    if period <= 0:
+        raise ValueError(f"period debe ser > 0: {period}")
+
+
+def sma(values: Sequence[float], period: int) -> list[float | None]:
+    _require_positive_period(period)
+    out: list[float | None] = [None] * len(values)
+    for i in range(period - 1, len(values)):
+        out[i] = sum(values[i - period + 1 : i + 1]) / period
+    return out
+
+
+def ema(values: Sequence[float], period: int) -> list[float | None]:
+    _require_positive_period(period)
+    out: list[float | None] = [None] * len(values)
+    if len(values) < period:
+        return out
+    alpha = 2.0 / (period + 1)
+    prev = sum(values[:period]) / period
+    out[period - 1] = prev
+    for i in range(period, len(values)):
+        prev = alpha * values[i] + (1.0 - alpha) * prev
+        out[i] = prev
+    return out
+
+
+def _rsi_value(avg_gain: float, avg_loss: float) -> float:
+    if avg_loss == 0.0:
+        return 100.0 if avg_gain > 0.0 else 50.0
+    rs = avg_gain / avg_loss
+    return 100.0 - 100.0 / (1.0 + rs)
+
+
+def rsi(values: Sequence[float], period: int = 14) -> list[float | None]:
+    _require_positive_period(period)
+    out: list[float | None] = [None] * len(values)
+    if len(values) < period + 1:
+        return out
+    gains = [0.0] * len(values)
+    losses = [0.0] * len(values)
+    for i in range(1, len(values)):
+        change = values[i] - values[i - 1]
+        if change > 0:
+            gains[i] = change
+        else:
+            losses[i] = -change
+    avg_gain = sum(gains[1 : period + 1]) / period
+    avg_loss = sum(losses[1 : period + 1]) / period
+    out[period] = _rsi_value(avg_gain, avg_loss)
+    for i in range(period + 1, len(values)):
+        avg_gain = (avg_gain * (period - 1) + gains[i]) / period
+        avg_loss = (avg_loss * (period - 1) + losses[i]) / period
+        out[i] = _rsi_value(avg_gain, avg_loss)
+    return out
+
+
+@dataclass(frozen=True, slots=True)
+class MACDResult:
+    macd: list[float | None]
+    signal: list[float | None]
+    histogram: list[float | None]
+
+
+def _ema_defined(values: list[float | None], period: int) -> list[float | None]:
+    out: list[float | None] = [None] * len(values)
+    defined = [v for v in values if v is not None]
+    if len(defined) < period:
+        return out
+    alpha = 2.0 / (period + 1)
+    prev = sum(defined[:period]) / period
+    positions = [i for i, v in enumerate(values) if v is not None]
+    out[positions[period - 1]] = prev
+    for idx, v in zip(positions[period:], defined[period:], strict=True):
+        prev = alpha * v + (1.0 - alpha) * prev
+        out[idx] = prev
+    return out
+
+
+def macd(values: Sequence[float], fast: int = 12, slow: int = 26, signal: int = 9) -> MACDResult:
+    _require_positive_period(fast)
+    _require_positive_period(slow)
+    _require_positive_period(signal)
+    ema_fast = ema(values, fast)
+    ema_slow = ema(values, slow)
+    line: list[float | None] = [None] * len(values)
+    for i in range(len(values)):
+        f = ema_fast[i]
+        s = ema_slow[i]
+        if f is not None and s is not None:
+            line[i] = f - s
+    signal_line = _ema_defined(line, signal)
+    histogram: list[float | None] = [None] * len(values)
+    for i in range(len(values)):
+        line_val = line[i]
+        signal_val = signal_line[i]
+        if line_val is not None and signal_val is not None:
+            histogram[i] = line_val - signal_val
+    return MACDResult(macd=line, signal=signal_line, histogram=histogram)
+
+
+def atr(candles: Sequence[Candle], period: int = 14) -> list[float | None]:
+    _require_positive_period(period)
+    out: list[float | None] = [None] * len(candles)
+    if len(candles) < period + 1:
+        return out
+    trs = [0.0] * len(candles)
+    trs[0] = candles[0].high - candles[0].low
+    for i in range(1, len(candles)):
+        prev_close = candles[i - 1].close
+        trs[i] = max(
+            candles[i].high - candles[i].low,
+            abs(candles[i].high - prev_close),
+            abs(candles[i].low - prev_close),
+        )
+    avg = sum(trs[1 : period + 1]) / period
+    out[period] = avg
+    for i in range(period + 1, len(candles)):
+        avg = (avg * (period - 1) + trs[i]) / period
+        out[i] = avg
+    return out
+
+
+def vwap(candles: Sequence[Candle]) -> list[float | None]:
+    out: list[float | None] = [None] * len(candles)
+    cum_pv = 0.0
+    cum_volume = 0.0
+    for i, c in enumerate(candles):
+        typical = (c.high + c.low + c.close) / 3.0
+        cum_pv += typical * c.volume
+        cum_volume += c.volume
+        out[i] = cum_pv / cum_volume if cum_volume > 0 else None
+    return out
+
+
+def returns(values: Sequence[float]) -> list[float | None]:
+    out: list[float | None] = [None] * len(values)
+    for i in range(1, len(values)):
+        prev = values[i - 1]
+        out[i] = (values[i] - prev) / prev if prev != 0 else None
+    return out
+
+
+def realized_volatility(values: Sequence[float], window: int) -> list[float | None]:
+    _require_positive_period(window)
+    out: list[float | None] = [None] * len(values)
+    rets = returns(values)
+    for i in range(len(values)):
+        start = max(1, i - window + 1)
+        window_rets = [r for r in rets[start : i + 1] if r is not None]
+        if len(window_rets) >= 2:
+            mean = sum(window_rets) / len(window_rets)
+            variance = sum((r - mean) ** 2 for r in window_rets) / (len(window_rets) - 1)
+            out[i] = variance**0.5
+    return out
+
+
+def momentum(values: Sequence[float], window: int) -> list[float | None]:
+    _require_positive_period(window)
+    out: list[float | None] = [None] * len(values)
+    for i in range(window, len(values)):
+        base = values[i - window]
+        out[i] = (values[i] - base) / base if base != 0 else None
+    return out
+
+
+def relative_volume(candles: Sequence[Candle], window: int) -> list[float | None]:
+    _require_positive_period(window)
+    out: list[float | None] = [None] * len(candles)
+    for i in range(len(candles)):
+        start = max(0, i - window + 1)
+        vols = [c.volume for c in candles[start : i + 1]]
+        mean = sum(vols) / len(vols)
+        out[i] = candles[i].volume / mean if mean > 0 else None
+    return out

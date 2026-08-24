@@ -309,34 +309,40 @@ phases:
       comentario: UAT APPROVED por usuario vía OpenCode
   '05':
     titulo: Feature Engine & Market State
-    estado: pending
-    iniciada: null
+    estado: in_progress
+    iniciada: '2026-08-23'
     cerrada: null
     entregables:
     - id: indicadores-basicos
       descripcion: RSI/MACD/EMA/ATR/VWAP internos
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/05/evidence/unit-tests.log
     - id: features-orderbook
       descripcion: Features orderbook (spread/imbalance/depth)
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/05/evidence/unit-tests.log
     - id: contexto-btc-features
       descripcion: Features contexto BTC
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/05/evidence/unit-tests.log
     - id: market-state-multitimeframe
       descripcion: Estado multi-timeframe 15m/1h/4h
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/05/evidence/unit-tests.log
     - id: clasificacion-regimenes
       descripcion: Régimen determinista versionado
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/05/evidence/unit-tests.log
     - id: no-lookahead-tests
       descripcion: Tests anti-lookahead
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/05/evidence/unit-tests.log
     gate_fase:
       estado: pending
       solicitado: null
@@ -1108,4 +1114,32 @@ time_log:
   fase: '04'
   evento: gate_approved
   detalle: UAT APPROVED por usuario vía OpenCode
+- fecha: '2026-08-23'
+  fase: '05'
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-08-23'
+  fase: '05'
+  evento: done
+  detalle: indicadores-basicos
+- fecha: '2026-08-23'
+  fase: '05'
+  evento: done
+  detalle: features-orderbook
+- fecha: '2026-08-23'
+  fase: '05'
+  evento: done
+  detalle: contexto-btc-features
+- fecha: '2026-08-23'
+  fase: '05'
+  evento: done
+  detalle: market-state-multitimeframe
+- fecha: '2026-08-23'
+  fase: '05'
+  evento: done
+  detalle: clasificacion-regimenes
+- fecha: '2026-08-23'
+  fase: '05'
+  evento: done
+  detalle: no-lookahead-tests
 blockers: []
