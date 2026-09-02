@@ -1,0 +1,9 @@
+# evidencia: deploy-r1-lenosrv
+fecha: 2026-09-02T15:15:13-06:00
+fase: 16
+comando: bash -c ssh -o ConnectTimeout=10 administrador@192.168.100.24 'docker ps --format "{{.Names}} | {{.Status}}" && docker exec self-evaluating-trading-agent-paper-runner-1 ls /app/src/application/services/regime_confirmation.py && docker exec self-evaluating-trading-agent-paper-runner-1 printenv PAPER_REPORT_INTERVAL_HOURS'
+self-evaluating-trading-agent-paper-runner-1 | Up 14 seconds
+self-evaluating-trading-agent-postgres-1 | Up 20 hours (healthy)
+/app/src/application/services/regime_confirmation.py
+6
+exit=0
