@@ -7,7 +7,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from application.ports.market_stream import WebSocketDisconnected
 from application.ports.paper_trading import PaperTradeEventRepository
+from application.services.connection_supervisor import ConnectionSupervisor, SupervisorConfig
 from application.services.paper_runner import (
     PaperRunner,
     PaperRunnerConfig,
@@ -42,13 +44,20 @@ async def _run_loop(
     state_path: Path,
     initial_equity: float,
     deadline: float | None,
+    recover: Callable[[], Awaitable[None]] | None = None,
 ) -> str:
     loop = asyncio.get_running_loop()
     last_report_time = loop.time()
     last_summary: PaperRunSummary | None = None
     processed = 0
     while deadline is None or loop.time() < deadline:
-        event = await stream.recv()
+        try:
+            event = await stream.recv()
+        except WebSocketDisconnected:
+            if recover is None:
+                raise
+            await recover()
+            continue
         if not isinstance(event, KlineUpdate):
             continue
         paper_event = await runner.handle_kline(event)
@@ -92,6 +101,13 @@ async def _run(
     session_factory = build_session_factory(engine)
     session = session_factory()
     stream = BybitWebSocketClient(url=settings.bybit_ws_url)
+
+    async def _connect_subscribed() -> None:
+        await stream.connect()
+        for symbol in symbols:
+            await stream.subscribe_kline(symbol, timeframe)
+
+    supervisor = ConnectionSupervisor(SupervisorConfig(), connect=_connect_subscribed)
     try:
         repo = SqlAlchemyPaperTradeEventRepository(session)
         config = PaperRunnerConfig(
@@ -105,9 +121,7 @@ async def _run(
             max_runtime_seconds=seconds,
         )
         runner = PaperRunner(config=config, event_repo=repo)
-        await stream.connect()
-        for symbol in symbols:
-            await stream.subscribe_kline(symbol, timeframe)
+        await supervisor.run_once_until_connected()
         deadline = None
         if seconds is not None:
             deadline = asyncio.get_running_loop().time() + seconds
@@ -122,6 +136,7 @@ async def _run(
             state_path=Path(settings.paper_certification_state_path),
             initial_equity=RiskConfig().capital,
             deadline=deadline,
+            recover=supervisor.run_once_until_connected,
         )
     finally:
         await session.close()

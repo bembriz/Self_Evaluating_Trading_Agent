@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from application.ports.market_stream import WebSocketDisconnected
 from application.services.paper_runner import (
     PaperRunner,
     PaperRunnerConfig,
@@ -166,6 +167,117 @@ async def test_run_loop_preserves_corrupt_certification_state(tmp_path: Path) ->
     assert result.startswith("processed=")
     assert state_path.read_text(encoding="utf-8") == "{"
     assert len(list(report_dir.glob("paper-*.md"))) == 1
+
+
+class FailingStream(FakeStream):
+    def __init__(self, events: list[Any]) -> None:
+        super().__init__(events)
+        self.reconnect_calls = 0
+
+    async def recv(self) -> Any:
+        if self._events:
+            item = self._events.pop(0)
+            if isinstance(item, BaseException):
+                raise item
+            return item
+        await asyncio.sleep(0.05)
+        return None
+
+
+async def test_run_loop_recovers_from_ws_disconnect_and_continues(tmp_path: Path) -> None:
+    repo = FakeRepo([])
+    stream = FailingStream(
+        [
+            _kline(100.0, 1_000),
+            WebSocketDisconnected("keepalive ping timeout"),
+            _kline(101.0, 2_000),
+            _kline(102.0, 3_000),
+        ]
+    )
+
+    async def recover() -> None:
+        stream.reconnect_calls += 1
+
+    async def fake_commit() -> None:
+        pass
+
+    result = await _run_loop(
+        stream=stream,
+        runner=_paper_runner(repo),
+        repo=repo,
+        commit=fake_commit,
+        session_id="paper-baseline-test",
+        report_interval_seconds=3600,
+        report_dir=tmp_path / "reports",
+        state_path=tmp_path / "certification-state.json",
+        initial_equity=1000.0,
+        deadline=asyncio.get_running_loop().time() + 1,
+        recover=recover,
+    )
+
+    assert stream.reconnect_calls == 1
+    assert result == "processed=3"
+    assert len(repo._events) == 3
+
+
+async def test_run_loop_preserves_runner_state_across_reconnect(tmp_path: Path) -> None:
+    repo = FakeRepo([])
+    stream = FailingStream(
+        [
+            _kline(100.0, 1_000),
+            WebSocketDisconnected("drop"),
+            _kline(101.0, 2_000),
+        ]
+    )
+
+    async def recover() -> None:
+        stream.reconnect_calls += 1
+
+    async def fake_commit() -> None:
+        pass
+
+    runner = _paper_runner(repo)
+    await _run_loop(
+        stream=stream,
+        runner=runner,
+        repo=repo,
+        commit=fake_commit,
+        session_id="paper-baseline-test",
+        report_interval_seconds=3600,
+        report_dir=tmp_path / "reports",
+        state_path=tmp_path / "certification-state.json",
+        initial_equity=1000.0,
+        deadline=asyncio.get_running_loop().time() + 1,
+        recover=recover,
+    )
+
+    assert stream.reconnect_calls == 1
+    assert len(runner._candles_by_symbol["ETHUSDT"]) == 2
+
+
+async def test_run_loop_without_recover_propagates_disconnect(tmp_path: Path) -> None:
+    repo = FakeRepo([])
+    stream = FailingStream([WebSocketDisconnected("drop")])
+
+    async def fake_commit() -> None:
+        pass
+
+    try:
+        await _run_loop(
+            stream=stream,
+            runner=_paper_runner(repo),
+            repo=repo,
+            commit=fake_commit,
+            session_id="paper-baseline-test",
+            report_interval_seconds=3600,
+            report_dir=tmp_path / "reports",
+            state_path=tmp_path / "certification-state.json",
+            initial_equity=1000.0,
+            deadline=asyncio.get_running_loop().time() + 1,
+        )
+    except WebSocketDisconnected:
+        return
+    raise AssertionError("WebSocketDisconnected debe propagarse sin recover")
 
 
 def test_paper_runner_help_exits_zero() -> None:
