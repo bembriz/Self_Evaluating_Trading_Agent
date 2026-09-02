@@ -1,0 +1,51 @@
+# evidencia: typing-mypy
+fecha: 2026-09-01T03:10:49-06:00
+fase: 16
+comando: uv run mypy src tests harness/scripts
+harness/scripts/gen_pdf.py:31: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+harness/scripts/gen_pdf.py:38: error: Library stubs not installed for "markdown"  [import-untyped]
+harness/scripts/gen_pdf.py:38: note: Hint: "python3 -m pip install types-Markdown"
+harness/scripts/gen_pdf.py:38: note: (or run "mypy --install-types" to install all missing stub packages)
+harness/scripts/gen_pdf.py:38: note: See https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
+harness/scripts/gen_pdf.py:39: error: Cannot find implementation or library stub for module named "weasyprint"  [import-not-found]
+harness/scripts/paper_certification.py:27: error: No overload variant of "int" matches argument type "object"  [call-overload]
+harness/scripts/paper_certification.py:27: note: Possible overload variants:
+harness/scripts/paper_certification.py:27: note:     def int(str | Buffer | SupportsInt | SupportsIndex | SupportsTrunc = ..., /) -> int
+harness/scripts/paper_certification.py:27: note:     def int(str | bytes | bytearray, /, base: SupportsIndex) -> int
+harness/scripts/paper_certification.py:28: error: No overload variant of "int" matches argument type "object"  [call-overload]
+harness/scripts/paper_certification.py:28: note: Possible overload variants:
+harness/scripts/paper_certification.py:28: note:     def int(str | Buffer | SupportsInt | SupportsIndex | SupportsTrunc = ..., /) -> int
+harness/scripts/paper_certification.py:28: note:     def int(str | bytes | bytearray, /, base: SupportsIndex) -> int
+harness/scripts/release_check.py:207: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+harness/scripts/ledger.py:14: error: Library stubs not installed for "yaml"  [import-untyped]
+harness/scripts/ledger.py:14: note: Hint: "python3 -m pip install types-PyYAML"
+harness/scripts/ledger.py:46: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/ledger.py:57: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/ledger.py:65: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/ledger.py:120: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/ledger.py:127: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/ledger.py:131: error: Returning Any from function declared to return "dict[Any, Any]"  [no-any-return]
+harness/scripts/ledger.py:134: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/ledger.py:137: error: Returning Any from function declared to return "dict[Any, Any]"  [no-any-return]
+harness/scripts/ledger.py:141: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/ledger.py:153: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/ledger.py:174: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/ledger.py:185: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/ledger.py:194: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/ledger.py:209: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/ledger.py:222: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/ledger.py:242: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/ledger.py:250: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/ledger.py:257: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/ledger.py:262: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/ledger.py:294: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/ledger.py:337: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/gen_report.py:24: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/gen_report.py:37: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+harness/scripts/gate_check.py:45: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/gate_check.py:47: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/gate_check.py:150: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/gate_check.py:157: error: Missing type arguments for generic type "dict"  [type-arg]
+harness/scripts/new_phase.py:22: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+Found 35 errors in 7 files (checked 203 source files)
+exit=1

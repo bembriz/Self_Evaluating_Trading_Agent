@@ -1,0 +1,6 @@
+# evidencia: backtest-determinism-diff
+fecha: 2026-08-26T00:02:59-06:00
+fase: 15
+comando: bash -c diff docs/phases/15/evidence/backtest_run1.json docs/phases/15/evidence/backtest_run2.json && echo DETERMINISTIC_OK
+DETERMINISTIC_OK
+exit=0

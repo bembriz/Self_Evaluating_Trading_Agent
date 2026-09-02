@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from domain.portfolio.portfolio import Portfolio
 from domain.risk.config import RiskConfig
 from domain.risk.engine import PortfolioRiskState, RiskEngine, TradeProposal
-from domain.risk.guards import KillSwitch
+from domain.risk.guards import KillSwitch, KillSwitchState
 from domain.risk.stops import update_trailing
 from domain.trading.decision import TradingDecision
 from domain.trading.fees import FeeModel
@@ -77,6 +77,11 @@ class PaperEngine:
     @property
     def peak_equity(self) -> float:
         return max(self._peak_equity, self.portfolio.equity(self._last_price or 0.0))
+
+    @property
+    def kill_switch_state(self) -> KillSwitchState:
+        """Estado actual del kill switch (solo lectura, para reportes de sesión)."""
+        return self._kill_switch.state
 
     def attach_kill_switch(self, kill_switch: KillSwitch) -> None:
         """Inyecta un estado externo persistente (SystemState) del kill switch."""

@@ -28,7 +28,7 @@ class BybitSigner:
         timestamp_ms: int | None = None,
     ) -> dict[str, str]:
         ts = timestamp_ms if timestamp_ms is not None else int(time.time() * 1000)
-        sign_payload = f"{ts}{self._api_key}{self._recv_window}{path}{payload}"
+        sign_payload = f"{ts}{self._api_key}{self._recv_window}{payload}"
         signature = hmac.new(self._api_secret, sign_payload.encode("utf-8"), hashlib.sha256)
         return {
             "X-BAPI-API-KEY": self._api_key,

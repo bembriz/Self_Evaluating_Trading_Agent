@@ -1,0 +1,6 @@
+# evidencia: typing-mypy-fixed
+fecha: 2026-09-01T03:12:14-06:00
+fase: 16
+comando: uv run mypy harness/scripts/paper_certification.py harness/tests/test_paper_certification.py
+Success: no issues found in 2 source files
+exit=0

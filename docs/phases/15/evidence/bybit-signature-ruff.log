@@ -1,0 +1,16 @@
+# evidencia: bybit-signature-ruff
+fecha: 2026-08-31T23:19:40-06:00
+fase: 15
+comando: uv run ruff check src/infrastructure/bybit/auth.py tests/test_bybit_trade_auth.py
+E501 Line too long (105 > 100)
+  --> tests/test_bybit_trade_auth.py:58:101
+   |
+56 |     import hmac
+57 |
+58 |     expected = hmac.new(b"S", b"123K10000" + b"symbol=ETHUSDT&category=spot", hashlib.sha256).hexdigest()
+   |                                                                                                     ^^^^^
+59 |     assert h["X-BAPI-SIGN"] == expected
+   |
+
+Found 1 error.
+exit=1

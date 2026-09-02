@@ -1,6 +1,7 @@
 # ===== Secretos (nunca versionar) =====
 .env
 .env.*
+.envrc
 !.env.example
 *.pem
 *.key

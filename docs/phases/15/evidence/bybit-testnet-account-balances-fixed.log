@@ -1,0 +1,70 @@
+# evidencia: bybit-testnet-account-balances-fixed
+fecha: 2026-08-31T23:31:10-06:00
+fase: 15
+comando: bash -lc set -a; . ./.envrc >/dev/null 2>&1; set +a; uv run python - <<'PY'
+from __future__ import annotations
+
+import asyncio
+import os
+
+import httpx
+
+from infrastructure.bybit.auth import BybitSigner
+
+ACCOUNT_TYPES = ("UNIFIED", "FUND", "SPOT")
+COINS = ("USDT", "ETH")
+
+async def signed_get(client: httpx.AsyncClient, signer: BybitSigner, path: str, params: dict[str, str]) -> dict[str, object]:
+    account_type = params["accountType"]
+    query = str(httpx.QueryParams(params))
+    headers = signer.sign(path, payload=query)
+    response = await client.get(path, params=params, headers=headers)
+    raw = response.json()
+    print(f"{account_type}_http_status={response.status_code}")
+    print(f"{account_type}_ret_code={raw.get("retCode")}")
+    print(f"{account_type}_ret_msg={raw.get("retMsg")}")
+    return raw
+
+async def main() -> None:
+    api_key = os.environ.get("BYBIT_API_KEY", "")
+    api_secret = os.environ.get("BYBIT_API_SECRET", "")
+    if not api_key or not api_secret:
+        raise SystemExit("missing BYBIT_API_KEY/BYBIT_API_SECRET in environment")
+    signer = BybitSigner(api_key=api_key, api_secret=api_secret)
+    async with httpx.AsyncClient(base_url="https://api-testnet.bybit.com", timeout=10.0) as client:
+        for account_type in ACCOUNT_TYPES:
+            raw = await signed_get(
+                client,
+                signer,
+                "/v5/account/wallet-balance",
+                {"accountType": account_type, "coin": ",".join(COINS)},
+            )
+            if raw.get("retCode") != 0:
+                continue
+            coins = []
+            for account in raw.get("result", {}).get("list", []):
+                if isinstance(account, dict):
+                    coins.extend(account.get("coin", []))
+            seen = {str(c.get("coin")): c for c in coins if isinstance(c, dict)}
+            for coin in COINS:
+                item = seen.get(coin, {})
+                try:
+                    balance = float(item.get("walletBalance", "0") or 0)
+                except (TypeError, ValueError):
+                    balance = 0.0
+                print(f"{account_type}_{coin}_wallet_balance_positive={balance > 0}")
+
+asyncio.run(main())
+PY
+UNIFIED_http_status=200
+UNIFIED_ret_code=0
+UNIFIED_ret_msg=OK
+UNIFIED_USDT_wallet_balance_positive=False
+UNIFIED_ETH_wallet_balance_positive=False
+FUND_http_status=200
+FUND_ret_code=10001
+FUND_ret_msg=accountType only support UNIFIED.
+SPOT_http_status=200
+SPOT_ret_code=10001
+SPOT_ret_msg=accountType only support UNIFIED.
+exit=0

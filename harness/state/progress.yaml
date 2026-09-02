@@ -3,7 +3,7 @@ meta:
   prd: docs/PRD — Self-Evaluating Trading Agent.md
   diseno_arnes: docs/design/harness-design.md
   creado: '2026-08-22'
-  actualizado: '2026-08-24'
+  actualizado: '2026-09-01'
   reglas:
     peso_fase_igual: true
     peso_entregable_igual: true
@@ -819,33 +819,35 @@ phases:
       comentario: ''
   '15':
     titulo: Local Release Candidate
-    estado: in_progress
+    estado: done
     iniciada: '2026-08-24'
-    cerrada: null
+    cerrada: '2026-08-31'
     entregables:
     - id: gate-backtest-pass
       descripcion: BACKTEST=PASS verificado
-      estado: blocked
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/15/evidence/backtest-official-run1.log
       motivo_bloqueo: Requiere corrida oficial de backtest sobre dataset congelado
         con métricas §45 registradas como evidencia
     - id: gate-replay-pass
       descripcion: REPLAY=PASS verificado
-      estado: blocked
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/15/evidence/replay-official-run1.log
       motivo_bloqueo: Requiere replay determinista reproducible ejecutado y registrado
     - id: gate-paper-pass
       descripcion: PAPER=PASS verificado
-      estado: blocked
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/15/evidence/paper-session-run1.log
       motivo_bloqueo: Requiere sesión de paper trading evaluada con fees/slippage/coste
         LLM
     - id: gate-testnet-pass
       descripcion: TESTNET=PASS verificado
-      estado: blocked
-      evidencia: []
-      motivo_bloqueo: Requiere BYBIT_API_KEY/BYBIT_API_SECRET de testnet para validar
-        lifecycle de órdenes real
+      estado: done
+      evidencia:
+      - docs/phases/15/evidence/bybit-testnet-lifecycle-pass-final.log
     - id: gate-observability-pass
       descripcion: OBSERVABILITY=PASS verificado
       estado: done
@@ -863,43 +865,54 @@ phases:
       - docs/phases/15/evidence/log.md
     - id: gate-uat-pass
       descripcion: UAT=PASS verificado
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/uat/phase-15-uat.md
     - id: local-release-report-md-pdf
       descripcion: LOCAL_RELEASE_REPORT MD+PDF
       estado: done
       evidencia:
       - docs/phases/15/evidence/log.md
     gate_fase:
-      estado: pending
-      solicitado: null
-      resuelto: null
+      estado: approved
+      solicitado: '2026-08-31'
+      resuelto: '2026-08-31'
+      comentario: 'Aprobación explícita del usuario en sesión OpenCode: apruebo gate
+        fase 15'
   '16':
     titulo: Paper Trading Certification
-    estado: pending
-    iniciada: null
+    estado: in_progress
+    iniciada: '2026-09-01'
     cerrada: null
     entregables:
     - id: certificacion-30-dias
       descripcion: ≥30 días calendario
-      estado: pending
+      estado: blocked
       evidencia: []
+      motivo_bloqueo: requiere 30 días calendario reales de paper trading
     - id: certificacion-200-trades
       descripcion: ≥200 trades reales paper
-      estado: pending
+      estado: blocked
       evidencia: []
+      motivo_bloqueo: requiere 200 trades reales paper; no generar trades artificiales
     - id: certificacion-2-regimenes
       descripcion: ≥2 regímenes de mercado
-      estado: pending
+      estado: blocked
       evidencia: []
+      motivo_bloqueo: requiere evidencia de al menos 2 regímenes de mercado
     - id: informes-periodicos
       descripcion: Informes periódicos generados
-      estado: pending
-      evidencia: []
+      estado: blocked
+      evidencia:
+      - docs/phases/16/evidence/certification-initial-task-3-final.log
+      motivo_bloqueo: 'sin reportes periódicos reales: el runner desplegado solo persiste
+        eventos en paper_trade_events; falta implementar y desplegar la emisión periódica
+        de reportes'
     - id: inmutabilidad-certificacion
       descripcion: Cambio estrategia invalida certificación
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/16/evidence/paper-certification-hash-invalidation-test.log
     gate_fase:
       estado: pending
       solicitado: null
@@ -1677,4 +1690,89 @@ time_log:
   evento: blocked
   detalle: 'gate-testnet-pass: Requiere BYBIT_API_KEY/BYBIT_API_SECRET de testnet
     para validar lifecycle de órdenes real'
+- fecha: '2026-08-26'
+  fase: '15'
+  evento: done
+  detalle: gate-backtest-pass
+- fecha: '2026-08-26'
+  fase: '15'
+  evento: done
+  detalle: gate-replay-pass
+- fecha: '2026-08-26'
+  fase: '15'
+  evento: done
+  detalle: gate-paper-pass
+- fecha: '2026-08-31'
+  fase: '15'
+  evento: blocked
+  detalle: 'gate-testnet-pass: Credenciales Testnet autentican, pero wallet sin saldo
+    USDT/ETH; requiere fondear cuenta Testnet antes de validar lifecycle real de orden'
+- fecha: '2026-08-31'
+  fase: '15'
+  evento: blocked
+  detalle: 'gate-testnet-pass: API key Testnet autentica, pero wallet UNIFIED reporta
+    USDT/ETH sin saldo positivo; requiere fondear/transferir saldo Testnet a UNIFIED
+    antes del lifecycle real de orden'
+- fecha: '2026-08-31'
+  fase: '15'
+  evento: unblocked
+  detalle: gate-testnet-pass
+- fecha: '2026-08-31'
+  fase: '15'
+  evento: done
+  detalle: gate-testnet-pass
+- fecha: '2026-08-31'
+  fase: '15'
+  evento: done
+  detalle: gate-uat-pass
+- fecha: '2026-08-31'
+  fase: '15'
+  evento: gate_requested
+  detalle: ''
+- fecha: '2026-08-31'
+  fase: '15'
+  evento: gate_approved
+  detalle: 'Aprobación explícita del usuario en sesión OpenCode: apruebo gate fase
+    15'
+- fecha: '2026-09-01'
+  fase: '16'
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-09-01'
+  fase: '16'
+  evento: done
+  detalle: informes-periodicos
+- fecha: '2026-09-01'
+  fase: '16'
+  evento: done
+  detalle: inmutabilidad-certificacion
+- fecha: '2026-09-01'
+  fase: '16'
+  evento: blocked
+  detalle: 'certificacion-30-dias: requiere 30 días calendario reales de paper trading'
+- fecha: '2026-09-01'
+  fase: '16'
+  evento: blocked
+  detalle: 'certificacion-200-trades: requiere 200 trades reales paper; no generar
+    trades artificiales'
+- fecha: '2026-09-01'
+  fase: '16'
+  evento: blocked
+  detalle: 'certificacion-2-regimenes: requiere evidencia de al menos 2 regímenes
+    de mercado'
+- fecha: '2026-09-01'
+  fase: '16'
+  evento: blocked
+  detalle: 'informes-periodicos: sin reportes periódicos reales aún; revertido de
+    done'
+- fecha: '2026-09-01'
+  fase: '16'
+  evento: done
+  detalle: informes-periodicos
+- fecha: '2026-09-01'
+  fase: '16'
+  evento: blocked
+  detalle: 'informes-periodicos: sin reportes periódicos reales: el runner desplegado
+    solo persiste eventos en paper_trade_events; falta implementar y desplegar la
+    emisión periódica de reportes'
 blockers: []

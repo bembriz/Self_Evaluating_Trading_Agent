@@ -1,0 +1,103 @@
+# evidencia: bybit-testnet-lifecycle-pass
+fecha: 2026-08-31T23:33:23-06:00
+fase: 15
+comando: bash -lc set -a; . ./.envrc >/dev/null 2>&1; set +a; uv run python - <<'PY'
+from __future__ import annotations
+
+import asyncio
+import os
+import time
+
+from domain.trading.order import OrderRequest
+from infrastructure.bybit.auth import BybitSigner
+from infrastructure.bybit.trade_client import BybitTradeClient
+
+SYMBOL = "ETHUSDT"
+ORDER_LINK_ID = f"seta-lrc15-{int(time.time())}"
+
+async def main() -> None:
+    api_key = os.environ.get("BYBIT_API_KEY", "")
+    api_secret = os.environ.get("BYBIT_API_SECRET", "")
+    if not api_key or not api_secret:
+        raise SystemExit("missing BYBIT_API_KEY/BYBIT_API_SECRET in environment")
+
+    client = BybitTradeClient(
+        signer=BybitSigner(api_key=api_key, api_secret=api_secret),
+        base_url="https://api-testnet.bybit.com",
+        timeout=10.0,
+    )
+    placed = False
+    try:
+        before = await client.open_orders(SYMBOL)
+        print(f"testnet_open_orders_before={len(before)}")
+        req = OrderRequest(
+            symbol=SYMBOL,
+            side="Buy",
+            quantity=0.2,
+            order_type="Limit",
+            price=25.0,
+            order_link_id=ORDER_LINK_ID,
+        )
+        order = await client.place_order(req)
+        placed = True
+        print("testnet_place_order=PASS")
+        print(f"order_link_id={order.order_link_id}")
+        print(f"exchange_order_id_present={bool(order.exchange_order_id)}")
+
+        open_orders = await client.open_orders(SYMBOL)
+        matched = [o for o in open_orders if o.order_link_id == ORDER_LINK_ID]
+        print(f"testnet_reconcile_open_order={bool(matched)}")
+        if not matched:
+            raise SystemExit("placed order was not visible in open orders")
+
+        cancelled = await client.cancel_order(symbol=SYMBOL, order_link_id=ORDER_LINK_ID)
+        placed = False
+        print(f"testnet_cancel_order={cancelled}")
+        if not cancelled:
+            raise SystemExit("cancel_order returned false for newly placed order")
+
+        after = await client.open_orders(SYMBOL)
+        still_open = [o for o in after if o.order_link_id == ORDER_LINK_ID]
+        print(f"testnet_order_still_open_after_cancel={bool(still_open)}")
+        if still_open:
+            raise SystemExit("order remained open after cancel")
+        print("TESTNET_LIFECYCLE=PASS")
+    finally:
+        if placed:
+            try:
+                await client.cancel_order(symbol=SYMBOL, order_link_id=ORDER_LINK_ID)
+            except Exception as exc:
+                print(f"cleanup_cancel_result=ignored:{exc.__class__.__name__}")
+        await client.close()
+
+asyncio.run(main())
+PY
+testnet_open_orders_before=0
+testnet_place_order=PASS
+order_link_id=seta-lrc15-1788240803
+exchange_order_id_present=True
+Traceback (most recent call last):
+  File "<stdin>", line 69, in <module>
+  File "/home/xuum/snap/codium/495/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/xuum/snap/codium/495/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/xuum/snap/codium/495/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "<stdin>", line 43, in main
+  File "/home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/src/infrastructure/bybit/trade_client.py", line 130, in open_orders
+    RemoteOrder.tolerant(
+  File "/home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/src/infrastructure/bybit/trade_client.py", line 58, in tolerant
+    return cls.model_validate(clean)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/.venv/lib/python3.12/site-packages/pydantic/main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for RemoteOrder
+status
+  Field required [type=missing, input_value={'orderLinkId': 'seta-lrc...': 0.0, 'avgPrice': 0.0}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+exit=1

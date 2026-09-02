@@ -1,0 +1,37 @@
+# evidencia: bybit-testnet-cleanup-open-orders
+fecha: 2026-08-31T23:34:20-06:00
+fase: 15
+comando: bash -lc set -a; . ./.envrc >/dev/null 2>&1; set +a; uv run python - <<'PY'
+from __future__ import annotations
+
+import asyncio
+import os
+
+from infrastructure.bybit.auth import BybitSigner
+from infrastructure.bybit.trade_client import BybitTradeClient
+
+SYMBOL = "ETHUSDT"
+PREFIX = "seta-lrc15-"
+
+async def main() -> None:
+    api_key = os.environ.get("BYBIT_API_KEY", "")
+    api_secret = os.environ.get("BYBIT_API_SECRET", "")
+    if not api_key or not api_secret:
+        raise SystemExit("missing BYBIT_API_KEY/BYBIT_API_SECRET in environment")
+    client = BybitTradeClient(signer=BybitSigner(api_key=api_key, api_secret=api_secret))
+    try:
+        orders = await client.open_orders(SYMBOL)
+        ours = [o for o in orders if o.order_link_id.startswith(PREFIX)]
+        print(f"testnet_open_orders_total={len(orders)}")
+        print(f"testnet_lrc15_open_orders={len(ours)}")
+        for order in ours:
+            cancelled = await client.cancel_order(symbol=SYMBOL, order_link_id=order.order_link_id)
+            print(f"cleanup_cancelled={order.order_link_id}:{cancelled}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+PY
+testnet_open_orders_total=0
+testnet_lrc15_open_orders=0
+exit=0

@@ -1,0 +1,6 @@
+# evidencia: tests-paper-cert-final
+fecha: 2026-09-01T03:12:15-06:00
+fase: 16
+comando: uv run pytest harness/tests/test_paper_certification.py -q
+.........                                                                [100%]
+exit=0

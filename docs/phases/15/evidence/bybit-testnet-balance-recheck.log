@@ -1,0 +1,56 @@
+# evidencia: bybit-testnet-balance-recheck
+fecha: 2026-08-31T23:33:04-06:00
+fase: 15
+comando: bash -lc set -a; . ./.envrc >/dev/null 2>&1; set +a; uv run python - <<'PY'
+from __future__ import annotations
+
+import asyncio
+import os
+
+import httpx
+
+from infrastructure.bybit.auth import BybitSigner
+
+async def main() -> None:
+    api_key = os.environ.get("BYBIT_API_KEY", "")
+    api_secret = os.environ.get("BYBIT_API_SECRET", "")
+    if not api_key or not api_secret:
+        raise SystemExit("missing BYBIT_API_KEY/BYBIT_API_SECRET in environment")
+    signer = BybitSigner(api_key=api_key, api_secret=api_secret)
+    params = {"accountType": "UNIFIED", "coin": "USDT,ETH"}
+    query = str(httpx.QueryParams(params))
+    headers = signer.sign("/v5/account/wallet-balance", payload=query)
+    async with httpx.AsyncClient(base_url="https://api-testnet.bybit.com", timeout=10.0) as client:
+        response = await client.get("/v5/account/wallet-balance", params=params, headers=headers)
+    raw = response.json()
+    print(f"wallet_http_status={response.status_code}")
+    print(f"wallet_ret_code={raw.get("retCode")}")
+    print(f"wallet_ret_msg={raw.get("retMsg")}")
+    if raw.get("retCode") != 0:
+        raise SystemExit("wallet balance check failed")
+    coins = []
+    for account in raw.get("result", {}).get("list", []):
+        if isinstance(account, dict):
+            coins.extend(account.get("coin", []))
+    seen = {str(c.get("coin")): c for c in coins if isinstance(c, dict)}
+    has_positive = False
+    for coin in ("USDT", "ETH"):
+        item = seen.get(coin, {})
+        try:
+            balance = float(item.get("walletBalance", "0") or 0)
+        except (TypeError, ValueError):
+            balance = 0.0
+        positive = balance > 0
+        has_positive = has_positive or positive
+        print(f"UNIFIED_{coin}_wallet_balance_positive={positive}")
+    if not has_positive:
+        raise SystemExit("UNIFIED wallet still has no positive USDT/ETH balance")
+
+asyncio.run(main())
+PY
+wallet_http_status=200
+wallet_ret_code=0
+wallet_ret_msg=OK
+UNIFIED_USDT_wallet_balance_positive=True
+UNIFIED_ETH_wallet_balance_positive=False
+exit=0

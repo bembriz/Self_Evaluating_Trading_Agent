@@ -1,0 +1,6 @@
+# evidencia: gen-report
+fecha: 2026-09-01T00:22:26-06:00
+fase: 16
+comando: python3 harness/scripts/gen_report.py --phase 16
+AVISO: phase-16-report.md ya existe; usa --force para regenerar. No se sobrescribió.
+exit=1

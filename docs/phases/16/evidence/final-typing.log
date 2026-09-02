@@ -1,0 +1,6 @@
+# evidencia: final-typing
+fecha: 2026-09-01T16:29:33-06:00
+fase: 16
+comando: uv run mypy src/application/ports/paper_trading.py src/application/services/paper_runner.py src/interfaces/cli/paper_runner.py tests/test_paper_runner.py tests/test_cli_paper_runner.py
+Success: no issues found in 5 source files
+exit=0

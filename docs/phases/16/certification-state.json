@@ -1,0 +1,9 @@
+{
+  "strategy_version": "baseline-v1",
+  "strategy_hash": "pending-live-paper-hash",
+  "active_strategy_hash": "pending-live-paper-hash",
+  "calendar_days": 0,
+  "trade_count": 0,
+  "market_regimes": [],
+  "periodic_reports": []
+}

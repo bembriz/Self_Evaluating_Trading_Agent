@@ -1,0 +1,5 @@
+# evidencia: paper-runner-task-4-forbidden-import-search
+fecha: 2026-09-01T15:54:29-06:00
+fase: 16
+comando: bash -c ! rg "^(from|import) infrastructure\\.bybit\\.trade_client|LLM|llm|application\\.ports\\.llm|DecisionAgent|infrastructure\\.llm" src/application/services/paper_runner.py
+exit=0

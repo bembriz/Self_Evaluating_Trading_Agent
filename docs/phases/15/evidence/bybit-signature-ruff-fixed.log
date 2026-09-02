@@ -1,0 +1,6 @@
+# evidencia: bybit-signature-ruff-fixed
+fecha: 2026-08-31T23:20:09-06:00
+fase: 15
+comando: uv run ruff check src/infrastructure/bybit/auth.py tests/test_bybit_trade_auth.py
+All checks passed!
+exit=0

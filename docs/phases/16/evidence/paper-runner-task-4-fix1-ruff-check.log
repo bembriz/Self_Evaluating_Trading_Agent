@@ -1,0 +1,15 @@
+# evidencia: paper-runner-task-4-fix1-ruff-check
+fecha: 2026-09-01T15:59:06-06:00
+fase: 16
+comando: uv run ruff check src/application/services/paper_runner.py tests/test_paper_runner.py harness/scripts/paper_certification.py harness/tests/test_paper_certification.py
+E501 Line too long (101 > 100)
+  --> harness/tests/test_paper_certification.py:8:101
+   |
+ 8 | def valid_state(report_path: str = "harness/tests/test_paper_certification.py") -> dict[str, object]:
+   |                                                                                                     ^
+ 9 |     return {
+10 |         "strategy_version": "baseline-v1",
+   |
+
+Found 1 error.
+exit=1

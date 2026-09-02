@@ -1,0 +1,6 @@
+# evidencia: paper-certification-ruff-check-final
+fecha: 2026-09-01T00:28:47-06:00
+fase: 16
+comando: uv run ruff check harness/scripts/paper_certification.py harness/tests/test_paper_certification.py
+All checks passed!
+exit=0

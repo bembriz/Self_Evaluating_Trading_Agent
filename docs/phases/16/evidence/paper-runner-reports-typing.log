@@ -1,0 +1,6 @@
+# evidencia: paper-runner-reports-typing
+fecha: 2026-09-01T20:45:38-06:00
+fase: 16
+comando: uv run mypy src/application/ports/paper_trading.py src/application/services/paper_runner.py src/interfaces/cli/paper_runner.py src/settings.py
+Success: no issues found in 4 source files
+exit=0

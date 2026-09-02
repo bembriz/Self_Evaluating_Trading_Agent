@@ -1,0 +1,90 @@
+{
+  "benchmark_buy_hold": {
+    "metrics": {
+      "avg_holding_bars": 103679.0,
+      "avg_loser": null,
+      "avg_winner": 492.963761063646,
+      "expectancy": 492.963761063646,
+      "exposure": 1.0,
+      "fees": 2.4939585291588484,
+      "fully_loaded_pnl": 492.963761063646,
+      "gross_pnl": 495.9565311568505,
+      "llm_cost": 0.0,
+      "loss_rate": 0.0,
+      "max_drawdown": 0.692714202762497,
+      "net_pnl": 492.963761063646,
+      "profit_factor": Infinity,
+      "risk_reward": null,
+      "sharpe": 0.5338106527606598,
+      "slippage": 0.49881156404559746,
+      "sortino": 0.7523371000905608,
+      "trades": 1,
+      "win_rate": 1.0
+    },
+    "strategy_version": "buy-and-hold"
+  },
+  "dataset": {
+    "file": "datasets/BYBIT_ETHBTC_V001/ETHUSDT_15m.csv",
+    "rows": 103680,
+    "sha256": "f561207c018d0f4ade1afdaca3d349a53faec49d732bb5f50933db64e2cbb31d",
+    "version": "BYBIT_ETHBTC_V001"
+  },
+  "decision_source": {
+    "confidence": 0.8,
+    "llm_calls": 0,
+    "note": "sin proveedor LLM en sesi\u00f3n local; llm_cost=0.0 expl\u00edcito",
+    "strategy_version": "baseline-v1",
+    "type": "deterministic-baseline"
+  },
+  "experiment_id": "paper-session-bybit_ethbtc_v001-baseline-v1-ethusdt-15m",
+  "metrics": {
+    "avg_holding_bars": 0.0,
+    "avg_loser": -0.17420632653488174,
+    "avg_winner": 0.24378948726629587,
+    "expectancy": -0.05158000360851585,
+    "exposure": 0.06964699074074074,
+    "fees": 15.681734720319247,
+    "fully_loaded_pnl": -20.219361414538213,
+    "gross_pnl": -1.4012796807527494,
+    "llm_cost": 0.0,
+    "loss_rate": 0.7066326530612245,
+    "max_drawdown": 0.01761861324424626,
+    "net_pnl": -20.219361414538213,
+    "profit_factor": 0.5809906219771929,
+    "risk_reward": 1.399429585110282,
+    "sharpe": -2.1932208997653166,
+    "slippage": 3.136347013466217,
+    "sortino": -3.2288155576320037,
+    "trades": 392,
+    "win_rate": 0.29336734693877553
+  },
+  "risk_config": {
+    "capital": 1000.0,
+    "high_risk_pct": 0.02,
+    "leverage": 0.0,
+    "low_risk_pct": 0.005,
+    "max_daily_loss": 0.02,
+    "max_drawdown": 0.05,
+    "max_open_positions": 1,
+    "max_position_allocation": 0.02,
+    "medium_risk_pct": 0.01,
+    "stop_atr_multiplier": 2.0,
+    "stop_loss_required": true,
+    "take_profit_r_multiple": 2.0,
+    "trailing_atr_multiplier": 3.0,
+    "version": "risk-v1"
+  },
+  "session": {
+    "bars": 103680,
+    "decisions": {
+      "buy": 1055,
+      "hold": 100859,
+      "sell": 1766
+    },
+    "filled": 784,
+    "kill_switch_tripped": false,
+    "rejected": 66102,
+    "symbol": "ETHUSDT",
+    "timeframe": "15m"
+  }
+}

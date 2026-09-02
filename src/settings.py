@@ -28,6 +28,13 @@ class Settings(BaseSettings):
     app_version: str = __version__
     trading_mode: str = "backtest"
     live_trading_enabled: bool = False
+    paper_decision_source: str = "baseline"
+    paper_symbols: list[str] = ["ETHUSDT"]
+    paper_timeframe: str = "15m"
+    paper_report_interval_hours: int = 24
+    paper_max_runtime_days: int = 7
+    paper_report_dir: str = "reports/paper"
+    paper_certification_state_path: str = "docs/phases/16/certification-state.json"
 
     postgres_host: str = "localhost"
     postgres_port: int = 5432

@@ -8,6 +8,7 @@ from typing import Any
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import (
     BigInteger,
+    Boolean,
     DateTime,
     Float,
     Index,
@@ -156,3 +157,34 @@ class ReflectionRecord(Base):
     lesson: Mapped[str] = mapped_column(Text, nullable=False, default="")
     future_condition: Mapped[str] = mapped_column(Text, nullable=False, default="")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
+
+
+class PaperTradeEventRecord(Base):
+    """Auditable event from real-time paper trading execution."""
+
+    __tablename__ = "paper_trade_events"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    session_id: Mapped[str] = mapped_column(String(96), nullable=False)
+    strategy_version: Mapped[str] = mapped_column(String(64), nullable=False)
+    strategy_hash: Mapped[str] = mapped_column(String(128), nullable=False)
+    decision_source: Mapped[str] = mapped_column(String(32), nullable=False)
+    symbol: Mapped[str] = mapped_column(String(16), nullable=False)
+    timeframe: Mapped[str] = mapped_column(String(8), nullable=False)
+    timestamp_ms: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    action: Mapped[str] = mapped_column(String(8), nullable=False)
+    filled: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    risk_reason: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    exit_reason: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    exec_price: Mapped[float | None] = mapped_column(Float, nullable=True)
+    quantity: Mapped[float | None] = mapped_column(Float, nullable=True)
+    fee: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    slippage_cost: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
+    equity: Mapped[float] = mapped_column(Float, nullable=False)
+    kill_switch_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
+
+    __table_args__ = (
+        Index("ix_paper_trade_events_session_ts", "session_id", "timestamp_ms"),
+        Index("ix_paper_trade_events_symbol_tf_ts", "symbol", "timeframe", "timestamp_ms"),
+    )

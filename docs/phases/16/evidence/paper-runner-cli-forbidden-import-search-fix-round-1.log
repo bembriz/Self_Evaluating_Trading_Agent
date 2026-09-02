@@ -1,0 +1,5 @@
+# evidencia: paper-runner-cli-forbidden-import-search-fix-round-1
+fecha: 2026-09-01T15:48:38-06:00
+fase: 16
+comando: bash -c ! rg "infrastructure\.bybit\.trade_client|trade_client|LLM|LLMProvider|testnet|place_order" src/interfaces/cli/paper_runner.py
+exit=0

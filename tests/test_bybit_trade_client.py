@@ -83,14 +83,14 @@ async def test_open_orders_parses_list() -> None:
                     {
                         "orderLinkId": "seta-a",
                         "orderId": "o1",
-                        "status": "New",
+                        "orderStatus": "New",
                         "cumExecQty": "0",
                         "avgPrice": "",
                     },
                     {
                         "orderLinkId": "seta-b",
                         "orderId": "o2",
-                        "status": "PartiallyFilled",
+                        "orderStatus": "PartiallyFilled",
                         "cumExecQty": "0.3",
                         "avgPrice": "2000.5",
                     },

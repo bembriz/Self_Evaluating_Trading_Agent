@@ -1,0 +1,72 @@
+# evidencia: bybit-testnet-account-balances
+fecha: 2026-08-31T23:30:46-06:00
+fase: 15
+comando: bash -lc set -a; . ./.envrc >/dev/null 2>&1; set +a; uv run python - <<'PY'
+from __future__ import annotations
+
+import asyncio
+import os
+
+import httpx
+
+from infrastructure.bybit.auth import BybitSigner
+
+ACCOUNT_TYPES = ("UNIFIED", "FUND", "SPOT")
+COINS = ("USDT", "ETH")
+
+async def signed_get(client: httpx.AsyncClient, signer: BybitSigner, path: str, params: dict[str, str]) -> dict[str, object]:
+    query = str(httpx.QueryParams(params))
+    headers = signer.sign(path, payload=query)
+    response = await client.get(path, params=params, headers=headers)
+    raw = response.json()
+    print(f"{params.get(accountType)}_http_status={response.status_code}")
+    print(f"{params.get(accountType)}_ret_code={raw.get(retCode)}")
+    print(f"{params.get(accountType)}_ret_msg={raw.get(retMsg)}")
+    return raw
+
+async def main() -> None:
+    api_key = os.environ.get("BYBIT_API_KEY", "")
+    api_secret = os.environ.get("BYBIT_API_SECRET", "")
+    if not api_key or not api_secret:
+        raise SystemExit("missing BYBIT_API_KEY/BYBIT_API_SECRET in environment")
+    signer = BybitSigner(api_key=api_key, api_secret=api_secret)
+    async with httpx.AsyncClient(base_url="https://api-testnet.bybit.com", timeout=10.0) as client:
+        for account_type in ACCOUNT_TYPES:
+            raw = await signed_get(
+                client,
+                signer,
+                "/v5/account/wallet-balance",
+                {"accountType": account_type, "coin": ",".join(COINS)},
+            )
+            if raw.get("retCode") != 0:
+                continue
+            coins = []
+            for account in raw.get("result", {}).get("list", []):
+                if isinstance(account, dict):
+                    coins.extend(account.get("coin", []))
+            seen = {str(c.get("coin")): c for c in coins if isinstance(c, dict)}
+            for coin in COINS:
+                item = seen.get(coin, {})
+                try:
+                    balance = float(item.get("walletBalance", "0") or 0)
+                except (TypeError, ValueError):
+                    balance = 0.0
+                print(f"{account_type}_{coin}_wallet_balance_positive={balance > 0}")
+
+asyncio.run(main())
+PY
+Traceback (most recent call last):
+  File "<stdin>", line 52, in <module>
+  File "/home/xuum/snap/codium/495/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/xuum/snap/codium/495/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/xuum/snap/codium/495/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "<stdin>", line 31, in main
+  File "<stdin>", line 18, in signed_get
+NameError: name 'accountType' is not defined
+exit=1

@@ -1,0 +1,6 @@
+# evidencia: task-3-ruff-format-check
+fecha: 2026-09-01T00:34:23-06:00
+fase: 16
+comando: uv run ruff format --check harness/scripts/paper_certification.py harness/tests/test_paper_certification.py
+2 files already formatted
+exit=0

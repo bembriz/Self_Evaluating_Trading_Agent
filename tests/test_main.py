@@ -38,3 +38,18 @@ def test_subcommand_dispatch_returns_zero(
 ) -> None:
     monkeypatch.setattr(target, lambda argv: 0)
     assert main([command]) == 0
+
+
+def test_main_dispatches_paper_runner(monkeypatch: pytest.MonkeyPatch) -> None:
+    called: dict[str, list[str] | None] = {}
+
+    def fake(argv: list[str] | None) -> int:
+        called["argv"] = argv
+        return 0
+
+    from interfaces.cli import paper_runner as cli_paper_runner
+
+    monkeypatch.setattr(cli_paper_runner, "paper_runner", fake)
+
+    assert main(["paper-runner", "--seconds", "1"]) == 0
+    assert called["argv"] == ["--seconds", "1"]

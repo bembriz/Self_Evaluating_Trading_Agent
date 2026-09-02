@@ -1,0 +1,6 @@
+# evidencia: progress-block-certificacion-200-trades-final
+fecha: 2026-09-01T00:46:15-06:00
+fase: 16
+comando: python3 harness/scripts/progress.py block --phase 16 --deliverable certificacion-200-trades --motivo requiere 200 trades reales paper; no generar trades artificiales
+bloqueado: 16/certificacion-200-trades
+exit=0

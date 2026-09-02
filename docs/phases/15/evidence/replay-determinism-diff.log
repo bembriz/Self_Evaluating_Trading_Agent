@@ -1,0 +1,6 @@
+# evidencia: replay-determinism-diff
+fecha: 2026-08-26T00:17:17-06:00
+fase: 15
+comando: bash -c diff docs/phases/15/evidence/replay_run1.jsonl docs/phases/15/evidence/replay_run2.jsonl && echo DETERMINISTIC_OK
+DETERMINISTIC_OK
+exit=0

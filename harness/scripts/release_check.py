@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import json
 import subprocess
 from pathlib import Path
 
@@ -30,33 +31,90 @@ def _run(cmd: list[str]) -> tuple[int, str]:
 
 def check_backtest() -> tuple[str, str]:
     # Corrida completa sobre dataset congelado con métricas §45 (Fase 06/14).
-    if _has("datasets/BYBIT_ETHBTC_V001"):
-        return (
-            "PENDING",
-            "dataset congelado presente pero falta la corrida oficial de backtest "
-            "con métricas §45 registrada como evidencia (requiere ejecución dedicada)",
+    log = REPO / "docs/phases/15/evidence/backtest-official-run1.log"
+    result = REPO / "docs/phases/15/evidence/backtest_run1.json"
+    if not (_has("datasets/BYBIT_ETHBTC_V001") and log.exists() and result.exists()):
+        return "PENDING", "corrida oficial de backtest sobre dataset congelado no registrada"
+    log_text = log.read_text(encoding="utf-8")
+    if "exit=0" not in log_text or "OK  datasets/BYBIT_ETHBTC_V001/" not in log_text:
+        return "PENDING", f"log de backtest sin verificación de dataset o con fallos: {log}"
+    try:
+        payload = json.loads(result.read_text(encoding="utf-8"))
+        m = payload["metrics"]
+        detail = (
+            f"{payload['experiment_id']}: net_pnl={m['net_pnl']:.2f} "
+            f"trades={m['trades']} win_rate={m['win_rate']:.3f} "
+            f"profit_factor={m['profit_factor']:.3f} maxDD={m['max_drawdown']:.3f}; "
+            f"buy_hold net_pnl={payload['benchmark_buy_hold']['metrics']['net_pnl']:.2f}"
         )
-    return "PENDING", "sin dataset congelado verificado"
+        return "PASS", detail
+    except (KeyError, json.JSONDecodeError):
+        return "PENDING", f"resultado de backtest ilegible: {result}"
 
 
 def check_replay() -> tuple[str, str]:
-    return "PENDING", "replay determinista reproducible pendiente de corrida oficial"
+    log = REPO / "docs/phases/15/evidence/replay-official-run1.log"
+    trace = REPO / "docs/phases/15/evidence/replay_run1.jsonl"
+    diff = REPO / "docs/phases/15/evidence/replay-determinism-diff.log"
+    if not (
+        _has("datasets/BYBIT_ETHBTC_V001") and log.exists() and trace.exists() and diff.exists()
+    ):
+        return "PENDING", "replay oficial sobre dataset congelado no registrado"
+    if "exit=0" not in log.read_text(encoding="utf-8") or "DETERMINISTIC_OK" not in diff.read_text(
+        encoding="utf-8"
+    ):
+        return "PENDING", f"replay sin exit=0 o sin determinismo probado: {log}"
+    summary = [ln for ln in trace.read_text(encoding="utf-8").splitlines() if '"summary"' in ln]
+    try:
+        s = json.loads(summary[-1])
+        return (
+            "PASS",
+            f"replay determinista reproducible (diff vacío): bars={s['bars']} "
+            f"buy={s['buy']} sell={s['sell']} hold={s['hold']}",
+        )
+    except (IndexError, KeyError, json.JSONDecodeError):
+        return "PENDING", f"traza de replay ilegible: {trace}"
 
 
 def check_paper() -> tuple[str, str]:
-    return (
-        "PENDING",
-        "paper trading operativo (Paper Engine Fase 10) pero sin sesión de paper "
-        "evaluada con fees/slippage/coste LLM registrada como evidencia",
-    )
+    log = REPO / "docs/phases/15/evidence/paper-session-run1.log"
+    result = REPO / "docs/phases/15/evidence/paper_session_run1.json"
+    diff = REPO / "docs/phases/15/evidence/paper-session-determinism-diff.log"
+    if not (
+        _has("datasets/BYBIT_ETHBTC_V001") and log.exists() and result.exists() and diff.exists()
+    ):
+        return (
+            "PENDING",
+            "sesión de paper trading evaluada con fees/slippage/coste LLM no registrada",
+        )
+    if "exit=0" not in log.read_text(encoding="utf-8") or "DETERMINISTIC_OK" not in diff.read_text(
+        encoding="utf-8"
+    ):
+        return "PENDING", f"sesión paper sin exit=0 o sin determinismo probado: {log}"
+    try:
+        payload = json.loads(result.read_text(encoding="utf-8"))
+        m = payload["metrics"]
+        s = payload["session"]
+        detail = (
+            f"{payload['experiment_id']}: bars={s['bars']} trades={m['trades']} "
+            f"net_pnl={m['net_pnl']:.2f} fees={m['fees']:.2f} slippage={m['slippage']:.2f} "
+            f"llm_cost={m['llm_cost']:.2f} kill_switch={s['kill_switch_tripped']} "
+            f"(fuente decisiones: {payload['decision_source']['type']})"
+        )
+        return "PASS", detail
+    except (KeyError, json.JSONDecodeError):
+        return "PENDING", f"resultado de sesión paper ilegible: {result}"
 
 
 def check_testnet() -> tuple[str, str]:
-    return (
-        "PENDING",
-        "lifecycle de órdenes implementado (Fase 12) pero no validado contra Testnet "
-        "real (requiere BYBIT_API_KEY/BYBIT_API_SECRET de testnet)",
-    )
+    rel = "docs/phases/15/evidence/bybit-testnet-lifecycle-pass-final.log"
+    log = REPO / rel
+    if not log.exists():
+        return "PENDING", "lifecycle de órdenes Testnet real no registrado"
+    text = log.read_text(encoding="utf-8")
+    if "TESTNET_LIFECYCLE=PASS" in text and "exit=0" in text:
+        return "PASS", f"lifecycle real create/reconcile/cancel validado contra Testnet ({rel})"
+    return "PENDING", f"lifecycle Testnet sin PASS o exit=0: {rel}"
 
 
 def check_observability() -> tuple[str, str]:

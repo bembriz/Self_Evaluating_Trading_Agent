@@ -9,6 +9,7 @@ from sqlalchemy import func, select, text
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from application.ports.paper_trading import PaperTradeEvent
 from domain.market.candle import Candle, Timeframe
 from domain.market.dataset import CandleFileEntry, DatasetManifest
 from domain.market.features import OrderBookFeatureSnapshot
@@ -16,6 +17,7 @@ from infrastructure.database.models import (
     DatasetManifestRecord,
     MarketCandle,
     OrderBookFeatureWindow,
+    PaperTradeEventRecord,
     SystemState,
 )
 
@@ -177,3 +179,64 @@ class SqlAlchemyOrderBookFeatureRepository:
             )
         )
         await self._session.flush()
+
+
+class SqlAlchemyPaperTradeEventRepository:
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def add(self, event: PaperTradeEvent) -> None:
+        self._session.add(
+            PaperTradeEventRecord(
+                session_id=event.session_id,
+                strategy_version=event.strategy_version,
+                strategy_hash=event.strategy_hash,
+                decision_source=event.decision_source,
+                symbol=event.symbol,
+                timeframe=event.timeframe,
+                timestamp_ms=event.timestamp_ms,
+                action=event.action,
+                filled=event.filled,
+                risk_reason=event.risk_reason,
+                exit_reason=event.exit_reason,
+                exec_price=event.exec_price,
+                quantity=event.quantity,
+                fee=event.fee,
+                slippage_cost=event.slippage_cost,
+                equity=event.equity,
+                kill_switch_active=event.kill_switch_active,
+            )
+        )
+        await self._session.flush()
+
+    async def list_session(self, session_id: str) -> list[PaperTradeEvent]:
+        rows = (
+            await self._session.scalars(
+                select(PaperTradeEventRecord)
+                .where(PaperTradeEventRecord.session_id == session_id)
+                .order_by(PaperTradeEventRecord.timestamp_ms, PaperTradeEventRecord.id)
+            )
+        ).all()
+        return [self._to_domain(row) for row in rows]
+
+    @staticmethod
+    def _to_domain(row: PaperTradeEventRecord) -> PaperTradeEvent:
+        return PaperTradeEvent(
+            session_id=row.session_id,
+            strategy_version=row.strategy_version,
+            strategy_hash=row.strategy_hash,
+            decision_source=row.decision_source,
+            symbol=row.symbol,
+            timeframe=row.timeframe,
+            timestamp_ms=row.timestamp_ms,
+            action=row.action,
+            filled=row.filled,
+            risk_reason=row.risk_reason,
+            exit_reason=row.exit_reason,
+            exec_price=row.exec_price,
+            quantity=row.quantity,
+            fee=row.fee,
+            slippage_cost=row.slippage_cost,
+            equity=row.equity,
+            kill_switch_active=row.kill_switch_active,
+        )
