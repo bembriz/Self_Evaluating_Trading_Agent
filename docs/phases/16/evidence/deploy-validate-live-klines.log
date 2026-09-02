@@ -1,7 +1,7 @@
 # evidencia: deploy-validate-live-klines
 fecha: 2026-09-01T19:31:02-06:00
 fase: 16
-comando: ssh -o ConnectTimeout=15 administrador@192.168.100.24 echo '1712@Lenovo' | sudo -S bash -c 'cd /srv/docker/self-evaluating-trading-agent && docker compose exec -T postgres psql -U trading -d trading_agent -c "SELECT session_id, action, filled, exec_price, quantity, equity, timestamp_ms FROM paper_trade_events ORDER BY id;"'
+comando: ssh -o ConnectTimeout=15 administrador@192.168.100.24 echo '[REDACTED]' | sudo -S bash -c 'cd /srv/docker/self-evaluating-trading-agent && docker compose exec -T postgres psql -U trading -d trading_agent -c "SELECT session_id, action, filled, exec_price, quantity, equity, timestamp_ms FROM paper_trade_events ORDER BY id;"'
 [sudo] password for administrador:          session_id         | action | filled | exec_price | quantity | equity | timestamp_ms  
 ----------------------------+--------+--------+------------+----------+--------+---------------
  paper-baseline-15m-ethusdt | HOLD   | f      |            |          |   1000 | 1788311700000

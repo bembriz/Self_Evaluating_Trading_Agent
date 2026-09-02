@@ -13,6 +13,7 @@ from application.services.paper_runner import (
     write_periodic_report,
 )
 from domain.market.candle import Timeframe
+from domain.market.regime import MarketRegime
 from domain.market.stream import KlineUpdate
 
 
@@ -55,6 +56,19 @@ def _paper_event(
     )
 
 
+def _regime_evidence(name: str) -> dict[str, object]:
+    return {
+        "name": name,
+        "symbol": "ETHUSDT",
+        "timeframe": "15m",
+        "first_seen_at_ms": 1_000,
+        "confirmed_at_ms": 3_000,
+        "last_seen_at_ms": 3_000,
+        "classifier_version": "regime-v1",
+        "confirmation_candles": 3,
+    }
+
+
 def test_paper_runner_config_rejects_live_enabled() -> None:
     with pytest.raises(UnsafePaperModeError, match="LIVE_TRADING_ENABLED"):
         PaperRunnerConfig(
@@ -88,6 +102,31 @@ class FakePaperTradeRepo:
         return [event for event in self.events if event.session_id == session_id]
 
 
+class FixedRegimeClassifier:
+    def __init__(self, regime: MarketRegime) -> None:
+        self.regime = regime
+        self.calls = 0
+
+    def classify(self, candles: object) -> MarketRegime:
+        self.calls += 1
+        return self.regime
+
+
+def _confirmed_kline(timestamp_ms: int) -> KlineUpdate:
+    return KlineUpdate(
+        "ETHUSDT",
+        Timeframe.M15,
+        timestamp_ms,
+        100.0,
+        101.0,
+        99.0,
+        100.5,
+        10.0,
+        1005.0,
+        True,
+    )
+
+
 async def test_runner_ignores_unconfirmed_kline() -> None:
     repo = FakePaperTradeRepo()
     runner = PaperRunner(config=_safe_config(), event_repo=repo)
@@ -117,6 +156,38 @@ async def test_runner_persists_event_for_confirmed_kline() -> None:
     assert event.timestamp_ms == 1_000
     assert event.action in {"BUY", "SELL", "HOLD"}
     assert event.equity > 0.0
+
+
+async def test_runner_confirms_regime_only_after_three_confirmed_candles() -> None:
+    repo = FakePaperTradeRepo()
+    classifier = FixedRegimeClassifier(MarketRegime.SIDEWAYS)
+    runner = PaperRunner(
+        config=_safe_config(),
+        event_repo=repo,
+        regime_classifier=classifier,  # type: ignore[arg-type]
+    )
+
+    for timestamp_ms in (1_000, 2_000, 3_000):
+        await runner.handle_kline(_confirmed_kline(timestamp_ms))
+
+    assert [item["name"] for item in runner.regime_evidence()] == ["SIDEWAYS"]
+    assert classifier.calls == 3
+
+
+async def test_runner_does_not_classify_an_incomplete_candle() -> None:
+    repo = FakePaperTradeRepo()
+    classifier = FixedRegimeClassifier(MarketRegime.SIDEWAYS)
+    runner = PaperRunner(
+        config=_safe_config(),
+        event_repo=repo,
+        regime_classifier=classifier,  # type: ignore[arg-type]
+    )
+    kline = KlineUpdate("ETHUSDT", Timeframe.M15, 1_000, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, False)
+
+    await runner.handle_kline(kline)
+
+    assert classifier.calls == 0
+    assert runner.regime_evidence() == []
 
 
 async def test_runner_run_once_is_safe_noop_until_stream_adapter_is_wired() -> None:
@@ -157,9 +228,17 @@ def test_write_periodic_report_contains_certification_progress(tmp_path: Path) -
 
 def test_write_certification_state_keeps_pending_thresholds_honest(tmp_path: Path) -> None:
     state_path = tmp_path / "certification-state.json"
+    report_path = tmp_path / "paper-report.md"
+    report_path.write_text("# Paper report\n", encoding="utf-8")
     summary = summarize_events([_paper_event(action="BUY", filled=True)])
 
-    write_certification_state(summary, state_path)
+    write_certification_state(
+        summary,
+        state_path,
+        previous={},
+        regime_evidence=[],
+        report_path=report_path,
+    )
 
     state = json.loads(state_path.read_text(encoding="utf-8"))
     assert state["strategy_hash"] == "abc123"
@@ -167,7 +246,7 @@ def test_write_certification_state_keeps_pending_thresholds_honest(tmp_path: Pat
     assert state["trade_count"] == 1
     assert state["calendar_days"] == 1
     assert state["market_regimes"] == []
-    assert state["periodic_reports"] == []
+    assert state["periodic_reports"] == [str(report_path)]
 
 
 def test_summarize_events_computes_pnl_from_initial_equity() -> None:
@@ -216,6 +295,23 @@ def test_write_periodic_report_includes_pnl_and_delta(tmp_path: Path) -> None:
     assert "delta_fills: n/a" in text
 
 
+def test_write_periodic_report_includes_regime_review_telemetry(tmp_path: Path) -> None:
+    summary = summarize_events([_paper_event(action="HOLD")])
+    report = tmp_path / "paper-report.md"
+
+    write_periodic_report(
+        summary,
+        report,
+        regime_evidence=[_regime_evidence("SIDEWAYS")],
+        rejected_regime_candidates=1,
+    )
+
+    text = report.read_text(encoding="utf-8")
+    assert "regime_confirmation_candles: 3" in text
+    assert "regime_classifier_version: regime-v1" in text
+    assert "rejected_regime_candidates: 1" in text
+
+
 def test_write_certification_state_preserves_only_existing_periodic_reports(
     tmp_path: Path,
 ) -> None:
@@ -229,7 +325,28 @@ def test_write_certification_state_preserves_only_existing_periodic_reports(
         summary,
         state_path,
         previous={"periodic_reports": [str(existing_report), str(missing_report)]},
+        regime_evidence=[],
+        report_path=existing_report,
     )
 
     state = json.loads(state_path.read_text(encoding="utf-8"))
     assert state["periodic_reports"] == [str(existing_report)]
+
+
+def test_write_certification_state_merges_existing_and_new_regime_evidence(tmp_path: Path) -> None:
+    state_path = tmp_path / "certification-state.json"
+    report_path = tmp_path / "paper-report.md"
+    report_path.write_text("# Paper report\n", encoding="utf-8")
+    summary = summarize_events([_paper_event(action="BUY", filled=True)])
+
+    write_certification_state(
+        summary,
+        state_path,
+        previous={"market_regimes": [_regime_evidence("SIDEWAYS")], "periodic_reports": []},
+        regime_evidence=[_regime_evidence("TREND_UP")],
+        report_path=report_path,
+    )
+
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    assert [item["name"] for item in state["market_regimes"]] == ["SIDEWAYS", "TREND_UP"]
+    assert state["periodic_reports"] == [str(report_path)]

@@ -1,4 +1,5 @@
 import asyncio
+import json
 from pathlib import Path
 from typing import Any
 
@@ -90,6 +91,81 @@ async def test_run_loop_emits_report_after_interval(tmp_path: Path) -> None:
     text = report_files[0].read_text(encoding="utf-8")
     assert "# Paper Trading Periodic Report" in text
     assert state_path.exists()
+
+
+async def test_run_loop_preserves_existing_certification_evidence(tmp_path: Path) -> None:
+    repo = FakeRepo([])
+    stream = FakeStream([_kline(100.0, 1_000)])
+    report_dir = tmp_path / "reports"
+    state_path = tmp_path / "certification-state.json"
+    state_path.write_text(
+        json.dumps(
+            {
+                "market_regimes": [
+                    {
+                        "name": "SIDEWAYS",
+                        "symbol": "ETHUSDT",
+                        "timeframe": "15m",
+                        "first_seen_at_ms": 1_000,
+                        "confirmed_at_ms": 3_000,
+                        "last_seen_at_ms": 3_000,
+                        "classifier_version": "regime-v1",
+                        "confirmation_candles": 3,
+                    }
+                ],
+                "periodic_reports": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    async def fake_commit() -> None:
+        pass
+
+    await _run_loop(
+        stream=stream,
+        runner=_paper_runner(repo),
+        repo=repo,
+        commit=fake_commit,
+        session_id="paper-baseline-test",
+        report_interval_seconds=0,
+        report_dir=report_dir,
+        state_path=state_path,
+        initial_equity=1000.0,
+        deadline=asyncio.get_running_loop().time() + 1,
+    )
+
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    assert [item["name"] for item in state["market_regimes"]] == ["SIDEWAYS"]
+    assert len(state["periodic_reports"]) == 1
+
+
+async def test_run_loop_preserves_corrupt_certification_state(tmp_path: Path) -> None:
+    repo = FakeRepo([])
+    stream = FakeStream([_kline(100.0, 1_000)])
+    report_dir = tmp_path / "reports"
+    state_path = tmp_path / "certification-state.json"
+    state_path.write_text("{", encoding="utf-8")
+
+    async def fake_commit() -> None:
+        pass
+
+    result = await _run_loop(
+        stream=stream,
+        runner=_paper_runner(repo),
+        repo=repo,
+        commit=fake_commit,
+        session_id="paper-baseline-test",
+        report_interval_seconds=0,
+        report_dir=report_dir,
+        state_path=state_path,
+        initial_equity=1000.0,
+        deadline=asyncio.get_running_loop().time() + 1,
+    )
+
+    assert result.startswith("processed=")
+    assert state_path.read_text(encoding="utf-8") == "{"
+    assert len(list(report_dir.glob("paper-*.md"))) == 1
 
 
 def test_paper_runner_help_exits_zero() -> None:

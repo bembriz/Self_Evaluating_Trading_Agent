@@ -1,0 +1,6 @@
+# evidencia: memory-embedding-ruff
+fecha: 2026-09-02T12:20:32-06:00
+fase: 16
+comando: /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/.venv/bin/ruff check tests/integration/test_memory_repository.py
+All checks passed!
+exit=0

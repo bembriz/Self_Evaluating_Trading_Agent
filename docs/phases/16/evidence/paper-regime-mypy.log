@@ -1,0 +1,6 @@
+# evidencia: paper-regime-mypy
+fecha: 2026-09-02T12:04:47-06:00
+fase: 16
+comando: env PYTHONPATH=/tmp/opencode/paper-regime-certification/src /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/.venv/bin/mypy src/application/services/regime_confirmation.py src/application/services/paper_runner.py src/interfaces/cli/paper_runner.py harness/scripts/paper_certification.py
+Success: no issues found in 4 source files
+exit=0

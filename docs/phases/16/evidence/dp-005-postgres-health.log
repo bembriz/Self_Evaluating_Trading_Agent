@@ -1,0 +1,7 @@
+# evidencia: dp-005-postgres-health
+fecha: 2026-09-02T12:11:40-06:00
+fase: 16
+comando: sudo -n docker compose ps postgres
+NAME                                    IMAGE                    COMMAND                  SERVICE    CREATED         STATUS                   PORTS
+paper-regime-certification-postgres-1   pgvector/pgvector:pg16   "docker-entrypoint.s…"   postgres   6 seconds ago   Up 5 seconds (healthy)   127.0.0.1:5433->5432/tcp
+exit=0

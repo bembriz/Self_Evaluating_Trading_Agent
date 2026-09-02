@@ -13,6 +13,7 @@ from application.services.paper_runner import (
     PaperRunnerConfig,
     PaperRunSummary,
     UnsafePaperModeError,
+    load_certification_state,
     summarize_events,
     write_certification_state,
     write_periodic_report,
@@ -63,11 +64,23 @@ async def _run_loop(
                 )
                 ts = summary.latest_timestamp_ms or 0
                 name = f"paper-{datetime.fromtimestamp(ts / 1000, tz=UTC):%Y%m%d-%H%M%S}.md"
-                write_periodic_report(summary, report_dir / name)
-                write_certification_state(summary, state_path)
+                report_path = report_dir / name
+                write_periodic_report(
+                    summary,
+                    report_path,
+                    regime_evidence=runner.regime_evidence(),
+                    rejected_regime_candidates=runner.rejected_regime_candidates,
+                )
+                write_certification_state(
+                    summary,
+                    state_path,
+                    previous=load_certification_state(state_path),
+                    regime_evidence=runner.regime_evidence(),
+                    report_path=report_path,
+                )
                 last_summary = summary
                 last_report_time = now
-            except OSError as exc:
+            except (OSError, ValueError) as exc:
                 print(f"[paper-runner] WARN: report write failed: {exc}")
     return f"processed={processed}"
 

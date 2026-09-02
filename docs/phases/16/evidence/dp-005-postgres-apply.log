@@ -1,0 +1,17 @@
+# evidencia: dp-005-postgres-apply
+fecha: 2026-09-02T12:11:34-06:00
+fase: 16
+comando: sudo -n docker compose up -d postgres
+ Network paper-regime-certification_default Creating 
+ Network paper-regime-certification_default Creating 
+ Volume paper-regime-certification_pgdata Creating 
+ Volume paper-regime-certification_pgdata Creating 
+ Volume paper-regime-certification_pgdata Created 
+ Volume paper-regime-certification_pgdata Created 
+ Network paper-regime-certification_default Created 
+ Network paper-regime-certification_default Created 
+ Container paper-regime-certification-postgres-1 Creating 
+ Container paper-regime-certification-postgres-1 Created 
+ Container paper-regime-certification-postgres-1 Starting 
+ Container paper-regime-certification-postgres-1 Started 
+exit=0

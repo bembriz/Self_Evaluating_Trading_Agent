@@ -5,6 +5,19 @@ import paper_certification
 from paper_certification import evaluate_state
 
 
+def _regime_evidence(name: str) -> dict[str, object]:
+    return {
+        "name": name,
+        "symbol": "ETHUSDT",
+        "timeframe": "15m",
+        "first_seen_at_ms": 1_000,
+        "confirmed_at_ms": 3_000,
+        "last_seen_at_ms": 3_000,
+        "classifier_version": "regime-v1",
+        "confirmation_candles": 3,
+    }
+
+
 def valid_state(
     report_path: str = "harness/tests/test_paper_certification.py",
 ) -> dict[str, object]:
@@ -14,7 +27,7 @@ def valid_state(
         "active_strategy_hash": "abc",
         "calendar_days": 30,
         "trade_count": 200,
-        "market_regimes": ["trend", "range"],
+        "market_regimes": [_regime_evidence("TREND_UP"), _regime_evidence("SIDEWAYS")],
         "periodic_reports": [report_path],
     }
 
@@ -47,12 +60,35 @@ def test_certification_is_pending_until_200_trades() -> None:
 
 
 def test_certification_is_pending_until_2_market_regimes() -> None:
-    state = valid_state() | {"market_regimes": ["trend"]}
+    state = valid_state() | {"market_regimes": [_regime_evidence("TREND_UP")]}
 
     result = evaluate_state(state)
 
     assert result.status == "PENDING"
     assert result.reasons == ["market_regimes below minimum: 1 < 2"]
+
+
+def test_certification_counts_distinct_valid_regime_evidence() -> None:
+    state = valid_state() | {
+        "market_regimes": [
+            _regime_evidence("SIDEWAYS"),
+            _regime_evidence("TREND_UP"),
+            _regime_evidence("SIDEWAYS"),
+        ]
+    }
+
+    result = evaluate_state(state)
+
+    assert result.status == "PASS"
+
+
+def test_certification_rejects_unstructured_or_invalid_regime_evidence() -> None:
+    state = valid_state() | {"market_regimes": ["SIDEWAYS", {"name": ""}]}
+
+    result = evaluate_state(state)
+
+    assert result.status == "PENDING"
+    assert result.reasons == ["market_regimes below minimum: 0 < 2"]
 
 
 def test_certification_is_pending_until_periodic_reports_exist() -> None:
@@ -90,7 +126,7 @@ def test_strategy_hash_change_invalidates_certification() -> None:
             "active_strategy_hash": "new",
             "calendar_days": 30,
             "trade_count": 200,
-            "market_regimes": ["trend", "range"],
+            "market_regimes": [_regime_evidence("TREND_UP"), _regime_evidence("SIDEWAYS")],
             "periodic_reports": ["x.md"],
         }
     )

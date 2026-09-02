@@ -2,12 +2,16 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections import defaultdict, deque
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from application.ports.paper_trading import PaperTradeEvent, PaperTradeEventRepository
 from application.services.paper_engine import PaperEngine
+from application.services.regime_confirmation import RegimeConfirmationTracker
+from domain.market.candle import Candle
+from domain.market.regime import RegimeClassifier
 from domain.market.stream import KlineUpdate
 from domain.risk.config import RiskConfig
 from domain.trading.decision import TradingDecision
@@ -102,13 +106,37 @@ def summarize_events(
     )
 
 
-def write_periodic_report(summary: PaperRunSummary, report_path: Path) -> None:
+def write_periodic_report(
+    summary: PaperRunSummary,
+    report_path: Path,
+    *,
+    regime_evidence: list[dict[str, object]] | None = None,
+    rejected_regime_candidates: int = 0,
+) -> None:
     report_path.parent.mkdir(parents=True, exist_ok=True)
     delta_fills = summary.delta_fills if summary.delta_fills is not None else "n/a"
     delta_pnl = (
         f"{summary.delta_pnl_absolute:.8f}" if summary.delta_pnl_absolute is not None else "n/a"
     )
     delta_pnl_pct = f"{summary.delta_pnl_pct:.8f}" if summary.delta_pnl_pct is not None else "n/a"
+    evidence = regime_evidence or []
+    confirmation_candles = next(
+        (
+            item["confirmation_candles"]
+            for item in evidence
+            if isinstance(item.get("confirmation_candles"), int)
+        ),
+        3,
+    )
+    classifier_version = next(
+        (
+            item["classifier_version"]
+            for item in evidence
+            if isinstance(item.get("classifier_version"), str)
+        ),
+        RegimeClassifier.version,
+    )
+    regime_names = ", ".join(name for item in evidence if isinstance(name := item.get("name"), str))
     report_path.write_text(
         "\n".join(
             [
@@ -136,6 +164,10 @@ def write_periodic_report(summary: PaperRunSummary, report_path: Path) -> None:
                 f"delta_pnl_absolute: {delta_pnl}",
                 f"delta_pnl_pct: {delta_pnl_pct}",
                 f"kill_switch_active: {summary.kill_switch_active}",
+                f"regime_confirmation_candles: {confirmation_candles}",
+                f"regime_classifier_version: {classifier_version}",
+                f"confirmed_market_regimes: {regime_names}",
+                f"rejected_regime_candidates: {rejected_regime_candidates}",
                 "",
             ]
         ),
@@ -143,10 +175,56 @@ def write_periodic_report(summary: PaperRunSummary, report_path: Path) -> None:
     )
 
 
+def _merge_regime_evidence(
+    previous: object, current: list[dict[str, object]]
+) -> list[dict[str, object]]:
+    merged: dict[str, dict[str, object]] = {}
+    for item in [*previous, *current] if isinstance(previous, list) else current:
+        name = item.get("name")
+        if not isinstance(name, str) or not name:
+            continue
+        existing = merged.get(name)
+        if existing is None:
+            merged[name] = dict(item)
+            continue
+        combined = {**existing, **item}
+        for field in ("first_seen_at_ms", "confirmed_at_ms"):
+            values = [value.get(field) for value in (existing, item)]
+            ints = [value for value in values if isinstance(value, int)]
+            if ints:
+                combined[field] = min(ints)
+        values = [value.get("last_seen_at_ms") for value in (existing, item)]
+        ints = [value for value in values if isinstance(value, int)]
+        if ints:
+            combined["last_seen_at_ms"] = max(ints)
+        merged[name] = combined
+    return list(merged.values())
+
+
+def _existing_report_paths(paths: object) -> list[str]:
+    if not isinstance(paths, list):
+        return []
+    return list(
+        dict.fromkeys(path for path in paths if isinstance(path, str) and Path(path).exists())
+    )
+
+
+def load_certification_state(state_path: Path) -> dict[str, Any]:
+    if not state_path.exists():
+        return {}
+    data = json.loads(state_path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise ValueError("certification state must be a JSON object")
+    return data
+
+
 def write_certification_state(
     summary: PaperRunSummary,
     state_path: Path,
     previous: dict[str, Any] | None = None,
+    *,
+    regime_evidence: list[dict[str, object]] | None = None,
+    report_path: Path | None = None,
 ) -> None:
     first = summary.first_timestamp_ms
     latest = summary.latest_timestamp_ms
@@ -154,6 +232,9 @@ def write_certification_state(
     if first is not None and latest is not None:
         calendar_days = max(1, ((latest - first) // 86_400_000) + 1)
     data = dict(previous or {})
+    reports = data.get("periodic_reports", [])
+    if report_path is not None:
+        reports = [*reports, str(report_path)] if isinstance(reports, list) else [str(report_path)]
     data.update(
         {
             "strategy_version": summary.strategy_version,
@@ -161,12 +242,10 @@ def write_certification_state(
             "active_strategy_hash": summary.strategy_hash,
             "calendar_days": calendar_days,
             "trade_count": summary.fills,
-            "market_regimes": data.get("market_regimes", []),
-            "periodic_reports": [
-                report
-                for report in data.get("periodic_reports", [])
-                if isinstance(report, str) and Path(report).exists()
-            ],
+            "market_regimes": _merge_regime_evidence(
+                data.get("market_regimes", []), regime_evidence or []
+            ),
+            "periodic_reports": _existing_report_paths(reports),
             "latest_equity": summary.latest_equity,
             "initial_equity": summary.initial_equity,
             "pnl_absolute": summary.pnl_absolute,
@@ -174,7 +253,9 @@ def write_certification_state(
         }
     )
     state_path.parent.mkdir(parents=True, exist_ok=True)
-    state_path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temporary_path = state_path.with_suffix(f"{state_path.suffix}.tmp")
+    temporary_path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temporary_path.replace(state_path)
 
 
 @dataclass(frozen=True, slots=True)
@@ -209,6 +290,7 @@ class PaperRunner:
         event_repo: PaperTradeEventRepository,
         paper_engine: PaperEngine | None = None,
         strategy: EmaRsiBaseline | None = None,
+        regime_classifier: RegimeClassifier | None = None,
     ) -> None:
         config.validate_safe()
         self._config = config
@@ -216,11 +298,33 @@ class PaperRunner:
         self._strategy = strategy or EmaRsiBaseline()
         self._engine = paper_engine or PaperEngine(config=RiskConfig())
         self._strategy_hash = strategy_hash(self._strategy.version, config.decision_source)
+        self._regime_classifier = regime_classifier or RegimeClassifier()
+        self._candles_by_symbol: dict[str, deque[Candle]] = defaultdict(lambda: deque(maxlen=100))
+        self._regime_trackers = {
+            symbol: RegimeConfirmationTracker(symbol=symbol, timeframe=config.timeframe)
+            for symbol in config.symbols
+        }
+
+    @property
+    def rejected_regime_candidates(self) -> int:
+        return sum(tracker.rejected_candidates for tracker in self._regime_trackers.values())
+
+    def regime_evidence(self) -> list[dict[str, object]]:
+        return [
+            evidence
+            for tracker in self._regime_trackers.values()
+            for evidence in tracker.evidence()
+        ]
 
     async def handle_kline(self, kline: KlineUpdate) -> PaperTradeEvent | None:
         candle = kline.to_candle()
         if candle is None:
             return None
+        candles = self._candles_by_symbol[kline.symbol]
+        candles.append(candle)
+        self._regime_trackers[kline.symbol].observe(
+            self._regime_classifier.classify(candles), candle.timestamp_ms
+        )
         signal = self._strategy.on_candle(candle)
         decision = TradingDecision(
             timestamp_ms=candle.timestamp_ms,

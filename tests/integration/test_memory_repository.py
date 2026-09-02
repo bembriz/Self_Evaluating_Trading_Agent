@@ -14,7 +14,20 @@ from domain.memory.reflection import Reflection, ReflectionResult
 from domain.trading.signal import Action
 from infrastructure.database.memory_repository import SqlAlchemyMemoryRepository
 
-SPACE = "fake|fake-e5|4"
+DIMENSION = 384
+SPACE = "fake|fake-e5|384"
+
+
+def _embedding(index: int) -> list[float]:
+    vector = [0.0] * DIMENSION
+    vector[index] = 1.0
+    return vector
+
+
+def test_fixture_embedding_matches_pgvector_dimension() -> None:
+    assert len(_embedding(0)) == DIMENSION
+    assert _embedding(0)[0] == 1.0
+    assert _embedding(0)[1] == 0.0
 
 
 def _item(id_: str, outcome_ts: int, embedding: list[float], space: str = SPACE) -> object:
@@ -35,7 +48,7 @@ def _item(id_: str, outcome_ts: int, embedding: list[float], space: str = SPACE)
 @pytest.mark.integration
 async def test_save_and_search_with_temporal_filter(session: AsyncSession) -> None:
     repo = SqlAlchemyMemoryRepository(session)
-    base = [1.0, 0.0, 0.0, 0.0]
+    base = _embedding(0)
     await repo.save_memory(_item("m_pasada", 900, base))  # type: ignore[arg-type]
     await repo.save_memory(_item("m_futura", 2000, base))  # type: ignore[arg-type]
 
@@ -48,10 +61,10 @@ async def test_save_and_search_with_temporal_filter(session: AsyncSession) -> No
 @pytest.mark.integration
 async def test_search_isolated_by_embedding_space(session: AsyncSession) -> None:
     repo = SqlAlchemyMemoryRepository(session)
-    await repo.save_memory(_item("m_otro_espacio", 500, [0.0, 1.0, 0.0, 0.0], "otro|modelo|4"))  # type: ignore[arg-type]
+    await repo.save_memory(_item("m_otro_espacio", 500, _embedding(1), "otro|modelo|384"))  # type: ignore[arg-type]
 
     hits = await repo.search_similar(
-        [0.0, 1.0, 0.0, 0.0], k=10, decision_timestamp_ms=1000, embedding_space=SPACE
+        _embedding(1), k=10, decision_timestamp_ms=1000, embedding_space=SPACE
     )
     assert all(h.memory.embedding_space == SPACE for h in hits)
 
