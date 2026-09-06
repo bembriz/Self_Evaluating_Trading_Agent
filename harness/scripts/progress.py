@@ -12,6 +12,7 @@ Uso:
   progress.py gate-reject --phase 00 --comentario "falta UAT"
   progress.py blocker-add --texto "..." [--phase 03]
   progress.py blocker-rm --index 0
+  progress.py add-phase --phase 16b --titulo "..." --deliverable id=descripción [...]
 """
 
 from __future__ import annotations
@@ -59,6 +60,15 @@ def build_parser() -> argparse.ArgumentParser:
     ba.add_argument("--phase", default="")
     br = sub.add_parser("blocker-rm", parents=[common])
     br.add_argument("--index", type=int, required=True)
+    ap = sub.add_parser("add-phase", parents=[common])
+    ap.add_argument("--phase", required=True)
+    ap.add_argument("--titulo", required=True)
+    ap.add_argument(
+        "--deliverable",
+        action="append",
+        required=True,
+        help="id=descripción (repetible)",
+    )
     return p
 
 
@@ -95,6 +105,15 @@ def main(argv: list[str] | None = None) -> int:
     elif args.cmd == "blocker-rm":
         ld.remove_blocker(data, args.index)
         print("bloqueo eliminado")
+    elif args.cmd == "add-phase":
+        entregables: list[tuple[str, str]] = []
+        for raw in args.deliverable:
+            if "=" not in raw:
+                raise SystemExit(f"--deliverable debe ser id=descripción: {raw!r}")
+            eid, desc = raw.split("=", 1)
+            entregables.append((eid, desc))
+        ld.add_phase(data, args.phase, args.titulo, entregables)
+        print(f"fase {args.phase} registrada ({len(entregables)} entregables)")
     ld.save_ledger(data, args.ledger)
     return 0
 

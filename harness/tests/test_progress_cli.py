@@ -135,3 +135,46 @@ def test_blockers_add_remove_via_cli(ledger):
 
     argv_rm = ["blocker-rm", "--index", "0", "--ledger", str(ledger)]
     assert main(argv_rm) == 0
+
+
+def test_add_phase_via_cli(ledger, capsys):
+    rc = main(
+        [
+            "add-phase",
+            "--phase",
+            "16b",
+            "--titulo",
+            "Fase correctiva 16b",
+            "--deliverable",
+            "fix-atr=runner calcula ATR",
+            "--deliverable",
+            "fix-ws=close tolerante",
+            "--ledger",
+            str(ledger),
+        ]
+    )
+    assert rc == 0
+    assert "fase 16b registrada (2 entregables)" in capsys.readouterr().out
+    data = ld.load_ledger(ledger)
+    fase = ld.get_phase(data, "16b")
+    assert [e["id"] for e in fase["entregables"]] == ["fix-atr", "fix-ws"]
+    assert fase["entregables"][0]["descripcion"] == "runner calcula ATR"
+
+
+def test_add_phase_cli_rechaza_deliverable_sin_formato(ledger):
+    import pytest
+
+    with pytest.raises(SystemExit):
+        main(
+            [
+                "add-phase",
+                "--phase",
+                "16b",
+                "--titulo",
+                "t",
+                "--deliverable",
+                "sin-separador",
+                "--ledger",
+                str(ledger),
+            ]
+        )

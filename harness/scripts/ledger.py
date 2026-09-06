@@ -131,6 +131,40 @@ def get_phase(data: dict, phase_id: str) -> dict:
     return fase
 
 
+def add_phase(
+    data: dict,
+    phase_id: str,
+    titulo: str,
+    entregables: list[tuple[str, str]],
+) -> None:
+    """Registra una fase nueva (p. ej. correctivas tipo 16b) con entregables pending."""
+    if not phase_id.strip():
+        raise LedgerError("add_phase exige un id de fase")
+    if not titulo.strip():
+        raise LedgerError("add_phase exige un título")
+    if not entregables:
+        raise LedgerError("add_phase exige al menos un entregable")
+    phases = data.setdefault("phases", {})
+    if phase_id in phases:
+        raise LedgerError(f"La fase ya existe: {phase_id!r}")
+    ids = [eid.strip() for eid, _ in entregables]
+    if any(not eid for eid in ids) or len(set(ids)) != len(ids):
+        raise LedgerError("add_phase: ids de entregable vacíos o duplicados")
+    phases[phase_id] = {
+        "titulo": titulo.strip(),
+        "estado": "pending",
+        "iniciada": None,
+        "cerrada": None,
+        "entregables": [
+            {"id": eid, "descripcion": desc.strip(), "estado": "pending", "evidencia": []}
+            for eid, desc in entregables
+        ],
+        "gate_fase": {"estado": "pending", "solicitado": None, "resuelto": None},
+    }
+    require_valid(data)
+    append_event(data, phase_id, "phase_added", titulo.strip())
+
+
 def find_deliverable(fase: dict, deliverable_id: str) -> dict:
     for ent in fase.get("entregables", []):
         if ent.get("id") == deliverable_id:

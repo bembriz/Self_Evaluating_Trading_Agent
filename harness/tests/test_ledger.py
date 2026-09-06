@@ -248,3 +248,37 @@ def test_save_actualiza_meta(ledger):
     ld.save_ledger(data, ledger)
     data = ld.load_ledger(ledger)
     assert data["meta"]["actualizado"] is not None
+
+
+def test_add_phase_registra_fase_correctiva(ledger):
+    data = ld.load_ledger(ledger)
+    ld.add_phase(
+        data,
+        "16b",
+        "Fase correctiva: fix ATR paper-runner",
+        [("fix-atr", "runner calcula ATR"), ("fix-ws", "close tolerante")],
+    )
+    fase = ld.get_phase(data, "16b")
+    assert fase["titulo"] == "Fase correctiva: fix ATR paper-runner"
+    assert fase["estado"] == "pending"
+    assert [e["id"] for e in fase["entregables"]] == ["fix-atr", "fix-ws"]
+    assert all(e["estado"] == "pending" for e in fase["entregables"])
+    assert fase["gate_fase"]["estado"] == "pending"
+    assert ld.validate(data) == []
+    assert data["time_log"][-1]["evento"] == "phase_added"
+
+
+def test_add_phase_rechaza_duplicados_y_vacios(ledger):
+    data = ld.load_ledger(ledger)
+    with pytest.raises(ld.LedgerError, match="ya existe"):
+        ld.add_phase(data, "00", "otra", [("x", "y")])
+    with pytest.raises(ld.LedgerError, match="título"):
+        ld.add_phase(data, "16b", "  ", [("x", "y")])
+    with pytest.raises(ld.LedgerError, match="al menos un entregable"):
+        ld.add_phase(data, "16b", "t", [])
+    with pytest.raises(ld.LedgerError, match="duplicados"):
+        ld.add_phase(data, "16b", "t", [("x", "a"), ("x", "b")])
+    with pytest.raises(ld.LedgerError, match="vacíos"):
+        ld.add_phase(data, "16b", "t", [(" ", "a")])
+    with pytest.raises(ld.LedgerError, match="id de fase"):
+        ld.add_phase(data, " ", "t", [("x", "a")])

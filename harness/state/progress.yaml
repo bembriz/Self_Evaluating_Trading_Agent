@@ -3,7 +3,7 @@ meta:
   prd: docs/PRD — Self-Evaluating Trading Agent.md
   diseno_arnes: docs/design/harness-design.md
   creado: '2026-08-22'
-  actualizado: '2026-09-01'
+  actualizado: '2026-09-06'
   reglas:
     peso_fase_igual: true
     peso_entregable_igual: true
@@ -981,6 +981,47 @@ phases:
       estado: pending
       solicitado: null
       resuelto: null
+  16b:
+    titulo: 'Fase correctiva: ATR en paper-runner + WS close + invalidación/reinicio
+      de certificación'
+    estado: in_progress
+    iniciada: '2026-09-06'
+    cerrada: null
+    entregables:
+    - id: fix-atr-paper-runner
+      descripcion: Runner WS calcula ATR vía AtrTracker y lo pasa al Risk Engine
+      estado: done
+      evidencia:
+      - docs/phases/16b/evidence/fix-atr-ws-paridad-tests.log
+    - id: fix-ws-close
+      descripcion: ws.py close() tolera conexión nunca establecida
+      estado: done
+      evidencia:
+      - docs/phases/16b/evidence/fix-atr-ws-paridad-tests.log
+    - id: paridad-paper-replay
+      descripcion: paper_session usa AtrTracker; test de igualdad tracker==atr()
+      estado: done
+      evidencia:
+      - docs/phases/16b/evidence/fix-atr-ws-paridad-tests.log
+    - id: invalidacion-corrida-4-dias
+      descripcion: paper_certification --invalidate; corrida 2026-09-02→06 marcada
+        INVALIDATED
+      estado: done
+      evidencia:
+      - docs/phases/16b/evidence/invalidate-paper-certification-tests.log
+    - id: session-id-override
+      descripcion: --session-id / PAPER_SESSION_ID para la nueva corrida
+      estado: done
+      evidencia:
+      - docs/phases/16b/evidence/session-id-override-tests.log
+    - id: redeploy-lenovosrv
+      descripcion: Rebuild + reinicio paper con misma strategy_version (UAT)
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
 time_log:
 - fecha: '2026-08-22'
   fase: '00'
@@ -1775,4 +1816,33 @@ time_log:
   detalle: 'informes-periodicos: sin reportes periódicos reales: el runner desplegado
     solo persiste eventos en paper_trade_events; falta implementar y desplegar la
     emisión periódica de reportes'
+- fecha: '2026-09-06'
+  fase: 16b
+  evento: phase_added
+  detalle: 'Fase correctiva: ATR en paper-runner + WS close + invalidación/reinicio
+    de certificación'
+- fecha: '2026-09-06'
+  fase: 16b
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-09-06'
+  fase: 16b
+  evento: done
+  detalle: fix-atr-paper-runner
+- fecha: '2026-09-06'
+  fase: 16b
+  evento: done
+  detalle: fix-ws-close
+- fecha: '2026-09-06'
+  fase: 16b
+  evento: done
+  detalle: paridad-paper-replay
+- fecha: '2026-09-06'
+  fase: 16b
+  evento: done
+  detalle: invalidacion-corrida-4-dias
+- fecha: '2026-09-06'
+  fase: 16b
+  evento: done
+  detalle: session-id-override
 blockers: []
