@@ -11,6 +11,7 @@ from application.ports.paper_trading import PaperTradeEvent, PaperTradeEventRepo
 from application.services.paper_engine import PaperEngine
 from application.services.regime_confirmation import RegimeConfirmationTracker
 from domain.market.candle import Candle
+from domain.market.indicators import AtrTracker
 from domain.market.regime import RegimeClassifier
 from domain.market.stream import KlineUpdate
 from domain.risk.config import RiskConfig
@@ -300,6 +301,7 @@ class PaperRunner:
         self._strategy_hash = strategy_hash(self._strategy.version, config.decision_source)
         self._regime_classifier = regime_classifier or RegimeClassifier()
         self._candles_by_symbol: dict[str, deque[Candle]] = defaultdict(lambda: deque(maxlen=100))
+        self._atr_trackers = {symbol: AtrTracker() for symbol in config.symbols}
         self._regime_trackers = {
             symbol: RegimeConfirmationTracker(symbol=symbol, timeframe=config.timeframe)
             for symbol in config.symbols
@@ -336,7 +338,7 @@ class PaperRunner:
         paper_event = self._engine.on_price(
             decision=decision,
             price=candle.close,
-            atr=None,
+            atr=self._atr_trackers[kline.symbol].update(candle),
             timestamp_ms=candle.timestamp_ms,
         )
         fill = paper_event.fill

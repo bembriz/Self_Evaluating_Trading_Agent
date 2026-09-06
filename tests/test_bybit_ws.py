@@ -3,6 +3,8 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any, cast
 
+import pytest
+
 from domain.market.candle import Timeframe
 from domain.market.stream import KlineUpdate, OrderBookDelta, OrderBookSnapshot
 from infrastructure.bybit.ws import BybitWebSocketClient
@@ -95,3 +97,47 @@ async def test_subscribe_sends_args() -> None:
     assert sent[0]["args"] == ["orderbook.50.ETHUSDT"]
     assert sent[1]["args"] == ["kline.15.ETHUSDT"]
     await client.close()
+
+
+class FailingConnect:
+    """Simula `websockets.connect` cuyo __aenter__ falla (p. ej. DNS caído).
+
+    Como en websockets 17, __aexit__ sobre una conexión nunca establecida lanza
+    AttributeError (`del self.connection`).
+    """
+
+    def __init__(self) -> None:
+        self.exit_calls = 0
+
+    async def __aenter__(self) -> Any:
+        raise OSError("Temporary failure in name resolution")
+
+    async def __aexit__(self, *exc: Any) -> None:
+        self.exit_calls += 1
+        raise AttributeError("'connect' object has no attribute 'connection'")
+
+
+async def test_close_tolerante_tras_connect_fallido() -> None:
+    cm = FailingConnect()
+    client = BybitWebSocketClient(connect=lambda url: cm)
+    with pytest.raises(OSError):
+        await client.connect()
+    await client.close()  # no debe propagar el AttributeError de __aexit__
+    assert cm.exit_calls == 0
+
+
+async def test_close_es_idempotente() -> None:
+    ws = FakeWS([])
+    client = BybitWebSocketClient(connect=fake_connect(ws))
+    await client.connect()
+    await client.close()
+    await client.close()
+
+
+async def test_connect_fallido_no_deja_estado() -> None:
+    cm = FailingConnect()
+    client = BybitWebSocketClient(connect=lambda url: cm)
+    with pytest.raises(OSError):
+        await client.connect()
+    assert client._cm is None
+    assert client._ws is None

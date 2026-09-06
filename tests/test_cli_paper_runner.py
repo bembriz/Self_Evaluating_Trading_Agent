@@ -10,7 +10,13 @@ from application.services.paper_runner import (
 )
 from domain.market.candle import Timeframe
 from domain.market.stream import KlineUpdate
-from interfaces.cli.paper_runner import _run_loop, paper_runner, run_paper_runner
+from interfaces.cli.paper_runner import (
+    _default_session_id,
+    _run_loop,
+    paper_runner,
+    resolve_session_id,
+    run_paper_runner,
+)
 from settings import Settings
 
 
@@ -340,3 +346,94 @@ def test_run_paper_runner_uses_max_runtime_days_when_seconds_omitted() -> None:
 
     assert code == 0
     assert captured["seconds"] == 604800
+
+
+def test_default_session_id_derives_from_timeframe_and_symbol() -> None:
+    assert _default_session_id("15m", "ETHUSDT") == "paper-baseline-15m-ethusdt"
+
+
+def test_resolve_session_id_uses_settings_override_when_present() -> None:
+    settings = Settings(
+        trading_mode="paper",
+        live_trading_enabled=False,
+        paper_session_id="paper-baseline-20260906",
+    )
+
+    resolved = resolve_session_id(settings, Timeframe.M15, "ETHUSDT")
+
+    assert resolved == "paper-baseline-20260906"
+
+
+def test_resolve_session_id_falls_back_to_default_without_override() -> None:
+    settings = Settings(trading_mode="paper", live_trading_enabled=False)
+
+    resolved = resolve_session_id(settings, Timeframe.M15, "ETHUSDT")
+
+    assert resolved == "paper-baseline-15m-ethusdt"
+
+
+def test_run_paper_runner_forwards_cli_session_id_to_runtime() -> None:
+    captured: dict[str, object] = {}
+
+    async def fake_run(
+        settings: Settings, symbols: list[str], timeframe: Timeframe, seconds: int | None
+    ) -> str:
+        captured["session_id"] = settings.paper_session_id
+        return "processed=0"
+
+    settings = Settings(trading_mode="paper", live_trading_enabled=False)
+
+    code = run_paper_runner(
+        settings,
+        argv=["--session-id", "paper-baseline-20260906"],
+        run=fake_run,
+    )
+
+    assert code == 0
+    assert captured["session_id"] == "paper-baseline-20260906"
+
+
+def test_run_paper_runner_cli_session_id_overrides_settings_env() -> None:
+    captured: dict[str, object] = {}
+
+    async def fake_run(
+        settings: Settings, symbols: list[str], timeframe: Timeframe, seconds: int | None
+    ) -> str:
+        captured["session_id"] = settings.paper_session_id
+        return "processed=0"
+
+    settings = Settings(
+        trading_mode="paper",
+        live_trading_enabled=False,
+        paper_session_id="paper-baseline-from-env",
+    )
+
+    code = run_paper_runner(
+        settings,
+        argv=["--session-id", "paper-baseline-20260906"],
+        run=fake_run,
+    )
+
+    assert code == 0
+    assert captured["session_id"] == "paper-baseline-20260906"
+
+
+def test_run_paper_runner_keeps_env_session_id_without_cli_arg() -> None:
+    captured: dict[str, object] = {}
+
+    async def fake_run(
+        settings: Settings, symbols: list[str], timeframe: Timeframe, seconds: int | None
+    ) -> str:
+        captured["session_id"] = settings.paper_session_id
+        return "processed=0"
+
+    settings = Settings(
+        trading_mode="paper",
+        live_trading_enabled=False,
+        paper_session_id="paper-baseline-from-env",
+    )
+
+    code = run_paper_runner(settings, argv=[], run=fake_run)
+
+    assert code == 0
+    assert captured["session_id"] == "paper-baseline-from-env"

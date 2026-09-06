@@ -1,6 +1,7 @@
 import argparse
 import json
 import sys
+import time
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -9,6 +10,52 @@ from typing import Any, TypeGuard
 MIN_DAYS = 30
 MIN_TRADES = 200
 MIN_REGIMES = 2
+
+
+def _write_json_atomic(path: Path, data: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path = path.with_suffix(f"{path.suffix}.tmp")
+    temporary_path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temporary_path.replace(path)
+
+
+def invalidate_state(
+    state: dict[str, Any],
+    *,
+    reason: str,
+    invalidated_at_ms: int,
+) -> dict[str, Any]:
+    """Devuelve una copia del estado marcada INVALIDATED (para archivar la corrida).
+
+    No muta el diccionario original: la copia conserva toda la métrica acumulada
+    (auditable) y añade status/motivo/timestamp de invalidación.
+    """
+    archived = dict(state)
+    archived["status"] = "INVALIDATED"
+    archived["invalidated_reason"] = reason
+    archived["invalidated_at_ms"] = invalidated_at_ms
+    return archived
+
+
+def reset_certification_state(state: dict[str, Any]) -> dict[str, Any]:
+    """Estado limpio para una nueva corrida con la MISMA versión de estrategia.
+
+    La corrida invalidada no puede arrastrar días/trades/regímenes/reportes a la
+    certificación siguiente; se conservan strategy_version/hash para que el hash
+    activo siga coincidiendo con el código desplegado.
+    """
+    strategy_hash = state.get("strategy_hash")
+    if not isinstance(strategy_hash, str):
+        strategy_hash = state.get("active_strategy_hash", "")
+    return {
+        "strategy_version": state.get("strategy_version", ""),
+        "strategy_hash": strategy_hash,
+        "active_strategy_hash": strategy_hash,
+        "calendar_days": 0,
+        "trade_count": 0,
+        "market_regimes": [],
+        "periodic_reports": [],
+    }
 
 
 @dataclass(frozen=True)
@@ -51,6 +98,12 @@ def _confirmed_regime_names(value: object) -> set[str]:
 
 
 def evaluate_state(state: dict[str, Any]) -> CertificationResult:
+    if state.get("status") == "INVALIDATED":
+        reason = state.get("invalidated_reason")
+        if isinstance(reason, str) and reason:
+            return CertificationResult("INVALIDATED", [f"invalidated: {reason}"])
+        return CertificationResult("INVALIDATED", ["invalidated by operator"])
+
     if state.get("strategy_hash") != state.get("active_strategy_hash"):
         return CertificationResult(
             status="INVALIDATED",
@@ -90,6 +143,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Evaluate Phase 16 paper certification state.")
     parser.add_argument("--state", required=True, help="Path to certification state JSON.")
     parser.add_argument("--report", required=True, help="Path to write Markdown report.")
+    parser.add_argument(
+        "--invalidate",
+        action="store_true",
+        help="Mark the run INVALIDATED (archive copy + reset active state for a new run).",
+    )
+    parser.add_argument("--reason", default="", help="Reason for invalidation (with --invalidate).")
+    parser.add_argument("--archive", default="", help="Path to write the INVALIDATED snapshot.")
     args = parser.parse_args(argv)
 
     state_path = Path(args.state)
@@ -101,10 +161,28 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"ERROR: corrupt certification state JSON: {exc}", file=sys.stderr)
         return 2
 
-    result = evaluate_state(state)
-    calendar_days = int(state.get("calendar_days", 0))
-    trade_count = int(state.get("trade_count", 0))
-    market_regimes = state.get("market_regimes", [])
+    if args.invalidate:
+        if not args.reason.strip():
+            print("ERROR: --reason is required with --invalidate", file=sys.stderr)
+            return 2
+        if not args.archive.strip():
+            print("ERROR: --archive is required with --invalidate", file=sys.stderr)
+            return 2
+        archived = invalidate_state(
+            state,
+            reason=args.reason.strip(),
+            invalidated_at_ms=int(time.time() * 1000),
+        )
+        _write_json_atomic(Path(args.archive), archived)
+        _write_json_atomic(state_path, reset_certification_state(state))
+        report_state: dict[str, Any] = archived
+    else:
+        report_state = state
+
+    result = evaluate_state(report_state)
+    calendar_days = int(report_state.get("calendar_days", 0))
+    trade_count = int(report_state.get("trade_count", 0))
+    market_regimes = report_state.get("market_regimes", [])
     regime_count = len(_confirmed_regime_names(market_regimes))
 
     report_path.parent.mkdir(parents=True, exist_ok=True)

@@ -12,9 +12,10 @@ from application.services.paper_runner import (
     write_certification_state,
     write_periodic_report,
 )
-from domain.market.candle import Timeframe
+from domain.market.candle import Candle, Timeframe
 from domain.market.regime import MarketRegime
 from domain.market.stream import KlineUpdate
+from domain.trading.signal import Action, Signal
 
 
 def _safe_config() -> PaperRunnerConfig:
@@ -350,3 +351,65 @@ def test_write_certification_state_merges_existing_and_new_regime_evidence(tmp_p
     state = json.loads(state_path.read_text(encoding="utf-8"))
     assert [item["name"] for item in state["market_regimes"]] == ["SIDEWAYS", "TREND_UP"]
     assert state["periodic_reports"] == [str(report_path)]
+
+
+class AlwaysBuyStrategy:
+    version = "test-always-buy-v1"
+
+    def on_candle(self, candle: Candle) -> Signal:
+        return Signal(timestamp_ms=candle.timestamp_ms, action=Action.BUY, reason="test")
+
+
+async def test_runner_rechaza_buy_por_stop_unavailable_solo_durante_warmup_atr() -> None:
+    repo = FakePaperTradeRepo()
+    runner = PaperRunner(
+        config=_safe_config(),
+        event_repo=repo,
+        strategy=AlwaysBuyStrategy(),  # type: ignore[arg-type]
+    )
+
+    event = await runner.handle_kline(_confirmed_kline(1_000))
+
+    assert event is not None
+    assert event.action == "BUY"
+    assert event.filled is False
+    assert event.risk_reason == "stop_unavailable"
+
+
+async def test_runner_llena_buy_cuando_el_atr_esta_disponible() -> None:
+    repo = FakePaperTradeRepo()
+    runner = PaperRunner(
+        config=_safe_config(),
+        event_repo=repo,
+        strategy=AlwaysBuyStrategy(),  # type: ignore[arg-type]
+    )
+
+    event = None
+    for i in range(15):
+        event = await runner.handle_kline(_confirmed_kline(1_000 + i * 900_000))
+
+    assert event is not None
+    assert event.action == "BUY"
+    assert event.filled is True
+    assert event.risk_reason == ""
+    assert event.quantity is not None and event.quantity > 0
+    assert event.exec_price is not None
+
+
+async def test_runner_no_alimenta_atr_con_velas_no_confirmadas() -> None:
+    repo = FakePaperTradeRepo()
+    runner = PaperRunner(
+        config=_safe_config(),
+        event_repo=repo,
+        strategy=AlwaysBuyStrategy(),  # type: ignore[arg-type]
+    )
+    for i in range(20):
+        kline = KlineUpdate(
+            "ETHUSDT", Timeframe.M15, 1_000 + i * 900_000, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, False
+        )
+        assert await runner.handle_kline(kline) is None
+
+    event = await runner.handle_kline(_confirmed_kline(1_000 + 20 * 900_000))
+
+    assert event is not None
+    assert event.risk_reason == "stop_unavailable"

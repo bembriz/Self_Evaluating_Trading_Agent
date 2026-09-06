@@ -32,6 +32,16 @@ RunFn = Callable[[Settings, list[str], Timeframe, int | None], Coroutine[Any, An
 SECONDS_PER_DAY = 24 * 60 * 60
 
 
+def _default_session_id(timeframe: str, first_symbol: str) -> str:
+    return f"paper-baseline-{timeframe}-{first_symbol.lower()}"
+
+
+def resolve_session_id(settings: Settings, timeframe: Timeframe, first_symbol: str) -> str:
+    if settings.paper_session_id:
+        return settings.paper_session_id
+    return _default_session_id(timeframe.label, first_symbol)
+
+
 async def _run_loop(
     *,
     stream: Any,
@@ -115,7 +125,7 @@ async def _run(
             live_trading_enabled=settings.live_trading_enabled,
             symbols=tuple(symbols),
             timeframe=timeframe.label,
-            session_id=f"paper-baseline-{timeframe.label}-{symbols[0].lower()}",
+            session_id=resolve_session_id(settings, timeframe, symbols[0]),
             decision_source=settings.paper_decision_source,
             report_interval_seconds=settings.paper_report_interval_hours * 60 * 60,
             max_runtime_seconds=seconds,
@@ -149,7 +159,10 @@ def run_paper_runner(settings: Settings, argv: list[str] | None = None, run: Run
     parser.add_argument("--symbols", nargs="+", default=None)
     parser.add_argument("--timeframe", default=None)
     parser.add_argument("--seconds", type=int, default=None)
+    parser.add_argument("--session-id", default=None)
     args = parser.parse_args(argv)
+    if args.session_id is not None:
+        settings = settings.model_copy(update={"paper_session_id": args.session_id})
     try:
         timeframe = Timeframe.from_label(args.timeframe or settings.paper_timeframe)
         symbols = args.symbols or list(settings.paper_symbols)

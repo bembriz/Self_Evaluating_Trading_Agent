@@ -1,0 +1,6 @@
+# evidencia: invalidate-paper-certification-tests
+fecha: 2026-09-06T02:09:40-06:00
+fase: 16b
+comando: .venv/bin/python -m pytest harness/tests/test_paper_certification.py -q -p no:cacheprovider
+..................                                                       [100%]
+exit=0
