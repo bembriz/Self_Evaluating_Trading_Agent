@@ -1,0 +1,13 @@
+{
+ "initial_cash": 1000.0,
+ "final_cash": 982.916986,
+ "final_position_qty": 0.0,
+ "final_position_value": 0.0,
+ "realized_gross_pnl": -1.40128,
+ "fees": 15.681735,
+ "analytical_slippage_cost": 3.136347,
+ "realized_net_pnl": -20.219361,
+ "unrealized_pnl": 0.0,
+ "final_equity": 982.916986,
+ "reconciliation_residual": 3.136347013
+}

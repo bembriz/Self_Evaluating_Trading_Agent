@@ -1,0 +1,28 @@
+{
+ "bars": 103680,
+ "buy_signals": 1055,
+ "buy_approved": 392,
+ "buy_rejected": {
+  "max_daily_loss": 663
+ },
+ "fills": 784,
+ "closed_trades": 392,
+ "days_triggered": 471,
+ "daily_activations_total": 663,
+ "daily_activations_per_day_max": 5,
+ "blocked_cycles": 63776,
+ "blocked_days": 684,
+ "spillover_days_blocked_without_own_trigger": 213,
+ "net_pnl": -20.219361414538213,
+ "fully_loaded_pnl": -20.219361414538213,
+ "gross_pnl": -1.4012796807527494,
+ "fees": 15.681734720319247,
+ "slippage": 3.136347013466217,
+ "win_rate": 0.29336734693877553,
+ "profit_factor": 0.5809906219771929,
+ "sharpe": -2.1932208997653166,
+ "sortino": -3.2288155576320037,
+ "max_drawdown": 0.01761861324424626,
+ "expectancy": -0.05158000360851585,
+ "final_equity": 982.9169855989312
+}
