@@ -413,3 +413,19 @@ async def test_runner_no_alimenta_atr_con_velas_no_confirmadas() -> None:
 
     assert event is not None
     assert event.risk_reason == "stop_unavailable"
+
+
+async def test_runner_atr_ready_flips_after_warmup() -> None:
+    repo = FakePaperTradeRepo()
+    runner = PaperRunner(
+        config=_safe_config(),
+        event_repo=repo,
+        strategy=AlwaysBuyStrategy(),  # type: ignore[arg-type]
+    )
+
+    assert runner.atr_ready is False
+    for i in range(14):
+        await runner.handle_kline(_confirmed_kline(1_000 + i * 900_000))
+    assert runner.atr_ready is False  # 1 prev_close + 13 TR
+    await runner.handle_kline(_confirmed_kline(1_000 + 14 * 900_000))
+    assert runner.atr_ready is True  # 15ª vela completa el warmup ATR

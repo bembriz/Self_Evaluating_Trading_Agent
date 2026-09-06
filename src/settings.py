@@ -36,6 +36,8 @@ class Settings(BaseSettings):
     paper_report_dir: str = "reports/paper"
     paper_certification_state_path: str = "docs/phases/16/certification-state.json"
     paper_session_id: str | None = None
+    paper_metrics_host: str = "0.0.0.0"
+    paper_metrics_port: int = 9090
 
     postgres_host: str = "localhost"
     postgres_port: int = 5432

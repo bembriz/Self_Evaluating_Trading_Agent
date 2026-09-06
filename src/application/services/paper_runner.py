@@ -311,6 +311,13 @@ class PaperRunner:
     def rejected_regime_candidates(self) -> int:
         return sum(tracker.rejected_candidates for tracker in self._regime_trackers.values())
 
+    @property
+    def atr_ready(self) -> bool:
+        """True si todos los ATR trackers completaron el warmup (velas suficientes)."""
+        return bool(self._atr_trackers) and all(
+            tracker.value is not None for tracker in self._atr_trackers.values()
+        )
+
     def regime_evidence(self) -> list[dict[str, object]]:
         return [
             evidence

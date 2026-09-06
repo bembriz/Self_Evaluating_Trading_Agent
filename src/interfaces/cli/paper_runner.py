@@ -26,6 +26,8 @@ from domain.risk.config import RiskConfig
 from infrastructure.bybit.ws import BybitWebSocketClient
 from infrastructure.database.repositories import SqlAlchemyPaperTradeEventRepository
 from infrastructure.database.session import build_session_factory, create_engine
+from infrastructure.observability.metrics import SetaMetrics
+from infrastructure.observability.server import start_metrics_server
 from settings import Settings
 
 RunFn = Callable[[Settings, list[str], Timeframe, int | None], Coroutine[Any, Any, str]]
@@ -55,6 +57,8 @@ async def _run_loop(
     initial_equity: float,
     deadline: float | None,
     recover: Callable[[], Awaitable[None]] | None = None,
+    metrics: SetaMetrics | None = None,
+    stale_timeout_seconds: float = 10.0,
 ) -> str:
     loop = asyncio.get_running_loop()
     last_report_time = loop.time()
@@ -62,17 +66,40 @@ async def _run_loop(
     processed = 0
     while deadline is None or loop.time() < deadline:
         try:
-            event = await stream.recv()
-        except WebSocketDisconnected:
+            if stale_timeout_seconds > 0:
+                event = await asyncio.wait_for(stream.recv(), timeout=stale_timeout_seconds)
+            else:
+                event = await stream.recv()
+        except TimeoutError:
+            if metrics is not None:
+                metrics.inc_stale()
+                metrics.inc_reconnect()
+                metrics.set_connected(False)
             if recover is None:
                 raise
             await recover()
+            if metrics is not None:
+                metrics.set_connected(True)
+            continue
+        except WebSocketDisconnected:
+            if metrics is not None:
+                metrics.inc_error("ws")
+                metrics.inc_reconnect()
+                metrics.set_connected(False)
+            if recover is None:
+                raise
+            await recover()
+            if metrics is not None:
+                metrics.set_connected(True)
             continue
         if not isinstance(event, KlineUpdate):
             continue
         paper_event = await runner.handle_kline(event)
         if paper_event is not None:
             processed += 1
+            if metrics is not None:
+                metrics.inc_candle()
+                metrics.set_atr_ready(runner.atr_ready)
             await commit()
         now = loop.time()
         if now - last_report_time >= report_interval_seconds:
@@ -111,11 +138,16 @@ async def _run(
     session_factory = build_session_factory(engine)
     session = session_factory()
     stream = BybitWebSocketClient(url=settings.bybit_ws_url)
+    metrics = SetaMetrics()
+    metrics_server = start_metrics_server(
+        metrics, host=settings.paper_metrics_host, port=settings.paper_metrics_port
+    )
 
     async def _connect_subscribed() -> None:
         await stream.connect()
         for symbol in symbols:
             await stream.subscribe_kline(symbol, timeframe)
+        metrics.set_connected(True)
 
     supervisor = ConnectionSupervisor(SupervisorConfig(), connect=_connect_subscribed)
     try:
@@ -147,8 +179,12 @@ async def _run(
             initial_equity=RiskConfig().capital,
             deadline=deadline,
             recover=supervisor.run_once_until_connected,
+            metrics=metrics,
+            stale_timeout_seconds=settings.stale_timeout_seconds,
         )
     finally:
+        metrics_server.shutdown()
+        metrics_server.server_close()
         await session.close()
         await engine.dispose()
         await stream.close()
