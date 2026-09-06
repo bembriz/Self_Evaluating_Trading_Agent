@@ -113,3 +113,24 @@ def test_paper_report_paths_env_override(monkeypatch: MonkeyPatch) -> None:
 
     assert s.paper_report_dir == "custom/reports"
     assert s.paper_certification_state_path == "custom/state.json"
+
+
+def test_paper_stale_timeout_defaults_keep_orderbook_unchanged(
+    monkeypatch: MonkeyPatch,
+) -> None:
+    for var in ("PAPER_STALE_TIMEOUT_SECONDS", "STALE_TIMEOUT_SECONDS"):
+        monkeypatch.delenv(var, raising=False)
+
+    s = Settings()
+
+    assert s.paper_stale_timeout_seconds == 120.0  # kline: push frequency 1–60s
+    assert s.stale_timeout_seconds == 10.0  # order-book/market_worker intacto
+
+
+def test_paper_stale_timeout_env_override(monkeypatch: MonkeyPatch) -> None:
+    monkeypatch.setenv("PAPER_STALE_TIMEOUT_SECONDS", "180")
+
+    s = Settings()
+
+    assert s.paper_stale_timeout_seconds == 180.0
+    assert s.stale_timeout_seconds == 10.0  # no afecta al order-book

@@ -288,3 +288,46 @@ async def test_e2e_atr_ready_gauge_flips_via_metrics_endpoint(tmp_path: Path) ->
     finally:
         server.shutdown()
         server.server_close()
+
+
+async def test_e2e_ws_gap_below_timeout_does_not_stale(tmp_path: Path) -> None:
+    """Un gap de datos < stale_timeout NO dispara stale ni reconexión."""
+    metrics = SetaMetrics()
+    repo = _Repo()
+
+    class SlowStream:
+        def __init__(self) -> None:
+            self.reconnect_calls = 0
+
+        async def recv(self) -> Any:
+            await asyncio.sleep(0.05)  # gap (0.05s) < timeout (0.2s)
+            return None
+
+    stream = SlowStream()
+
+    async def recover() -> None:
+        stream.reconnect_calls += 1
+
+    async def commit() -> None:
+        pass
+
+    await _run_loop(
+        stream=stream,
+        runner=_runner(repo),
+        repo=repo,
+        commit=commit,
+        session_id="t",
+        report_interval_seconds=3600,
+        report_dir=tmp_path / "r",
+        state_path=tmp_path / "c.json",
+        initial_equity=1000.0,
+        deadline=asyncio.get_running_loop().time() + 0.6,
+        recover=recover,
+        metrics=metrics,
+        stale_timeout_seconds=0.2,
+    )
+
+    text = metrics.render()
+    assert "seta_ws_stale_total 0.0" in text
+    assert "seta_reconnects_total 0.0" in text
+    assert stream.reconnect_calls == 0

@@ -180,7 +180,7 @@ async def _run(
             deadline=deadline,
             recover=supervisor.run_once_until_connected,
             metrics=metrics,
-            stale_timeout_seconds=settings.stale_timeout_seconds,
+            stale_timeout_seconds=settings.paper_stale_timeout_seconds,
         )
     finally:
         metrics_server.shutdown()

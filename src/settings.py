@@ -52,6 +52,7 @@ class Settings(BaseSettings):
     bybit_ws_url: str = "wss://stream.bybit.com/v5/public/spot"
     bybit_orderbook_depth: int = 50
     stale_timeout_seconds: float = 10.0
+    paper_stale_timeout_seconds: float = 120.0
     feature_window_seconds: int = 5
 
     llm_provider: str = "deepseek"
