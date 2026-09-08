@@ -33,6 +33,22 @@ from infrastructure.database.repositories import (
     SqlAlchemySystemStateRepository,
 )
 from infrastructure.database.session import build_session_factory, create_engine
+from infrastructure.observability.logging import (
+    BUY_FILL,
+    EXCEPTION,
+    IMPORTANT_RISK_REJECTION,
+    PROCESS_START,
+    PROCESS_STOP,
+    SELL_FILL,
+    STATE_RESTORED,
+    WS_CONNECTED,
+    WS_DISCONNECTED,
+    WS_RECONNECTED,
+    WS_STALE,
+    StructuredLogger,
+    configure_json_logging,
+    is_important_risk_rejection,
+)
 from infrastructure.observability.metrics import SetaMetrics
 from infrastructure.observability.server import start_metrics_server
 from settings import Settings
@@ -72,6 +88,21 @@ def resolve_session_id(settings: Settings, timeframe: Timeframe, first_symbol: s
     return _default_session_id(timeframe.label, first_symbol)
 
 
+async def _restore_logged(
+    *,
+    restore: Callable[[], Awaitable[PaperRunner]],
+    logger: StructuredLogger,
+) -> PaperRunner:
+    """Restaura el runner; loguea EXCEPTION si el recovery falla (no silencioso)."""
+    try:
+        runner = await restore()
+    except Exception:
+        logger.exception(EXCEPTION)
+        raise
+    logger.info(STATE_RESTORED)
+    return runner
+
+
 async def _run_loop(
     *,
     stream: Any,
@@ -87,6 +118,7 @@ async def _run_loop(
     recover: Callable[[], Awaitable[None]] | None = None,
     metrics: SetaMetrics | None = None,
     stale_timeout_seconds: float = 10.0,
+    logger: StructuredLogger | None = None,
 ) -> str:
     loop = asyncio.get_running_loop()
     last_report_time = loop.time()
@@ -103,32 +135,71 @@ async def _run_loop(
                 metrics.inc_stale()
                 metrics.inc_reconnect()
                 metrics.set_connected(False)
+            if logger is not None:
+                logger.warning(WS_STALE)
             if recover is None:
                 raise
             await recover()
             if metrics is not None:
                 metrics.set_connected(True)
+            if logger is not None:
+                logger.info(WS_RECONNECTED)
             continue
-        except WebSocketDisconnected:
+        except WebSocketDisconnected as exc:
             if metrics is not None:
                 metrics.inc_error("ws")
                 metrics.inc_reconnect()
                 metrics.set_connected(False)
+            if logger is not None:
+                logger.error(WS_DISCONNECTED, reason=str(exc))
             if recover is None:
                 raise
             await recover()
             if metrics is not None:
                 metrics.set_connected(True)
+            if logger is not None:
+                logger.info(WS_RECONNECTED)
             continue
         if not isinstance(event, KlineUpdate):
             continue
-        paper_event = await runner.handle_kline(event)
+        try:
+            paper_event = await runner.handle_kline(event)
+        except Exception:
+            if logger is not None:
+                logger.exception(EXCEPTION)
+            raise
         if paper_event is not None:
             processed += 1
             if metrics is not None:
                 metrics.inc_candle()
                 metrics.set_atr_ready(runner.atr_ready)
-            await commit()
+            if logger is not None:
+                if paper_event.filled and paper_event.action == "BUY":
+                    logger.info(
+                        BUY_FILL,
+                        symbol=paper_event.symbol,
+                        exec_price=paper_event.exec_price,
+                        quantity=paper_event.quantity,
+                    )
+                elif paper_event.filled and paper_event.action == "SELL":
+                    logger.info(
+                        SELL_FILL,
+                        symbol=paper_event.symbol,
+                        exec_price=paper_event.exec_price,
+                        quantity=paper_event.quantity,
+                        exit_reason=paper_event.exit_reason,
+                    )
+                elif is_important_risk_rejection(paper_event.risk_reason):
+                    logger.warning(
+                        IMPORTANT_RISK_REJECTION,
+                        risk_reason=paper_event.risk_reason,
+                    )
+            try:
+                await commit()
+            except Exception:
+                if logger is not None:
+                    logger.exception(EXCEPTION)
+                raise
         now = loop.time()
         if now - last_report_time >= report_interval_seconds:
             try:
@@ -155,7 +226,10 @@ async def _run_loop(
                 last_summary = summary
                 last_report_time = now
             except (OSError, ValueError) as exc:
-                print(f"[paper-runner] WARN: report write failed: {exc}")
+                if logger is not None:
+                    logger.error("ERROR", message=f"report write failed: {exc}")
+                else:
+                    print(f"[paper-runner] WARN: report write failed: {exc}")
     return f"processed={processed}"
 
 
@@ -176,8 +250,22 @@ async def _run(
         for symbol in symbols:
             await stream.subscribe_kline(symbol, timeframe)
         metrics.set_connected(True)
+        logger.info(WS_CONNECTED)
 
     supervisor = ConnectionSupervisor(SupervisorConfig(), connect=_connect_subscribed)
+    session_id = resolve_session_id(settings, timeframe, symbols[0])
+    logger = StructuredLogger(
+        configure_json_logging(),
+        context={
+            "session_id": session_id,
+            "symbol": symbols[0],
+            "timeframe": timeframe.label,
+            "application_version": settings.app_version,
+            "strategy_version": "baseline-v1",
+            "risk_config_version": RiskConfig().version,
+        },
+    )
+    logger.info(PROCESS_START)
     try:
         repo = SqlAlchemyPaperTradeEventRepository(session)
         candle_repo = SqlAlchemyMarketCandleRepository(session)
@@ -188,18 +276,21 @@ async def _run(
             live_trading_enabled=settings.live_trading_enabled,
             symbols=tuple(symbols),
             timeframe=timeframe.label,
-            session_id=resolve_session_id(settings, timeframe, symbols[0]),
+            session_id=session_id,
             decision_source=settings.paper_decision_source,
             report_interval_seconds=settings.paper_report_interval_hours * 60 * 60,
             max_runtime_seconds=seconds,
         )
-        runner = await restore_runner(
-            config=config,
-            event_repo=repo,
-            candle_repo=candle_repo,
-            system_state_repo=system_state_repo,
-            symbol=symbols[0],
-            timeframe=timeframe,
+        runner = await _restore_logged(
+            restore=lambda: restore_runner(
+                config=config,
+                event_repo=repo,
+                candle_repo=candle_repo,
+                system_state_repo=system_state_repo,
+                symbol=symbols[0],
+                timeframe=timeframe,
+            ),
+            logger=logger,
         )
         backfill_svc = BackfillService(rest_client, candle_repo)
 
@@ -237,8 +328,10 @@ async def _run(
             recover=supervisor.run_once_until_connected,
             metrics=metrics,
             stale_timeout_seconds=settings.paper_stale_timeout_seconds,
+            logger=logger,
         )
     finally:
+        logger.info(PROCESS_STOP)
         metrics_server.shutdown()
         metrics_server.server_close()
         await session.close()
