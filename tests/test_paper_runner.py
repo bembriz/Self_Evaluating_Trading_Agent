@@ -15,6 +15,7 @@ from application.services.paper_runner import (
 from domain.market.candle import Candle, Timeframe
 from domain.market.regime import MarketRegime
 from domain.market.stream import KlineUpdate
+from domain.risk.guards import KillSwitch, KillSwitchState
 from domain.trading.signal import Action, Signal
 
 
@@ -90,6 +91,13 @@ def test_paper_runner_config_rejects_non_paper_mode() -> None:
             timeframe="15m",
             session_id="paper-baseline-test",
         ).validate_safe()
+
+
+def test_paper_runner_attaches_restored_kill_switch() -> None:
+    ks = KillSwitch(KillSwitchState(active=True, reason="manual stop", activated_at_ms=42))
+    runner = PaperRunner(config=_safe_config(), event_repo=FakePaperTradeRepo(), kill_switch=ks)
+    assert runner._engine.kill_switch_state.active is True
+    assert runner._engine.kill_switch_state.reason == "manual stop"
 
 
 class FakePaperTradeRepo:

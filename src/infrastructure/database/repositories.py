@@ -77,7 +77,10 @@ class SqlAlchemyMarketCandleRepository:
             stmt = (
                 pg_insert(MarketCandle)
                 .values(rows)
-                .on_conflict_do_nothing(index_elements=["symbol", "timeframe", "timestamp_ms"])
+                .on_conflict_do_nothing(
+                    index_elements=["symbol", "timeframe", "timestamp_ms"],
+                    index_where=text("source = 'download'"),
+                )
                 .returning(MarketCandle.id)
             )
             result = await self._session.execute(stmt)
@@ -107,6 +110,77 @@ class SqlAlchemyMarketCandleRepository:
         )
         rows = (await self._session.scalars(stmt)).all()
         return [self._to_domain(r) for r in rows]
+
+    async def upsert_paper(
+        self, session_id: str, symbol: str, timeframe: Timeframe, candles: list[Candle]
+    ) -> int:
+        inserted = 0
+        for offset in range(0, len(candles), self.BATCH_SIZE):
+            batch = candles[offset : offset + self.BATCH_SIZE]
+            rows = [
+                {
+                    "session_id": session_id,
+                    "symbol": symbol,
+                    "timeframe": timeframe.label,
+                    "timestamp_ms": c.timestamp_ms,
+                    "open": c.open,
+                    "high": c.high,
+                    "low": c.low,
+                    "close": c.close,
+                    "volume": c.volume,
+                    "turnover": c.turnover,
+                    "source": "paper-live",
+                    "confirmed": True,
+                }
+                for c in batch
+            ]
+            stmt = (
+                pg_insert(MarketCandle)
+                .values(rows)
+                .on_conflict_do_nothing(
+                    index_elements=["session_id", "symbol", "timeframe", "timestamp_ms"],
+                    index_where=text("source = 'paper-live'"),
+                )
+                .returning(MarketCandle.id)
+            )
+            result = await self._session.execute(stmt)
+            inserted += len(result.scalars().all())
+        return inserted
+
+    async def session_range(
+        self,
+        session_id: str,
+        symbol: str,
+        timeframe: Timeframe,
+        start_ms: int,
+        end_ms: int,
+    ) -> list[Candle]:
+        stmt = (
+            select(MarketCandle)
+            .where(
+                MarketCandle.session_id == session_id,
+                MarketCandle.symbol == symbol,
+                MarketCandle.timeframe == timeframe.label,
+                MarketCandle.source == "paper-live",
+                MarketCandle.timestamp_ms >= start_ms,
+                MarketCandle.timestamp_ms <= end_ms,
+            )
+            .order_by(MarketCandle.timestamp_ms)
+        )
+        rows = (await self._session.scalars(stmt)).all()
+        return [self._to_domain(r) for r in rows]
+
+    async def last_persisted_ms(
+        self, session_id: str, symbol: str, timeframe: Timeframe
+    ) -> int | None:
+        stmt = select(func.max(MarketCandle.timestamp_ms)).where(
+            MarketCandle.session_id == session_id,
+            MarketCandle.symbol == symbol,
+            MarketCandle.timeframe == timeframe.label,
+            MarketCandle.source == "paper-live",
+        )
+        value = await self._session.scalar(stmt)
+        return int(value) if value is not None else None
 
     @staticmethod
     def _to_domain(row: MarketCandle) -> Candle:
@@ -186,8 +260,9 @@ class SqlAlchemyPaperTradeEventRepository:
         self._session = session
 
     async def add(self, event: PaperTradeEvent) -> None:
-        self._session.add(
-            PaperTradeEventRecord(
+        stmt = (
+            pg_insert(PaperTradeEventRecord)
+            .values(
                 session_id=event.session_id,
                 strategy_version=event.strategy_version,
                 strategy_hash=event.strategy_hash,
@@ -206,8 +281,11 @@ class SqlAlchemyPaperTradeEventRepository:
                 equity=event.equity,
                 kill_switch_active=event.kill_switch_active,
             )
+            .on_conflict_do_nothing(
+                index_elements=["session_id", "symbol", "timeframe", "timestamp_ms"]
+            )
         )
-        await self._session.flush()
+        await self._session.execute(stmt)
 
     async def list_session(self, session_id: str) -> list[PaperTradeEvent]:
         rows = (

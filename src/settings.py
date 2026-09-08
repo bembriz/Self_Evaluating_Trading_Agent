@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     paper_symbols: list[str] = ["ETHUSDT"]
     paper_timeframe: str = "15m"
     paper_report_interval_hours: int = 24
-    paper_max_runtime_days: int = 7
+    paper_max_runtime_days: int = 45
     paper_report_dir: str = "reports/paper"
     paper_certification_state_path: str = "docs/phases/16/certification-state.json"
     paper_session_id: str | None = None

@@ -82,7 +82,7 @@ def test_paper_runner_settings_defaults(monkeypatch: MonkeyPatch) -> None:
     assert s.paper_symbols == ["ETHUSDT"]
     assert s.paper_timeframe == "15m"
     assert s.paper_report_interval_hours == 24
-    assert s.paper_max_runtime_days == 7
+    assert s.paper_max_runtime_days == 45
 
 
 def test_paper_runner_safe_mode_env_overrides(monkeypatch: MonkeyPatch) -> None:

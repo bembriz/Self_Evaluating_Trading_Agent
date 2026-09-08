@@ -3,6 +3,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 from application.ports.market_stream import WebSocketDisconnected
 from application.services.paper_runner import (
     PaperRunner,
@@ -437,3 +439,28 @@ def test_run_paper_runner_keeps_env_session_id_without_cli_arg() -> None:
 
     assert code == 0
     assert captured["session_id"] == "paper-baseline-from-env"
+
+
+async def test_run_loop_stops_on_commit_failure(tmp_path: Path) -> None:
+    repo = FakeRepo([])
+    stream = FakeStream([_kline(100.0, 1_000), _kline(101.0, 2_000)])
+
+    async def failing_commit() -> None:
+        raise RuntimeError("db commit failed")
+
+    with pytest.raises(RuntimeError, match="db commit failed"):
+        await _run_loop(
+            stream=stream,
+            runner=_paper_runner(repo),
+            repo=repo,
+            commit=failing_commit,
+            session_id="paper-baseline-test",
+            report_interval_seconds=3600,
+            report_dir=tmp_path / "reports",
+            state_path=tmp_path / "certification-state.json",
+            initial_equity=1000.0,
+            deadline=asyncio.get_running_loop().time() + 1,
+        )
+
+    # El runner no procesa la segunda vela tras el fallo de commit.
+    assert len(repo._events) == 1
