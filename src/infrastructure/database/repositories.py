@@ -280,6 +280,7 @@ class SqlAlchemyPaperTradeEventRepository:
                 slippage_cost=event.slippage_cost,
                 equity=event.equity,
                 kill_switch_active=event.kill_switch_active,
+                decision_context=event.decision_context,
             )
             .on_conflict_do_nothing(
                 index_elements=["session_id", "symbol", "timeframe", "timestamp_ms"]
@@ -317,4 +318,5 @@ class SqlAlchemyPaperTradeEventRepository:
             slippage_cost=row.slippage_cost,
             equity=row.equity,
             kill_switch_active=row.kill_switch_active,
+            decision_context=row.decision_context,
         )

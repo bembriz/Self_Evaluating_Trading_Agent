@@ -10,6 +10,7 @@ from typing import Any
 
 from application.ports.market_repositories import MarketCandleRepository
 from application.ports.paper_trading import PaperTradeEvent, PaperTradeEventRepository
+from application.services.decision_context import SCHEMA_VERSION, DecisionContext
 from application.services.paper_engine import PaperEngine
 from application.services.regime_confirmation import RegimeConfirmationTracker
 from domain.market.candle import Candle, Timeframe
@@ -54,7 +55,28 @@ def events_equivalent(a: PaperTradeEvent, b: PaperTradeEvent, tol: float = 1e-9)
         and _floats_close(a.fee, b.fee, tol)
         and _floats_close(a.slippage_cost, b.slippage_cost, tol)
         and _floats_close(a.equity, b.equity, tol)
+        and _contexts_equivalent(a.decision_context, b.decision_context, tol)
     )
+
+
+def _contexts_equivalent(a: dict[str, Any] | None, b: dict[str, Any] | None, tol: float) -> bool:
+    if a is None or b is None:
+        return a is None and b is None
+    keys = ("signal_reason", "regime")
+    for key in keys:
+        if a.get(key) != b.get(key):
+            return False
+    for key in ("atr", "ema_fast", "ema_slow", "rsi"):
+        av, bv = a.get(key), b.get(key)
+        if (av is None) != (bv is None):
+            return False
+        if (
+            av is not None
+            and bv is not None
+            and abs(float(av) - float(bv)) > tol * max(1.0, abs(float(av)), abs(float(bv)))
+        ):
+            return False
+    return True
 
 
 def strategy_hash(strategy_version: str, decision_source: str) -> str:
@@ -385,10 +407,10 @@ class PaperRunner:
         """Pipeline puro (sin persistencia): vela → trackers → decision → engine → evento."""
         candles = self._candles_by_symbol[symbol]
         candles.append(candle)
-        self._regime_trackers[symbol].observe(
-            self._regime_classifier.classify(candles), candle.timestamp_ms
-        )
+        regime = self._regime_classifier.classify(candles)
+        self._regime_trackers[symbol].observe(regime, candle.timestamp_ms)
         signal = self._strategy.on_candle(candle)
+        atr_value = self._atr_trackers[symbol].update(candle)
         decision = TradingDecision(
             timestamp_ms=candle.timestamp_ms,
             action=signal.action,
@@ -399,10 +421,19 @@ class PaperRunner:
         paper_event = self._engine.on_price(
             decision=decision,
             price=candle.close,
-            atr=self._atr_trackers[symbol].update(candle),
+            atr=atr_value,
             timestamp_ms=candle.timestamp_ms,
         )
         fill = paper_event.fill
+        context = DecisionContext(
+            schema_version=SCHEMA_VERSION,
+            signal_reason=signal.reason,
+            atr=atr_value,
+            ema_fast=getattr(self._strategy, "ema_fast", None),
+            ema_slow=getattr(self._strategy, "ema_slow", None),
+            rsi=getattr(self._strategy, "rsi", None),
+            regime=regime.name if regime is not None else None,
+        )
         return PaperTradeEvent(
             session_id=self._config.session_id,
             strategy_version=self._strategy.version,
@@ -421,6 +452,7 @@ class PaperRunner:
             slippage_cost=fill.slippage_cost if fill is not None else 0.0,
             equity=self._engine.mark_to_market(price=candle.close),
             kill_switch_active=self._engine.kill_switch_state.active,
+            decision_context=context.to_dict(),
         )
 
     def replay(

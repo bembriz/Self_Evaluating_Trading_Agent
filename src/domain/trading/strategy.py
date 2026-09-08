@@ -102,6 +102,21 @@ class EmaRsiBaseline:
         self._slow = _EmaTracker(self._config.ema_slow)
         self._rsi = _RsiTracker(self._config.rsi_period)
 
+    @property
+    def ema_fast(self) -> float | None:
+        """Valor actual de la EMA rápida (None durante warmup)."""
+        return self._fast.current
+
+    @property
+    def ema_slow(self) -> float | None:
+        """Valor actual de la EMA lenta (None durante warmup)."""
+        return self._slow.current
+
+    @property
+    def rsi(self) -> float | None:
+        """Valor actual del RSI (None durante warmup)."""
+        return self._rsi.current
+
     def on_candle(self, candle: Candle) -> Signal:
         close = candle.close
         self._fast.update(close)

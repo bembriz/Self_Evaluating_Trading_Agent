@@ -219,6 +219,7 @@ class PaperTradeEventRecord(Base):
     slippage_cost: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
     equity: Mapped[float] = mapped_column(Float, nullable=False)
     kill_switch_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    decision_context: Mapped[dict[str, Any] | None] = mapped_column(JSONB, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
 
     __table_args__ = (

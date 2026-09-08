@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from application.ports.paper_trading import PaperTradeEvent
+from application.services.decision_context import DecisionContext, recompute_decision_contexts
 from application.services.paper_runner import PaperRunner, PaperRunnerConfig
 from application.services.recovery import restore_runner
 from domain.market.candle import Candle, Timeframe
@@ -123,3 +124,25 @@ async def test_restart_parity_mid_position(session: AsyncSession) -> None:
     equity_restart = restored._engine.portfolio.equity(last_close)
 
     assert equity_restart == equity_continuous
+
+
+async def test_decision_context_persisted_and_roundtrips(session: AsyncSession) -> None:
+    candles = _uptrend(80)
+    repo = SqlAlchemyPaperTradeEventRepository(session)
+    runner = PaperRunner(
+        config=_config("ctx-test"),
+        event_repo=repo,
+        candle_repo=SqlAlchemyMarketCandleRepository(session),
+    )
+    for c in candles:
+        await runner.handle_candle("ETHUSDT", TF, c)
+    await session.commit()
+
+    events = await repo.list_session("ctx-test")
+    assert len(events) == len(candles)
+    assert all(e.decision_context is not None for e in events)
+
+    recomputed = recompute_decision_contexts(candles)
+    for event, expected in zip(events, recomputed, strict=True):
+        assert event.decision_context is not None
+        assert DecisionContext.from_dict(event.decision_context) == expected
