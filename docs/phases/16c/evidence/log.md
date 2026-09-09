@@ -1,0 +1,5 @@
+- `2026-09-09T04:36:49-06:00` **e2e-restart-parity** → `uv run pytest tests/e2e/test_e2e_restart_parity.py -q` · exit=`0` · artifact: docs/phases/16c/evidence/e2e-restart-parity.log
+- `2026-09-09T04:38:42-06:00` **full-suite-coverage** → `uv run pytest --cov=src --cov-branch --cov-report=term-missing --cov-report=json:docs/phases/16c/evidence/coverage.json -q` · exit=`0` · artifact: docs/phases/16c/evidence/full-suite-coverage.log
+- `2026-09-09T04:38:42-06:00` **ruff-check** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/16c/evidence/ruff-check.log
+- `2026-09-09T04:38:42-06:00` **ruff-format** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/16c/evidence/ruff-format.log
+- `2026-09-09T04:38:43-06:00` **mypy** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/16c/evidence/mypy.log
