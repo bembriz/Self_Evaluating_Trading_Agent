@@ -11,7 +11,7 @@ from typing import Any
 from application.ports.market_repositories import MarketCandleRepository
 from application.ports.paper_trading import PaperTradeEvent, PaperTradeEventRepository
 from application.services.decision_context import SCHEMA_VERSION, DecisionContext
-from application.services.paper_engine import PaperEngine
+from application.services.paper_engine import OutOfOrderTimestampError, PaperEngine
 from application.services.regime_confirmation import RegimeConfirmationTracker
 from domain.market.candle import Candle, Timeframe
 from domain.market.indicators import AtrTracker
@@ -34,6 +34,10 @@ class RecoveryDivergenceError(RuntimeError):
 
 class RecoveryGapError(RuntimeError):
     """Falta un evento persistido para una vela: brecha de datos en recovery."""
+
+
+class DuplicateCandleError(RuntimeError):
+    """Vela con timestamp ya procesado pero payload distinto: inconsistencia de datos."""
 
 
 def _floats_close(a: float | None, b: float | None, tol: float) -> bool:
@@ -366,6 +370,7 @@ class PaperRunner:
             symbol: RegimeConfirmationTracker(symbol=symbol, timeframe=config.timeframe)
             for symbol in config.symbols
         }
+        self._last_candle: dict[tuple[str, str], Candle] = {}
 
     @property
     def rejected_regime_candidates(self) -> int:
@@ -393,8 +398,28 @@ class PaperRunner:
 
     async def handle_candle(
         self, symbol: str, timeframe: Timeframe, candle: Candle
-    ) -> PaperTradeEvent:
-        """Procesa una vela confirmada y la persiste atómicamente (candle + evento)."""
+    ) -> PaperTradeEvent | None:
+        """Procesa una vela confirmada y la persiste atómicamente (candle + evento).
+
+        Deduplicación de estado (16c.5a/D3): una vela con timestamp igual al último
+        procesado no vuelve a avanzar estado mutable en memoria. Si es idéntica es
+        no-op (None); si difiere el payload es inconsistencia de datos.
+        """
+        key = (symbol, timeframe.label)
+        previous = self._last_candle.get(key)
+        if previous is not None:
+            if candle.timestamp_ms < previous.timestamp_ms:
+                raise OutOfOrderTimestampError(
+                    f"timestamp fuera de orden: {candle.timestamp_ms} < {previous.timestamp_ms}"
+                )
+            if candle.timestamp_ms == previous.timestamp_ms:
+                if candle == previous:
+                    return None
+                raise DuplicateCandleError(
+                    f"vela duplicada con payload distinto en {symbol} {timeframe.label} "
+                    f"ts={candle.timestamp_ms}"
+                )
+        self._last_candle[key] = candle
         event = self._process(symbol, timeframe.label, candle)
         if self._candle_repo is not None:
             await self._candle_repo.upsert_paper(
@@ -468,6 +493,7 @@ class PaperRunner:
         """
         for symbol, timeframe_label, candle in candles:
             event = self._process(symbol, timeframe_label, candle)
+            self._last_candle[(symbol, timeframe_label)] = candle
             key = (symbol, timeframe_label, candle.timestamp_ms)
             expected = persisted.get(key)
             if expected is None:

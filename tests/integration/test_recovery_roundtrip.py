@@ -146,3 +146,65 @@ async def test_decision_context_persisted_and_roundtrips(session: AsyncSession) 
     for event, expected in zip(events, recomputed, strict=True):
         assert event.decision_context is not None
         assert DecisionContext.from_dict(event.decision_context) == expected
+
+
+async def test_crash_after_commit_overlap_replayed_candle_is_noop(session: AsyncSession) -> None:
+    """Crash tras commit: la vela reentregada (overlap REST/WS) no duplica evento,
+    fill ni contabilidad, y el estado reconstruido es idéntico al de antes del overlap.
+
+    Secuencia: candle procesado → commit → crash → restore (replay) → la misma vela
+    reaparece (overlap) → NO evento duplicado, NO fill duplicado, NO doble contabilidad,
+    estado == estado previo al overlap (la vela reentregada es no-op).
+    """
+    candles = _uptrend(80, step=0.5)
+    split = 40
+
+    repo = SqlAlchemyPaperTradeEventRepository(session)
+    candle_repo = SqlAlchemyMarketCandleRepository(session)
+    system = SqlAlchemySystemStateRepository(session)
+
+    first = PaperRunner(
+        config=_config("crash-after-commit"),
+        event_repo=repo,
+        candle_repo=candle_repo,
+    )
+    await _process(first, candles[:split])
+    await session.commit()
+
+    # Crash + restart: reconstruye desde lo committeado.
+    restored = await restore_runner(
+        config=_config("crash-after-commit"),
+        event_repo=repo,
+        candle_repo=candle_repo,
+        system_state_repo=system,
+        symbol="ETHUSDT",
+        timeframe=TF,
+    )
+    state_before = _engine_snapshot(restored)
+
+    # Overlap: la última vela committeada reaparece (WS/REST re-entrega).
+    await restored.handle_candle("ETHUSDT", TF, candles[split - 1])
+    await session.commit()
+
+    state_after = _engine_snapshot(restored)
+    events = await repo.list_session("crash-after-commit")
+
+    # Sin evento duplicado (la vela reentregada no genera evento nuevo).
+    assert len(events) == split
+    # La vela reentregada es no-op: sin doble contabilidad ni mutación de estado.
+    assert state_after == state_before
+
+
+def _engine_snapshot(runner: PaperRunner) -> tuple[float, ...]:
+    """Fotografía del estado contable + trackers deterministas del runner."""
+    engine = runner._engine
+    strategy = runner._strategy
+    return (
+        round(engine.portfolio.cash, 12),
+        round(engine.portfolio.position, 12),
+        round(engine.portfolio.realized_pnl, 12),
+        round(engine.realized_pnl_today, 12),
+        round(strategy.ema_fast or 0.0, 12),
+        round(strategy.ema_slow or 0.0, 12),
+        round(strategy.rsi or 0.0, 12),
+    )
