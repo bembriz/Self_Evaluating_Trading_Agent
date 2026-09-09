@@ -1,0 +1,161 @@
+# evidencia: gate-full-suite
+fecha: 2026-09-09T05:16:58-06:00
+fase: 16c
+comando: bash -c uv run pytest --cov=src --cov-branch --cov-report=term-missing --cov-report=json:/tmp/opencode/phase-16c-restart-safe/docs/phases/16c/evidence/gate-full-suite-coverage.json --cov-fail-under=90 -q
+........................................................................ [ 12%]
+........................................................................ [ 24%]
+........................................................................ [ 36%]
+...................................s.................................... [ 48%]
+........................................................................ [ 60%]
+........................................................................ [ 72%]
+........................................................................ [ 84%]
+........................................................................ [ 96%]
+...................                                                      [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /tmp/opencode/phase-16c-restart-safe/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                                                  Stmts   Miss Branch BrPart  Cover   Missing
+-------------------------------------------------------------------------------------------------
+src/application/__init__.py                               0      0      0      0   100%
+src/application/commands/__init__.py                      0      0      0      0   100%
+src/application/ports/__init__.py                         0      0      0      0   100%
+src/application/ports/dataset_store.py                   11      0      0      0   100%
+src/application/ports/embeddings.py                       5      0      0      0   100%
+src/application/ports/llm.py                             18      0      0      0   100%
+src/application/ports/market_data.py                      5      0      0      0   100%
+src/application/ports/market_repositories.py             11      0      0      0   100%
+src/application/ports/market_stream.py                    8      0      0      0   100%
+src/application/ports/memory_repository.py               16      0      0      0   100%
+src/application/ports/orderbook_features.py               4      0      0      0   100%
+src/application/ports/paper_trading.py                   25      0      0      0   100%
+src/application/ports/repositories.py                     6      0      0      0   100%
+src/application/queries/__init__.py                       0      0      0      0   100%
+src/application/services/__init__.py                      0      0      0      0   100%
+src/application/services/approval_workflow.py            25      2      6      1    90%   23, 30
+src/application/services/audit_log.py                    24      1      0      0    96%   45
+src/application/services/backfill.py                     30      0      4      0   100%
+src/application/services/backtest_engine.py              58      0     16      0   100%
+src/application/services/connection_supervisor.py        39      0      6      1    98%   58->60
+src/application/services/cost_monitor.py                 19      1      0      0    95%   42
+src/application/services/decision_agent.py               30      0      2      0   100%
+src/application/services/decision_context.py             50      0      8      0   100%
+src/application/services/historical_data.py              63      0      6      0   100%
+src/application/services/market_data_service.py         113      5     28      5    93%   66, 102, 140-141, 155->exit, 164, 165->exit
+src/application/services/memory_comparison.py            51      0      4      0   100%
+src/application/services/memory_writer.py                27      0      4      0   100%
+src/application/services/ml_pipeline.py                  80      0     12      0   100%
+src/application/services/paper_engine.py                164      1     36      1    99%   193
+src/application/services/paper_runner.py                239     19     68     11    88%   72, 76, 82, 245, 250-260, 266, 277, 292->294, 296->298, 338, 342
+src/application/services/reconciliation.py               26      0      6      1    97%   52->49
+src/application/services/recovery.py                     26      0      0      0   100%
+src/application/services/reflection_engine.py            31      1     12      1    95%   87
+src/application/services/regime_confirmation.py          53      1     12      1    97%   29
+src/application/services/validation.py                   27      1     12      0    97%   17
+src/domain/__init__.py                                    0      0      0      0   100%
+src/domain/evaluation/__init__.py                         0      0      0      0   100%
+src/domain/evaluation/bootstrap.py                       72      2     22      2    96%   70, 95
+src/domain/evaluation/buy_hold.py                        19      0      2      0   100%
+src/domain/evaluation/comparison.py                      29      0      0      0   100%
+src/domain/evaluation/metrics.py                         87      0     24      0   100%
+src/domain/evaluation/outcome.py                         31      0      8      1    97%   55->58
+src/domain/evaluation/sensitivity.py                     72      2     14      2    95%   73, 124
+src/domain/experiments/__init__.py                        0      0      0      0   100%
+src/domain/experiments/experiment.py                     26      0      0      0   100%
+src/domain/experiments/features.py                       33      0      4      0   100%
+src/domain/experiments/improvement.py                    20      0      0      0   100%
+src/domain/experiments/logistic_regression.py            46      0     16      0   100%
+src/domain/experiments/walk_forward.py                   24      0      6      0   100%
+src/domain/llm/__init__.py                                0      0      0      0   100%
+src/domain/llm/budget.py                                 44      0     10      0   100%
+src/domain/llm/call.py                                   19      0      0      0   100%
+src/domain/llm/cost.py                                    6      0      0      0   100%
+src/domain/llm/prompt.py                                 13      0      0      0   100%
+src/domain/market/__init__.py                             0      0      0      0   100%
+src/domain/market/candle.py                              42      0     12      0   100%
+src/domain/market/dataset.py                             32      0      0      0   100%
+src/domain/market/feature_engine.py                      63      0      6      0   100%
+src/domain/market/features.py                            14      0      0      0   100%
+src/domain/market/indicators.py                         174      0     54      0   100%
+src/domain/market/orderbook.py                           72      4     16      4    91%   77, 83, 89, 103
+src/domain/market/regime.py                              79      0     26      0   100%
+src/domain/market/state.py                               36      0      0      0   100%
+src/domain/market/stream.py                              34      0      2      0   100%
+src/domain/memory/__init__.py                             0      0      0      0   100%
+src/domain/memory/guards.py                              10      0      4      0   100%
+src/domain/memory/memory.py                              22      0      0      0   100%
+src/domain/memory/reflection.py                          15      0      0      0   100%
+src/domain/memory/space.py                                4      0      0      0   100%
+src/domain/portfolio/__init__.py                          0      0      0      0   100%
+src/domain/portfolio/portfolio.py                        73      0     10      0   100%
+src/domain/risk/__init__.py                               0      0      0      0   100%
+src/domain/risk/config.py                                25      0      4      0   100%
+src/domain/risk/engine.py                                74      0     24      0   100%
+src/domain/risk/guards.py                                41      0      8      0   100%
+src/domain/risk/sizing.py                                34      0      8      0   100%
+src/domain/risk/stops.py                                 11      0      2      0   100%
+src/domain/time/day.py                                    3      0      0      0   100%
+src/domain/trading/__init__.py                            0      0      0      0   100%
+src/domain/trading/decision.py                           26      0      0      0   100%
+src/domain/trading/fees.py                               12      0      0      0   100%
+src/domain/trading/fill.py                               37      0      4      0   100%
+src/domain/trading/order.py                              42      3      4      1    91%   57, 63, 68
+src/domain/trading/signal.py                             17      0      0      0   100%
+src/domain/trading/slippage.py                           11      0      0      0   100%
+src/domain/trading/strategy.py                          109      0     18      0   100%
+src/infrastructure/__init__.py                            0      0      0      0   100%
+src/infrastructure/bybit/__init__.py                      0      0      0      0   100%
+src/infrastructure/bybit/auth.py                         22      1      0      0    95%   51
+src/infrastructure/bybit/client.py                       53      3     18      5    89%   54->66, 61->60, 64, 88, 94
+src/infrastructure/bybit/schemas.py                      11      0      0      0   100%
+src/infrastructure/bybit/trade_client.py                 93      2     16      4    94%   54->56, 93, 115, 175->187
+src/infrastructure/bybit/ws.py                           80      6     16      4    90%   60, 72, 77, 80-81, 89
+src/infrastructure/bybit/ws_schemas.py                   30      0      0      0   100%
+src/infrastructure/database/__init__.py                   0      0      0      0   100%
+src/infrastructure/database/base.py                       3      0      0      0   100%
+src/infrastructure/database/memory_repository.py         44      8      8      3    75%   30, 54-55, 72-76
+src/infrastructure/database/models.py                   114      0      0      0   100%
+src/infrastructure/database/repositories.py             108      0     10      1    99%   206->209
+src/infrastructure/database/session.py                    6      0      0      0   100%
+src/infrastructure/embeddings/__init__.py                 0      0      0      0   100%
+src/infrastructure/embeddings/fastembed_provider.py      45      7      8      1    81%   26-33, 68
+src/infrastructure/execution/__init__.py                  0      0      0      0   100%
+src/infrastructure/llm/__init__.py                        0      0      0      0   100%
+src/infrastructure/llm/deepseek.py                       87      3      8      2    95%   102->133, 138-139, 151
+src/infrastructure/llm/prompts.py                        13      0      2      0   100%
+src/infrastructure/llm/schemas.py                        26      0      0      0   100%
+src/infrastructure/observability/__init__.py              0      0      0      0   100%
+src/infrastructure/observability/logging.py              53      0      6      1    98%   38->40
+src/infrastructure/observability/metrics.py              34      0      0      0   100%
+src/infrastructure/observability/server.py               21      2      2      1    87%   28-29
+src/infrastructure/observability/tracing.py              21     14      4      1    32%   21-38
+src/infrastructure/storage/dataset_store.py              34      0      6      0   100%
+src/interfaces/__init__.py                                0      0      0      0   100%
+src/interfaces/api/__init__.py                            0      0      0      0   100%
+src/interfaces/api/app.py                                37      0      2      1    97%   25->exit
+src/interfaces/api/deps.py                               13      0      0      0   100%
+src/interfaces/api/routers/__init__.py                    0      0      0      0   100%
+src/interfaces/api/routers/dashboard.py                  51      2      6      2    89%   57->71, 65->71, 67-68
+src/interfaces/api/routers/health.py                     15      0      2      0   100%
+src/interfaces/api/routers/system.py                     11      0      0      0   100%
+src/interfaces/cli/__init__.py                            0      0      0      0   100%
+src/interfaces/cli/backtest.py                           69      8      4      1    88%   67-68, 143-148
+src/interfaces/cli/download.py                           75     36      4      0    54%   41-93, 97-100, 119-127, 131-134
+src/interfaces/cli/market_worker.py                      63      5      8      3    89%   57, 75, 80, 99, 103
+src/interfaces/cli/paper_runner.py                      199     47     60      7    78%   134->138, 139, 141, 143->145, 146, 168->170, 230, 239-340, 364-366
+src/interfaces/cli/paper_session.py                      94     10     12      3    88%   73-74, 112, 116, 190-195
+src/interfaces/cli/replay.py                             58      8      6      1    86%   59-60, 115-120
+src/interfaces/web/__init__.py                            0      0      0      0   100%
+src/main.py                                              37      3     14      3    88%   37, 39, 41
+src/settings.py                                          57      0      0      0   100%
+src/version.py                                            1      0      0      0   100%
+-------------------------------------------------------------------------------------------------
+TOTAL                                                  4615    208    772     76    94%
+Coverage JSON written to file /tmp/opencode/phase-16c-restart-safe/docs/phases/16c/evidence/gate-full-suite-coverage.json
+Required test coverage of 90% reached. Total coverage: 94.39%
+exit=0

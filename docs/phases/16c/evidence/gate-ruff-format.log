@@ -1,0 +1,6 @@
+# evidencia: gate-ruff-format
+fecha: 2026-09-09T05:18:57-06:00
+fase: 16c
+comando: bash -c uv run ruff format --check .
+260 files already formatted
+exit=0

@@ -1,0 +1,6 @@
+# evidencia: gate-paper-cert-unit
+fecha: 2026-09-09T05:14:51-06:00
+fase: 16c
+comando: bash -c cd harness && uv run pytest tests/test_paper_certification.py -q
+............................                                             [100%]
+exit=0
