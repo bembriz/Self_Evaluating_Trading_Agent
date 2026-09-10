@@ -1,5 +1,5 @@
 from application.ports.paper_trading import PaperTradeEvent
-from application.services.backfill import BackfillService, candle_close_ms
+from application.services.backfill import BackfillResult, BackfillService, candle_close_ms
 from application.services.paper_runner import PaperRunner, PaperRunnerConfig
 from application.services.recovery import recover_and_handoff
 from domain.market.candle import Candle, Timeframe
@@ -227,6 +227,52 @@ async def test_restart_no_gap_produces_no_new_events() -> None:
     assert result.recovered == 0
     assert result.skipped_partial == 0
     assert len(events.events) == 0
+
+
+async def test_fresh_session_never_fetches_history() -> None:
+    """Sesión SIN velas persistidas: NO se consulta REST, NO se procesa, NO se persiste.
+
+    Regresión del boundary de certificación: un ``last is None`` NO debe recuperar
+    histórico desde ``start=0`` (contaminaría la sesión antes del anchor).
+    """
+    candles = FakeCandleRepo()  # sesión prístina: sin velas
+    events = FakeEventRepo()
+    client = FakeClient([_candle(900_000), _candle(1_800_000)])  # histórico disponible
+    svc = BackfillService(client, candles)
+
+    result = await svc.backfill(
+        session_id="sess",
+        symbol="ETHUSDT",
+        timeframe=TF,
+        cutoff_ms=2_700_000,
+        runner=_runner(events, candles),
+    )
+
+    assert client.calls == []  # REST NO invocado
+    assert result == BackfillResult(recovered=0, skipped_partial=0)
+    assert events.events == []  # 0 events
+    assert await candles.last_persisted_ms("sess", "ETHUSDT", TF) is None  # 0 candles
+
+
+async def test_existing_session_backfills_only_from_last_plus_interval() -> None:
+    """Sesión existente: el fetch arranca en ``last + interval`` (no en 0)."""
+    candles = FakeCandleRepo()
+    await candles.upsert_paper("sess", "ETHUSDT", TF, [_candle(900_000)])
+    events = FakeEventRepo()
+    client = FakeClient([_candle(1_800_000), _candle(2_700_000)])
+    svc = BackfillService(client, candles)
+
+    result = await svc.backfill(
+        session_id="sess",
+        symbol="ETHUSDT",
+        timeframe=TF,
+        cutoff_ms=3_600_000,
+        runner=_runner(events, candles),
+    )
+
+    assert client.calls == [("ETHUSDT", TF, 1_800_000, 3_600_000)]
+    assert result.recovered == 2
+    assert [e.timestamp_ms for e in events.events] == [1_800_000, 2_700_000]
 
 
 async def test_handoff_race_candle_closes_between_backfill_and_subscribe() -> None:

@@ -61,8 +61,10 @@ services:
       # Ventana de certificación: 30d + margen ⇒ 45 (0 = sin límite). Evita el
       # default peligroso de .env.example (7d), insuficiente para certificar.
       PAPER_MAX_RUNTIME_DAYS: ${PAPER_MAX_RUNTIME_DAYS:-45}
-      # Sesión explícita y versionada (no reutiliza la sesión 0.1.3).
-      PAPER_SESSION_ID: ${PAPER_SESSION_ID:-paper-baseline-15m-ethusdt-0.2.0}
+      # Sesión de VALIDACIÓN (runtime/drills/UAT). La sesión de CERTIFICACIÓN es
+      # SIEMPRE nueva y se inyecta explícitamente en el START (--session-id), nunca
+      # reutiliza la de validación ni una sesión con evidencia previa.
+      PAPER_SESSION_ID: ${PAPER_SESSION_ID:-paper-validation-15m-ethusdt}
       PAPER_REPORT_DIR: reports/paper
       PAPER_CERTIFICATION_STATE_PATH: /app/certification/certification-state.json
       # Identidad de artefacto: fail-fast, SIEMPRE inyectada en el APPLY.

@@ -1083,3 +1083,144 @@ async def test_fresh_start_then_periodic_stays_v2_running(
     assert operational["state_continuity"] == "PASS"  # sin FAIL espurio en el 1er write
     assert operational["metrics_history_days"] >= 1  # heartbeat real confirmado
     json.dumps(final, allow_nan=False)
+
+
+# ---------------------------------------------------------------------------
+# Fresh Session Bootstrap + Certification Boundary: el START exige sesión
+# prístina (0 paper_trade_events, 0 market_candles) en NOT_STARTED/INVALIDATED.
+# ---------------------------------------------------------------------------
+
+
+async def test_operator_start_rejected_with_prior_events(tmp_path: Path) -> None:
+    """NOT_STARTED + eventos previos ⇒ START rejected fail-closed, sin ancla."""
+    state_path = tmp_path / "certification-state.json"
+    artifact = _config_artifact([], now_ms=1_700_000_000_000)
+
+    assert (
+        _operator_start_anchor(
+            state_path=state_path,
+            artifact=artifact,
+            prior_event_count=1,
+            prior_candle_count=0,
+            now_ms=1_000,
+        )
+        is False
+    )
+    assert not state_path.exists()
+
+
+async def test_operator_start_rejected_with_prior_candles(tmp_path: Path) -> None:
+    """NOT_STARTED + velas previas ⇒ START rejected fail-closed, sin ancla."""
+    state_path = tmp_path / "certification-state.json"
+    artifact = _config_artifact([], now_ms=1_700_000_000_000)
+
+    assert (
+        _operator_start_anchor(
+            state_path=state_path,
+            artifact=artifact,
+            prior_event_count=0,
+            prior_candle_count=1,
+            now_ms=1_000,
+        )
+        is False
+    )
+    assert not state_path.exists()
+
+
+async def test_operator_start_pristine_zero_counts_anchors(tmp_path: Path) -> None:
+    """Sesión prístina (0 events, 0 candles) ⇒ START PASS + anchor."""
+    state_path = tmp_path / "certification-state.json"
+    artifact = _config_artifact([], now_ms=1_700_000_000_000)
+
+    assert _operator_start_anchor(
+        state_path=state_path,
+        artifact=artifact,
+        prior_event_count=0,
+        prior_candle_count=0,
+        now_ms=1_000,
+    )
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    assert certification_phase(state) == "RUNNING"
+    assert state["frozen"]["certification_started_at"] == _iso(1_000)
+
+
+async def test_invalidated_recertification_requires_fresh_session(tmp_path: Path) -> None:
+    """INVALIDATED con evidencia previa ⇒ rechazo; con sesión limpia ⇒ anchor nuevo."""
+    state_path = tmp_path / "certification-state.json"
+    old_anchor = _iso(42)
+    state_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 2,
+                "status": "INVALIDATED",
+                "invalidated_reason": "operator",
+                "frozen": {
+                    "symbol": "ETHUSDT",
+                    "timeframe": "15m",
+                    "certification_started_at": old_anchor,
+                },
+                "current": {},
+            }
+        ),
+        encoding="utf-8",
+    )
+    artifact = _config_artifact([], now_ms=1_700_000_000_000)
+
+    # Evidencia previa ⇒ fail-closed: el estado queda INVALIDATED y sin ancla nueva.
+    assert (
+        _operator_start_anchor(
+            state_path=state_path,
+            artifact=artifact,
+            prior_event_count=7,
+            prior_candle_count=7,
+            now_ms=5_000,
+        )
+        is False
+    )
+    unchanged = json.loads(state_path.read_text(encoding="utf-8"))
+    assert certification_phase(unchanged) == "INVALIDATED"
+    assert unchanged["frozen"]["certification_started_at"] == old_anchor
+
+    # Sesión limpia ⇒ recertificación con anchor nuevo.
+    assert _operator_start_anchor(
+        state_path=state_path,
+        artifact=artifact,
+        prior_event_count=0,
+        prior_candle_count=0,
+        now_ms=9_000,
+    )
+    renewed = json.loads(state_path.read_text(encoding="utf-8"))
+    assert certification_phase(renewed) == "RUNNING"
+    assert renewed["frozen"]["certification_started_at"] == _iso(9_000)
+    assert renewed["frozen"]["certification_started_at"] != old_anchor
+
+
+async def test_running_restart_with_prior_evidence_keeps_anchor(tmp_path: Path) -> None:
+    """RUNNING + restart con evidencia acumulada ⇒ no-op, ancla intacta (no aplica el gate)."""
+    state_path = tmp_path / "certification-state.json"
+    artifact = _config_artifact([], now_ms=1_700_000_000_000)
+    assert _operator_start_anchor(
+        state_path=state_path,
+        artifact=artifact,
+        prior_event_count=0,
+        prior_candle_count=0,
+        now_ms=1_000,
+    )
+    anchor = json.loads(state_path.read_text(encoding="utf-8"))["frozen"][
+        "certification_started_at"
+    ]
+
+    # Restart de una certificación en curso: ya hay evidencia, pero RUNNING ⇒ no-op.
+    assert (
+        _operator_start_anchor(
+            state_path=state_path,
+            artifact=artifact,
+            prior_event_count=50,
+            prior_candle_count=50,
+            now_ms=99_999,
+        )
+        is False
+    )
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    assert certification_phase(state) == "RUNNING"
+    assert state["frozen"]["certification_started_at"] == anchor

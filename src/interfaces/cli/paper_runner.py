@@ -22,6 +22,7 @@ from application.services.certification_snapshot import (
     RuntimeArtifact,
     build_certification_state_v2,
     certification_phase,
+    pristine_session_conflict,
     runtime_artifact,
     start_certification,
     write_certification_state_v2,
@@ -413,22 +414,34 @@ def _operator_start_anchor(
     *,
     state_path: Path,
     artifact: RuntimeArtifact,
+    prior_event_count: int = 0,
+    prior_candle_count: int = 0,
     now_ms: int,
     logger: StructuredLogger | None = None,
 ) -> bool:
     """Ancla el reloj v2 SOLO si el operador pidió --start-certification.
 
-    NOT_STARTED/INVALIDATED con artefacto válido ⇒ start_certification + write v2
+    NOT_STARTED/INVALIDATED con artefacto válido y sesión **prístina** (0
+    ``paper_trade_events``, 0 ``market_candles``) ⇒ start_certification + write v2
     (retorna True). RUNNING ⇒ no-op (nunca re-ancla; retorna False). START RECHAZADO
     (Task 8b/A: campo obligatorio vacío o conflicto de sesión con el estado
-    persistido) ⇒ registra el rechazo para el operador y NO ancla (retorna False;
-    el fichero queda intacto). Sin estado previo ({}).
+    persistido; boundary: evidencia previa en la sesión) ⇒ registra el rechazo para
+    el operador y NO ancla (retorna False; el fichero queda intacto). Sin estado
+    previo ({}).
     """
     previous = load_certification_state(state_path)
     phase = certification_phase(previous)
     if phase not in ("NOT_STARTED", "INVALIDATED"):
         if logger is not None:
             logger.info("CERT_START_SKIPPED", phase=phase)
+        return False
+    conflict = pristine_session_conflict(prior_event_count, prior_candle_count)
+    if conflict is not None:
+        reason = f"START rejected: {conflict}; use a fresh session_id"
+        if logger is not None:
+            logger.warning(_CERT_START_REJECTED, reason=reason)
+        else:
+            print(f"[paper-runner] WARN: {reason}")
         return False
     try:
         anchored = start_certification(previous, artifact, now_ms=now_ms)
@@ -521,11 +534,9 @@ async def _run(
                 runner=runner,
             )
 
-        await recover_and_handoff(
-            backfill=_backfill,
-            subscribe=supervisor.run_once_until_connected,
-            now_ms=_now_ms,
-        )
+        # START explícito ANTES de recover_and_handoff: la certificación debe anclar
+        # sobre una sesión prístina (sin evidencia previa); el recovery/backfill/
+        # subscribe ocurre después, de modo que jamás se procesa evidencia pre-anchor.
         state_path = Path(settings.paper_certification_state_path)
         startup_events = await repo.list_session(config.session_id)
         startup_summary = summarize_events(startup_events, initial_equity=RiskConfig().capital)
@@ -542,12 +553,27 @@ async def _run(
             default_session_id=session_id,
         )
         if start_certification:
+            prior_candles = await candle_repo.session_range(
+                session_id=config.session_id,
+                symbol=symbols[0],
+                timeframe=timeframe,
+                start_ms=0,
+                end_ms=_now_ms(),
+            )
             _operator_start_anchor(
                 state_path=state_path,
                 artifact=artifact,
+                prior_event_count=len(startup_events),
+                prior_candle_count=len(prior_candles),
                 now_ms=_now_ms(),
                 logger=logger,
             )
+
+        await recover_and_handoff(
+            backfill=_backfill,
+            subscribe=supervisor.run_once_until_connected,
+            now_ms=_now_ms,
+        )
         deadline = None
         if seconds is not None:
             deadline = asyncio.get_running_loop().time() + seconds

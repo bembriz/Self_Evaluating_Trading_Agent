@@ -28,6 +28,7 @@ from application.services.certification_snapshot import (
     market_evidence_complete,
     metrics_history_days,
     missing_start_identity,
+    pristine_session_conflict,
     recovery_integrity,
     runtime_artifact,
     safeguard_passes,
@@ -1591,3 +1592,12 @@ def test_start_legacy_flat_state_upgrades_to_v2_envelope() -> None:
     assert started["accounting_book"] is None
     assert set(started["frozen"]) == FROZEN_KEYS
     assert certification_phase(started) == "RUNNING"
+
+
+def test_pristine_session_conflict() -> None:
+    """Predicado puro: sesión prístina ⇔ 0 eventos y 0 velas; si no, razón del rechazo."""
+    assert pristine_session_conflict(0, 0) is None
+    assert pristine_session_conflict(1, 0) is not None
+    assert pristine_session_conflict(0, 1) is not None
+    assert "paper_trade_events" in str(pristine_session_conflict(3, 0))
+    assert "market_candles" in str(pristine_session_conflict(0, 2))

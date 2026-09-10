@@ -347,6 +347,21 @@ def session_context_conflict(previous: Mapping[str, Any], artifact: RuntimeArtif
     return None
 
 
+def pristine_session_conflict(prior_event_count: int, prior_candle_count: int) -> str | None:
+    """Razón por la que una sesión NO es prístina para anclar (fail-closed), o ``None``.
+
+    La certificación debe empezar sobre una sesión sin evidencia previa: 0
+    ``paper_trade_events`` y 0 ``market_candles``. Si existe evidencia, anclar
+    contaminaría la certificación con datos pre-anchor; el operador debe usar un
+    ``session_id`` nuevo.
+    """
+    if prior_event_count > 0:
+        return f"session has {prior_event_count} prior paper_trade_events"
+    if prior_candle_count > 0:
+        return f"session has {prior_candle_count} prior market_candles"
+    return None
+
+
 def start_certification(
     previous: Mapping[str, Any], artifact: RuntimeArtifact, *, now_ms: int
 ) -> dict[str, Any]:

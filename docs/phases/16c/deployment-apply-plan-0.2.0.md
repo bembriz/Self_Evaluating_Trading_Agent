@@ -3,6 +3,10 @@
 > **Fecha:** 2026-09-10 · **Estado:** `READY_FOR_USER_COMMIT_GATE`
 > **Nada de este documento se ha ejecutado.** Es el plan de aplicación + los cambios de config en el worktree.
 > Cierra los blockers del preflight (`deployment-preflight-0.2.0.md`).
+>
+> **Actualización 16c.8 (Fresh Session Bootstrap + Certification Boundary):** sesión de
+> validación ≠ sesión de certificación; START fail-closed sobre sesión no prístina; rollback
+> con restauración de config 0.1.3 previa y `pg_dump` cuando 0.2.0 ya escribió datos. Ver §8.
 
 ## 0. Artefacto e identidad
 
@@ -40,7 +44,7 @@ Sin hardcodear ninguno de los dos.
        PAPER_TIMEFRAME: 15m
 +      PAPER_REPORT_INTERVAL_HOURS: ${PAPER_REPORT_INTERVAL_HOURS:-6}
 +      PAPER_MAX_RUNTIME_DAYS: ${PAPER_MAX_RUNTIME_DAYS:-45}          # cierra el trap 7d
-+      PAPER_SESSION_ID: ${PAPER_SESSION_ID:-paper-baseline-15m-ethusdt-0.2.0}
++      PAPER_SESSION_ID: ${PAPER_SESSION_ID:-paper-validation-15m-ethusdt}   # VALIDACIÓN (no certificación)
        PAPER_REPORT_DIR: reports/paper
        PAPER_CERTIFICATION_STATE_PATH: /app/certification/certification-state.json
 -      GIT_COMMIT: ${GIT_COMMIT:-8188e857…}
@@ -157,10 +161,14 @@ sudo cp -a "$PROJ/compose.yaml" "$C/" ; sudo cp -a "$PROJ/deploy" "$C/" ; sudo c
 # 5b/5c. instalar compose.yaml + deploy/ 0.2.0 (SIN tocar persistentes)
 sudo install -m 0644 "$STAGE/compose.yaml" "$PROJ/compose.yaml"
 sudo rm -rf "$PROJ/deploy" && sudo cp -a "$STAGE/deploy" "$PROJ/deploy"
-# 5d. crear safeguard + validar permisos
+# 5d. crear safeguard + validar permisos (DETECTAR UID/GID reales, no asumir 1000:1000)
+OP_UID=$(id -u); OP_GID=$(id -g)   # operador host que escribe la evidencia del drill
+IMG_UID=$(sudo docker run --rm --entrypoint id self-evaluating-trading-agent-paper-runner:0.2.0 -u)
+IMG_GID=$(sudo docker run --rm --entrypoint id self-evaluating-trading-agent-paper-runner:0.2.0 -g)
 sudo mkdir -p "$PROJ/safeguard"
-sudo chown 1000:1000 "$PROJ/safeguard" && sudo chmod 0775 "$PROJ/safeguard"
+sudo chown "${OP_UID}:${OP_GID}" "$PROJ/safeguard" && sudo chmod 0775 "$PROJ/safeguard"
 test -w "$PROJ/safeguard" && ls -ld "$PROJ/safeguard"
+echo "runner uid/gid = ${IMG_UID}:${IMG_GID} (debe poder leer /app/safeguard)"
 # 5e. inyectar identidad
 printf 'GIT_COMMIT=%s\nDOCKER_IMAGE_DIGEST=%s\n' "<FINAL_DEPLOY_SHA>" "$DIGEST" | sudo tee "$PROJ/.env" >/dev/null
 # 5f. validar EN EL DIRECTORIO PRODUCTIVO (autoritativo, identidad real)
@@ -168,7 +176,7 @@ cd "$PROJ"
 sudo env GIT_COMMIT="<FINAL_DEPLOY_SHA>" DOCKER_IMAGE_DIGEST="$DIGEST" docker compose config -q && echo CONFIG_OK
 ```
 - **NUNCA `--delete`** sobre `reports/`, `certification/`, `safeguard/`, datos persistentes.
-- **Verificar:** `CONFIG_OK`; `deploy/prometheus.yml` target `paper-runner:9090`; `safeguard` escribible.
+- **Verificar:** `CONFIG_OK`; `deploy/prometheus.yml` target `paper-runner:9090`; `safeguard` escribible por el operador host; UID/GID detectados (no asumidos).
 - **Rollback:** restaurar `$C/compose.yaml`, `$C/deploy`, `$C/.env`.
 - **ABORT:** `docker compose config` falla en el directorio productivo.
 
@@ -193,13 +201,17 @@ docker exec self-evaluating-trading-agent-postgres-1 \
 - **Rollback:** `alembic downgrade 0008` (SQL offline validado) + `pg_dump` si hiciera falta.
 - **ABORT:** upgrade parcial/fallido.
 
-### Paso 8 — deploy 0.2.0 SIN `--start-certification`
+### Paso 8 — deploy 0.2.0 (sesión de VALIDACIÓN) SIN `--start-certification`
 ```bash
-sudo docker compose up -d --no-build paper-runner
+cd "$PROJ"
+sudo docker compose up -d --no-build paper-runner   # PAPER_SESSION_ID=paper-validation-15m-ethusdt
 ```
+- **Fresh Session Bootstrap:** una sesión nueva NO recupera histórico REST (backfill con
+  `last is None` ⇒ sin fetch); el warmup se hace con velas reales.
 - Estado esperado: **v2 NOT_STARTED** (`schema_version:2`, `frozen.certification_started_at: null`).
-- **Verificar:** contenedor up con imagen `:0.2.0`; estado NOT_STARTED; `alembic_version=0011`.
-- **Rollback:** stop + `docker tag :0.1.3-rollback :latest` + `up -d --no-build`.
+- **Verificar:** contenedor up con imagen `:0.2.0`; estado NOT_STARTED; `alembic_version=0011`;
+  `PAPER_SESSION_ID` = validación.
+- **Rollback:** ver §5 (restaurar config 0.1.3 **antes** de arrancar).
 - **ABORT:** estado RUNNING (START accidental) o v1/legacy.
 
 ### Paso 9 — observability
@@ -238,26 +250,63 @@ uv run python harness/scripts/safeguard_drill.py --kind daily_loss \
 - **Rollback:** borrar el fichero (no afecta al runner).
 - **ABORT:** cualquier paso FAIL.
 
-### Paso 12 — UAT (HITL)
-- Checklist UAT (skill `uat-hitl`); veredicto APPROVED/REJECTED del usuario.
-- **ABORT:** UAT REJECTED ⇒ no START.
+### Paso 12 — UAT (HITL) sobre la sesión de VALIDACIÓN
+- Checklist UAT (skill `uat-hitl`) sobre `paper-validation-15m-ethusdt`; veredicto APPROVED/REJECTED.
+- **ABORT:** UAT REJECTED ⇒ no se abre la certificación.
 
 ### Paso 13 — USER GATE
-- Presentar evidencia consolidada + UAT; esperar aprobación explícita.
+- Presentar evidencia consolidada + UAT; esperar aprobación explícita para certificar.
 
-### Paso 14 — explicit START
+### Paso 14 — cerrar validación y fijar la sesión de CERTIFICACIÓN en el entorno
 ```bash
 cd "$PROJ"
 sudo docker compose stop paper-runner
+# archivar el certification-state de VALIDACIÓN (no se borra)
+sudo mv "$PROJ/certification/certification-state.json" \
+        "$PROJ/certification/certification-state-INVALIDATED-validation-$(date -u +%Y%m%dT%H%M%SZ).json"
+# el estado activo debe estar AUSENTE (arranque en frío)
+test ! -e "$PROJ/certification/certification-state.json" && echo ACTIVE_STATE_ABSENT
+# seleccionar una sesión de certificación NUEVA (nunca la de validación)
+CERT_SESSION="paper-certification-15m-ethusdt-$(date -u +%Y%m%dT%H%M%SZ)"
+echo "$CERT_SESSION"
+# PERSISTIR la sesión en el entorno productivo: el one-shot Y el servicio normal deben
+# resolver al MISMO session_id (NO basta pasar --session-id solo al one-shot).
+sudo sed -i '/^PAPER_SESSION_ID=/d' "$PROJ/.env"
+printf 'PAPER_SESSION_ID=%s\n' "$CERT_SESSION" | sudo tee -a "$PROJ/.env" >/dev/null
+# el compose productivo debe resolver la sesión de certificación (no la de validación)
+sudo env GIT_COMMIT="<FINAL_DEPLOY_SHA>" DOCKER_IMAGE_DIGEST="$DIGEST" docker compose config \
+  | grep 'PAPER_SESSION_ID:'   # debe mostrar $CERT_SESSION
+# comprobar que la sesión de certificación NO tiene evidencia previa (0/0)
+docker exec self-evaluating-trading-agent-postgres-1 psql -U trading -d trading_agent -tAc \
+  "select count(*) from paper_trade_events where session_id='$CERT_SESSION';"
+docker exec self-evaluating-trading-agent-postgres-1 psql -U trading -d trading_agent -tAc \
+  "select count(*) from market_candles where session_id='$CERT_SESSION';"
+```
+- **Verificar:** `ACTIVE_STATE_ABSENT`; compose resuelve `PAPER_SESSION_ID=$CERT_SESSION`; conteos **0/0**.
+- **Rollback:** restaurar el `certification-state.json` archivado de validación y revertir `.env`.
+- **ABORT:** conteos ≠ 0, estado activo presente, o el compose no resuelve `$CERT_SESSION`.
+
+### Paso 15 — explicit START (sesión de certificación fría, misma en one-shot y servicio)
+```bash
+cd "$PROJ"
+# el one-shot hereda PAPER_SESSION_ID=$CERT_SESSION del .env; --session-id lo hace explícito
 sudo docker compose run --rm --no-deps paper-runner \
-  python -m main paper-runner --symbols ETHUSDT --timeframe 15m --start-certification --seconds 30
+  python -m main paper-runner --symbols ETHUSDT --timeframe 15m \
+  --session-id "$CERT_SESSION" --start-certification --seconds 30
+# el servicio normal usa el MISMO PAPER_SESSION_ID persistido en .env
 sudo docker compose up -d --no-build paper-runner
 ```
-- El one-shot ancla el reloj v2 y sale; el servicio normal preserva el ancla (nunca re-ancla).
-- **Verificar:** `schema_version:2`, fase RUNNING, `frozen` con las 10 claves y `git_commit=FINAL_DEPLOY_SHA`,
-  `docker_image_digest=$DIGEST`.
-- **Rollback:** archivar estado anclado y reiniciar certificación (operador).
-- **ABORT:** START rechazado o identidad inconsistente.
+- El one-shot ancla el reloj v2 sobre la sesión prístina y sale; el servicio normal
+  preserva el ancla (nunca re-ancla) **sobre la misma sesión**. El warmup ocurre con velas reales.
+- **Verificar:** `schema_version:2`, fase RUNNING, `session_id == $CERT_SESSION` (estado y
+  `paper_trade_events`/`market_candles` del runner en marcha), `frozen` con las 10 claves,
+  `git_commit=FINAL_DEPLOY_SHA`, `docker_image_digest=$DIGEST`; **sin evidencia pre-anchor**.
+- **Rollback:** archivar el estado anclado, revertir `PAPER_SESSION_ID` y repetir con otro `session_id`.
+- **ABORT:** START rejected, o el servicio normal no resuelve `$CERT_SESSION`.
+
+### Paso 16 — runner normal (certificación en curso)
+- `docker compose up -d --no-build paper-runner` deja el runner en modo normal (sin flag).
+- **Verificar:** estado RUNNING estable, `/metrics` 200, eventos creciendo para `$CERT_SESSION`.
 
 ---
 
@@ -274,11 +323,46 @@ sudo docker compose up -d --no-build paper-runner
 | retention | render | `--storage.tsdb.retention.time=45d` |
 | exposición | render | prometheus `127.0.0.1:9090`, grafana `127.0.0.1:3000`, paper-runner sin `ports` |
 | restart sin START ⇒ NOT_STARTED | `pytest -k "not_started or restart or legacy or certification or start"` | **25 passed, 19 deselected** (`test_periodic_write_without_flag_produces_not_started_v2`, `test_case7_not_started_never_passes`, …) |
-| E2E productor→state→evaluador | `pytest tests/e2e/test_certification_state_v2_e2e.py` | **9 passed** |
+| E2E productor→state→evaluador | `pytest tests/e2e/test_certification_state_v2_e2e.py` | **9 passed** (incl. `test_case8_strict_json_no_nan_infinity`) |
+| **Fresh session + REST histórico** | `pytest tests/test_backfill.py -k fresh_session` | **PASS** (REST NO invocado, 0 events, 0 candles) |
+| **Existing session → last+interval** | `pytest tests/test_backfill.py -k existing_session` | **PASS** (fetch arranca en `last + interval`) |
+| **START con evidencia previa** | `pytest tests/test_cli_paper_runner.py -k "prior_events or prior_candles or invalidated_recertification"` | **PASS** (fail-closed, sin ancla) |
+| **RUNNING restart preserva ancla** | `pytest tests/test_cli_paper_runner.py -k running_restart_with_prior` | **PASS** (no-op, ancla intacta) |
+| **Fresh Session Bootstrap + Boundary** (unit) | `pytest tests/test_backfill.py tests/test_cli_paper_runner.py tests/test_certification_snapshot.py` | **115 passed** |
+| **Recovery E2E** | `pytest tests/e2e/test_e2e_restart_parity.py` | **PASS (10)** |
+| **Certification E2E** | `pytest tests/e2e/test_certification_state_v2_e2e.py` | **PASS (9)** |
+| **Full product suite + coverage** | `pytest --cov=src --cov-branch --cov-fail-under=90` | **727 passed, 1 skipped · 93.66%** |
+| **Harness suite + coverage** | `cd harness && uv run pytest tests --cov=scripts --cov-fail-under=80` | **91 passed · 80.25%** |
+| **ruff / mypy (root)** | `ruff check . && ruff format --check . && mypy src tests` | **PASS** (268 formatted / 235 files) |
+| **ruff (harness)** | `cd harness && uv run ruff check . && ruff format --check .` | **PASS** (24 files) |
+| **strict JSON** | E2E `test_case8` + `json.dumps(..., allow_nan=False)` | **PASS** |
+| **blast radius (codebase-memory)** | `detect_changes since 47acd2e (both)` | 9 changed files · 14 seed symbols · 104 impacted (transitivo); 0 cambios en matemática de dominio |
+| **index coverage** | `check_index_coverage` (archivos tocados) | `no_recorded_issue` en `src/**` y tests; `docs/` excluido por diseño |
 
 ---
 
-## 5. Criterios ABORT globales
+## 5. Rollback global (orden estricto)
+
+> **Restaurar SIEMPRE la config 0.1.3 ANTES de arrancar el rollback**: el `up` debe leer el
+> `compose.yaml`/`deploy/` de 0.1.3, nunca el de 0.2.0.
+
+1. `sudo docker compose stop paper-runner` (y `prometheus grafana` si se levantaron).
+2. **Restaurar config 0.1.3**: copiar `$C/compose.yaml`, `$C/deploy`, `$C/.env` (o eliminar `.env`).
+3. Restaurar imagen: `docker tag self-evaluating-trading-agent-paper-runner:0.1.3-rollback self-evaluating-trading-agent-paper-runner:latest`.
+4. `sudo docker compose up -d --no-build paper-runner`.
+5. **DB**:
+   - Si 0.2.0 **no** escribió datos nuevos → `alembic downgrade 0008` es suficiente.
+   - Si 0.2.0 **ya escribió** eventos/velas y hay que volver a 0008 → **restaurar el
+     `pg_dump` pre-APPLY** (Paso 2) en vez de confiar en el downgrade; validar con
+     `pg_restore -l` y verificar `alembic_version=0008` + conteos esperados.
+6. Restaurar `certification/certification-state.json` desde el backup/archivo si aplica.
+7. Verificar: contenedor 0.1.3 up, `alembic_version` correcto, sin exposición pública.
+
+**ABORT del rollback** si el `pg_dump` no restaura o la config 0.1.3 no arranca.
+
+---
+
+## 6. Criterios ABORT globales
 
 Abortar y revertir en orden inverso si cualquiera:
 - build desde árbol sucio / SHA staged ≠ `FINAL_DEPLOY_SHA`.
@@ -286,16 +370,34 @@ Abortar y revertir en orden inverso si cualquiera:
 - `pg_dump` no restaurable; `alembic upgrade` parcial (≠ 0011).
 - imagen 0.2.0 no arranca o `/metrics ≠ 200`.
 - estado RUNNING/legacy antes del START explícito.
+- **START rechazado por evidencia previa** (eventos/velas ≠ 0 en la sesión de certificación).
 - target `paper-runner:9090` `down` o exposición no-loopback.
 - drills de safeguard FAIL; UAT REJECTED.
 
 ---
 
-## 6. Veredicto
+## 7. Veredicto
 
 ```
 READY_FOR_USER_COMMIT_GATE
 ```
 
 Cambios preparados y validados en el worktree; **no aplicados, no commiteados**.
-Próximo paso: aprobación del usuario para el commit (ver `commit-candidate-009.md`).
+Próximo paso: aprobación del usuario para el commit (ver `commit-candidate-010.md`).
+
+---
+
+## 8. Fix de código asociado (Fresh Session Bootstrap + Certification Boundary)
+
+- `BackfillService.backfill`: `last is None` ⇒ **sin fetch histórico** (fresh session); el
+  recovery normal con vela previa recupera solo el gap `last + interval`.
+- `pristine_session_conflict` + `_operator_start_anchor`: START en NOT_STARTED/INVALIDATED
+  exige **0 `paper_trade_events` y 0 `market_candles`** (fail-closed; el operador debe usar
+  un `session_id` nuevo).
+- `_run`: el START se ancla **antes** de `recover_and_handoff` (ninguna evidencia pre-anchor).
+- `RUNNING` ⇒ no-op: el restart preserva el ancla y sí recupera gaps.
+- **SESSION SWITCH (invariante):** la sesión de certificación se **persiste en `.env`**
+  (`PAPER_SESSION_ID=paper-certification-…`) ANTES del one-shot; el one-shot y el servicio
+  normal resuelven al MISMO `session_id` (no se pasa `--session-id` solo al one-shot). La
+  sesión de validación (`paper-validation-…`) nunca se reutiliza para certificar.
+- Detalle y blast radius: `commit-candidate-010.md`.

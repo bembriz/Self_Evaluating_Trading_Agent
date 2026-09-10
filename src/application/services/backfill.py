@@ -43,9 +43,17 @@ class BackfillService:
         cutoff_ms: int,
         runner: PaperRunner,
     ) -> BackfillResult:
-        """Procesa cronológicamente las velas cerradas faltantes hasta ``cutoff_ms``."""
+        """Procesa cronológicamente las velas cerradas faltantes hasta ``cutoff_ms``.
+
+        **Fresh Session Bootstrap:** si la sesión no tiene velas persistidas
+        (``last is None``) NO se recupera histórico. Un ``start=0`` traería todo el
+        histórico REST y contaminaría la sesión (decisiones/fills pre-anchor). El
+        warmup de la sesión nueva se hace con velas reales tras el START.
+        """
         last = await self._candle_repo.last_persisted_ms(session_id, symbol, timeframe)
-        start = last + timeframe.minutes * _MS_PER_MINUTE if last is not None else 0
+        if last is None:
+            return BackfillResult(recovered=0, skipped_partial=0)
+        start = last + timeframe.minutes * _MS_PER_MINUTE
         candles = await self._client.fetch_candles(symbol, timeframe, start, cutoff_ms)
 
         recovered = 0
