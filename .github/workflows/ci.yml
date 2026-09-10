@@ -4,7 +4,6 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
 
 jobs:
   quality:
@@ -81,3 +80,44 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build image
         run: docker build -t self-evaluating-trading-agent:ci .
+
+  harness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: harness
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+          enable-cache: true
+      - run: uv sync --frozen
+      - run: uv run pytest --cov=scripts --cov-branch --cov-fail-under=80
+
+  diff-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Scoped diff-check (exclude historical evidence logs)
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+            HEAD="${{ github.event.pull_request.head.sha }}"
+          else
+            BASE="${{ github.event.before }}"
+            HEAD="${{ github.sha }}"
+            if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then
+              BASE="HEAD~1"
+            fi
+          fi
+          git fetch --no-tags origin "$BASE" 2>/dev/null || true
+          echo "scoped diff-check range: $BASE...$HEAD"
+          git diff --check "$BASE...$HEAD" -- . \
+            ':(exclude,glob)docs/phases/16/evidence/*.log' \
+            ':(exclude)docs/phases/16/evidence/log.md'
+          echo "scoped diff-check PASS (excluded historical evidence logs: docs/phases/16/evidence/*.log + log.md)"
