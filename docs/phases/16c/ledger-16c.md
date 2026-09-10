@@ -52,3 +52,15 @@ en `harness/state/progress.yaml`.
   / `mark-done` con su evidencia) queda como **carry-over post-merge** de esta rama a `main`.
 - **Prohibido editar `harness/state/progress.yaml` a mano** (AGENTS.md §9): el ledger oficial
   lo calcula `progress.py` sobre entregables con evidencia.
+
+## Post-commit (16c.6)
+
+| Campo | Valor |
+|---|---|
+| commit | `adc88cd0db39d5ded209497a0b0d6464e2a78f7f` — `feat(phase-16c): producer schema v2 restart-safe + bump 0.2.0 (cierre integrado)` |
+| estado | **POST_COMMIT_PASS** (16c.6 integrado) |
+| verificación | `git status --short` vacío · `git diff HEAD^ HEAD --check` OK · re-index 3087 nodos/14440 edges (0 skipped/0 parse_partial) · `detect_changes since 66448dc` 35/286/54 (0 en `src/domain`) · cobertura `no_recorded_issue` |
+| arnés | `progress.py`: Fase 16 `1/5` (4 bloqueados = certificación real pendiente) · `gate_check --phase 16`: 4 PASS · 1 FAIL (`scope-complete`, esperado) · 2 MANUAL |
+| **Paper** | **NO certificado** (la sesión real de ≥30 días sigue pendiente) |
+| reporte | `docs/phases/16c/post-commit-verification-007.md` |
+| NO ejecutado | push · merge · tag · redeploy · migración productiva · inicio de Paper Certification |
