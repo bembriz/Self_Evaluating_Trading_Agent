@@ -2,14 +2,30 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import json
+import urllib.request
 from collections.abc import Awaitable, Callable, Coroutine
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from application.ports.market_repositories import MarketCandleRepository
 from application.ports.market_stream import WebSocketDisconnected
-from application.ports.paper_trading import PaperTradeEventRepository
+from application.ports.paper_trading import PaperTradeEvent, PaperTradeEventRepository
+from application.services.accounting_reconciliation import (
+    MissingMarkError,
+    latest_persisted_mark,
+    reconcile_with_book,
+)
 from application.services.backfill import BackfillService
+from application.services.certification_snapshot import (
+    RuntimeArtifact,
+    build_certification_state_v2,
+    certification_phase,
+    runtime_artifact,
+    start_certification,
+    write_certification_state_v2,
+)
 from application.services.connection_supervisor import ConnectionSupervisor, SupervisorConfig
 from application.services.paper_runner import (
     PaperRunner,
@@ -25,6 +41,7 @@ from application.services.recovery import recover_and_handoff, restore_runner
 from domain.market.candle import Timeframe
 from domain.market.stream import KlineUpdate
 from domain.risk.config import RiskConfig
+from domain.trading.strategy import EmaRsiBaseline
 from infrastructure.bybit.client import BybitRestClient
 from infrastructure.bybit.ws import BybitWebSocketClient
 from infrastructure.database.repositories import (
@@ -53,9 +70,30 @@ from infrastructure.observability.metrics import SetaMetrics
 from infrastructure.observability.server import start_metrics_server
 from settings import Settings
 
-RunFn = Callable[[Settings, list[str], Timeframe, int | None], Coroutine[Any, Any, str]]
+RunFn = Callable[..., Coroutine[Any, Any, str]]
 SECONDS_PER_DAY = 24 * 60 * 60
 MIN_RUNTIME_FOR_CERTIFICATION_DAYS = 45
+_CERTIFICATION_STATE_SKIPPED = "CERTIFICATION_STATE_SKIPPED"
+_CERT_START_REJECTED = "CERT_START_REJECTED"
+
+
+def _certification_write_kind(state_path: Path) -> str:
+    """Routing legacy/v2 por el ARCHIVO (Task 8b/B), nunca por params de wiring.
+
+    - Fichero ausente o con ``schema_version == 2`` ⇒ ``"v2"`` (productor v2).
+    - Fichero legacy plano (existe sin ``schema_version``) o ilegible ⇒ ``"legacy"``
+      (escritor de compatibilidad 0.1.x). Un fichero corrupto no confirma schema 2
+      y se trata como legacy (fail-closed al formato previo, que preserva el fichero).
+    """
+    if not state_path.exists():
+        return "v2"
+    try:
+        previous = json.loads(state_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, TypeError):
+        return "legacy"
+    if isinstance(previous, dict) and previous.get("schema_version") == 2:
+        return "v2"
+    return "legacy"
 
 
 def resolve_runtime_seconds(cli_seconds: int | None, max_days: int) -> int | None:
@@ -103,6 +141,111 @@ async def _restore_logged(
     return runner
 
 
+def _self_scrape_heartbeat_ok(metrics_port: int) -> bool:
+    """Self-scrape del endpoint /metrics: True si el server responde 2xx.
+
+    Nunca lanza: cualquier fallo de red/timeout/HTTP ⇒ False (ese día no cuenta
+    cobertura), el runner jamás aborta por un heartbeat caído.
+    """
+    try:
+        with urllib.request.urlopen(
+            f"http://127.0.0.1:{metrics_port}/metrics", timeout=2.0
+        ) as response:
+            return 200 <= int(response.status) < 300
+    except Exception:
+        return False
+
+
+def _read_safeguard_evidence(path: Path | None) -> dict[str, Any]:
+    """Evidencia de safeguard drills; ausente/ilegible ⇒ {} (fail-closed)."""
+    if path is None:
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, TypeError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+async def _write_certification_state_v2(
+    *,
+    session_id: str,
+    state_path: Path,
+    summary: PaperRunSummary,
+    events: list[PaperTradeEvent],
+    candle_repo: MarketCandleRepository,
+    artifact: RuntimeArtifact,
+    symbol: str,
+    timeframe: Timeframe,
+    report_path: Path,
+    heartbeat_ok_override: bool | None,
+    metrics_port: int | None,
+    safeguard_evidence_path: Path | None,
+    logger: StructuredLogger | None,
+) -> None:
+    """Compone y escribe el certification-state v2 (schema 2) con el productor real.
+
+    Fail-closed: los errores inesperados se propagan al caller (que los registra
+    sin fabricar evidencia ni alterar trading); MissingMarkError se traduce a un
+    estado ``accounting_status == FAIL`` con ``failure_reason`` y jamás crash.
+    """
+    previous = load_certification_state(state_path)
+    phase = certification_phase(previous)
+    if phase == "INVALIDATED":
+        if logger is not None:
+            logger.warning(
+                _CERTIFICATION_STATE_SKIPPED,
+                reason="previous state INVALIDATED; periodic v2 write skipped",
+                state=str(state_path),
+            )
+        else:
+            print(
+                "[paper-runner] WARN: certification state INVALIDATED; "
+                "periodic v2 write skipped (reactivate with --start-certification)"
+            )
+        return
+    if heartbeat_ok_override is not None:
+        heartbeat_ok = heartbeat_ok_override
+    elif metrics_port is not None:
+        heartbeat_ok = await asyncio.to_thread(_self_scrape_heartbeat_ok, metrics_port)
+    else:
+        heartbeat_ok = False
+    now_ms = int(datetime.now(UTC).timestamp() * 1000)
+    today = datetime.now(UTC).strftime("%Y-%m-%d")
+    candles = await candle_repo.session_range(
+        session_id=session_id, symbol=symbol, timeframe=timeframe, start_ms=0, end_ms=now_ms
+    )
+    interval_ms = timeframe.minutes * 60_000
+    try:
+        reconciliation = reconcile_with_book(
+            events,
+            initial_capital=RiskConfig().capital,
+            mark_price=latest_persisted_mark(candles),
+            previous_book=previous.get("accounting_book"),
+            interval_ms=interval_ms,
+        )
+        reconciliation_error = None
+    except MissingMarkError:
+        reconciliation = None
+        reconciliation_error = "missing_persisted_mark"
+    state = build_certification_state_v2(
+        previous=previous,
+        summary=summary,
+        events=events,
+        candles=candles,
+        heartbeat_ok=heartbeat_ok,
+        today=today,
+        safeguard_evidence=_read_safeguard_evidence(safeguard_evidence_path),
+        reconciliation=reconciliation,
+        reconciliation_error=reconciliation_error,
+        artifact=artifact,
+        now_ms=now_ms,
+        interval_ms=interval_ms,
+        report_path=str(report_path),
+    )
+    write_certification_state_v2(state, state_path)
+
+
 async def _run_loop(
     *,
     stream: Any,
@@ -119,6 +262,13 @@ async def _run_loop(
     metrics: SetaMetrics | None = None,
     stale_timeout_seconds: float = 10.0,
     logger: StructuredLogger | None = None,
+    candle_repo: MarketCandleRepository | None = None,
+    artifact: RuntimeArtifact | None = None,
+    symbol: str | None = None,
+    timeframe: Timeframe | None = None,
+    metrics_port: int | None = None,
+    heartbeat_ok: bool | None = None,
+    safeguard_evidence_path: Path | None = None,
 ) -> str:
     loop = asyncio.get_running_loop()
     last_report_time = loop.time()
@@ -216,25 +366,90 @@ async def _run_loop(
                     regime_evidence=runner.regime_evidence(),
                     rejected_regime_candidates=runner.rejected_regime_candidates,
                 )
-                write_certification_state(
-                    summary,
-                    state_path,
-                    previous=load_certification_state(state_path),
-                    regime_evidence=runner.regime_evidence(),
-                    report_path=report_path,
-                )
+                if _certification_write_kind(state_path) == "v2":
+                    if (
+                        candle_repo is None
+                        or artifact is None
+                        or symbol is None
+                        or timeframe is None
+                    ):
+                        raise RuntimeError(
+                            "certification v2 writer requires candle_repo/artifact/symbol/timeframe"
+                        )
+                    await _write_certification_state_v2(
+                        session_id=session_id,
+                        state_path=state_path,
+                        summary=summary,
+                        events=events,
+                        candle_repo=candle_repo,
+                        artifact=artifact,
+                        symbol=symbol,
+                        timeframe=timeframe,
+                        report_path=report_path,
+                        heartbeat_ok_override=heartbeat_ok,
+                        metrics_port=metrics_port,
+                        safeguard_evidence_path=safeguard_evidence_path,
+                        logger=logger,
+                    )
+                else:
+                    write_certification_state(
+                        summary,
+                        state_path,
+                        previous=load_certification_state(state_path),
+                        regime_evidence=runner.regime_evidence(),
+                        report_path=report_path,
+                    )
                 last_summary = summary
                 last_report_time = now
-            except (OSError, ValueError) as exc:
+            except Exception as exc:
                 if logger is not None:
-                    logger.error("ERROR", message=f"report write failed: {exc}")
+                    logger.error(EXCEPTION, message=f"report write failed: {exc}")
                 else:
                     print(f"[paper-runner] WARN: report write failed: {exc}")
     return f"processed={processed}"
 
 
+def _operator_start_anchor(
+    *,
+    state_path: Path,
+    artifact: RuntimeArtifact,
+    now_ms: int,
+    logger: StructuredLogger | None = None,
+) -> bool:
+    """Ancla el reloj v2 SOLO si el operador pidió --start-certification.
+
+    NOT_STARTED/INVALIDATED con artefacto válido ⇒ start_certification + write v2
+    (retorna True). RUNNING ⇒ no-op (nunca re-ancla; retorna False). START RECHAZADO
+    (Task 8b/A: campo obligatorio vacío o conflicto de sesión con el estado
+    persistido) ⇒ registra el rechazo para el operador y NO ancla (retorna False;
+    el fichero queda intacto). Sin estado previo ({}).
+    """
+    previous = load_certification_state(state_path)
+    phase = certification_phase(previous)
+    if phase not in ("NOT_STARTED", "INVALIDATED"):
+        if logger is not None:
+            logger.info("CERT_START_SKIPPED", phase=phase)
+        return False
+    try:
+        anchored = start_certification(previous, artifact, now_ms=now_ms)
+    except ValueError as exc:
+        if logger is not None:
+            logger.warning(_CERT_START_REJECTED, reason=str(exc))
+        else:
+            print(f"[paper-runner] WARN: {exc}")
+        return False
+    write_certification_state_v2(anchored, state_path)
+    if logger is not None:
+        logger.info("CERT_STARTED", phase=phase)
+    return True
+
+
 async def _run(
-    settings: Settings, symbols: list[str], timeframe: Timeframe, seconds: int | None
+    settings: Settings,
+    symbols: list[str],
+    timeframe: Timeframe,
+    seconds: int | None,
+    start_certification: bool = False,
 ) -> str:
     engine = create_engine(settings.database_url)
     session_factory = build_session_factory(engine)
@@ -311,6 +526,28 @@ async def _run(
             subscribe=supervisor.run_once_until_connected,
             now_ms=_now_ms,
         )
+        state_path = Path(settings.paper_certification_state_path)
+        startup_events = await repo.list_session(config.session_id)
+        startup_summary = summarize_events(startup_events, initial_equity=RiskConfig().capital)
+        artifact = runtime_artifact(
+            summary=startup_summary,
+            app_version=settings.app_version,
+            git_commit=settings.git_commit,
+            docker_image_digest=settings.docker_image_digest,
+            risk_config=RiskConfig(),
+            now_ms=_now_ms(),
+            default_symbol=symbols[0],
+            default_timeframe=timeframe.label,
+            default_strategy_version=EmaRsiBaseline.version,
+            default_session_id=session_id,
+        )
+        if start_certification:
+            _operator_start_anchor(
+                state_path=state_path,
+                artifact=artifact,
+                now_ms=_now_ms(),
+                logger=logger,
+            )
         deadline = None
         if seconds is not None:
             deadline = asyncio.get_running_loop().time() + seconds
@@ -322,13 +559,19 @@ async def _run(
             session_id=config.session_id,
             report_interval_seconds=config.report_interval_seconds,
             report_dir=Path(settings.paper_report_dir),
-            state_path=Path(settings.paper_certification_state_path),
+            state_path=state_path,
             initial_equity=RiskConfig().capital,
             deadline=deadline,
             recover=supervisor.run_once_until_connected,
             metrics=metrics,
             stale_timeout_seconds=settings.paper_stale_timeout_seconds,
             logger=logger,
+            candle_repo=candle_repo,
+            artifact=artifact,
+            symbol=symbols[0],
+            timeframe=timeframe,
+            metrics_port=settings.paper_metrics_port,
+            safeguard_evidence_path=Path(settings.paper_safeguard_evidence_path),
         )
     finally:
         logger.info(PROCESS_STOP)
@@ -346,6 +589,12 @@ def run_paper_runner(settings: Settings, argv: list[str] | None = None, run: Run
     parser.add_argument("--timeframe", default=None)
     parser.add_argument("--seconds", type=int, default=None)
     parser.add_argument("--session-id", default=None)
+    parser.add_argument(
+        "--start-certification",
+        action="store_true",
+        default=False,
+        help="ancla el reloj de certificación v2 antes del bucle (operador)",
+    )
     args = parser.parse_args(argv)
     if args.session_id is not None:
         settings = settings.model_copy(update={"paper_session_id": args.session_id})
@@ -357,7 +606,18 @@ def run_paper_runner(settings: Settings, argv: list[str] | None = None, run: Run
         timeframe = Timeframe.from_label(args.timeframe or settings.paper_timeframe)
         symbols = args.symbols or list(settings.paper_symbols)
         max_runtime_seconds = resolve_runtime_seconds(args.seconds, settings.paper_max_runtime_days)
-        result = asyncio.run(run(settings, symbols, timeframe, max_runtime_seconds))
+        if run is _run:
+            result = asyncio.run(
+                _run(
+                    settings,
+                    symbols,
+                    timeframe,
+                    max_runtime_seconds,
+                    start_certification=args.start_certification,
+                )
+            )
+        else:
+            result = asyncio.run(run(settings, symbols, timeframe, max_runtime_seconds))
     except ValueError as exc:
         print(f"ERROR: {exc}")
         return 2

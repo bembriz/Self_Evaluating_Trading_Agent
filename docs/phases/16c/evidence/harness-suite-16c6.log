@@ -1,0 +1,26 @@
+# evidencia: harness-suite-16c6
+fecha: 2026-09-09T22:39:22-06:00
+fase: 16c
+comando: bash -c cd harness && uv run pytest tests --cov=scripts --cov-branch --cov-report=term-missing --cov-report=json:/tmp/opencode/phase-16c-restart-safe/docs/phases/16c/evidence/harness-suite-coverage-16c6.json --cov-fail-under=80
+........................................................................ [ 79%]
+...................                                                      [100%]
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                             Stmts   Miss Branch BrPart  Cover   Missing
+----------------------------------------------------------------------------
+scripts/gate_check.py              104      3     32      2    96%   198-199, 225
+scripts/gen_pdf.py                  29      4      4      1    85%   40-51, 70
+scripts/gen_report.py               41      1      8      1    96%   77
+scripts/ledger.py                  260     19     94     14    90%   38, 53, 69, 76, 83-84, 86, 98-99, 105, 110, 138, 204, 205->exit, 362-364, 372-374
+scripts/new_phase.py                39      1      8      1    96%   65
+scripts/paper_certification.py     211     21     64     13    88%   75, 77, 81, 85-86, 96, 100-103, 117, 119, 169, 265-266, 290, 480-481, 488-489, 513
+scripts/progress.py                 77      1     22      2    97%   95->98, 103
+scripts/release_check.py           122     93     36      1    22%   21, 25-29, 34-52, 56-76, 80-106, 121-135, 139-147, 156-179, 187-192, 208-248, 252
+scripts/safeguard_drill.py         170     43     16      3    71%   42->45, 98, 360, 387-389, 404-405, 408-409, 415-417, 421-423, 427-463, 467-513, 517
+----------------------------------------------------------------------------
+TOTAL                             1053    186    284     38    80%
+Coverage JSON written to file /tmp/opencode/phase-16c-restart-safe/docs/phases/16c/evidence/harness-suite-coverage-16c6.json
+Required test coverage of 80% reached. Total coverage: 80.25%
+91 passed in 15.50s
+exit=0

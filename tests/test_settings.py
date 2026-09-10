@@ -134,3 +134,14 @@ def test_paper_stale_timeout_env_override(monkeypatch: MonkeyPatch) -> None:
 
     assert s.paper_stale_timeout_seconds == 180.0
     assert s.stale_timeout_seconds == 10.0  # no afecta al order-book
+
+
+def test_certification_artifact_settings_defaults(monkeypatch: MonkeyPatch) -> None:
+    for var in ("GIT_COMMIT", "DOCKER_IMAGE_DIGEST", "PAPER_SAFEGUARD_EVIDENCE_PATH"):
+        monkeypatch.delenv(var, raising=False)
+
+    s = Settings()
+
+    assert s.git_commit == ""
+    assert s.docker_image_digest == ""
+    assert s.paper_safeguard_evidence_path == "docs/phases/16/safeguard-evidence.json"

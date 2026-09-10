@@ -35,6 +35,9 @@ class Settings(BaseSettings):
     paper_max_runtime_days: int = 45
     paper_report_dir: str = "reports/paper"
     paper_certification_state_path: str = "docs/phases/16/certification-state.json"
+    git_commit: str = ""
+    docker_image_digest: str = ""
+    paper_safeguard_evidence_path: str = "docs/phases/16/safeguard-evidence.json"
     paper_session_id: str | None = None
     paper_metrics_host: str = "0.0.0.0"
     paper_metrics_port: int = 9090
