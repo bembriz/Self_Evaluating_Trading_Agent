@@ -1,0 +1,12 @@
+# evidencia: deploy-applied-lenosrv
+fecha: 2026-09-01T19:30:53-06:00
+fase: 16
+comando: bash -c ssh -o ConnectTimeout=10 administrador@192.168.100.24 "echo \"[REDACTED]\" | sudo -S bash -c 'cd /srv/docker/self-evaluating-trading-agent && docker compose ps && echo --- && docker compose images'"
+[sudo] password for administrador: NAME                                           IMAGE                                        COMMAND                  SERVICE        CREATED         STATUS                   PORTS
+self-evaluating-trading-agent-paper-runner-1   self-evaluating-trading-agent-paper-runner   "python -m main pape…"   paper-runner   5 minutes ago   Up 5 minutes             
+self-evaluating-trading-agent-postgres-1       pgvector/pgvector:pg16                       "docker-entrypoint.s…"   postgres       6 minutes ago   Up 6 minutes (healthy)   127.0.0.1:5433->5432/tcp
+---
+CONTAINER                                      REPOSITORY                                   TAG                 PLATFORM            IMAGE ID            SIZE                CREATED
+self-evaluating-trading-agent-paper-runner-1   self-evaluating-trading-agent-paper-runner   latest              linux/amd64         8122d57846d7        124MB               5 minutes ago
+self-evaluating-trading-agent-postgres-1       pgvector/pgvector                            pg16                linux/amd64         ccc6e83d6e35        156MB               2 weeks ago
+exit=0

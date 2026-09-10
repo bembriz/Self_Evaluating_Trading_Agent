@@ -1,0 +1,19 @@
+# evidencia: git-diff-stat-task-5
+fecha: 2026-09-01T00:47:00-06:00
+fase: 16
+comando: git diff --stat
+ .gitignore                                |   1 +
+ docs/phases/15/LOCAL_RELEASE_REPORT.md    |  14 +-
+ docs/phases/15/evidence/log.md            | 764 ++++++++++++++++++++++++++++++
+ docs/phases/15/evidence/release-check.log |  10 +-
+ docs/uat/phase-15-uat.md                  |  16 +-
+ harness/scripts/release_check.py          |  92 +++-
+ harness/state/progress.yaml               | 134 ++++--
+ src/application/services/paper_engine.py  |   7 +-
+ src/infrastructure/bybit/auth.py          |   2 +-
+ src/infrastructure/bybit/trade_client.py  |   2 +-
+ src/main.py                               |  12 +
+ tests/test_bybit_trade_auth.py            |  10 +-
+ tests/test_bybit_trade_client.py          |   4 +-
+ 13 files changed, 992 insertions(+), 76 deletions(-)
+exit=0

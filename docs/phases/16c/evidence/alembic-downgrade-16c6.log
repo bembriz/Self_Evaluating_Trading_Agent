@@ -1,0 +1,8 @@
+# evidencia: alembic-downgrade-16c6
+fecha: 2026-09-09T18:45:58-06:00
+fase: 16c
+comando: uv run alembic downgrade -1
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running downgrade 0011_paper_events_context -> 0010_paper_events_idempotency, paper_trade_events: decision_context JSONB versionado.
+exit=0

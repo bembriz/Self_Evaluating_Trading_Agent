@@ -1,0 +1,15 @@
+# evidencia: alembic-upgrade-head-16c6
+fecha: 2026-09-09T18:45:54-06:00
+fase: 16c
+comando: uv run alembic upgrade head
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 0001, esquema inicial: extensión vector + tabla system_state
+INFO  [alembic.runtime.migration] Running upgrade 0001 -> 0002, market data: market_candles + dataset_manifests
+INFO  [alembic.runtime.migration] Running upgrade 0002 -> 0003, orderbook_feature_windows
+INFO  [alembic.runtime.migration] Running upgrade 0003 -> 0004, memory_items + reflections (pgvector)
+INFO  [alembic.runtime.migration] Running upgrade 0004 -> 0008_paper_trading_events, paper_trade_events
+INFO  [alembic.runtime.migration] Running upgrade 0008_paper_trading_events -> 0009_market_candles_paper, market_candles: persistencia de velas paper-live con scope por sesión.
+INFO  [alembic.runtime.migration] Running upgrade 0009_market_candles_paper -> 0010_paper_events_idempotency, paper_trade_events: idempotency key para recovery sin duplicados.
+INFO  [alembic.runtime.migration] Running upgrade 0010_paper_events_idempotency -> 0011_paper_events_context, paper_trade_events: decision_context JSONB versionado.
+exit=0

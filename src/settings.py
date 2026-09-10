@@ -28,6 +28,19 @@ class Settings(BaseSettings):
     app_version: str = __version__
     trading_mode: str = "backtest"
     live_trading_enabled: bool = False
+    paper_decision_source: str = "baseline"
+    paper_symbols: list[str] = ["ETHUSDT"]
+    paper_timeframe: str = "15m"
+    paper_report_interval_hours: int = 24
+    paper_max_runtime_days: int = 45
+    paper_report_dir: str = "reports/paper"
+    paper_certification_state_path: str = "docs/phases/16/certification-state.json"
+    git_commit: str = ""
+    docker_image_digest: str = ""
+    paper_safeguard_evidence_path: str = "docs/phases/16/safeguard-evidence.json"
+    paper_session_id: str | None = None
+    paper_metrics_host: str = "0.0.0.0"
+    paper_metrics_port: int = 9090
 
     postgres_host: str = "localhost"
     postgres_port: int = 5432
@@ -42,6 +55,7 @@ class Settings(BaseSettings):
     bybit_ws_url: str = "wss://stream.bybit.com/v5/public/spot"
     bybit_orderbook_depth: int = 50
     stale_timeout_seconds: float = 10.0
+    paper_stale_timeout_seconds: float = 120.0
     feature_window_seconds: int = 5
 
     llm_provider: str = "deepseek"

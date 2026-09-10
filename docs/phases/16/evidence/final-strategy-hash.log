@@ -1,0 +1,14 @@
+# evidencia: final-strategy-hash
+fecha: 2026-09-01T16:30:00-06:00
+fase: 16
+comando: uv run python -c 
+import hashlib
+files = ['src/domain/trading/strategy.py', 'config/paper.yaml']
+h = hashlib.sha256()
+for f in sorted(files):
+    with open(f, 'rb') as fh:
+        h.update(fh.read())
+print(f'strategy_hash={h.hexdigest()[:16]}')
+
+strategy_hash=301168c1847700ab
+exit=0

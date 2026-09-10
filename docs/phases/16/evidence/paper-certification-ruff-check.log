@@ -1,0 +1,19 @@
+# evidencia: paper-certification-ruff-check
+fecha: 2026-09-01T00:28:02-06:00
+fase: 16
+comando: uv run ruff check harness/scripts/paper_certification.py harness/tests/test_paper_certification.py
+I001 [*] Import block is un-sorted or un-formatted
+ --> harness/scripts/paper_certification.py:1:1
+  |
+1 | from dataclasses import dataclass
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: Organize imports
+  |
+2 |
+  -
+3 | MIN_DAYS = 30
+  |
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.
+exit=1

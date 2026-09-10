@@ -1,0 +1,61 @@
+# evidencia: bybit-testnet-balance-check
+fecha: 2026-08-31T23:17:53-06:00
+fase: 15
+comando: bash -lc set -a; . ./.envrc >/dev/null 2>&1; set +a; uv run python - <<'PY'
+from __future__ import annotations
+
+import asyncio
+import os
+
+import httpx
+
+from infrastructure.bybit.auth import BybitSigner
+
+async def main() -> None:
+    api_key = os.environ.get("BYBIT_API_KEY", "")
+    api_secret = os.environ.get("BYBIT_API_SECRET", "")
+    if not api_key or not api_secret:
+        raise SystemExit("missing BYBIT_API_KEY/BYBIT_API_SECRET in environment")
+
+    signer = BybitSigner(api_key=api_key, api_secret=api_secret)
+    params = {"accountType": "UNIFIED", "coin": "USDT,ETH"}
+    query = "&".join(f"{k}={v}" for k, v in params.items())
+    headers = signer.sign("/v5/account/wallet-balance", payload=query)
+    async with httpx.AsyncClient(base_url="https://api-testnet.bybit.com", timeout=10.0) as client:
+        response = await client.get("/v5/account/wallet-balance", params=params, headers=headers)
+    raw = response.json()
+    print(f"wallet_http_status={response.status_code}")
+    print(f"wallet_ret_code={raw.get(retCode)}")
+    print(f"wallet_ret_msg={raw.get(retMsg)}")
+    if raw.get("retCode") != 0:
+        raise SystemExit("wallet balance check failed")
+    coins = []
+    for account in raw.get("result", {}).get("list", []):
+        if isinstance(account, dict):
+            coins.extend(account.get("coin", []))
+    seen = {str(c.get("coin")): c for c in coins if isinstance(c, dict)}
+    for coin in ("USDT", "ETH"):
+        item = seen.get(coin, {})
+        try:
+            balance = float(item.get("walletBalance", "0") or 0)
+        except (TypeError, ValueError):
+            balance = 0.0
+        print(f"{coin}_wallet_balance_positive={balance > 0}")
+
+asyncio.run(main())
+PY
+wallet_http_status=200
+Traceback (most recent call last):
+  File "<stdin>", line 41, in <module>
+  File "/home/xuum/snap/codium/495/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/xuum/snap/codium/495/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/xuum/snap/codium/495/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "<stdin>", line 24, in main
+NameError: name 'retCode' is not defined
+exit=1

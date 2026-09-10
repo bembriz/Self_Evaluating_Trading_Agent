@@ -7,18 +7,24 @@ los stops/TP/trailing tienen prioridad absoluta sobre la intención del LLM.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 
 from domain.portfolio.portfolio import Portfolio
 from domain.risk.config import RiskConfig
 from domain.risk.engine import PortfolioRiskState, RiskEngine, TradeProposal
-from domain.risk.guards import KillSwitch
+from domain.risk.guards import KillSwitch, KillSwitchState, daily_loss_exceeded
 from domain.risk.stops import update_trailing
+from domain.time.day import utc_day_index
 from domain.trading.decision import TradingDecision
 from domain.trading.fees import FeeModel
 from domain.trading.fill import Fill
 from domain.trading.signal import Action
 from domain.trading.slippage import SlippageModel
+
+
+class OutOfOrderTimestampError(ValueError):
+    """Evento con timestamp anterior al último procesado: rechazado sin mutar estado."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -53,18 +59,25 @@ class PaperEngine:
         config: RiskConfig,
         fee_model: FeeModel | None = None,
         slippage_model: SlippageModel | None = None,
+        day_key: Callable[[int], int] = utc_day_index,
     ) -> None:
         self._config = config
         self._engine = RiskEngine(config)
         self._fees = fee_model or FeeModel()
         self._slippage = slippage_model or SlippageModel()
+        self._day_key = day_key
         self.portfolio = Portfolio(initial_cash=config.capital, cash=config.capital)
         self._kill_switch = KillSwitch()
         self._position: PaperPosition | None = None
         self._realized_pnl_today = 0.0
+        self._day: int | None = None
+        self._last_timestamp_ms: int | None = None
         self._peak_equity = config.capital
         self._last_price: float | None = None
         self._last_atr = 0.0
+        self._orders_rejected = 0
+        self._daily_loss_triggered = 0
+        self._daily_loss_active_cycles = 0
 
     @property
     def position(self) -> PaperPosition | None:
@@ -75,8 +88,35 @@ class PaperEngine:
         return self._realized_pnl_today
 
     @property
+    def daily_loss_active(self) -> bool:
+        """True si la pérdida realizada del día ya alcanzó el límite diario."""
+        return daily_loss_exceeded(
+            self._realized_pnl_today, capital=self._config.capital, config=self._config
+        )
+
+    @property
+    def orders_rejected(self) -> int:
+        """Órdenes (BUY/SELL) rechazadas por el Risk Engine (excluye HOLD)."""
+        return self._orders_rejected
+
+    @property
+    def daily_loss_triggered(self) -> int:
+        """Veces que el guard diario rechazó una nueva exposición (BUY)."""
+        return self._daily_loss_triggered
+
+    @property
+    def daily_loss_active_cycles(self) -> int:
+        """Ciclos HOLD procesados con el límite diario ya alcanzado (observabilidad)."""
+        return self._daily_loss_active_cycles
+
+    @property
     def peak_equity(self) -> float:
         return max(self._peak_equity, self.portfolio.equity(self._last_price or 0.0))
+
+    @property
+    def kill_switch_state(self) -> KillSwitchState:
+        """Estado actual del kill switch (solo lectura, para reportes de sesión)."""
+        return self._kill_switch.state
 
     def attach_kill_switch(self, kill_switch: KillSwitch) -> None:
         """Inyecta un estado externo persistente (SystemState) del kill switch."""
@@ -93,6 +133,18 @@ class PaperEngine:
         self, *, decision: TradingDecision, price: float, atr: float | None, timestamp_ms: int
     ) -> PaperEvent:
         """Punto único de entrada: stop→TP→trailing primero; luego la decisión."""
+        if self._last_timestamp_ms is not None and timestamp_ms < self._last_timestamp_ms:
+            raise OutOfOrderTimestampError(
+                f"timestamp fuera de orden: {timestamp_ms} < {self._last_timestamp_ms}"
+            )
+        self._last_timestamp_ms = timestamp_ms
+        day = self._day_key(timestamp_ms)
+        if self._day is None:
+            self._day = day
+        elif day != self._day:
+            self._day = day
+            self._realized_pnl_today = 0.0
+
         self._last_price = price
         self._last_atr = atr or 0.0
         # 1. Prioridad absoluta: gestión de la posición abierta.
@@ -119,8 +171,14 @@ class PaperEngine:
         verdict = self._engine.evaluate(proposal, state)
 
         if not verdict.approved:
+            if decision.action is not Action.HOLD:
+                self._orders_rejected += 1
+                if decision.action is Action.BUY and verdict.reason == "max_daily_loss":
+                    self._daily_loss_triggered += 1
             return PaperEvent(filled=False, action=decision.action, risk_reason=verdict.reason)
         if decision.action is Action.HOLD:
+            if self.daily_loss_active:
+                self._daily_loss_active_cycles += 1
             return PaperEvent(filled=False, action=Action.HOLD)
         if decision.action is Action.SELL and self._position is not None:
             return self._close_position(price=price, timestamp_ms=timestamp_ms, reason="llm_sell")

@@ -131,7 +131,7 @@ class BybitTradeClient:
                 **{
                     "orderLinkId": str(r.get("orderLinkId", "")),
                     "orderId": str(r.get("orderId", "")),
-                    "status": str(r.get("status", "")),
+                    "status": str(r.get("orderStatus", r.get("status", ""))),
                     "cumExecQty": str(r.get("cumExecQty", "")),
                     "avgPrice": str(r.get("avgPrice", "")),
                 }

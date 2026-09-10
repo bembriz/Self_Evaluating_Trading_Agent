@@ -1,2 +1,11 @@
-# Modo paper — cableado en Fase 10 (Risk & Paper Execution).
-# Por ahora hereda de base.yaml.
+environment: paper
+trading_mode: paper
+live_trading_enabled: false
+paper_decision_source: baseline
+paper_symbols:
+  - ETHUSDT
+paper_timeframe: 15m
+paper_report_interval_hours: 24
+paper_max_runtime_days: 7
+paper_report_dir: reports/paper
+paper_certification_state_path: docs/phases/16/certification-state.json

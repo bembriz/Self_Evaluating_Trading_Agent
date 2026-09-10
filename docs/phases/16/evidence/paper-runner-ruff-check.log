@@ -1,0 +1,6 @@
+# evidencia: paper-runner-ruff-check
+fecha: 2026-09-01T15:43:34-06:00
+fase: 16
+comando: uv run ruff check src/interfaces/cli/paper_runner.py src/main.py src/settings.py tests/test_cli_paper_runner.py tests/test_main.py tests/test_settings.py
+All checks passed!
+exit=0

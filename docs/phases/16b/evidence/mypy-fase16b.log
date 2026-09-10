@@ -1,0 +1,6 @@
+# evidencia: mypy-fase16b
+fecha: 2026-09-06T02:10:24-06:00
+fase: 16b
+comando: .venv/bin/mypy src/interfaces/cli/paper_runner.py src/interfaces/cli/paper_session.py src/settings.py src/application/services/paper_runner.py src/domain/market/indicators.py src/infrastructure/bybit/ws.py
+Success: no issues found in 6 source files
+exit=0

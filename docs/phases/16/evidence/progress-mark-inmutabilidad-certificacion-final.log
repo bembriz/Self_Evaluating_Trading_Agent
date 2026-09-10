@@ -1,0 +1,6 @@
+# evidencia: progress-mark-inmutabilidad-certificacion-final
+fecha: 2026-09-01T00:46:03-06:00
+fase: 16
+comando: python3 harness/scripts/progress.py mark-done --phase 16 --deliverable inmutabilidad-certificacion --evidence docs/phases/16/evidence/paper-certification-hash-invalidation-test.log
+registrado: 16/inmutabilidad-certificacion
+exit=0

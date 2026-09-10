@@ -21,6 +21,29 @@ class MarketCandleRepository(Protocol):
         """Candles con timestamp_ms en [start_ms, end_ms], ascendente."""
         ...
 
+    async def upsert_paper(
+        self, session_id: str, symbol: str, timeframe: Timeframe, candles: list[Candle]
+    ) -> int:
+        """Inserta velas paper-live (source='paper-live') con idempotencia por sesión."""
+        ...
+
+    async def session_range(
+        self,
+        session_id: str,
+        symbol: str,
+        timeframe: Timeframe,
+        start_ms: int,
+        end_ms: int,
+    ) -> list[Candle]:
+        """Candles paper-live de una sesión en [start_ms, end_ms], ascendente."""
+        ...
+
+    async def last_persisted_ms(
+        self, session_id: str, symbol: str, timeframe: Timeframe
+    ) -> int | None:
+        """Máximo timestamp_ms persistido de la sesión; None si no hay velas."""
+        ...
+
 
 class DatasetManifestRepository(Protocol):
     async def upsert(self, manifest: DatasetManifest) -> None: ...

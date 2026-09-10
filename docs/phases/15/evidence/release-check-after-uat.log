@@ -1,0 +1,16 @@
+# evidencia: release-check-after-uat
+fecha: 2026-08-31T23:46:37-06:00
+fase: 15
+comando: python3 harness/scripts/release_check.py
+PASS     BACKTEST: backtest-bybit_ethbtc_v001-baseline-v1-ethusdt-15m: net_pnl=-1091.88 trades=1054 win_rate=0.264 prof
+PASS     REPLAY: replay determinista reproducible (diff vacío): bars=103680 buy=1055 sell=1766 hold=100859
+PASS     PAPER: paper-session-bybit_ethbtc_v001-baseline-v1-ethusdt-15m: bars=103680 trades=392 net_pnl=-20.22 fees=
+PASS     TESTNET: lifecycle real create/reconcile/cancel validado contra Testnet (docs/phases/15/evidence/bybit-testne
+PASS     OBSERVABILITY: métricas y dashboard verificados (-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings
+PASS     SECURITY: pip-audit limpio; 0 vulnerabilidades; .env fuera del repo; hooks anti-secretos activos
+PASS     CI: equivalente local del pipeline verde (ruff+format+mypy+pytest+coverage>=90%); CI remoto en GitHub Ac
+PASS     UAT: checklist HITL de fase 15 APPROVED
+
+Reporte: /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/docs/phases/15/LOCAL_RELEASE_REPORT.md
+VEREDICTO: ACCEPTED
+exit=0

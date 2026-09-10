@@ -191,3 +191,37 @@ def test_engine_uses_latest_config_version(cfg: RiskConfig) -> None:
     custom = replace(cfg, version="risk-v2", stop_atr_multiplier=3.0)
     v = RiskEngine(custom).evaluate(_proposal(atr=10.0), _state())
     assert v.stop_loss == pytest.approx(2000.0 - 30.0)
+
+
+def test_buy_allowed_below_daily_limit(cfg: RiskConfig) -> None:
+    """Pérdida < 2% (umbral) → BUY sigue permitido."""
+    v = RiskEngine(cfg).evaluate(_proposal(), _state(realized_pnl_today=-19.99))
+    assert v.approved is True
+    assert v.reason == "ok"
+
+
+def test_hold_after_daily_limit_is_noop_not_rejected(cfg: RiskConfig) -> None:
+    """HOLD tras alcanzar el límite diario NO es una orden rechazada."""
+    v = RiskEngine(cfg).evaluate(_proposal(action=Action.HOLD), _state(realized_pnl_today=-20.0))
+    assert v.approved is True
+    assert v.reason == "no_op"
+
+
+def test_sell_with_position_after_daily_limit_reduces(cfg: RiskConfig) -> None:
+    """SELL reduce posición incluso con límite diario alcanzado (reduce riesgo)."""
+    v = RiskEngine(cfg).evaluate(
+        _proposal(action=Action.SELL, atr=None),
+        _state(open_positions=1, realized_pnl_today=-20.0),
+    )
+    assert v.approved is True
+    assert v.reason == "reduce"
+
+
+def test_sell_without_position_after_daily_limit(cfg: RiskConfig) -> None:
+    """SELL sin posición tras límite → no_position_to_reduce (NO max_daily_loss)."""
+    v = RiskEngine(cfg).evaluate(
+        _proposal(action=Action.SELL, atr=None),
+        _state(open_positions=0, realized_pnl_today=-20.0),
+    )
+    assert v.approved is False
+    assert v.reason == "no_position_to_reduce"

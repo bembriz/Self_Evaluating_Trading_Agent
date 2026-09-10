@@ -1,0 +1,80 @@
+{
+  "benchmark_buy_hold": {
+    "metrics": {
+      "avg_holding_bars": 103679.0,
+      "avg_loser": null,
+      "avg_winner": 492.963761063646,
+      "expectancy": 492.963761063646,
+      "exposure": 1.0,
+      "fees": 2.4939585291588484,
+      "fully_loaded_pnl": 492.963761063646,
+      "gross_pnl": 495.9565311568505,
+      "llm_cost": 0.0,
+      "loss_rate": 0.0,
+      "max_drawdown": 0.692714202762497,
+      "net_pnl": 492.963761063646,
+      "profit_factor": Infinity,
+      "risk_reward": null,
+      "sharpe": 0.5338106527606598,
+      "slippage": 0.49881156404559746,
+      "sortino": 0.7523371000905608,
+      "trades": 1,
+      "win_rate": 1.0
+    },
+    "strategy_version": "buy-and-hold"
+  },
+  "dataset": {
+    "file": "datasets/BYBIT_ETHBTC_V001/ETHUSDT_15m.csv",
+    "rows": 103680,
+    "sha256": "f561207c018d0f4ade1afdaca3d349a53faec49d732bb5f50933db64e2cbb31d",
+    "version": "BYBIT_ETHBTC_V001"
+  },
+  "experiment_id": "backtest-bybit_ethbtc_v001-baseline-v1-ethusdt-15m",
+  "metrics": {
+    "avg_holding_bars": 37.96584440227704,
+    "avg_loser": -5.008920986367803,
+    "avg_winner": 10.054110909335126,
+    "expectancy": -1.0359391391140895,
+    "exposure": 0.38619791666666664,
+    "fees": 987.18107781601,
+    "fully_loaded_pnl": -1091.8798526262503,
+    "gross_pnl": 92.737452359887,
+    "llm_cost": 0.0,
+    "loss_rate": 0.7362428842504745,
+    "max_drawdown": 0.9007889607172694,
+    "net_pnl": -1091.8798526262503,
+    "profit_factor": 0.7190888677252221,
+    "risk_reward": 2.007240868182634,
+    "sharpe": -1.9647754267598165,
+    "slippage": 197.43622717012738,
+    "sortino": -2.909837797324213,
+    "trades": 1054,
+    "win_rate": 0.2637571157495256
+  },
+  "params": {
+    "fee_model": {
+      "maker_bps": 10.0,
+      "taker_bps": 10.0,
+      "version": "bybit-spot-v1"
+    },
+    "initial_cash": 1000.0,
+    "periods_per_year": 35136.0,
+    "slippage_model": {
+      "bps": 2.0,
+      "version": "conservative-v1"
+    },
+    "symbol": "ETHUSDT",
+    "timeframe": "15m"
+  },
+  "signals": 2821,
+  "strategy": {
+    "config": {
+      "ema_fast": 20,
+      "ema_slow": 50,
+      "rsi_exit": 80.0,
+      "rsi_period": 14
+    },
+    "name": "EmaRsiBaseline",
+    "version": "baseline-v1"
+  }
+}

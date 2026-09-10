@@ -1,0 +1,68 @@
+# evidencia: git-status-task-5-final
+fecha: 2026-09-01T00:49:23-06:00
+fase: 16
+comando: git status --short
+ M .gitignore
+ M docs/phases/15/LOCAL_RELEASE_REPORT.md
+ M docs/phases/15/evidence/log.md
+ M docs/phases/15/evidence/release-check.log
+ M docs/uat/phase-15-uat.md
+ M harness/scripts/release_check.py
+ M harness/state/progress.yaml
+ M src/application/services/paper_engine.py
+ M src/infrastructure/bybit/auth.py
+ M src/infrastructure/bybit/trade_client.py
+ M src/main.py
+ M tests/test_bybit_trade_auth.py
+ M tests/test_bybit_trade_client.py
+?? docs/phases/15/evidence/backtest-determinism-diff.log
+?? docs/phases/15/evidence/backtest-official-run1.log
+?? docs/phases/15/evidence/backtest-official-run2.log
+?? docs/phases/15/evidence/backtest_run1.json
+?? docs/phases/15/evidence/backtest_run2.json
+?? docs/phases/15/evidence/bybit-release-gate-tests.log
+?? docs/phases/15/evidence/bybit-signature-ruff-fixed.log
+?? docs/phases/15/evidence/bybit-signature-ruff.log
+?? docs/phases/15/evidence/bybit-signature-unit-tests-fixed.log
+?? docs/phases/15/evidence/bybit-signature-unit-tests.log
+?? docs/phases/15/evidence/bybit-testnet-account-balances-fixed.log
+?? docs/phases/15/evidence/bybit-testnet-account-balances.log
+?? docs/phases/15/evidence/bybit-testnet-balance-check-encoded.log
+?? docs/phases/15/evidence/bybit-testnet-balance-check-fixed.log
+?? docs/phases/15/evidence/bybit-testnet-balance-check.log
+?? docs/phases/15/evidence/bybit-testnet-balance-recheck.log
+?? docs/phases/15/evidence/bybit-testnet-cleanup-open-orders.log
+?? docs/phases/15/evidence/bybit-testnet-lifecycle-fixed.log
+?? docs/phases/15/evidence/bybit-testnet-lifecycle-funded.log
+?? docs/phases/15/evidence/bybit-testnet-lifecycle-pass-final.log
+?? docs/phases/15/evidence/bybit-testnet-lifecycle-pass.log
+?? docs/phases/15/evidence/bybit-testnet-lifecycle-price25.log
+?? docs/phases/15/evidence/bybit-testnet-lifecycle.log
+?? docs/phases/15/evidence/dataset-verify.log
+?? docs/phases/15/evidence/paper-session-determinism-diff.log
+?? docs/phases/15/evidence/paper-session-run1.log
+?? docs/phases/15/evidence/paper-session-run2.log
+?? docs/phases/15/evidence/paper_session_run1.json
+?? docs/phases/15/evidence/paper_session_run2.json
+?? docs/phases/15/evidence/release-check-after-testnet.log
+?? docs/phases/15/evidence/release-check-after-uat.log
+?? docs/phases/15/evidence/replay-determinism-diff.log
+?? docs/phases/15/evidence/replay-official-run1.log
+?? docs/phases/15/evidence/replay-official-run2.log
+?? docs/phases/15/evidence/replay_run1.jsonl
+?? docs/phases/15/evidence/replay_run2.jsonl
+?? docs/phases/16/
+?? docs/phases/phase-16-report.md
+?? docs/superpowers/plans/2026-09-01-phase-16-paper-trading-certification.md
+?? docs/superpowers/specs/
+?? docs/uat/phase-16-uat.md
+?? harness/scripts/paper_certification.py
+?? harness/tests/test_paper_certification.py
+?? harness/tests/test_release_check.py
+?? src/interfaces/cli/backtest.py
+?? src/interfaces/cli/paper_session.py
+?? src/interfaces/cli/replay.py
+?? tests/test_cli_backtest.py
+?? tests/test_cli_paper_session.py
+?? tests/test_cli_replay.py
+exit=0

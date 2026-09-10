@@ -1,7 +1,8 @@
 """Contabilidad de portfolio exacta (PRD §5, §25). Dominio puro.
 
 Long-only spot: BUY solo con cash disponible (nunca cash negativo); SELL solo reduce
-posición existente (nunca short). PnL neto = gross - fees - slippage.
+posición existente (nunca short). PnL neto = gross − fees (la slippage ya está
+embebida en exec_price; se reporta aparte como métrica analítica).
 """
 
 from __future__ import annotations
@@ -73,7 +74,9 @@ class Portfolio:
         gross_pnl = (exit_price - (self.avg_entry or 0.0)) * quantity
         fees = allocated_entry_fees + exit_fee
         slippage = allocated_entry_slippage + exit_slippage
-        net_pnl = gross_pnl - fees - slippage
+        # Slippage ya está embebida en exec_price (y por tanto en gross_pnl): no se
+        # vuelve a descontar. Se conserva como métrica analítica informativa.
+        net_pnl = gross_pnl - fees
 
         self.cash += fill.notional * scale - exit_fee
         self.position -= quantity

@@ -1,0 +1,20 @@
+# evidencia: paper-certification-domain-red
+fecha: 2026-09-01T00:26:58-06:00
+fase: 16
+comando: uv run pytest harness/tests/test_paper_certification.py -q
+
+==================================== ERRORS ====================================
+______________ ERROR collecting tests/test_paper_certification.py ______________
+ImportError while importing test module '/home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/harness/tests/test_paper_certification.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+../../../snap/codium/495/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+harness/tests/test_paper_certification.py:1: in <module>
+    from paper_certification import evaluate_state
+E   ModuleNotFoundError: No module named 'paper_certification'
+=========================== short test summary info ============================
+ERROR harness/tests/test_paper_certification.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+exit=2

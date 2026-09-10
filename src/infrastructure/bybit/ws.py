@@ -34,13 +34,20 @@ class BybitWebSocketClient:
 
     async def connect(self) -> None:
         self._cm = self._connect(self._url)
-        self._ws = await self._cm.__aenter__()
+        try:
+            self._ws = await self._cm.__aenter__()
+        except BaseException:
+            # La conexión nunca se estableció: descartar el context manager para
+            # que close() no invoque __aexit__ sobre un `connect` sin `connection`
+            # (websockets 17 lanza AttributeError en ese caso y enmascara el error
+            # primario de red).
+            self._cm = None
+            raise
 
     async def close(self) -> None:
-        if self._cm is not None:
-            await self._cm.__aexit__(None, None, None)
-            self._cm = None
-            self._ws = None
+        cm, self._cm, self._ws = self._cm, None, None
+        if cm is not None:
+            await cm.__aexit__(None, None, None)
 
     async def subscribe_orderbook(self, symbol: str, depth: int) -> None:
         await self._send({"op": "subscribe", "args": [f"orderbook.{depth}.{symbol}"]})

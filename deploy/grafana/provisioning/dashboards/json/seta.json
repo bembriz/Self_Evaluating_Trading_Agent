@@ -3,7 +3,7 @@
   "uid": "seta-tech",
   "refresh": "5s",
   "panels": [
-    {"type": "stat", "title": "WS stale", "targets": [{"expr": "seta_ws_stale"}], "gridPos": {"x":0,"y":0,"w":6,"h":4}},
+    {"type": "stat", "title": "WS stale", "targets": [{"expr": "seta_ws_stale_status"}], "gridPos": {"x":0,"y":0,"w":6,"h":4}},
     {"type": "stat", "title": "Reconexiones", "targets": [{"expr": "seta_reconnects_total"}], "gridPos": {"x":6,"y":0,"w":6,"h":4}},
     {"type": "timeseries", "title": "Latencia decisión p50/p95", "targets": [{"expr": "histogram_quantile(0.5, sum(rate(seta_latency_seconds_bucket{op=\"decision\"}[5m])) by (le))"}, {"expr": "histogram_quantile(0.95, sum(rate(seta_latency_seconds_bucket{op=\"decision\"}[5m])) by (le))"}], "gridPos": {"x":12,"y":0,"w":12,"h":8}},
     {"type": "timeseries", "title": "Errores por tipo", "targets": [{"expr": "sum(rate(seta_errors_total[5m])) by (kind)"}], "gridPos": {"x":0,"y":4,"w":12,"h":8}},

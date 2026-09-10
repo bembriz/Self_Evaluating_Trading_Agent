@@ -1,0 +1,6 @@
+# evidencia: final-forbidden-imports
+fecha: 2026-09-01T16:29:47-06:00
+fase: 16
+comando: uv run python -c import re; p='src/application/services/paper_runner.py'; c=open(p).read(); bad=[l for l in c.split('\n') if re.search(r'infrastructure\.bybit\.trade_client|LLMProvider|DecisionAgent|llm_provider|llm_port', l)]; print('CLEAN' if not bad else bad); exit(1 if bad else 0)
+CLEAN
+exit=0

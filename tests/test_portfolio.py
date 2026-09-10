@@ -24,7 +24,7 @@ def test_sell_reduces_position_and_records_trade() -> None:
     trade = p.trades[0]
     assert trade.quantity == pytest.approx(buy.quantity)
     assert trade.gross_pnl > 0
-    assert trade.net_pnl == pytest.approx(trade.gross_pnl - trade.fees - trade.slippage)
+    assert trade.net_pnl == pytest.approx(trade.gross_pnl - trade.fees)
 
 
 def test_sell_cannot_short() -> None:

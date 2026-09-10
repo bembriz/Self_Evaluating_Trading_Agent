@@ -1,0 +1,71 @@
+# evidencia: paper-certification-harness-coverage
+fecha: 2026-09-01T00:28:02-06:00
+fase: 16
+comando: uv run pytest harness/tests --cov=harness/scripts --cov-fail-under=80
+...............FF............................................            [100%]
+=================================== FAILURES ===================================
+____________________ test_dependencias_presentes_genera_pdf ____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xuum/pytest-5/test_dependencias_presentes_ge0')
+
+    def test_dependencias_presentes_genera_pdf(tmp_path):
+        md = tmp_path / "mini.md"
+        md.write_text(
+            "# Título\n\n| A | B |\n|---|---|\n| 1 | 2 |\n\n```bash\nexit=0\n```\n",
+            encoding="utf-8",
+        )
+        rc = gen_pdf.main([str(md)])
+>       assert rc == 0
+E       assert 65 == 0
+
+harness/tests/test_gen_pdf.py:11: AssertionError
+----------------------------- Captured stderr call -----------------------------
+ERROR: faltan dependencias para PDF.
+Detalle: No module named 'markdown'
+
+Este script requiere los dev-dependencies 'markdown' y 'weasyprint'.
+Su instalación está sujeta a la política de dependencias del proyecto:
+1) Genera/usa el Dependency Proposal correspondiente (skill infra-control).
+2) Tras tu autorización: uv add --dev markdown weasyprint
+3) Reintenta este comando.
+_____________________ test_entrada_inexistente_devuelve_66 _____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xuum/pytest-5/test_entrada_inexistente_devue0')
+capsys = <_pytest.capture.CaptureFixture object at 0x7fdee532f710>
+
+    def test_entrada_inexistente_devuelve_66(tmp_path, capsys):
+        rc = gen_pdf.main([str(tmp_path / "no.md")])
+>       assert rc == 66
+E       assert 65 == 66
+
+harness/tests/test_gen_pdf.py:18: AssertionError
+----------------------------- Captured stderr call -----------------------------
+ERROR: faltan dependencias para PDF.
+Detalle: No module named 'markdown'
+
+Este script requiere los dev-dependencies 'markdown' y 'weasyprint'.
+Su instalación está sujeta a la política de dependencias del proyecto:
+1) Genera/usa el Dependency Proposal correspondiente (skill infra-control).
+2) Tras tu autorización: uv add --dev markdown weasyprint
+3) Reintenta este comando.
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                                     Stmts   Miss Branch BrPart  Cover   Missing
+------------------------------------------------------------------------------------
+harness/scripts/gate_check.py              104      3     32      2    96%   198-199, 225
+harness/scripts/gen_pdf.py                  29     13      4      1    52%   39, 53-66, 70
+harness/scripts/gen_report.py               41      1      8      1    96%   77
+harness/scripts/ledger.py                  260     19     94     14    90%   38, 53, 69, 76, 83-84, 86, 98-99, 105, 110, 138, 204, 205->exit, 362-364, 372-374
+harness/scripts/new_phase.py                39      1      8      1    96%   65
+harness/scripts/paper_certification.py      29      0     12      0   100%
+harness/scripts/progress.py                 77      1     22      2    97%   95->98, 103
+harness/scripts/release_check.py           122     93     36      1    22%   21, 25-29, 34-52, 56-76, 80-106, 121-135, 139-147, 156-179, 187-192, 208-248, 252
+------------------------------------------------------------------------------------
+TOTAL                                      701    131    216     22    80%
+FAIL Required test coverage of 80% not reached. Total coverage: 79.61%
+=========================== short test summary info ============================
+FAILED harness/tests/test_gen_pdf.py::test_dependencias_presentes_genera_pdf
+FAILED harness/tests/test_gen_pdf.py::test_entrada_inexistente_devuelve_66 - ...
+2 failed, 59 passed in 8.78s
+exit=1

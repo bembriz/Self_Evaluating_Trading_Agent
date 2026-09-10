@@ -1,0 +1,13 @@
+# evidencia: strategy-hash
+fecha: 2026-09-01T00:40:48-06:00
+fase: 16
+comando: bash -c sha256sum src/domain/trading/strategy.py src/domain/risk/*.py config/paper.yaml
+80e3a27740396c53c902746a0f640d84e9b6bf576be9d250d7059c7eb45e5b2d  src/domain/trading/strategy.py
+0b067bd81b6b422d89dfc47fd6f2e929dd081e67368a35458389257070752b9a  src/domain/risk/config.py
+f354ee2b18498d321cf382c0471c783208ad40eb8e5ee6c3f1c1107b56eaa669  src/domain/risk/engine.py
+797d56df1a76c9456c3fc17ce345e57d3806bf4530042e0efce51cc83d5c81fb  src/domain/risk/guards.py
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  src/domain/risk/__init__.py
+28cf94924d3b4282f26163362d3783e7f804a8e90387259c9fb42c2f9bf3bd04  src/domain/risk/sizing.py
+41d92f1b076b6c16db4d3df5453f4a724c2e85ea55cf82887120bd68a1366018  src/domain/risk/stops.py
+262e150d3ba02f1f1840af839f7d083c08e384044f51dfd5afe15ca22b12b6fd  config/paper.yaml
+exit=0

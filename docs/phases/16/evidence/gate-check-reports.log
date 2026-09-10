@@ -1,0 +1,20 @@
+# evidencia: gate-check-reports
+fecha: 2026-09-01T20:48:37-06:00
+fase: 16
+comando: python3 harness/scripts/gate_check.py --phase 16
+# Gate check — Fase 16: Paper Trading Certification
+
+| Check | Tipo | Estado | Detalle |
+|---|---|---|---|
+| scope-complete | auto | **FAIL** | pendientes: ['certificacion-30-dias', 'certificacion-200-trades', 'certificacion-2-regimenes', 'informes-periodicos'] |
+| evidence-files | auto | **PASS** | rutas verificadas |
+| coverage-gate | auto | **PASS** | 92.00% ≥ 90.0% |
+| lint-green | auto | **PASS** | lint.log |
+| typing-green | auto | **PASS** | typing.log |
+| uat-approved | manual | **MANUAL** | phase-16-uat.md |
+| user-approval | manual | **MANUAL** | gate_fase=pending |
+
+**Resultado:** 4 PASS · 1 FAIL · 2 MANUAL
+**BLOQUEADO: corrige los FAIL antes de solicitar el gate.**
+
+exit=1

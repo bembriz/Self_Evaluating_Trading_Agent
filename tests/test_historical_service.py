@@ -53,6 +53,21 @@ class FakeCandleRepo:
     ) -> list[Candle]:
         return []
 
+    async def upsert_paper(
+        self, session_id: str, symbol: str, timeframe: Timeframe, candles: list[Candle]
+    ) -> int:
+        return len(candles)
+
+    async def session_range(
+        self, session_id: str, symbol: str, timeframe: Timeframe, start_ms: int, end_ms: int
+    ) -> list[Candle]:
+        return []
+
+    async def last_persisted_ms(
+        self, session_id: str, symbol: str, timeframe: Timeframe
+    ) -> int | None:
+        return None
+
 
 class FakeManifestRepo:
     def __init__(self) -> None:

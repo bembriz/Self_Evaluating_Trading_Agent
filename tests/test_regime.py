@@ -1,3 +1,5 @@
+from collections import deque
+
 from domain.market.candle import Candle
 from domain.market.regime import MarketRegime, RegimeClassifier, RegimeConfig
 
@@ -98,3 +100,7 @@ def test_zero_lookback_never_breaks_out() -> None:
     candles = [_c(i, 100, 101, 99, 100) for i in range(60)]
     cfg = RegimeConfig(breakout_lookback=0)
     assert RegimeClassifier(cfg).classify(candles) is MarketRegime.SIDEWAYS
+
+
+def test_classify_accepts_deque_input() -> None:
+    assert RegimeClassifier().classify(deque(_uptrend(60))) is MarketRegime.TREND_UP

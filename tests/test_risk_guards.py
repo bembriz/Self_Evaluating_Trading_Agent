@@ -69,3 +69,12 @@ def test_kill_switch_restore_persistent_across_restart() -> None:
     first = KillSwitch().activate(reason="dd", timestamp_ms=5)
     restored = KillSwitch(initial_state=first)
     assert restored.allows_trading() is False  # sobrevive al reinicio
+
+
+def test_kill_switch_state_serialization_roundtrip() -> None:
+    state = KillSwitchState(active=True, reason="manual stop", activated_at_ms=42)
+    assert KillSwitchState.from_dict(state.to_dict()) == state
+
+
+def test_kill_switch_state_from_dict_defaults() -> None:
+    assert KillSwitchState.from_dict({}) == KillSwitchState()

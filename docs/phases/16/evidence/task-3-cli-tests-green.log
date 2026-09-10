@@ -1,0 +1,6 @@
+# evidencia: task-3-cli-tests-green
+fecha: 2026-09-01T00:34:23-06:00
+fase: 16
+comando: uv run pytest harness/tests/test_paper_certification.py -q
+.......                                                                  [100%]
+exit=0

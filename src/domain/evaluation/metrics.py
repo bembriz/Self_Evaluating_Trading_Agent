@@ -50,7 +50,9 @@ def compute_metrics(
     gross_pnl = sum(t.gross_pnl for t in trades)
     fees = sum(t.fees for t in trades)
     slippage = sum(t.slippage for t in trades)
-    net_pnl = gross_pnl - fees - slippage
+    # La slippage ya está embebida en exec_price (y por tanto en gross_pnl): no se
+    # vuelve a descontar aquí; se reporta por separado como métrica analítica.
+    net_pnl = gross_pnl - fees
     fully_loaded_pnl = net_pnl - llm_cost
 
     winners = [t.net_pnl for t in trades if t.net_pnl > 0]

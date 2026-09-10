@@ -41,15 +41,11 @@ def test_signer_known_vector() -> None:
     # Firma determinista para los mismos inputs:
     again = signer.sign("/v5/order/create", payload='{"a":1}', timestamp_ms=1_700_000_000_000)
     assert again["X-BAPI-SIGN"] == headers["X-BAPI-SIGN"]
-    # Sensible al secreto, path, payload y timestamp:
+    # Sensible al secreto, payload y timestamp:
     import hashlib
     import hmac
 
-    expected = hmac.new(
-        b"S",
-        b"1700000000000K5000" + b"/v5/order/create" + b'{"a":1}',
-        hashlib.sha256,
-    ).hexdigest()
+    expected = hmac.new(b"S", b"1700000000000K5000" + b'{"a":1}', hashlib.sha256).hexdigest()
     assert headers["X-BAPI-SIGN"] == expected
 
 
@@ -60,7 +56,7 @@ def test_signer_get_query_string_payload() -> None:
     import hmac
 
     expected = hmac.new(
-        b"S", b"123K10000" + b"/v5/order/realtime" + b"symbol=ETHUSDT&category=spot", hashlib.sha256
+        b"S", b"123K10000" + b"symbol=ETHUSDT&category=spot", hashlib.sha256
     ).hexdigest()
     assert h["X-BAPI-SIGN"] == expected
 

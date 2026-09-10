@@ -1,0 +1,121 @@
+# evidencia: compose-config-paper-runner
+fecha: 2026-09-01T16:08:47-06:00
+fase: 16
+comando: docker compose config
+name: self-evaluating_trading_agent
+services:
+  grafana:
+    depends_on:
+      prometheus:
+        condition: service_started
+        required: true
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_SECURITY_ADMIN_PASSWORD: seta
+      GF_SECURITY_ADMIN_USER: operator
+    image: grafana/grafana:11.1.0
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        host_ip: 127.0.0.1
+        target: 3000
+        published: "3000"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/deploy/grafana/provisioning
+        target: /etc/grafana/provisioning
+        read_only: true
+        bind: {}
+      - type: volume
+        source: grafanadata
+        target: /var/lib/grafana
+        volume: {}
+  paper-runner:
+    build:
+      context: /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent
+      dockerfile: Dockerfile
+    command:
+      - python
+      - -m
+      - main
+      - paper-runner
+      - --symbols
+      - ETHUSDT
+      - --timeframe
+      - 15m
+    depends_on:
+      postgres:
+        condition: service_healthy
+        required: true
+    environment:
+      LIVE_TRADING_ENABLED: "false"
+      PAPER_DECISION_SOURCE: baseline
+      PAPER_TIMEFRAME: 15m
+      POSTGRES_DB: trading_agent
+      POSTGRES_HOST: postgres
+      POSTGRES_PASSWORD: trading
+      POSTGRES_PORT: "5432"
+      POSTGRES_USER: trading
+      TRADING_MODE: paper
+    networks:
+      default: null
+    restart: unless-stopped
+  postgres:
+    environment:
+      POSTGRES_DB: trading_agent
+      POSTGRES_PASSWORD: trading
+      POSTGRES_USER: trading
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U trading -d trading_agent
+      timeout: 5s
+      interval: 5s
+      retries: 10
+    image: pgvector/pgvector:pg16
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        host_ip: 127.0.0.1
+        target: 5432
+        published: "5433"
+        protocol: tcp
+    volumes:
+      - type: volume
+        source: pgdata
+        target: /var/lib/postgresql/data
+        volume: {}
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        host_ip: 127.0.0.1
+        target: 9090
+        published: "9090"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/deploy/prometheus.yml
+        target: /etc/prometheus/prometheus.yml
+        read_only: true
+        bind: {}
+      - type: volume
+        source: promdata
+        target: /prometheus
+        volume: {}
+networks:
+  default:
+    name: self-evaluating_trading_agent_default
+volumes:
+  grafanadata:
+    name: self-evaluating_trading_agent_grafanadata
+  pgdata:
+    name: self-evaluating_trading_agent_pgdata
+  promdata:
+    name: self-evaluating_trading_agent_promdata
+exit=0

@@ -1,10 +1,10 @@
 # evidencia: release-check
-fecha: 2026-08-24T08:59:05-06:00
+fecha: 2026-08-26T00:41:23-06:00
 fase: 15
-comando: python3 harness/scripts/release_check.py
-PENDING  BACKTEST: dataset congelado presente pero falta la corrida oficial de backtest con métricas §45 registrada com
-PENDING  REPLAY: replay determinista reproducible pendiente de corrida oficial
-PENDING  PAPER: paper trading operativo (Paper Engine Fase 10) pero sin sesión de paper evaluada con fees/slippage/c
+comando: uv run python harness/scripts/release_check.py
+PASS     BACKTEST: backtest-bybit_ethbtc_v001-baseline-v1-ethusdt-15m: net_pnl=-1091.88 trades=1054 win_rate=0.264 prof
+PASS     REPLAY: replay determinista reproducible (diff vacío): bars=103680 buy=1055 sell=1766 hold=100859
+PASS     PAPER: paper-session-bybit_ethbtc_v001-baseline-v1-ethusdt-15m: bars=103680 trades=392 net_pnl=-20.22 fees=
 PENDING  TESTNET: lifecycle de órdenes implementado (Fase 12) pero no validado contra Testnet real (requiere BYBIT_API
 PASS     OBSERVABILITY: métricas y dashboard verificados (-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings
 PASS     SECURITY: pip-audit limpio; 0 vulnerabilidades; .env fuera del repo; hooks anti-secretos activos

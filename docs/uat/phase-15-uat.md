@@ -4,8 +4,8 @@
 
 ## Estado honesto
 
-El veredicto binario actual es **NOT_ACCEPTED**: 3 gates PASS (OBSERVABILITY, SECURITY, CI-local),
-4 PENDING por recursos externos (corridas oficiales backtest/replay/paper, claves Testnet) y el UAT humano.
+El veredicto binario actual queda pendiente solo de la aprobación formal del gate de fase:
+los 8 gates del Local Release Candidate tienen evidencia PASS tras la validación Testnet real.
 
 ## Pasos
 
@@ -19,12 +19,12 @@ El veredicto binario actual es **NOT_ACCEPTED**: 3 gates PASS (OBSERVABILITY, SE
 
 | Paso | Resultado observado | ¿Coincide? (SÍ/NO) |
 |---|---|---|
-| 1 | | |
-| 2 | | |
-| 3 | | |
+| 1 | Reporte revisado tras evidencia Testnet | SÍ |
+| 2 | `release_check.py` reproducido con gates PASS | SÍ |
+| 3 | Usuario declaró `uat validado` en sesión OpenCode | SÍ |
 
 ---
 
-## VEREDICTO UAT: PENDING
-Decisor: ________________  Fecha: ________
-Comentario:
+## VEREDICTO UAT: APPROVED
+Decisor: usuario  Fecha: 2026-09-01
+Comentario: UAT validado por declaración explícita en sesión OpenCode.

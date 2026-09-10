@@ -1,0 +1,37 @@
+# evidencia: progress-report-task-5-final
+fecha: 2026-09-01T00:47:00-06:00
+fase: 16
+comando: python3 harness/scripts/progress.py report
+# Progreso del proyecto
+
+**Avance global: 86.32%** (calculado sobre evidencias)
+
+| Fase | Título | Estado | Done | Pend | Bloq | % | Gate |
+|---|---|---|---|---|---|---|---|
+| 00 | Governance & Agent Bootstrap (Arnés) | done | 12/12 | 0 | 0 | 100.0% | approved |
+| 01 | Python Project Foundation | done | 11/11 | 0 | 0 | 100.0% | approved |
+| 02 | PostgreSQL & Application Skeleton | done | 8/8 | 0 | 0 | 100.0% | approved |
+| 03 | Historical Market Data | done | 7/7 | 0 | 0 | 100.0% | approved |
+| 04 | Real-Time Market Data | done | 8/8 | 0 | 0 | 100.0% | approved |
+| 05 | Feature Engine & Market State | done | 6/6 | 0 | 0 | 100.0% | approved |
+| 06 | Backtesting & Deterministic Baseline | done | 8/8 | 0 | 0 | 100.0% | approved |
+| 07 | ML Baseline | done | 6/6 | 0 | 0 | 100.0% | approved |
+| 08 | LLM Decision Agent | done | 9/9 | 0 | 0 | 100.0% | approved |
+| 09 | Trading Memory / RAG | done | 8/8 | 0 | 0 | 100.0% | approved |
+| 10 | Risk & Paper Execution | done | 10/10 | 0 | 0 | 100.0% | approved |
+| 11 | Evaluation & Reflection | done | 7/7 | 0 | 0 | 100.0% | approved |
+| 12 | Bybit Testnet | done | 7/7 | 0 | 0 | 100.0% | approved |
+| 13 | Dashboard & Observability | done | 8/8 | 0 | 0 | 100.0% | approved |
+| 14 | Robustness Evaluation | done | 11/11 | 0 | 0 | 100.0% | approved |
+| 15 | Local Release Candidate | done | 9/9 | 0 | 0 | 100.0% | approved |
+| 16 | Paper Trading Certification | in_progress | 2/5 | 0 | 3 | 40.0% | pending |
+| 17 | LIVE Readiness Review | pending | 0/8 | 8 | 0 | 0.0% | pending |
+| 18 | Cloud Evaluation | pending | 0/3 | 3 | 0 | 0.0% | pending |
+
+**Totales:** 137 done · 11 pendiente · 3 bloqueados · 16/19 fases con gate aprobado
+
+**ETA:** 0–1 días (velocidad 22.83 entregables/día, banda ±50%) → 2026-09-01 … 2026-09-02
+
+**Bloqueos:** ninguno
+
+exit=0

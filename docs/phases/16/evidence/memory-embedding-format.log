@@ -1,0 +1,6 @@
+# evidencia: memory-embedding-format
+fecha: 2026-09-02T12:20:37-06:00
+fase: 16
+comando: /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/.venv/bin/ruff format --check tests/integration/test_memory_repository.py
+1 file already formatted
+exit=0

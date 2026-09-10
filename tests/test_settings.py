@@ -64,3 +64,84 @@ def test_llm_settings_from_env(monkeypatch: MonkeyPatch) -> None:
     s = load_settings()
     assert s.llm_model == "deepseek-v4-pro"
     assert s.llm_experiment_budget_usd == 7.5
+
+
+def test_paper_runner_settings_defaults(monkeypatch: MonkeyPatch) -> None:
+    for var in (
+        "PAPER_DECISION_SOURCE",
+        "PAPER_SYMBOLS",
+        "PAPER_TIMEFRAME",
+        "PAPER_REPORT_INTERVAL_HOURS",
+        "PAPER_MAX_RUNTIME_DAYS",
+    ):
+        monkeypatch.delenv(var, raising=False)
+
+    s = Settings()
+
+    assert s.paper_decision_source == "baseline"
+    assert s.paper_symbols == ["ETHUSDT"]
+    assert s.paper_timeframe == "15m"
+    assert s.paper_report_interval_hours == 24
+    assert s.paper_max_runtime_days == 45
+
+
+def test_paper_runner_safe_mode_env_overrides(monkeypatch: MonkeyPatch) -> None:
+    monkeypatch.setenv("TRADING_MODE", "paper")
+    monkeypatch.setenv("LIVE_TRADING_ENABLED", "false")
+
+    s = Settings()
+
+    assert s.trading_mode == "paper"
+    assert s.live_trading_enabled is False
+
+
+def test_paper_report_paths_defaults(monkeypatch: MonkeyPatch) -> None:
+    for var in ("PAPER_REPORT_DIR", "PAPER_CERTIFICATION_STATE_PATH"):
+        monkeypatch.delenv(var, raising=False)
+
+    s = Settings()
+
+    assert s.paper_report_dir == "reports/paper"
+    assert s.paper_certification_state_path == "docs/phases/16/certification-state.json"
+
+
+def test_paper_report_paths_env_override(monkeypatch: MonkeyPatch) -> None:
+    monkeypatch.setenv("PAPER_REPORT_DIR", "custom/reports")
+    monkeypatch.setenv("PAPER_CERTIFICATION_STATE_PATH", "custom/state.json")
+
+    s = Settings()
+
+    assert s.paper_report_dir == "custom/reports"
+    assert s.paper_certification_state_path == "custom/state.json"
+
+
+def test_paper_stale_timeout_defaults_keep_orderbook_unchanged(
+    monkeypatch: MonkeyPatch,
+) -> None:
+    for var in ("PAPER_STALE_TIMEOUT_SECONDS", "STALE_TIMEOUT_SECONDS"):
+        monkeypatch.delenv(var, raising=False)
+
+    s = Settings()
+
+    assert s.paper_stale_timeout_seconds == 120.0  # kline: push frequency 1–60s
+    assert s.stale_timeout_seconds == 10.0  # order-book/market_worker intacto
+
+
+def test_paper_stale_timeout_env_override(monkeypatch: MonkeyPatch) -> None:
+    monkeypatch.setenv("PAPER_STALE_TIMEOUT_SECONDS", "180")
+
+    s = Settings()
+
+    assert s.paper_stale_timeout_seconds == 180.0
+    assert s.stale_timeout_seconds == 10.0  # no afecta al order-book
+
+
+def test_certification_artifact_settings_defaults(monkeypatch: MonkeyPatch) -> None:
+    for var in ("GIT_COMMIT", "DOCKER_IMAGE_DIGEST", "PAPER_SAFEGUARD_EVIDENCE_PATH"):
+        monkeypatch.delenv(var, raising=False)
+
+    s = Settings()
+
+    assert s.git_commit == ""
+    assert s.docker_image_digest == ""
+    assert s.paper_safeguard_evidence_path == "docs/phases/16/safeguard-evidence.json"

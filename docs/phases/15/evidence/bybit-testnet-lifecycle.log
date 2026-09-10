@@ -1,0 +1,95 @@
+# evidencia: bybit-testnet-lifecycle
+fecha: 2026-08-31T23:15:11-06:00
+fase: 15
+comando: bash -lc set -a; . ./.envrc >/dev/null 2>&1; set +a; uv run python - <<'PY'
+from __future__ import annotations
+
+import asyncio
+import os
+import time
+
+from domain.trading.order import OrderRequest
+from infrastructure.bybit.auth import BybitSigner
+from infrastructure.bybit.trade_client import BybitTradeClient
+
+SYMBOL = "ETHUSDT"
+ORDER_LINK_ID = f"seta-lrc15-{int(time.time())}"
+
+async def main() -> None:
+    api_key = os.environ.get("BYBIT_API_KEY", "")
+    api_secret = os.environ.get("BYBIT_API_SECRET", "")
+    if not api_key or not api_secret:
+        raise SystemExit("missing BYBIT_API_KEY/BYBIT_API_SECRET in environment")
+
+    client = BybitTradeClient(
+        signer=BybitSigner(api_key=api_key, api_secret=api_secret),
+        base_url="https://api-testnet.bybit.com",
+        timeout=10.0,
+    )
+    placed = False
+    try:
+        before = await client.open_orders(SYMBOL)
+        print(f"testnet_open_orders_before={len(before)}")
+        req = OrderRequest(
+            symbol=SYMBOL,
+            side="Buy",
+            quantity=5.0,
+            order_type="Limit",
+            price=1.0,
+            order_link_id=ORDER_LINK_ID,
+        )
+        order = await client.place_order(req)
+        placed = True
+        print("testnet_place_order=PASS")
+        print(f"order_link_id={order.order_link_id}")
+        print(f"exchange_order_id_present={bool(order.exchange_order_id)}")
+
+        open_orders = await client.open_orders(SYMBOL)
+        matched = [o for o in open_orders if o.order_link_id == ORDER_LINK_ID]
+        print(f"testnet_reconcile_open_order={bool(matched)}")
+        if not matched:
+            raise SystemExit("placed order was not visible in open orders")
+
+        cancelled = await client.cancel_order(symbol=SYMBOL, order_link_id=ORDER_LINK_ID)
+        print(f"testnet_cancel_order={cancelled}")
+        if not cancelled:
+            raise SystemExit("cancel_order returned false for newly placed order")
+
+        after = await client.open_orders(SYMBOL)
+        still_open = [o for o in after if o.order_link_id == ORDER_LINK_ID]
+        print(f"testnet_order_still_open_after_cancel={bool(still_open)}")
+        if still_open:
+            raise SystemExit("order remained open after cancel")
+        print("TESTNET_LIFECYCLE=PASS")
+    finally:
+        if placed:
+            try:
+                await client.cancel_order(symbol=SYMBOL, order_link_id=ORDER_LINK_ID)
+            except Exception as exc:  # best-effort cleanup, do not expose internals/secrets
+                print(f"cleanup_cancel_result=ignored:{exc.__class__.__name__}")
+        await client.close()
+
+asyncio.run(main())
+PY
+Traceback (most recent call last):
+  File "<stdin>", line 68, in <module>
+  File "/home/xuum/snap/codium/495/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/xuum/snap/codium/495/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/xuum/snap/codium/495/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/asyncio/base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "<stdin>", line 27, in main
+  File "/home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/src/infrastructure/bybit/trade_client.py", line 118, in open_orders
+    result = await self._get(
+             ^^^^^^^^^^^^^^^^
+  File "/home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/src/infrastructure/bybit/trade_client.py", line 161, in _get
+    return self._unwrap(await self._send_with_retry(send))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/src/infrastructure/bybit/trade_client.py", line 167, in _unwrap
+    raise BybitTradeError(f"retCode={raw.get('retCode')}: {raw.get('retMsg')}")
+infrastructure.bybit.trade_client.BybitTradeError: retCode=10004: Error sign, please check your signature generation algorithm: origin_string[1788239712665suWkuX1e1c0ixn7osg10000category=spot&symbol=ETHUSDT]
+exit=1

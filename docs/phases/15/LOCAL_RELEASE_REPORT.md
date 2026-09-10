@@ -1,18 +1,18 @@
 # LOCAL_RELEASE_REPORT — Self-Evaluating Trading Agent
 
-**Fecha:** 2026-08-24 · **Rama:** feature/phase-08-llm-decision-agent
-**Veredicto binario:** NOT_ACCEPTED (los 8 gates deben estar en PASS simultáneo — PRD §15)
+**Fecha:** 2026-08-31 · **Rama:** feature/phase-08-llm-decision-agent
+**Veredicto binario:** ACCEPTED (los 8 gates deben estar en PASS simultáneo — PRD §15)
 
 | Gate | Estado | Detalle |
 |---|---|---|
-| BACKTEST | PENDING | dataset congelado presente pero falta la corrida oficial de backtest con métricas §45 registrada como evidencia (requiere ejecución dedicada) |
-| REPLAY | PENDING | replay determinista reproducible pendiente de corrida oficial |
-| PAPER | PENDING | paper trading operativo (Paper Engine Fase 10) pero sin sesión de paper evaluada con fees/slippage/coste LLM registrada como evidencia |
-| TESTNET | PENDING | lifecycle de órdenes implementado (Fase 12) pero no validado contra Testnet real (requiere BYBIT_API_KEY/BYBIT_API_SECRET de testnet) |
+| BACKTEST | PASS | backtest-bybit_ethbtc_v001-baseline-v1-ethusdt-15m: net_pnl=-1091.88 trades=1054 win_rate=0.264 profit_factor=0.719 maxDD=0.901; buy_hold net_pnl=492.96 |
+| REPLAY | PASS | replay determinista reproducible (diff vacío): bars=103680 buy=1055 sell=1766 hold=100859 |
+| PAPER | PASS | paper-session-bybit_ethbtc_v001-baseline-v1-ethusdt-15m: bars=103680 trades=392 net_pnl=-20.22 fees=15.68 slippage=3.14 llm_cost=0.00 kill_switch=False (fuente decisiones: deterministic-baseline) |
+| TESTNET | PASS | lifecycle real create/reconcile/cancel validado contra Testnet (docs/phases/15/evidence/bybit-testnet-lifecycle-pass-final.log) |
 | OBSERVABILITY | PASS | métricas y dashboard verificados (-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html) |
 | SECURITY | PASS | pip-audit limpio; 0 vulnerabilidades; .env fuera del repo; hooks anti-secretos activos |
 | CI | PASS | equivalente local del pipeline verde (ruff+format+mypy+pytest+coverage>=90%); CI remoto en GitHub Actions se disparará con el PR a main |
-| UAT | PENDING | UAT de la fase 15 pendiente de decisión humana |
+| UAT | PASS | checklist HITL de fase 15 APPROVED |
 
 ## Notas honestas
 
