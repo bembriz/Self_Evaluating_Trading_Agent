@@ -1,0 +1,6 @@
+# evidencia: format
+fecha: 2026-09-10T20:56:58-06:00
+fase: 17B
+comando: uv run ruff format --check src/lab tests/lab
+6 files already formatted
+exit=0
