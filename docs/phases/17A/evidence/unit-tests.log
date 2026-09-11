@@ -1,0 +1,19 @@
+# evidencia: unit-tests
+fecha: 2026-09-10T20:24:44-06:00
+fase: 17A
+comando: uv run pytest tests/lab/test_experiment_spec.py --cov=src/lab --cov-branch --cov-report=json:docs/phases/17A/evidence/coverage.json
+........................................................................ [ 83%]
+..............                                                           [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Coverage JSON written to file docs/phases/17A/evidence/coverage.json
+Required test coverage of 90.0% reached. Total coverage: 100.00%
+86 passed, 1 warning in 0.77s
+exit=0

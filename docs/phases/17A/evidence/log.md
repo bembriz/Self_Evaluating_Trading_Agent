@@ -1,0 +1,10 @@
+- `2026-09-10T19:53:31-06:00` **unit-tests** → `uv run pytest tests/lab/test_experiment_spec.py --cov=src/lab --cov-branch --cov-report=json:docs/phases/17A/evidence/coverage.json` · exit=`0` · artifact: docs/phases/17A/evidence/unit-tests.log
+- `2026-09-10T19:53:31-06:00` **lint** → `uv run ruff check src/lab tests/lab` · exit=`0` · artifact: docs/phases/17A/evidence/lint.log
+- `2026-09-10T19:53:31-06:00` **format** → `uv run ruff format --check src/lab tests/lab` · exit=`0` · artifact: docs/phases/17A/evidence/format.log
+- `2026-09-10T19:53:32-06:00` **typing** → `uv run mypy src/lab tests/lab` · exit=`0` · artifact: docs/phases/17A/evidence/typing.log
+- `2026-09-10T19:55:08-06:00` **global-coverage** → `uv run pytest tests --ignore=tests/integration --ignore=tests/e2e --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/17A/evidence/global-coverage.log
+- `2026-09-10T20:24:50-06:00` **unit-tests** → `uv run pytest tests/lab/test_experiment_spec.py --cov=src/lab --cov-branch --cov-report=json:docs/phases/17A/evidence/coverage.json` · exit=`0` · artifact: docs/phases/17A/evidence/unit-tests.log
+- `2026-09-10T20:24:50-06:00` **lint** → `uv run ruff check src/lab tests/lab` · exit=`0` · artifact: docs/phases/17A/evidence/lint.log
+- `2026-09-10T20:24:50-06:00` **format** → `uv run ruff format --check src/lab tests/lab` · exit=`0` · artifact: docs/phases/17A/evidence/format.log
+- `2026-09-10T20:24:51-06:00` **typing** → `uv run mypy src/lab tests/lab` · exit=`0` · artifact: docs/phases/17A/evidence/typing.log
+- `2026-09-10T20:26:20-06:00` **global-coverage** → `uv run pytest tests --ignore=tests/integration --ignore=tests/e2e --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/17A/evidence/global-coverage.log
