@@ -1,0 +1,6 @@
+# evidencia: format
+fecha: 2026-09-12T00:10:31-06:00
+fase: 17E
+comando: uv run ruff format --check src/lab/registry.py tests/lab/test_registry.py
+2 files already formatted
+exit=0

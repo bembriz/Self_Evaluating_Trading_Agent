@@ -1,0 +1,10 @@
+# evidencia: coverage-17e-modules
+fecha: 2026-09-12T00:12:44-06:00
+fase: 17E
+comando: uv run coverage report --include=src/lab/registry.py --show-missing
+Name                  Stmts   Miss Branch BrPart  Cover   Missing
+-----------------------------------------------------------------
+src/lab/registry.py      95      0     28      0   100%
+-----------------------------------------------------------------
+TOTAL                    95      0     28      0   100%
+exit=0

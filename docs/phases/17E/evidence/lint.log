@@ -1,0 +1,6 @@
+# evidencia: lint
+fecha: 2026-09-12T00:07:29-06:00
+fase: 17E
+comando: uv run ruff check src/lab/registry.py tests/lab/test_registry.py
+All checks passed!
+exit=0

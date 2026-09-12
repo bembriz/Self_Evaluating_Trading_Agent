@@ -1,0 +1,6 @@
+# evidencia: lint-repo
+fecha: 2026-09-12T00:07:47-06:00
+fase: 17E
+comando: uv run ruff check src/ tests/
+All checks passed!
+exit=0

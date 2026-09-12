@@ -1,0 +1,17 @@
+- `2026-09-12T00:06:53-06:00` **registry-tests** → `uv run pytest tests/lab/test_registry.py -q --no-cov` · exit=`0` · artifact: docs/phases/17E/evidence/registry-tests.log
+- `2026-09-12T00:07:21-06:00` **double-run** → `uv run python /tmp/opencode/gen_17e_evidence.py` · exit=`0` · artifact: docs/phases/17E/evidence/double-run.log
+- `2026-09-12T00:07:29-06:00` **lint** → `uv run ruff check src/lab/registry.py tests/lab/test_registry.py` · exit=`0` · artifact: docs/phases/17E/evidence/lint.log
+- `2026-09-12T00:07:29-06:00` **format** → `uv run ruff format --check src/lab/registry.py tests/lab/test_registry.py` · exit=`1` · artifact: docs/phases/17E/evidence/format.log
+- `2026-09-12T00:07:30-06:00` **mypy** → `uv run mypy src/lab/registry.py tests/lab/test_registry.py` · exit=`0` · artifact: docs/phases/17E/evidence/mypy.log
+- `2026-09-12T00:07:33-06:00` **format** → `uv run ruff format --check src/lab/registry.py tests/lab/test_registry.py` · exit=`0` · artifact: docs/phases/17E/evidence/format.log
+- `2026-09-12T00:07:44-06:00` **lab-tests** → `uv run pytest tests/lab/ -q --no-cov` · exit=`0` · artifact: docs/phases/17E/evidence/lab-tests.log
+- `2026-09-12T00:07:47-06:00` **lint-repo** → `uv run ruff check src/ tests/` · exit=`0` · artifact: docs/phases/17E/evidence/lint-repo.log
+- `2026-09-12T00:07:48-06:00` **mypy-repo** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/17E/evidence/mypy-repo.log
+- `2026-09-12T00:07:56-06:00` **integration-tests** → `uv run pytest tests/integration -q --no-cov` · exit=`0` · artifact: docs/phases/17E/evidence/integration-tests.log
+- `2026-09-12T00:09:45-06:00` **coverage-global** → `uv run pytest --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/17E/evidence/coverage-global.log
+- `2026-09-12T00:09:53-06:00` **coverage-17e-modules** → `uv run coverage report --include=src/lab/registry.py --show-missing` · exit=`0` · artifact: docs/phases/17E/evidence/coverage-17e-modules.log
+- `2026-09-12T00:10:31-06:00` **registry-tests** → `uv run pytest tests/lab/test_registry.py -q --no-cov` · exit=`0` · artifact: docs/phases/17E/evidence/registry-tests.log
+- `2026-09-12T00:10:31-06:00` **format** → `uv run ruff format --check src/lab/registry.py tests/lab/test_registry.py` · exit=`0` · artifact: docs/phases/17E/evidence/format.log
+- `2026-09-12T00:10:42-06:00` **lab-tests** → `uv run pytest tests/lab/ -q --no-cov` · exit=`0` · artifact: docs/phases/17E/evidence/lab-tests.log
+- `2026-09-12T00:12:44-06:00` **coverage-global** → `uv run pytest --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/17E/evidence/coverage-global.log
+- `2026-09-12T00:12:44-06:00` **coverage-17e-modules** → `uv run coverage report --include=src/lab/registry.py --show-missing` · exit=`0` · artifact: docs/phases/17E/evidence/coverage-17e-modules.log

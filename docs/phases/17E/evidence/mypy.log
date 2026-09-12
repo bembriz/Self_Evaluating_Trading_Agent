@@ -1,0 +1,6 @@
+# evidencia: mypy
+fecha: 2026-09-12T00:07:29-06:00
+fase: 17E
+comando: uv run mypy src/lab/registry.py tests/lab/test_registry.py
+Success: no issues found in 2 source files
+exit=0
