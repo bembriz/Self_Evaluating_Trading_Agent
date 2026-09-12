@@ -1,0 +1,6 @@
+- `2026-09-11T19:59:10-06:00` **split-candidate-tests** → `python3 -m pytest tests/test_split_candidate_17c_a.py -v --no-cov` · exit=`1` · artifact: docs/phases/17C-A/evidence/split-candidate-tests.log
+- `2026-09-11T19:59:20-06:00` **split-candidate-tests** → `uv run pytest tests/test_split_candidate_17c_a.py -v --no-cov` · exit=`0` · artifact: docs/phases/17C-A/evidence/split-candidate-tests.log
+- `2026-09-11T19:59:26-06:00` **lint-candidate** → `uv run ruff check tests/test_split_candidate_17c_a.py` · exit=`1` · artifact: docs/phases/17C-A/evidence/lint-candidate.log
+- `2026-09-11T19:59:56-06:00` **split-candidate-tests** → `uv run pytest tests/test_split_candidate_17c_a.py -v --no-cov` · exit=`0` · artifact: docs/phases/17C-A/evidence/split-candidate-tests.log
+- `2026-09-11T19:59:56-06:00` **lint-candidate** → `uv run ruff check tests/test_split_candidate_17c_a.py splits/CANDIDATE.json` · exit=`1` · artifact: docs/phases/17C-A/evidence/lint-candidate.log
+- `2026-09-11T20:00:02-06:00` **lint-candidate** → `uv run ruff check tests/test_split_candidate_17c_a.py` · exit=`0` · artifact: docs/phases/17C-A/evidence/lint-candidate.log

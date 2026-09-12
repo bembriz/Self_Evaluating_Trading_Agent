@@ -1,0 +1,6 @@
+# evidencia: lint-candidate
+fecha: 2026-09-11T20:00:02-06:00
+fase: 17C-A
+comando: uv run ruff check tests/test_split_candidate_17c_a.py
+All checks passed!
+exit=0

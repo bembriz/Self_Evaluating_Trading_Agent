@@ -1,0 +1,43 @@
+{
+  "dataset_id": "BYBIT_ETHBTC_V001",
+  "dataset_manifest_sha": "3c008c3ab5299e33beaa61c80ddc927d2f14fc3f96924b5d6db537b2a4e91644",
+  "total_rows": 103680,
+  "candidate_created_at": "2026-09-12T01:58:43.326689+00:00",
+  "row_convention": "[start, end)",
+  "timeframe": "15m",
+  "symbol": "ETHUSDT",
+  "rule": "60/25/15 temporal contiguous, day-aligned (multiples of 96 rows)",
+  "justification": "60% DEVELOPMENT (62208 rows, 648d) for strategy development/backtesting; 25% WALK_FORWARD (25920 rows, 270d ~9 months) for out-of-sample walk-forward validation; 15% FINAL_HOLDOUT (15552 rows, 162d ~5.3 months) at the temporal end, untouched, for the final unbiased estimate. Temporal, contiguous, no shuffle, no overlaps, no gaps, full coverage; boundaries day-aligned.",
+  "splits": [
+    {
+      "name": "DEVELOPMENT",
+      "row_start": 0,
+      "row_end": 62208,
+      "rows": 62208,
+      "first_timestamp": "2023-09-08T17:45:00+00:00",
+      "last_timestamp": "2025-06-17T17:30:00+00:00",
+      "duration_days": 648.0,
+      "percentage": 60.0
+    },
+    {
+      "name": "WALK_FORWARD",
+      "row_start": 62208,
+      "row_end": 88128,
+      "rows": 25920,
+      "first_timestamp": "2025-06-17T17:45:00+00:00",
+      "last_timestamp": "2026-03-14T17:30:00+00:00",
+      "duration_days": 270.0,
+      "percentage": 25.0
+    },
+    {
+      "name": "FINAL_HOLDOUT",
+      "row_start": 88128,
+      "row_end": 103680,
+      "rows": 15552,
+      "first_timestamp": "2026-03-14T17:45:00+00:00",
+      "last_timestamp": "2026-08-23T17:30:00+00:00",
+      "duration_days": 162.0,
+      "percentage": 15.0
+    }
+  ]
+}
