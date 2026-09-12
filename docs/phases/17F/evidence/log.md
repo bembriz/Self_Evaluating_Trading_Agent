@@ -1,0 +1,24 @@
+- `2026-09-12T00:31:43-06:00` **wf-tests** → `uv run pytest tests/lab/test_walk_forward.py tests/lab/test_robustness.py -q --no-cov` · exit=`1` · artifact: docs/phases/17F/evidence/wf-tests.log
+- `2026-09-12T00:32:17-06:00` **wf-tests** → `uv run pytest tests/lab/test_walk_forward.py tests/lab/test_robustness.py -q --no-cov` · exit=`0` · artifact: docs/phases/17F/evidence/wf-tests.log
+- `2026-09-12T00:33:22-06:00` **walkforward-evidence** → `uv run python /tmp/opencode/gen_17f_evidence.py` · exit=`0` · artifact: docs/phases/17F/evidence/walkforward-evidence.log
+- `2026-09-12T00:33:39-06:00` **lint** → `uv run ruff check src/lab/walk_forward.py src/lab/robustness.py tests/lab/test_walk_forward.py tests/lab/test_robustness.py` · exit=`1` · artifact: docs/phases/17F/evidence/lint.log
+- `2026-09-12T00:33:39-06:00` **format** → `uv run ruff format --check src/lab/walk_forward.py src/lab/robustness.py tests/lab/test_walk_forward.py tests/lab/test_robustness.py` · exit=`1` · artifact: docs/phases/17F/evidence/format.log
+- `2026-09-12T00:33:40-06:00` **mypy** → `uv run mypy src/lab/walk_forward.py src/lab/robustness.py tests/lab/test_walk_forward.py tests/lab/test_robustness.py` · exit=`0` · artifact: docs/phases/17F/evidence/mypy.log
+- `2026-09-12T00:33:47-06:00` **lint** → `uv run ruff check src/lab/walk_forward.py src/lab/robustness.py tests/lab/test_walk_forward.py tests/lab/test_robustness.py` · exit=`0` · artifact: docs/phases/17F/evidence/lint.log
+- `2026-09-12T00:33:47-06:00` **format** → `uv run ruff format --check src/lab/walk_forward.py src/lab/robustness.py tests/lab/test_walk_forward.py tests/lab/test_robustness.py` · exit=`0` · artifact: docs/phases/17F/evidence/format.log
+- `2026-09-12T00:33:47-06:00` **mypy** → `uv run mypy src/lab/walk_forward.py src/lab/robustness.py tests/lab/test_walk_forward.py tests/lab/test_robustness.py` · exit=`0` · artifact: docs/phases/17F/evidence/mypy.log
+- `2026-09-12T00:34:09-06:00` **lab-tests** → `uv run pytest tests/lab/ -q --no-cov` · exit=`0` · artifact: docs/phases/17F/evidence/lab-tests.log
+- `2026-09-12T00:34:09-06:00` **lint-repo** → `uv run ruff check src/ tests/` · exit=`0` · artifact: docs/phases/17F/evidence/lint-repo.log
+- `2026-09-12T00:34:09-06:00` **mypy-repo** → `uv run mypy src tests` · exit=`2` · artifact: docs/phases/17F/evidence/mypy-repo.log
+- `2026-09-12T00:34:42-06:00` **mypy-repo** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/17F/evidence/mypy-repo.log
+- `2026-09-12T00:34:56-06:00` **wf-tests** → `uv run pytest tests/lab/test_walkforward.py tests/lab/test_robustness.py -q --no-cov` · exit=`0` · artifact: docs/phases/17F/evidence/wf-tests.log
+- `2026-09-12T00:35:14-06:00` **lab-tests** → `uv run pytest tests/lab/ -q --no-cov` · exit=`0` · artifact: docs/phases/17F/evidence/lab-tests.log
+- `2026-09-12T00:35:19-06:00` **integration-tests** → `uv run pytest tests/integration -q --no-cov` · exit=`0` · artifact: docs/phases/17F/evidence/integration-tests.log
+- `2026-09-12T00:37:17-06:00` **coverage-global** → `uv run pytest --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/17F/evidence/coverage-global.log
+- `2026-09-12T00:37:21-06:00` **coverage-17f-modules** → `uv run coverage report --include=src/lab/walk_forward.py,src/lab/robustness.py --show-missing` · exit=`0` · artifact: docs/phases/17F/evidence/coverage-17f-modules.log
+- `2026-09-12T00:38:44-06:00` **lab-tests** → `uv run pytest tests/lab/ -q --no-cov` · exit=`0` · artifact: docs/phases/17F/evidence/lab-tests.log
+- `2026-09-12T00:38:45-06:00` **coverage-17f-modules** → `uv run coverage report --include=src/lab/walk_forward.py,src/lab/robustness.py --show-missing` · exit=`0` · artifact: docs/phases/17F/evidence/coverage-17f-modules.log
+- `2026-09-12T00:38:45-06:00` **lint** → `uv run ruff check src/lab/walk_forward.py src/lab/robustness.py tests/lab/test_walkforward.py tests/lab/test_robustness.py` · exit=`0` · artifact: docs/phases/17F/evidence/lint.log
+- `2026-09-12T00:38:45-06:00` **format** → `uv run ruff format --check src/lab/walk_forward.py src/lab/robustness.py tests/lab/test_walkforward.py tests/lab/test_robustness.py` · exit=`0` · artifact: docs/phases/17F/evidence/format.log
+- `2026-09-12T00:38:45-06:00` **lint-repo** → `uv run ruff check src/ tests/` · exit=`0` · artifact: docs/phases/17F/evidence/lint-repo.log
+- `2026-09-12T00:38:46-06:00` **mypy-repo** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/17F/evidence/mypy-repo.log

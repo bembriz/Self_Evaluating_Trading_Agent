@@ -1,0 +1,12 @@
+{
+  "run": {
+    "application_git_sha": "c8f34e1",
+    "created_at": "2026-09-12T04:01:02+00:00",
+    "event_trace_hash": "0bdeb756f48fcba405bbc7ab9e23daf93cd093330325b8ccbe3f9a6722579dfe",
+    "experiment_spec_id": "a494e98c9e088b6bfe3e5bf86e15fe393117857503b8386f004338c3ac29b2f0",
+    "metrics_hash": "01fbbe7ddc36d0e7a86d7fdec56dc720cc186e24cecf8796bb1652400c3b0a9d",
+    "run_id": "robust-ema-fast-22",
+    "status": "ok"
+  },
+  "run_id": "robust-ema-fast-22"
+}

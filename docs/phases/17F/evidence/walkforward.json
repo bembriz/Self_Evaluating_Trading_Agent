@@ -1,0 +1,73 @@
+{
+  "windows": [
+    {
+      "index": 0,
+      "row_start": 62208,
+      "row_end": 70848,
+      "first_timestamp": 1750182300000,
+      "last_timestamp": 1757957400000,
+      "trades": 77,
+      "net_pnl": -3.0835621892615013,
+      "return_pct": -0.003083562189261501,
+      "max_drawdown": 0.0024673161573028892,
+      "profit_factor": 0.49154631620939565,
+      "expectancy": -0.04004626219820131,
+      "experiment_spec_id": "a6e6b4c01d3791c65f85892ef70afa499520062ad586e4536e03d4cef2fcbcdb",
+      "run_id": "wf-window-0",
+      "event_trace_hash": "a544e06979d053e626e8d3b72522cb616588244949a342dfd7cd919d62e0bf90",
+      "metrics_hash": "e23f81cd2d7ab609e7c94f8e9b78ddfc33bb0b07c1265491c16fe83978bc5e7d"
+    },
+    {
+      "index": 1,
+      "row_start": 70848,
+      "row_end": 79488,
+      "first_timestamp": 1757958300000,
+      "last_timestamp": 1765733400000,
+      "trades": 95,
+      "net_pnl": -7.022150732859141,
+      "return_pct": -0.007022150732859141,
+      "max_drawdown": 0.006327659910351554,
+      "profit_factor": 0.13199983202513108,
+      "expectancy": -0.07391737613535938,
+      "experiment_spec_id": "dd43ee93364e3130364d7ded2523151cb80bc595869065c3b3016edb5ab2877c",
+      "run_id": "wf-window-1",
+      "event_trace_hash": "625fbeea985cb0590a4ec3413074663cde6539e380c0b5f34c45a1d73a3c0b2f",
+      "metrics_hash": "ef1dfc735a744319d6da2097d6f7007a00e6dd62949e66450eb95b409572593f"
+    },
+    {
+      "index": 2,
+      "row_start": 79488,
+      "row_end": 88128,
+      "first_timestamp": 1765734300000,
+      "last_timestamp": 1773509400000,
+      "trades": 81,
+      "net_pnl": -5.968229890314542,
+      "return_pct": -0.005968229890314542,
+      "max_drawdown": 0.005530486453353735,
+      "profit_factor": 0.24102684128310425,
+      "expectancy": -0.07368185049771041,
+      "experiment_spec_id": "5bc13e063325b2e2f9655b0d47fdd4a8ee02060a6add2b7fc80a7848604fd162",
+      "run_id": "wf-window-2",
+      "event_trace_hash": "c206c26cb252691fd37996569aa7b299e584498d3cf00a18ac2f94fa03f0b6a7",
+      "metrics_hash": "73e29e33eb3da4026ec060588b415c0f515066a81f3c5368e051906cf63c0b78"
+    }
+  ],
+  "aggregate": {
+    "total_windows": 3,
+    "profitable_windows": 0,
+    "losing_windows": 3,
+    "aggregate_net_pnl": -16.073942812435185,
+    "aggregate_return_pct": -0.016073942812435182,
+    "median_window_return": -0.005968229890314542,
+    "worst_window_return": -0.007022150732859141,
+    "max_drawdown": 0.006327659910351554,
+    "total_trades": 253,
+    "profit_factor": 0.0,
+    "expectancy": -0.06353337080013907
+  },
+  "representative_double_run": {
+    "run_id": "wf-window-0-rerun",
+    "hashes_match": true
+  },
+  "engine_note": "MVP-A (price=close, atr=None) + risk-v1-nostop-mvp-a so BUY path is exercisable"
+}

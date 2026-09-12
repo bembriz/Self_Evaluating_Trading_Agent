@@ -1,0 +1,6 @@
+# evidencia: format
+fecha: 2026-09-12T00:38:45-06:00
+fase: 17F
+comando: uv run ruff format --check src/lab/walk_forward.py src/lab/robustness.py tests/lab/test_walkforward.py tests/lab/test_robustness.py
+4 files already formatted
+exit=0

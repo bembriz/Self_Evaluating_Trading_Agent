@@ -1,0 +1,11 @@
+# evidencia: coverage-17f-modules
+fecha: 2026-09-12T00:38:44-06:00
+fase: 17F
+comando: uv run coverage report --include=src/lab/walk_forward.py,src/lab/robustness.py --show-missing
+Name                      Stmts   Miss Branch BrPart  Cover   Missing
+---------------------------------------------------------------------
+src/lab/robustness.py        30      0      6      0   100%
+src/lab/walk_forward.py      86      0     18      0   100%
+---------------------------------------------------------------------
+TOTAL                       116      0     24      0   100%
+exit=0

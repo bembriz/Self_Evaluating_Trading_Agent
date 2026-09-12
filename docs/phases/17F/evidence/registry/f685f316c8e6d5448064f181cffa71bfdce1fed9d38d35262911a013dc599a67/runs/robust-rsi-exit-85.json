@@ -1,0 +1,12 @@
+{
+  "run": {
+    "application_git_sha": "c8f34e1",
+    "created_at": "2026-09-12T04:01:06+00:00",
+    "event_trace_hash": "c6293e28c72a04bb3e62dd6060250e8f877fcbfac7d458676e7f13c22363fc53",
+    "experiment_spec_id": "f685f316c8e6d5448064f181cffa71bfdce1fed9d38d35262911a013dc599a67",
+    "metrics_hash": "296b7ec668bc9411bcee84b2c10eaa908695d979e0905d92aec3c06a2db8be46",
+    "run_id": "robust-rsi-exit-85",
+    "status": "ok"
+  },
+  "run_id": "robust-rsi-exit-85"
+}

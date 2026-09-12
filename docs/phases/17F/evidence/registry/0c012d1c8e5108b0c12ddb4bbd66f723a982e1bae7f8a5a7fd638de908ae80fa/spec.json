@@ -1,0 +1,43 @@
+{
+  "spec": {
+    "dataset": {
+      "dataset_id": "BYBIT_ETHBTC_V001",
+      "row_end": 62208,
+      "row_start": 0,
+      "symbol": "ETHUSDT",
+      "timeframe": "15m"
+    },
+    "execution": {
+      "model": "runtime-parity",
+      "version": "mvp-a"
+    },
+    "fees": {
+      "version": "bybit-spot-v1"
+    },
+    "holdout_protocol": "deny-holdout",
+    "kernel_identity": {
+      "kernel_bundle_version": 1,
+      "kernel_fingerprint": "4be1a009cac0f4a0e63ce7bc9211c08d5e6c39162adf139259742e7bd48be985"
+    },
+    "risk": {
+      "capital": 1000.0,
+      "version": "risk-v1-nostop-mvp-a"
+    },
+    "seed": null,
+    "slippage": {
+      "version": "conservative-v1"
+    },
+    "strategy": {
+      "artifact_identity": "4d1d6235da4c3c33b360ae52c032337949b0c81e85d4847f7634ecfe503be66d",
+      "ema_fast": 20,
+      "ema_slow": 45,
+      "name": "ema-rsi-baseline",
+      "rsi_exit": 80.0,
+      "rsi_period": 14,
+      "version": "baseline-v1"
+    },
+    "timing_model": "mvp-a",
+    "walk_forward": null
+  },
+  "spec_id": "0c012d1c8e5108b0c12ddb4bbd66f723a982e1bae7f8a5a7fd638de908ae80fa"
+}

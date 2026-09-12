@@ -1,0 +1,126 @@
+{
+  "variants": [
+    {
+      "name": "baseline",
+      "params": {
+        "ema_fast": 20,
+        "ema_slow": 50,
+        "rsi_period": 14,
+        "rsi_exit": 80.0
+      },
+      "experiment_spec_id": "43775412f540660709d94fd7c80a22ff5ace6c21234f9c5fe03dd393161c0d03",
+      "run_id": "robust-baseline",
+      "trades": 406,
+      "net_pnl": -20.023553665527754,
+      "return_pct": -0.020023553665527754,
+      "event_trace_hash": "e28d84922f3f156d42217d8b5be247c0be95aae4d66f3be85f74d0ed28d4f852",
+      "metrics_hash": "fe6680eaf13263cd2fdc75f084e2b91a7223efc0d20c25229150ca1ff3ac4900"
+    },
+    {
+      "name": "ema-fast-18",
+      "params": {
+        "ema_fast": 18,
+        "ema_slow": 50,
+        "rsi_period": 14,
+        "rsi_exit": 80.0
+      },
+      "experiment_spec_id": "012890907f724299ca3d2456a40dd5bd32fea98217d10d1cc44d1644fd24c227",
+      "run_id": "robust-ema-fast-18",
+      "trades": 369,
+      "net_pnl": -20.059642921018977,
+      "return_pct": -0.020059642921018975,
+      "event_trace_hash": "24a6f3512b97bf56e7154c5fc5901ac187130fc8a6d9776d32f02ff27255001b",
+      "metrics_hash": "0518bbc129ff4ff57ca67e57d20bb2ad74540162269c8bffe43d649b6d986175"
+    },
+    {
+      "name": "ema-fast-22",
+      "params": {
+        "ema_fast": 22,
+        "ema_slow": 50,
+        "rsi_period": 14,
+        "rsi_exit": 80.0
+      },
+      "experiment_spec_id": "a494e98c9e088b6bfe3e5bf86e15fe393117857503b8386f004338c3ac29b2f0",
+      "run_id": "robust-ema-fast-22",
+      "trades": 449,
+      "net_pnl": -20.02650425412378,
+      "return_pct": -0.020026504254123778,
+      "event_trace_hash": "0bdeb756f48fcba405bbc7ab9e23daf93cd093330325b8ccbe3f9a6722579dfe",
+      "metrics_hash": "01fbbe7ddc36d0e7a86d7fdec56dc720cc186e24cecf8796bb1652400c3b0a9d"
+    },
+    {
+      "name": "ema-slow-45",
+      "params": {
+        "ema_fast": 20,
+        "ema_slow": 45,
+        "rsi_period": 14,
+        "rsi_exit": 80.0
+      },
+      "experiment_spec_id": "0c012d1c8e5108b0c12ddb4bbd66f723a982e1bae7f8a5a7fd638de908ae80fa",
+      "run_id": "robust-ema-slow-45",
+      "trades": 402,
+      "net_pnl": -20.040764767441065,
+      "return_pct": -0.020040764767441065,
+      "event_trace_hash": "a30569ebca32287784ee9107172acf1724717a23db45e6c033a215fc6681939b",
+      "metrics_hash": "f4482bedad408927ed9519cdaee094c188761792c2d48461baa2a6e3eb38bc63"
+    },
+    {
+      "name": "ema-slow-55",
+      "params": {
+        "ema_fast": 20,
+        "ema_slow": 55,
+        "rsi_period": 14,
+        "rsi_exit": 80.0
+      },
+      "experiment_spec_id": "54b24e5fa67d5cbf8f807c4cc61689575aad92473f1e1b52021dfdfbe724875f",
+      "run_id": "robust-ema-slow-55",
+      "trades": 447,
+      "net_pnl": -20.085698411830016,
+      "return_pct": -0.020085698411830017,
+      "event_trace_hash": "32631aa4a305422daa6c802a9bf669fc66cd4a93ac3c3434e3a7a433a1515592",
+      "metrics_hash": "875339354b003987427cc44649e8e2130912c80a90f5679b53e540b346318697"
+    },
+    {
+      "name": "rsi-exit-75",
+      "params": {
+        "ema_fast": 20,
+        "ema_slow": 50,
+        "rsi_period": 14,
+        "rsi_exit": 75.0
+      },
+      "experiment_spec_id": "8d7a42bd62476911a98c07f90b342c74c47a6689b7c1e11f26e00c1109f19af8",
+      "run_id": "robust-rsi-exit-75",
+      "trades": 372,
+      "net_pnl": -20.040485883305777,
+      "return_pct": -0.020040485883305776,
+      "event_trace_hash": "3d5549d1085f5df1aacbc1ebf09ffe84dcb3616df0549a3c5caa7e8c5d5cfc56",
+      "metrics_hash": "3b2af49ef49581193f5f3dde8446c6f8511fe267a00264bc519b9977e7976bbb"
+    },
+    {
+      "name": "rsi-exit-85",
+      "params": {
+        "ema_fast": 20,
+        "ema_slow": 50,
+        "rsi_period": 14,
+        "rsi_exit": 85.0
+      },
+      "experiment_spec_id": "f685f316c8e6d5448064f181cffa71bfdce1fed9d38d35262911a013dc599a67",
+      "run_id": "robust-rsi-exit-85",
+      "trades": 413,
+      "net_pnl": -20.059429370793886,
+      "return_pct": -0.020059429370793885,
+      "event_trace_hash": "c6293e28c72a04bb3e62dd6060250e8f877fcbfac7d458676e7f13c22363fc53",
+      "metrics_hash": "296b7ec668bc9411bcee84b2c10eaa908695d979e0905d92aec3c06a2db8be46"
+    }
+  ],
+  "summary": {
+    "baseline_net_pnl": -20.023553665527754,
+    "variants": 7,
+    "min_net_pnl": -20.085698411830016,
+    "max_net_pnl": -20.023553665527754,
+    "median_net_pnl": -20.040764767441065,
+    "stable": "YES"
+  },
+  "engine_note": "MVP-A (price=close, atr=None) + risk-v1-nostop-mvp-a so BUY path is exercisable",
+  "note": "distribution and sensitivity only; no selection, no promotion"
+}
