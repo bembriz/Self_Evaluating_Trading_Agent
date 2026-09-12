@@ -1,0 +1,20 @@
+- `2026-09-11T21:16:58-06:00` **lab-tests** → `uv run pytest tests/lab/test_frozen_dataset.py tests/lab/test_session_runner.py -q --no-cov` · exit=`0` · artifact: docs/phases/17D/evidence/lab-tests.log
+- `2026-09-11T21:17:11-06:00` **lint** → `uv run ruff check src/lab/frozen_dataset.py src/lab/session_runner.py tests/lab/test_frozen_dataset.py tests/lab/test_session_runner.py` · exit=`1` · artifact: docs/phases/17D/evidence/lint.log
+- `2026-09-11T21:17:11-06:00` **format** → `uv run ruff format --check src/lab/frozen_dataset.py src/lab/session_runner.py tests/lab/test_frozen_dataset.py tests/lab/test_session_runner.py` · exit=`1` · artifact: docs/phases/17D/evidence/format.log
+- `2026-09-11T21:17:12-06:00` **mypy** → `uv run mypy src/lab/frozen_dataset.py src/lab/session_runner.py tests/lab/test_frozen_dataset.py tests/lab/test_session_runner.py` · exit=`0` · artifact: docs/phases/17D/evidence/mypy.log
+- `2026-09-11T21:17:27-06:00` **lint** → `uv run ruff check src/lab/frozen_dataset.py src/lab/session_runner.py tests/lab/test_frozen_dataset.py tests/lab/test_session_runner.py` · exit=`0` · artifact: docs/phases/17D/evidence/lint.log
+- `2026-09-11T21:17:27-06:00` **format** → `uv run ruff format --check src/lab/frozen_dataset.py src/lab/session_runner.py tests/lab/test_frozen_dataset.py tests/lab/test_session_runner.py` · exit=`0` · artifact: docs/phases/17D/evidence/format.log
+- `2026-09-11T21:17:28-06:00` **mypy** → `uv run mypy src/lab/frozen_dataset.py src/lab/session_runner.py tests/lab/test_frozen_dataset.py tests/lab/test_session_runner.py` · exit=`0` · artifact: docs/phases/17D/evidence/mypy.log
+- `2026-09-11T21:17:35-06:00` **lab-tests** → `uv run pytest tests/lab/ -q --no-cov` · exit=`0` · artifact: docs/phases/17D/evidence/lab-tests.log
+- `2026-09-11T21:17:39-06:00` **lint-repo** → `uv run ruff check src/ tests/` · exit=`0` · artifact: docs/phases/17D/evidence/lint-repo.log
+- `2026-09-11T21:17:40-06:00` **mypy-repo** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/17D/evidence/mypy-repo.log
+- `2026-09-11T21:17:53-06:00` **paper-risk-tests** → `uv run pytest tests/test_paper_engine.py tests/test_paper_runner.py tests/test_risk_engine.py tests/test_risk_guards.py tests/test_risk_sizing.py tests/test_risk_stops.py tests/test_strategy.py tests/test_portfolio.py -q --no-cov` · exit=`0` · artifact: docs/phases/17D/evidence/paper-risk-tests.log
+- `2026-09-11T21:19:35-06:00` **coverage-global** → `uv run pytest --cov=src --cov-branch --cov-fail-under=90` · exit=`1` · artifact: docs/phases/17D/evidence/coverage-global.log
+- `2026-09-11T21:27:56-06:00` **integration-tests** → `uv run pytest tests/integration -v --no-cov` · exit=`1` · artifact: docs/phases/17D/evidence/integration-tests.log
+- `2026-09-11T21:30:01-06:00` **coverage-full** → `uv run pytest --cov=src --cov-branch --cov-fail-under=90` · exit=`1` · artifact: docs/phases/17D/evidence/coverage-full.log
+- `2026-09-11T21:33:24-06:00` **lab-tests** → `uv run pytest tests/lab/ -q --no-cov` · exit=`0` · artifact: docs/phases/17D/evidence/lab-tests.log
+- `2026-09-11T21:33:29-06:00` **lint-repo** → `uv run ruff check src/ tests/` · exit=`0` · artifact: docs/phases/17D/evidence/lint-repo.log
+- `2026-09-11T21:33:29-06:00` **format-check** → `uv run ruff format --check src/lab/ tests/lab/` · exit=`0` · artifact: docs/phases/17D/evidence/format-check.log
+- `2026-09-11T21:33:30-06:00` **mypy-repo** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/17D/evidence/mypy-repo.log
+- `2026-09-11T21:35:22-06:00` **coverage-full** → `uv run pytest --cov=src --cov-branch --cov-fail-under=90` · exit=`1` · artifact: docs/phases/17D/evidence/coverage-full.log
+- `2026-09-11T21:35:26-06:00` **coverage-17d-modules** → `uv run coverage report --include=src/lab/frozen_dataset.py,src/lab/session_runner.py --show-missing` · exit=`0` · artifact: docs/phases/17D/evidence/coverage-17d-modules.log

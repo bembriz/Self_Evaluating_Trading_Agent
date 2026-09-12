@@ -1,0 +1,6 @@
+# evidencia: mypy
+fecha: 2026-09-11T21:17:27-06:00
+fase: 17D
+comando: uv run mypy src/lab/frozen_dataset.py src/lab/session_runner.py tests/lab/test_frozen_dataset.py tests/lab/test_session_runner.py
+Success: no issues found in 4 source files
+exit=0

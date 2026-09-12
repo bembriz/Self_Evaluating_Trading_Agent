@@ -1,0 +1,11 @@
+# evidencia: coverage-17d-modules
+fecha: 2026-09-11T21:35:25-06:00
+fase: 17D
+comando: uv run coverage report --include=src/lab/frozen_dataset.py,src/lab/session_runner.py --show-missing
+Name                        Stmts   Miss Branch BrPart  Cover   Missing
+-----------------------------------------------------------------------
+src/lab/frozen_dataset.py      94      0     32      0   100%
+src/lab/session_runner.py      73      0     10      0   100%
+-----------------------------------------------------------------------
+TOTAL                         167      0     42      0   100%
+exit=0
