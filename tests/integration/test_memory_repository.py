@@ -14,7 +14,19 @@ from domain.memory.reflection import Reflection, ReflectionResult
 from domain.trading.signal import Action
 from infrastructure.database.memory_repository import SqlAlchemyMemoryRepository
 
-SPACE = "fake|fake-e5|4"
+SPACE = "fake|fake-e5|384"
+
+EMBEDDING_DIMENSION = 384
+
+
+def embedding_384(first: float, second: float) -> list[float]:
+    """Vector determinista de 384 dims (igual que el schema pgvector).
+
+    Solo las dos primeras componentes varían: vectores idénticos siguen
+    siendo idénticos (similitud 1.0) y vectores distintos siguen
+    apuntando en direcciones distintas. Sin random.
+    """
+    return [first, second] + [0.0] * (EMBEDDING_DIMENSION - 2)
 
 
 def _item(id_: str, outcome_ts: int, embedding: list[float], space: str = SPACE) -> object:
@@ -35,7 +47,7 @@ def _item(id_: str, outcome_ts: int, embedding: list[float], space: str = SPACE)
 @pytest.mark.integration
 async def test_save_and_search_with_temporal_filter(session: AsyncSession) -> None:
     repo = SqlAlchemyMemoryRepository(session)
-    base = [1.0, 0.0, 0.0, 0.0]
+    base = embedding_384(1.0, 0.0)
     await repo.save_memory(_item("m_pasada", 900, base))  # type: ignore[arg-type]
     await repo.save_memory(_item("m_futura", 2000, base))  # type: ignore[arg-type]
 
@@ -48,10 +60,10 @@ async def test_save_and_search_with_temporal_filter(session: AsyncSession) -> No
 @pytest.mark.integration
 async def test_search_isolated_by_embedding_space(session: AsyncSession) -> None:
     repo = SqlAlchemyMemoryRepository(session)
-    await repo.save_memory(_item("m_otro_espacio", 500, [0.0, 1.0, 0.0, 0.0], "otro|modelo|4"))  # type: ignore[arg-type]
+    await repo.save_memory(_item("m_otro_espacio", 500, embedding_384(0.0, 1.0), "otro|modelo|384"))  # type: ignore[arg-type]
 
     hits = await repo.search_similar(
-        [0.0, 1.0, 0.0, 0.0], k=10, decision_timestamp_ms=1000, embedding_space=SPACE
+        embedding_384(0.0, 1.0), k=10, decision_timestamp_ms=1000, embedding_space=SPACE
     )
     assert all(h.memory.embedding_space == SPACE for h in hits)
 
