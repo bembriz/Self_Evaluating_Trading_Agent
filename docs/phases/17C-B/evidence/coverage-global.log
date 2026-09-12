@@ -1,0 +1,1304 @@
+# evidencia: coverage-global
+fecha: 2026-09-11T20:24:35-06:00
+fase: 17C-B
+comando: uv run pytest --cov=src --cov-branch --cov-fail-under=90
+EEEEEEEEEEEEEEE......................................................... [ 12%]
+........................................................................ [ 24%]
+........................................................................ [ 36%]
+........................................................................ [ 48%]
+........................s............................................... [ 60%]
+........................................................................ [ 72%]
+........................................................................ [ 84%]
+........................................................................ [ 96%]
+....................                                                     [100%]
+==================================== ERRORS ====================================
+____________________ ERROR at setup of test_schema_migrado _____________________
+
+self = <Coroutine test_schema_migrado>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:926: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+tests/conftest.py:56: in migrated_db
+    _recreate_test_database()
+tests/conftest.py:43: in _recreate_test_database
+    with psycopg.connect(admin_url, autocommit=True) as conn:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+cls = <class 'psycopg.Connection'>
+conninfo = 'user=trading password=trading dbname=trading_agent host=localhost port=5433 hostaddr=127.0.0.1'
+autocommit = True, prepare_threshold = 5, context = None, row_factory = None
+cursor_factory = None, kwargs = {}
+
+    @classmethod
+    def connect(
+        cls,
+        conninfo: str = "",
+        *,
+        autocommit: bool = False,
+        prepare_threshold: int | None = 5,
+        context: AdaptContext | None = None,
+        row_factory: RowFactory[Row] | None = None,
+        cursor_factory: type[Cursor[Row]] | None = None,
+        **kwargs: ConnParam,
+    ) -> Self:
+        """
+        Connect to a database server and return a new `Connection` instance.
+        """
+
+        params = cls._get_connection_params(conninfo, **kwargs)
+        timeout = timeout_from_conninfo(params)
+        rv = None
+        attempts = conninfo_attempts(params)
+        conn_errors: list[tuple[e.Error, str]] = []
+        for attempt in attempts:
+            tdescr = (attempt.get("host"), attempt.get("port"), attempt.get("hostaddr"))
+            descr = "host: %r, port: %r, hostaddr: %r" % tdescr
+            logger.debug("connection attempt: %s", descr)
+            try:
+                conninfo = make_conninfo("", **attempt)
+                gen = cls._connect_gen(conninfo, timeout=timeout)
+                rv = waiting.wait_conn(gen, interval=_WAIT_INTERVAL)
+            except e.Error as ex:
+                logger.debug("connection failed: %s: %s", descr, str(ex))
+                conn_errors.append((ex, descr))
+            except e._NO_TRACEBACK as ex:
+                raise ex.with_traceback(None)
+            else:
+                logger.debug("connection succeeded: %s", descr)
+                break
+
+        if not rv:
+            last_ex = conn_errors[-1][0]
+            if len(conn_errors) == 1:
+>               raise last_ex.with_traceback(None)
+E               psycopg.OperationalError: connection failed: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+E               	Is the server running on that host and accepting TCP/IP connections?
+
+.venv/lib/python3.12/site-packages/psycopg/connection.py:122: OperationalError
+____________________ ERROR at setup of test_health_liveness ____________________
+
+test_settings = Settings(app_name='self-evaluating-trading-agent', app_version='0.1.0', trading_mode='backtest', live_trading_enabled=...lm_experiment_budget_usd=5.0, llm_monthly_budget_usd=50.0, prompts_dir='prompts', otel_enabled=False, otel_endpoint='')
+
+    @pytest.fixture(scope="session")
+    def migrated_db(test_settings: Settings) -> Iterator[str]:
+        """Recrea la DB de test y aplica un roundtrip up→down→up completo."""
+>       _recreate_test_database()
+
+tests/conftest.py:56:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests/conftest.py:43: in _recreate_test_database
+    with psycopg.connect(admin_url, autocommit=True) as conn:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+cls = <class 'psycopg.Connection'>
+conninfo = 'user=trading password=trading dbname=trading_agent host=localhost port=5433 hostaddr=127.0.0.1'
+autocommit = True, prepare_threshold = 5, context = None, row_factory = None
+cursor_factory = None, kwargs = {}
+
+    @classmethod
+    def connect(
+        cls,
+        conninfo: str = "",
+        *,
+        autocommit: bool = False,
+        prepare_threshold: int | None = 5,
+        context: AdaptContext | None = None,
+        row_factory: RowFactory[Row] | None = None,
+        cursor_factory: type[Cursor[Row]] | None = None,
+        **kwargs: ConnParam,
+    ) -> Self:
+        """
+        Connect to a database server and return a new `Connection` instance.
+        """
+
+        params = cls._get_connection_params(conninfo, **kwargs)
+        timeout = timeout_from_conninfo(params)
+        rv = None
+        attempts = conninfo_attempts(params)
+        conn_errors: list[tuple[e.Error, str]] = []
+        for attempt in attempts:
+            tdescr = (attempt.get("host"), attempt.get("port"), attempt.get("hostaddr"))
+            descr = "host: %r, port: %r, hostaddr: %r" % tdescr
+            logger.debug("connection attempt: %s", descr)
+            try:
+                conninfo = make_conninfo("", **attempt)
+                gen = cls._connect_gen(conninfo, timeout=timeout)
+                rv = waiting.wait_conn(gen, interval=_WAIT_INTERVAL)
+            except e.Error as ex:
+                logger.debug("connection failed: %s: %s", descr, str(ex))
+                conn_errors.append((ex, descr))
+            except e._NO_TRACEBACK as ex:
+                raise ex.with_traceback(None)
+            else:
+                logger.debug("connection succeeded: %s", descr)
+                break
+
+        if not rv:
+            last_ex = conn_errors[-1][0]
+            if len(conn_errors) == 1:
+>               raise last_ex.with_traceback(None)
+E               psycopg.OperationalError: connection failed: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+E               	Is the server running on that host and accepting TCP/IP connections?
+
+.venv/lib/python3.12/site-packages/psycopg/connection.py:122: OperationalError
+________________ ERROR at setup of test_ready_con_db_disponible ________________
+
+test_settings = Settings(app_name='self-evaluating-trading-agent', app_version='0.1.0', trading_mode='backtest', live_trading_enabled=...lm_experiment_budget_usd=5.0, llm_monthly_budget_usd=50.0, prompts_dir='prompts', otel_enabled=False, otel_endpoint='')
+
+    @pytest.fixture(scope="session")
+    def migrated_db(test_settings: Settings) -> Iterator[str]:
+        """Recrea la DB de test y aplica un roundtrip up→down→up completo."""
+>       _recreate_test_database()
+
+tests/conftest.py:56:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests/conftest.py:43: in _recreate_test_database
+    with psycopg.connect(admin_url, autocommit=True) as conn:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+cls = <class 'psycopg.Connection'>
+conninfo = 'user=trading password=trading dbname=trading_agent host=localhost port=5433 hostaddr=127.0.0.1'
+autocommit = True, prepare_threshold = 5, context = None, row_factory = None
+cursor_factory = None, kwargs = {}
+
+    @classmethod
+    def connect(
+        cls,
+        conninfo: str = "",
+        *,
+        autocommit: bool = False,
+        prepare_threshold: int | None = 5,
+        context: AdaptContext | None = None,
+        row_factory: RowFactory[Row] | None = None,
+        cursor_factory: type[Cursor[Row]] | None = None,
+        **kwargs: ConnParam,
+    ) -> Self:
+        """
+        Connect to a database server and return a new `Connection` instance.
+        """
+
+        params = cls._get_connection_params(conninfo, **kwargs)
+        timeout = timeout_from_conninfo(params)
+        rv = None
+        attempts = conninfo_attempts(params)
+        conn_errors: list[tuple[e.Error, str]] = []
+        for attempt in attempts:
+            tdescr = (attempt.get("host"), attempt.get("port"), attempt.get("hostaddr"))
+            descr = "host: %r, port: %r, hostaddr: %r" % tdescr
+            logger.debug("connection attempt: %s", descr)
+            try:
+                conninfo = make_conninfo("", **attempt)
+                gen = cls._connect_gen(conninfo, timeout=timeout)
+                rv = waiting.wait_conn(gen, interval=_WAIT_INTERVAL)
+            except e.Error as ex:
+                logger.debug("connection failed: %s: %s", descr, str(ex))
+                conn_errors.append((ex, descr))
+            except e._NO_TRACEBACK as ex:
+                raise ex.with_traceback(None)
+            else:
+                logger.debug("connection succeeded: %s", descr)
+                break
+
+        if not rv:
+            last_ex = conn_errors[-1][0]
+            if len(conn_errors) == 1:
+>               raise last_ex.with_traceback(None)
+E               psycopg.OperationalError: connection failed: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+E               	Is the server running on that host and accepting TCP/IP connections?
+
+.venv/lib/python3.12/site-packages/psycopg/connection.py:122: OperationalError
+___________ ERROR at setup of test_system_state_fallback_a_settings ____________
+
+test_settings = Settings(app_name='self-evaluating-trading-agent', app_version='0.1.0', trading_mode='backtest', live_trading_enabled=...lm_experiment_budget_usd=5.0, llm_monthly_budget_usd=50.0, prompts_dir='prompts', otel_enabled=False, otel_endpoint='')
+
+    @pytest.fixture(scope="session")
+    def migrated_db(test_settings: Settings) -> Iterator[str]:
+        """Recrea la DB de test y aplica un roundtrip up→down→up completo."""
+>       _recreate_test_database()
+
+tests/conftest.py:56:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests/conftest.py:43: in _recreate_test_database
+    with psycopg.connect(admin_url, autocommit=True) as conn:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+cls = <class 'psycopg.Connection'>
+conninfo = 'user=trading password=trading dbname=trading_agent host=localhost port=5433 hostaddr=127.0.0.1'
+autocommit = True, prepare_threshold = 5, context = None, row_factory = None
+cursor_factory = None, kwargs = {}
+
+    @classmethod
+    def connect(
+        cls,
+        conninfo: str = "",
+        *,
+        autocommit: bool = False,
+        prepare_threshold: int | None = 5,
+        context: AdaptContext | None = None,
+        row_factory: RowFactory[Row] | None = None,
+        cursor_factory: type[Cursor[Row]] | None = None,
+        **kwargs: ConnParam,
+    ) -> Self:
+        """
+        Connect to a database server and return a new `Connection` instance.
+        """
+
+        params = cls._get_connection_params(conninfo, **kwargs)
+        timeout = timeout_from_conninfo(params)
+        rv = None
+        attempts = conninfo_attempts(params)
+        conn_errors: list[tuple[e.Error, str]] = []
+        for attempt in attempts:
+            tdescr = (attempt.get("host"), attempt.get("port"), attempt.get("hostaddr"))
+            descr = "host: %r, port: %r, hostaddr: %r" % tdescr
+            logger.debug("connection attempt: %s", descr)
+            try:
+                conninfo = make_conninfo("", **attempt)
+                gen = cls._connect_gen(conninfo, timeout=timeout)
+                rv = waiting.wait_conn(gen, interval=_WAIT_INTERVAL)
+            except e.Error as ex:
+                logger.debug("connection failed: %s: %s", descr, str(ex))
+                conn_errors.append((ex, descr))
+            except e._NO_TRACEBACK as ex:
+                raise ex.with_traceback(None)
+            else:
+                logger.debug("connection succeeded: %s", descr)
+                break
+
+        if not rv:
+            last_ex = conn_errors[-1][0]
+            if len(conn_errors) == 1:
+>               raise last_ex.with_traceback(None)
+E               psycopg.OperationalError: connection failed: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+E               	Is the server running on that host and accepting TCP/IP connections?
+
+.venv/lib/python3.12/site-packages/psycopg/connection.py:122: OperationalError
+___________________ ERROR at setup of test_upsert_and_count ____________________
+
+self = <Coroutine test_upsert_and_count>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests/conftest.py:56: in migrated_db
+    _recreate_test_database()
+tests/conftest.py:43: in _recreate_test_database
+    with psycopg.connect(admin_url, autocommit=True) as conn:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+cls = <class 'psycopg.Connection'>
+conninfo = 'user=trading password=trading dbname=trading_agent host=localhost port=5433 hostaddr=127.0.0.1'
+autocommit = True, prepare_threshold = 5, context = None, row_factory = None
+cursor_factory = None, kwargs = {}
+
+    @classmethod
+    def connect(
+        cls,
+        conninfo: str = "",
+        *,
+        autocommit: bool = False,
+        prepare_threshold: int | None = 5,
+        context: AdaptContext | None = None,
+        row_factory: RowFactory[Row] | None = None,
+        cursor_factory: type[Cursor[Row]] | None = None,
+        **kwargs: ConnParam,
+    ) -> Self:
+        """
+        Connect to a database server and return a new `Connection` instance.
+        """
+
+        params = cls._get_connection_params(conninfo, **kwargs)
+        timeout = timeout_from_conninfo(params)
+        rv = None
+        attempts = conninfo_attempts(params)
+        conn_errors: list[tuple[e.Error, str]] = []
+        for attempt in attempts:
+            tdescr = (attempt.get("host"), attempt.get("port"), attempt.get("hostaddr"))
+            descr = "host: %r, port: %r, hostaddr: %r" % tdescr
+            logger.debug("connection attempt: %s", descr)
+            try:
+                conninfo = make_conninfo("", **attempt)
+                gen = cls._connect_gen(conninfo, timeout=timeout)
+                rv = waiting.wait_conn(gen, interval=_WAIT_INTERVAL)
+            except e.Error as ex:
+                logger.debug("connection failed: %s: %s", descr, str(ex))
+                conn_errors.append((ex, descr))
+            except e._NO_TRACEBACK as ex:
+                raise ex.with_traceback(None)
+            else:
+                logger.debug("connection succeeded: %s", descr)
+                break
+
+        if not rv:
+            last_ex = conn_errors[-1][0]
+            if len(conn_errors) == 1:
+>               raise last_ex.with_traceback(None)
+E               psycopg.OperationalError: connection failed: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+E               	Is the server running on that host and accepting TCP/IP connections?
+
+.venv/lib/python3.12/site-packages/psycopg/connection.py:122: OperationalError
+_________________________ ERROR at setup of test_range _________________________
+
+self = <Coroutine test_range>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests/conftest.py:56: in migrated_db
+    _recreate_test_database()
+tests/conftest.py:43: in _recreate_test_database
+    with psycopg.connect(admin_url, autocommit=True) as conn:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+cls = <class 'psycopg.Connection'>
+conninfo = 'user=trading password=trading dbname=trading_agent host=localhost port=5433 hostaddr=127.0.0.1'
+autocommit = True, prepare_threshold = 5, context = None, row_factory = None
+cursor_factory = None, kwargs = {}
+
+    @classmethod
+    def connect(
+        cls,
+        conninfo: str = "",
+        *,
+        autocommit: bool = False,
+        prepare_threshold: int | None = 5,
+        context: AdaptContext | None = None,
+        row_factory: RowFactory[Row] | None = None,
+        cursor_factory: type[Cursor[Row]] | None = None,
+        **kwargs: ConnParam,
+    ) -> Self:
+        """
+        Connect to a database server and return a new `Connection` instance.
+        """
+
+        params = cls._get_connection_params(conninfo, **kwargs)
+        timeout = timeout_from_conninfo(params)
+        rv = None
+        attempts = conninfo_attempts(params)
+        conn_errors: list[tuple[e.Error, str]] = []
+        for attempt in attempts:
+            tdescr = (attempt.get("host"), attempt.get("port"), attempt.get("hostaddr"))
+            descr = "host: %r, port: %r, hostaddr: %r" % tdescr
+            logger.debug("connection attempt: %s", descr)
+            try:
+                conninfo = make_conninfo("", **attempt)
+                gen = cls._connect_gen(conninfo, timeout=timeout)
+                rv = waiting.wait_conn(gen, interval=_WAIT_INTERVAL)
+            except e.Error as ex:
+                logger.debug("connection failed: %s: %s", descr, str(ex))
+                conn_errors.append((ex, descr))
+            except e._NO_TRACEBACK as ex:
+                raise ex.with_traceback(None)
+            else:
+                logger.debug("connection succeeded: %s", descr)
+                break
+
+        if not rv:
+            last_ex = conn_errors[-1][0]
+            if len(conn_errors) == 1:
+>               raise last_ex.with_traceback(None)
+E               psycopg.OperationalError: connection failed: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+E               	Is the server running on that host and accepting TCP/IP connections?
+
+.venv/lib/python3.12/site-packages/psycopg/connection.py:122: OperationalError
+______________ ERROR at setup of test_upsert_batches_large_input _______________
+
+self = <Coroutine test_upsert_batches_large_input>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests/conftest.py:56: in migrated_db
+    _recreate_test_database()
+tests/conftest.py:43: in _recreate_test_database
+    with psycopg.connect(admin_url, autocommit=True) as conn:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+cls = <class 'psycopg.Connection'>
+conninfo = 'user=trading password=trading dbname=trading_agent host=localhost port=5433 hostaddr=127.0.0.1'
+autocommit = True, prepare_threshold = 5, context = None, row_factory = None
+cursor_factory = None, kwargs = {}
+
+    @classmethod
+    def connect(
+        cls,
+        conninfo: str = "",
+        *,
+        autocommit: bool = False,
+        prepare_threshold: int | None = 5,
+        context: AdaptContext | None = None,
+        row_factory: RowFactory[Row] | None = None,
+        cursor_factory: type[Cursor[Row]] | None = None,
+        **kwargs: ConnParam,
+    ) -> Self:
+        """
+        Connect to a database server and return a new `Connection` instance.
+        """
+
+        params = cls._get_connection_params(conninfo, **kwargs)
+        timeout = timeout_from_conninfo(params)
+        rv = None
+        attempts = conninfo_attempts(params)
+        conn_errors: list[tuple[e.Error, str]] = []
+        for attempt in attempts:
+            tdescr = (attempt.get("host"), attempt.get("port"), attempt.get("hostaddr"))
+            descr = "host: %r, port: %r, hostaddr: %r" % tdescr
+            logger.debug("connection attempt: %s", descr)
+            try:
+                conninfo = make_conninfo("", **attempt)
+                gen = cls._connect_gen(conninfo, timeout=timeout)
+                rv = waiting.wait_conn(gen, interval=_WAIT_INTERVAL)
+            except e.Error as ex:
+                logger.debug("connection failed: %s: %s", descr, str(ex))
+                conn_errors.append((ex, descr))
+            except e._NO_TRACEBACK as ex:
+                raise ex.with_traceback(None)
+            else:
+                logger.debug("connection succeeded: %s", descr)
+                break
+
+        if not rv:
+            last_ex = conn_errors[-1][0]
+            if len(conn_errors) == 1:
+>               raise last_ex.with_traceback(None)
+E               psycopg.OperationalError: connection failed: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+E               	Is the server running on that host and accepting TCP/IP connections?
+
+.venv/lib/python3.12/site-packages/psycopg/connection.py:122: OperationalError
+__________________ ERROR at setup of test_manifest_upsert_get __________________
+
+self = <Coroutine test_manifest_upsert_get>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests/conftest.py:56: in migrated_db
+    _recreate_test_database()
+tests/conftest.py:43: in _recreate_test_database
+    with psycopg.connect(admin_url, autocommit=True) as conn:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+cls = <class 'psycopg.Connection'>
+conninfo = 'user=trading password=trading dbname=trading_agent host=localhost port=5433 hostaddr=127.0.0.1'
+autocommit = True, prepare_threshold = 5, context = None, row_factory = None
+cursor_factory = None, kwargs = {}
+
+    @classmethod
+    def connect(
+        cls,
+        conninfo: str = "",
+        *,
+        autocommit: bool = False,
+        prepare_threshold: int | None = 5,
+        context: AdaptContext | None = None,
+        row_factory: RowFactory[Row] | None = None,
+        cursor_factory: type[Cursor[Row]] | None = None,
+        **kwargs: ConnParam,
+    ) -> Self:
+        """
+        Connect to a database server and return a new `Connection` instance.
+        """
+
+        params = cls._get_connection_params(conninfo, **kwargs)
+        timeout = timeout_from_conninfo(params)
+        rv = None
+        attempts = conninfo_attempts(params)
+        conn_errors: list[tuple[e.Error, str]] = []
+        for attempt in attempts:
+            tdescr = (attempt.get("host"), attempt.get("port"), attempt.get("hostaddr"))
+            descr = "host: %r, port: %r, hostaddr: %r" % tdescr
+            logger.debug("connection attempt: %s", descr)
+            try:
+                conninfo = make_conninfo("", **attempt)
+                gen = cls._connect_gen(conninfo, timeout=timeout)
+                rv = waiting.wait_conn(gen, interval=_WAIT_INTERVAL)
+            except e.Error as ex:
+                logger.debug("connection failed: %s: %s", descr, str(ex))
+                conn_errors.append((ex, descr))
+            except e._NO_TRACEBACK as ex:
+                raise ex.with_traceback(None)
+            else:
+                logger.debug("connection succeeded: %s", descr)
+                break
+
+        if not rv:
+            last_ex = conn_errors[-1][0]
+            if len(conn_errors) == 1:
+>               raise last_ex.with_traceback(None)
+E               psycopg.OperationalError: connection failed: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+E               	Is the server running on that host and accepting TCP/IP connections?
+
+.venv/lib/python3.12/site-packages/psycopg/connection.py:122: OperationalError
+_________ ERROR at setup of test_save_and_search_with_temporal_filter __________
+
+self = <Coroutine test_save_and_search_with_temporal_filter>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests/conftest.py:56: in migrated_db
+    _recreate_test_database()
+tests/conftest.py:43: in _recreate_test_database
+    with psycopg.connect(admin_url, autocommit=True) as conn:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+cls = <class 'psycopg.Connection'>
+conninfo = 'user=trading password=trading dbname=trading_agent host=localhost port=5433 hostaddr=127.0.0.1'
+autocommit = True, prepare_threshold = 5, context = None, row_factory = None
+cursor_factory = None, kwargs = {}
+
+    @classmethod
+    def connect(
+        cls,
+        conninfo: str = "",
+        *,
+        autocommit: bool = False,
+        prepare_threshold: int | None = 5,
+        context: AdaptContext | None = None,
+        row_factory: RowFactory[Row] | None = None,
+        cursor_factory: type[Cursor[Row]] | None = None,
+        **kwargs: ConnParam,
+    ) -> Self:
+        """
+        Connect to a database server and return a new `Connection` instance.
+        """
+
+        params = cls._get_connection_params(conninfo, **kwargs)
+        timeout = timeout_from_conninfo(params)
+        rv = None
+        attempts = conninfo_attempts(params)
+        conn_errors: list[tuple[e.Error, str]] = []
+        for attempt in attempts:
+            tdescr = (attempt.get("host"), attempt.get("port"), attempt.get("hostaddr"))
+            descr = "host: %r, port: %r, hostaddr: %r" % tdescr
+            logger.debug("connection attempt: %s", descr)
+            try:
+                conninfo = make_conninfo("", **attempt)
+                gen = cls._connect_gen(conninfo, timeout=timeout)
+                rv = waiting.wait_conn(gen, interval=_WAIT_INTERVAL)
+            except e.Error as ex:
+                logger.debug("connection failed: %s: %s", descr, str(ex))
+                conn_errors.append((ex, descr))
+            except e._NO_TRACEBACK as ex:
+                raise ex.with_traceback(None)
+            else:
+                logger.debug("connection succeeded: %s", descr)
+                break
+
+        if not rv:
+            last_ex = conn_errors[-1][0]
+            if len(conn_errors) == 1:
+>               raise last_ex.with_traceback(None)
+E               psycopg.OperationalError: connection failed: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+E               	Is the server running on that host and accepting TCP/IP connections?
+
+.venv/lib/python3.12/site-packages/psycopg/connection.py:122: OperationalError
+__________ ERROR at setup of test_search_isolated_by_embedding_space ___________
+
+self = <Coroutine test_search_isolated_by_embedding_space>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests/conftest.py:56: in migrated_db
+    _recreate_test_database()
+tests/conftest.py:43: in _recreate_test_database
+    with psycopg.connect(admin_url, autocommit=True) as conn:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+cls = <class 'psycopg.Connection'>
+conninfo = 'user=trading password=trading dbname=trading_agent host=localhost port=5433 hostaddr=127.0.0.1'
+autocommit = True, prepare_threshold = 5, context = None, row_factory = None
+cursor_factory = None, kwargs = {}
+
+    @classmethod
+    def connect(
+        cls,
+        conninfo: str = "",
+        *,
+        autocommit: bool = False,
+        prepare_threshold: int | None = 5,
+        context: AdaptContext | None = None,
+        row_factory: RowFactory[Row] | None = None,
+        cursor_factory: type[Cursor[Row]] | None = None,
+        **kwargs: ConnParam,
+    ) -> Self:
+        """
+        Connect to a database server and return a new `Connection` instance.
+        """
+
+        params = cls._get_connection_params(conninfo, **kwargs)
+        timeout = timeout_from_conninfo(params)
+        rv = None
+        attempts = conninfo_attempts(params)
+        conn_errors: list[tuple[e.Error, str]] = []
+        for attempt in attempts:
+            tdescr = (attempt.get("host"), attempt.get("port"), attempt.get("hostaddr"))
+            descr = "host: %r, port: %r, hostaddr: %r" % tdescr
+            logger.debug("connection attempt: %s", descr)
+            try:
+                conninfo = make_conninfo("", **attempt)
+                gen = cls._connect_gen(conninfo, timeout=timeout)
+                rv = waiting.wait_conn(gen, interval=_WAIT_INTERVAL)
+            except e.Error as ex:
+                logger.debug("connection failed: %s: %s", descr, str(ex))
+                conn_errors.append((ex, descr))
+            except e._NO_TRACEBACK as ex:
+                raise ex.with_traceback(None)
+            else:
+                logger.debug("connection succeeded: %s", descr)
+                break
+
+        if not rv:
+            last_ex = conn_errors[-1][0]
+            if len(conn_errors) == 1:
+>               raise last_ex.with_traceback(None)
+E               psycopg.OperationalError: connection failed: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+E               	Is the server running on that host and accepting TCP/IP connections?
+
+.venv/lib/python3.12/site-packages/psycopg/connection.py:122: OperationalError
+_________________ ERROR at setup of test_reflection_roundtrip __________________
+
+self = <Coroutine test_reflection_roundtrip>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests/conftest.py:56: in migrated_db
+    _recreate_test_database()
+tests/conftest.py:43: in _recreate_test_database
+    with psycopg.connect(admin_url, autocommit=True) as conn:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+cls = <class 'psycopg.Connection'>
+conninfo = 'user=trading password=trading dbname=trading_agent host=localhost port=5433 hostaddr=127.0.0.1'
+autocommit = True, prepare_threshold = 5, context = None, row_factory = None
+cursor_factory = None, kwargs = {}
+
+    @classmethod
+    def connect(
+        cls,
+        conninfo: str = "",
+        *,
+        autocommit: bool = False,
+        prepare_threshold: int | None = 5,
+        context: AdaptContext | None = None,
+        row_factory: RowFactory[Row] | None = None,
+        cursor_factory: type[Cursor[Row]] | None = None,
+        **kwargs: ConnParam,
+    ) -> Self:
+        """
+        Connect to a database server and return a new `Connection` instance.
+        """
+
+        params = cls._get_connection_params(conninfo, **kwargs)
+        timeout = timeout_from_conninfo(params)
+        rv = None
+        attempts = conninfo_attempts(params)
+        conn_errors: list[tuple[e.Error, str]] = []
+        for attempt in attempts:
+            tdescr = (attempt.get("host"), attempt.get("port"), attempt.get("hostaddr"))
+            descr = "host: %r, port: %r, hostaddr: %r" % tdescr
+            logger.debug("connection attempt: %s", descr)
+            try:
+                conninfo = make_conninfo("", **attempt)
+                gen = cls._connect_gen(conninfo, timeout=timeout)
+                rv = waiting.wait_conn(gen, interval=_WAIT_INTERVAL)
+            except e.Error as ex:
+                logger.debug("connection failed: %s: %s", descr, str(ex))
+                conn_errors.append((ex, descr))
+            except e._NO_TRACEBACK as ex:
+                raise ex.with_traceback(None)
+            else:
+                logger.debug("connection succeeded: %s", descr)
+                break
+
+        if not rv:
+            last_ex = conn_errors[-1][0]
+            if len(conn_errors) == 1:
+>               raise last_ex.with_traceback(None)
+E               psycopg.OperationalError: connection failed: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+E               	Is the server running on that host and accepting TCP/IP connections?
+
+.venv/lib/python3.12/site-packages/psycopg/connection.py:122: OperationalError
+___________________ ERROR at setup of test_insert_and_query ____________________
+
+self = <Coroutine test_insert_and_query>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests/conftest.py:56: in migrated_db
+    _recreate_test_database()
+tests/conftest.py:43: in _recreate_test_database
+    with psycopg.connect(admin_url, autocommit=True) as conn:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+cls = <class 'psycopg.Connection'>
+conninfo = 'user=trading password=trading dbname=trading_agent host=localhost port=5433 hostaddr=127.0.0.1'
+autocommit = True, prepare_threshold = 5, context = None, row_factory = None
+cursor_factory = None, kwargs = {}
+
+    @classmethod
+    def connect(
+        cls,
+        conninfo: str = "",
+        *,
+        autocommit: bool = False,
+        prepare_threshold: int | None = 5,
+        context: AdaptContext | None = None,
+        row_factory: RowFactory[Row] | None = None,
+        cursor_factory: type[Cursor[Row]] | None = None,
+        **kwargs: ConnParam,
+    ) -> Self:
+        """
+        Connect to a database server and return a new `Connection` instance.
+        """
+
+        params = cls._get_connection_params(conninfo, **kwargs)
+        timeout = timeout_from_conninfo(params)
+        rv = None
+        attempts = conninfo_attempts(params)
+        conn_errors: list[tuple[e.Error, str]] = []
+        for attempt in attempts:
+            tdescr = (attempt.get("host"), attempt.get("port"), attempt.get("hostaddr"))
+            descr = "host: %r, port: %r, hostaddr: %r" % tdescr
+            logger.debug("connection attempt: %s", descr)
+            try:
+                conninfo = make_conninfo("", **attempt)
+                gen = cls._connect_gen(conninfo, timeout=timeout)
+                rv = waiting.wait_conn(gen, interval=_WAIT_INTERVAL)
+            except e.Error as ex:
+                logger.debug("connection failed: %s: %s", descr, str(ex))
+                conn_errors.append((ex, descr))
+            except e._NO_TRACEBACK as ex:
+                raise ex.with_traceback(None)
+            else:
+                logger.debug("connection succeeded: %s", descr)
+                break
+
+        if not rv:
+            last_ex = conn_errors[-1][0]
+            if len(conn_errors) == 1:
+>               raise last_ex.with_traceback(None)
+E               psycopg.OperationalError: connection failed: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+E               	Is the server running on that host and accepting TCP/IP connections?
+
+.venv/lib/python3.12/site-packages/psycopg/connection.py:122: OperationalError
+________ ERROR at setup of test_paper_trade_event_repository_roundtrip _________
+
+self = <Coroutine test_paper_trade_event_repository_roundtrip>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests/conftest.py:56: in migrated_db
+    _recreate_test_database()
+tests/conftest.py:43: in _recreate_test_database
+    with psycopg.connect(admin_url, autocommit=True) as conn:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+cls = <class 'psycopg.Connection'>
+conninfo = 'user=trading password=trading dbname=trading_agent host=localhost port=5433 hostaddr=127.0.0.1'
+autocommit = True, prepare_threshold = 5, context = None, row_factory = None
+cursor_factory = None, kwargs = {}
+
+    @classmethod
+    def connect(
+        cls,
+        conninfo: str = "",
+        *,
+        autocommit: bool = False,
+        prepare_threshold: int | None = 5,
+        context: AdaptContext | None = None,
+        row_factory: RowFactory[Row] | None = None,
+        cursor_factory: type[Cursor[Row]] | None = None,
+        **kwargs: ConnParam,
+    ) -> Self:
+        """
+        Connect to a database server and return a new `Connection` instance.
+        """
+
+        params = cls._get_connection_params(conninfo, **kwargs)
+        timeout = timeout_from_conninfo(params)
+        rv = None
+        attempts = conninfo_attempts(params)
+        conn_errors: list[tuple[e.Error, str]] = []
+        for attempt in attempts:
+            tdescr = (attempt.get("host"), attempt.get("port"), attempt.get("hostaddr"))
+            descr = "host: %r, port: %r, hostaddr: %r" % tdescr
+            logger.debug("connection attempt: %s", descr)
+            try:
+                conninfo = make_conninfo("", **attempt)
+                gen = cls._connect_gen(conninfo, timeout=timeout)
+                rv = waiting.wait_conn(gen, interval=_WAIT_INTERVAL)
+            except e.Error as ex:
+                logger.debug("connection failed: %s: %s", descr, str(ex))
+                conn_errors.append((ex, descr))
+            except e._NO_TRACEBACK as ex:
+                raise ex.with_traceback(None)
+            else:
+                logger.debug("connection succeeded: %s", descr)
+                break
+
+        if not rv:
+            last_ex = conn_errors[-1][0]
+            if len(conn_errors) == 1:
+>               raise last_ex.with_traceback(None)
+E               psycopg.OperationalError: connection failed: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+E               	Is the server running on that host and accepting TCP/IP connections?
+
+.venv/lib/python3.12/site-packages/psycopg/connection.py:122: OperationalError
+______________ ERROR at setup of test_repository_set_get_y_upsert ______________
+
+self = <Coroutine test_repository_set_get_y_upsert>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests/conftest.py:56: in migrated_db
+    _recreate_test_database()
+tests/conftest.py:43: in _recreate_test_database
+    with psycopg.connect(admin_url, autocommit=True) as conn:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+cls = <class 'psycopg.Connection'>
+conninfo = 'user=trading password=trading dbname=trading_agent host=localhost port=5433 hostaddr=127.0.0.1'
+autocommit = True, prepare_threshold = 5, context = None, row_factory = None
+cursor_factory = None, kwargs = {}
+
+    @classmethod
+    def connect(
+        cls,
+        conninfo: str = "",
+        *,
+        autocommit: bool = False,
+        prepare_threshold: int | None = 5,
+        context: AdaptContext | None = None,
+        row_factory: RowFactory[Row] | None = None,
+        cursor_factory: type[Cursor[Row]] | None = None,
+        **kwargs: ConnParam,
+    ) -> Self:
+        """
+        Connect to a database server and return a new `Connection` instance.
+        """
+
+        params = cls._get_connection_params(conninfo, **kwargs)
+        timeout = timeout_from_conninfo(params)
+        rv = None
+        attempts = conninfo_attempts(params)
+        conn_errors: list[tuple[e.Error, str]] = []
+        for attempt in attempts:
+            tdescr = (attempt.get("host"), attempt.get("port"), attempt.get("hostaddr"))
+            descr = "host: %r, port: %r, hostaddr: %r" % tdescr
+            logger.debug("connection attempt: %s", descr)
+            try:
+                conninfo = make_conninfo("", **attempt)
+                gen = cls._connect_gen(conninfo, timeout=timeout)
+                rv = waiting.wait_conn(gen, interval=_WAIT_INTERVAL)
+            except e.Error as ex:
+                logger.debug("connection failed: %s: %s", descr, str(ex))
+                conn_errors.append((ex, descr))
+            except e._NO_TRACEBACK as ex:
+                raise ex.with_traceback(None)
+            else:
+                logger.debug("connection succeeded: %s", descr)
+                break
+
+        if not rv:
+            last_ex = conn_errors[-1][0]
+            if len(conn_errors) == 1:
+>               raise last_ex.with_traceback(None)
+E               psycopg.OperationalError: connection failed: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+E               	Is the server running on that host and accepting TCP/IP connections?
+
+.venv/lib/python3.12/site-packages/psycopg/connection.py:122: OperationalError
+____________________ ERROR at setup of test_repository_ping ____________________
+
+self = <Coroutine test_repository_ping>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+        # When loop factories are configured, resolve the loop factory
+        # fixture early so that a factory variant change cascades cache
+        # invalidation before any async fixture checks its cache.
+        hook_caller = self.config.hook.pytest_asyncio_loop_factories
+        if hook_caller.get_hookimpls():
+            _ = self._request.getfixturevalue(_asyncio_loop_factory.__name__)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+.venv/lib/python3.12/site-packages/pytest_asyncio/plugin.py:558:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests/conftest.py:56: in migrated_db
+    _recreate_test_database()
+tests/conftest.py:43: in _recreate_test_database
+    with psycopg.connect(admin_url, autocommit=True) as conn:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+cls = <class 'psycopg.Connection'>
+conninfo = 'user=trading password=trading dbname=trading_agent host=localhost port=5433 hostaddr=127.0.0.1'
+autocommit = True, prepare_threshold = 5, context = None, row_factory = None
+cursor_factory = None, kwargs = {}
+
+    @classmethod
+    def connect(
+        cls,
+        conninfo: str = "",
+        *,
+        autocommit: bool = False,
+        prepare_threshold: int | None = 5,
+        context: AdaptContext | None = None,
+        row_factory: RowFactory[Row] | None = None,
+        cursor_factory: type[Cursor[Row]] | None = None,
+        **kwargs: ConnParam,
+    ) -> Self:
+        """
+        Connect to a database server and return a new `Connection` instance.
+        """
+
+        params = cls._get_connection_params(conninfo, **kwargs)
+        timeout = timeout_from_conninfo(params)
+        rv = None
+        attempts = conninfo_attempts(params)
+        conn_errors: list[tuple[e.Error, str]] = []
+        for attempt in attempts:
+            tdescr = (attempt.get("host"), attempt.get("port"), attempt.get("hostaddr"))
+            descr = "host: %r, port: %r, hostaddr: %r" % tdescr
+            logger.debug("connection attempt: %s", descr)
+            try:
+                conninfo = make_conninfo("", **attempt)
+                gen = cls._connect_gen(conninfo, timeout=timeout)
+                rv = waiting.wait_conn(gen, interval=_WAIT_INTERVAL)
+            except e.Error as ex:
+                logger.debug("connection failed: %s: %s", descr, str(ex))
+                conn_errors.append((ex, descr))
+            except e._NO_TRACEBACK as ex:
+                raise ex.with_traceback(None)
+            else:
+                logger.debug("connection succeeded: %s", descr)
+                break
+
+        if not rv:
+            last_ex = conn_errors[-1][0]
+            if len(conn_errors) == 1:
+>               raise last_ex.with_traceback(None)
+E               psycopg.OperationalError: connection failed: connection to server at "127.0.0.1", port 5433 failed: Connection refused
+E               	Is the server running on that host and accepting TCP/IP connections?
+
+.venv/lib/python3.12/site-packages/psycopg/connection.py:122: OperationalError
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                                                  Stmts   Miss Branch BrPart  Cover   Missing
+-------------------------------------------------------------------------------------------------
+src/application/__init__.py                               0      0      0      0   100%
+src/application/commands/__init__.py                      0      0      0      0   100%
+src/application/ports/__init__.py                         0      0      0      0   100%
+src/application/ports/dataset_store.py                   11      0      0      0   100%
+src/application/ports/embeddings.py                       5      0      0      0   100%
+src/application/ports/llm.py                             18      0      0      0   100%
+src/application/ports/market_data.py                      5      0      0      0   100%
+src/application/ports/market_repositories.py              8      0      0      0   100%
+src/application/ports/market_stream.py                    8      0      0      0   100%
+src/application/ports/memory_repository.py               16      0      0      0   100%
+src/application/ports/orderbook_features.py               4      0      0      0   100%
+src/application/ports/paper_trading.py                   24      0      0      0   100%
+src/application/ports/repositories.py                     6      0      0      0   100%
+src/application/queries/__init__.py                       0      0      0      0   100%
+src/application/services/__init__.py                      0      0      0      0   100%
+src/application/services/approval_workflow.py            25      2      6      1    90%   23, 30
+src/application/services/audit_log.py                    24      1      0      0    96%   45
+src/application/services/backtest_engine.py              58      0     16      0   100%
+src/application/services/connection_supervisor.py        39      0      6      1    98%   58->60
+src/application/services/cost_monitor.py                 19      1      0      0    95%   42
+src/application/services/decision_agent.py               30      0      2      0   100%
+src/application/services/historical_data.py              63      0      6      0   100%
+src/application/services/market_data_service.py         113      5     28      5    93%   66, 102, 140-141, 155->exit, 164, 165->exit
+src/application/services/memory_comparison.py            51      0      4      0   100%
+src/application/services/memory_writer.py                27      0      4      0   100%
+src/application/services/ml_pipeline.py                  80      0     12      0   100%
+src/application/services/paper_engine.py                128      1     24      1    99%   140
+src/application/services/paper_runner.py                117      2     16      3    96%   154->156, 197, 201
+src/application/services/reconciliation.py               26      0      6      1    97%   52->49
+src/application/services/reflection_engine.py            31      1     12      1    95%   87
+src/application/services/validation.py                   27      1     12      0    97%   17
+src/domain/__init__.py                                    0      0      0      0   100%
+src/domain/evaluation/__init__.py                         0      0      0      0   100%
+src/domain/evaluation/bootstrap.py                       72      2     22      2    96%   70, 95
+src/domain/evaluation/buy_hold.py                        19      0      2      0   100%
+src/domain/evaluation/comparison.py                      29      0      0      0   100%
+src/domain/evaluation/metrics.py                         87      0     24      0   100%
+src/domain/evaluation/outcome.py                         31      0      8      1    97%   55->58
+src/domain/evaluation/sensitivity.py                     72      2     14      2    95%   73, 124
+src/domain/experiments/__init__.py                        0      0      0      0   100%
+src/domain/experiments/experiment.py                     26      0      0      0   100%
+src/domain/experiments/features.py                       33      0      4      0   100%
+src/domain/experiments/improvement.py                    20      0      0      0   100%
+src/domain/experiments/logistic_regression.py            46      0     16      0   100%
+src/domain/experiments/walk_forward.py                   24      0      6      0   100%
+src/domain/llm/__init__.py                                0      0      0      0   100%
+src/domain/llm/budget.py                                 44      0     10      0   100%
+src/domain/llm/call.py                                   19      0      0      0   100%
+src/domain/llm/cost.py                                    6      0      0      0   100%
+src/domain/llm/prompt.py                                 13      0      0      0   100%
+src/domain/market/__init__.py                             0      0      0      0   100%
+src/domain/market/candle.py                              42      0     12      0   100%
+src/domain/market/dataset.py                             32      0      0      0   100%
+src/domain/market/feature_engine.py                      63      0      6      0   100%
+src/domain/market/features.py                            14      0      0      0   100%
+src/domain/market/indicators.py                         148      0     48      0   100%
+src/domain/market/orderbook.py                           72      4     16      4    91%   77, 83, 89, 103
+src/domain/market/regime.py                              79      0     26      0   100%
+src/domain/market/state.py                               36      0      0      0   100%
+src/domain/market/stream.py                              34      0      2      0   100%
+src/domain/memory/__init__.py                             0      0      0      0   100%
+src/domain/memory/guards.py                              10      0      4      0   100%
+src/domain/memory/memory.py                              22      0      0      0   100%
+src/domain/memory/reflection.py                          15      0      0      0   100%
+src/domain/memory/space.py                                4      0      0      0   100%
+src/domain/portfolio/__init__.py                          0      0      0      0   100%
+src/domain/portfolio/portfolio.py                        73      0     10      0   100%
+src/domain/risk/__init__.py                               0      0      0      0   100%
+src/domain/risk/config.py                                25      0      4      0   100%
+src/domain/risk/engine.py                                74      0     24      0   100%
+src/domain/risk/guards.py                                36      0      8      0   100%
+src/domain/risk/sizing.py                                34      0      8      0   100%
+src/domain/risk/stops.py                                 11      0      2      0   100%
+src/domain/trading/__init__.py                            0      0      0      0   100%
+src/domain/trading/decision.py                           26      0      0      0   100%
+src/domain/trading/fees.py                               12      0      0      0   100%
+src/domain/trading/fill.py                               37      0      4      0   100%
+src/domain/trading/order.py                              42      3      4      1    91%   57, 63, 68
+src/domain/trading/signal.py                             17      0      0      0   100%
+src/domain/trading/slippage.py                           11      0      0      0   100%
+src/domain/trading/strategy.py                          100      0     18      0   100%
+src/infrastructure/__init__.py                            0      0      0      0   100%
+src/infrastructure/bybit/__init__.py                      0      0      0      0   100%
+src/infrastructure/bybit/auth.py                         22      1      0      0    95%   51
+src/infrastructure/bybit/client.py                       53      3     18      5    89%   54->66, 61->60, 64, 88, 94
+src/infrastructure/bybit/schemas.py                      11      0      0      0   100%
+src/infrastructure/bybit/trade_client.py                 93      2     16      4    94%   54->56, 93, 115, 175->187
+src/infrastructure/bybit/ws.py                           77      6     16      4    89%   53, 65, 70, 73-74, 82
+src/infrastructure/bybit/ws_schemas.py                   30      0      0      0   100%
+src/infrastructure/database/__init__.py                   0      0      0      0   100%
+src/infrastructure/database/base.py                       3      0      0      0   100%
+src/infrastructure/database/memory_repository.py         44     28      8      0    31%   26, 29-56, 59-77, 87-105, 108-109, 113
+src/infrastructure/database/models.py                   109      1      0      0    99%   28
+src/infrastructure/database/repositories.py              91     46      8      0    45%   33, 36-41, 48, 60-85, 88-93, 98-109, 113, 128, 131-142, 145-148, 167-181, 186, 189-210, 213-220, 224
+src/infrastructure/database/session.py                    6      0      0      0   100%
+src/infrastructure/embeddings/__init__.py                 0      0      0      0   100%
+src/infrastructure/embeddings/fastembed_provider.py      45      7      8      1    81%   26-33, 68
+src/infrastructure/execution/__init__.py                  0      0      0      0   100%
+src/infrastructure/llm/__init__.py                        0      0      0      0   100%
+src/infrastructure/llm/deepseek.py                       87      3      8      2    95%   102->133, 138-139, 151
+src/infrastructure/llm/prompts.py                        13      0      2      0   100%
+src/infrastructure/llm/schemas.py                        26      0      0      0   100%
+src/infrastructure/observability/__init__.py              0      0      0      0   100%
+src/infrastructure/observability/metrics.py              22      0      0      0   100%
+src/infrastructure/observability/tracing.py              21     14      4      1    32%   21-38
+src/infrastructure/storage/dataset_store.py              34      0      6      0   100%
+src/interfaces/__init__.py                                0      0      0      0   100%
+src/interfaces/api/__init__.py                            0      0      0      0   100%
+src/interfaces/api/app.py                                37      0      2      1    97%   25->exit
+src/interfaces/api/deps.py                               13      4      0      0    69%   19-21, 26
+src/interfaces/api/routers/__init__.py                    0      0      0      0   100%
+src/interfaces/api/routers/dashboard.py                  51      2      6      2    89%   57->71, 65->71, 67-68
+src/interfaces/api/routers/health.py                     15      1      2      0    94%   19
+src/interfaces/api/routers/system.py                     11      0      0      0   100%
+src/interfaces/cli/__init__.py                            0      0      0      0   100%
+src/interfaces/cli/backtest.py                           69      8      4      1    88%   67-68, 143-148
+src/interfaces/cli/download.py                           75     36      4      0    54%   41-93, 97-100, 119-127, 131-134
+src/interfaces/cli/market_worker.py                      63      5      8      3    89%   57, 75, 80, 99, 103
+src/interfaces/cli/paper_runner.py                       87     23     14      2    71%   54->57, 58->49, 70-71, 78-116, 135-137
+src/interfaces/cli/paper_session.py                      94     10     12      3    88%   73-74, 112, 116, 190-195
+src/interfaces/cli/replay.py                             58      8      6      1    86%   59-60, 115-120
+src/interfaces/web/__init__.py                            0      0      0      0   100%
+src/lab/__init__.py                                       0      0      0      0   100%
+src/lab/experiment_spec.py                              133      0     56      0   100%
+src/lab/fingerprints.py                                 105      0     52      0   100%
+src/lab/kernel_bundle.py                                 31      0      6      0   100%
+src/lab/splits.py                                        18      0      6      0   100%
+src/main.py                                              37      3     14      3    88%   37, 39, 41
+src/settings.py                                          53      0      0      0   100%
+src/version.py                                            1      0      0      0   100%
+-------------------------------------------------------------------------------------------------
+TOTAL                                                  4311    236    742     56    94%
+Required test coverage of 90% reached. Total coverage: 93.71%
+=========================== short test summary info ============================
+ERROR tests/integration/test_alembic.py::test_schema_migrado - psycopg.Operat...
+ERROR tests/integration/test_api.py::test_health_liveness - psycopg.Operation...
+ERROR tests/integration/test_api.py::test_ready_con_db_disponible - psycopg.O...
+ERROR tests/integration/test_api.py::test_system_state_fallback_a_settings - ...
+ERROR tests/integration/test_market_repository.py::test_upsert_and_count - ps...
+ERROR tests/integration/test_market_repository.py::test_range - psycopg.Opera...
+ERROR tests/integration/test_market_repository.py::test_upsert_batches_large_input
+ERROR tests/integration/test_market_repository.py::test_manifest_upsert_get
+ERROR tests/integration/test_memory_repository.py::test_save_and_search_with_temporal_filter
+ERROR tests/integration/test_memory_repository.py::test_search_isolated_by_embedding_space
+ERROR tests/integration/test_memory_repository.py::test_reflection_roundtrip
+ERROR tests/integration/test_orderbook_features.py::test_insert_and_query - p...
+ERROR tests/integration/test_paper_trading_repository.py::test_paper_trade_event_repository_roundtrip
+ERROR tests/integration/test_repository.py::test_repository_set_get_y_upsert
+ERROR tests/integration/test_repository.py::test_repository_ping - psycopg.Op...
+580 passed, 1 skipped, 1 warning, 15 errors in 88.06s (0:01:28)
+exit=1

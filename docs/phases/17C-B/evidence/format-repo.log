@@ -1,0 +1,6 @@
+# evidencia: format-repo
+fecha: 2026-09-11T20:24:25-06:00
+fase: 17C-B
+comando: uv run ruff format --check src/lab/splits.py tests/lab/test_splits.py tests/test_split_candidate_17c_a.py
+3 files already formatted
+exit=0

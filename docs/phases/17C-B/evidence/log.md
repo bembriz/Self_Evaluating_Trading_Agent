@@ -1,0 +1,21 @@
+- `2026-09-11T20:20:58-06:00` **splits-tests** → `uv run pytest tests/lab/test_splits.py tests/lab/ tests/test_split_candidate_17c_a.py -v --no-cov` · exit=`0` · artifact: docs/phases/17C-B/evidence/splits-tests.log
+- `2026-09-11T20:21:02-06:00` **lint** → `uv run ruff check src/lab/splits.py tests/lab/test_splits.py` · exit=`1` · artifact: docs/phases/17C-B/evidence/lint.log
+- `2026-09-11T20:21:03-06:00` **format** → `uv run ruff format --check src/lab/splits.py tests/lab/test_splits.py` · exit=`0` · artifact: docs/phases/17C-B/evidence/format.log
+- `2026-09-11T20:21:03-06:00` **mypy** → `uv run mypy src/lab/splits.py tests/lab/test_splits.py` · exit=`1` · artifact: docs/phases/17C-B/evidence/mypy.log
+- `2026-09-11T20:21:17-06:00` **lint** → `uv run ruff check src/lab/splits.py tests/lab/test_splits.py` · exit=`0` · artifact: docs/phases/17C-B/evidence/lint.log
+- `2026-09-11T20:21:17-06:00` **format** → `uv run ruff format --check src/lab/splits.py tests/lab/test_splits.py` · exit=`0` · artifact: docs/phases/17C-B/evidence/format.log
+- `2026-09-11T20:21:18-06:00` **mypy** → `uv run mypy src/lab/splits.py tests/lab/test_splits.py` · exit=`0` · artifact: docs/phases/17C-B/evidence/mypy.log
+- `2026-09-11T20:21:24-06:00` **splits-tests** → `uv run pytest tests/lab/test_splits.py tests/lab/ tests/test_split_candidate_17c_a.py -q --no-cov` · exit=`0` · artifact: docs/phases/17C-B/evidence/splits-tests.log
+- `2026-09-11T20:23:02-06:00` **coverage-global** → `uv run pytest --cov=src --cov-branch --cov-fail-under=90` · exit=`1` · artifact: docs/phases/17C-B/evidence/coverage-global.log
+- `2026-09-11T20:23:26-06:00` **lint-repo** → `uv run ruff check src/lab/splits.py tests/lab/test_splits.py src/ tests/` · exit=`0` · artifact: docs/phases/17C-B/evidence/lint-repo.log
+- `2026-09-11T20:23:31-06:00` **mypy-repo** → `uv run mypy src tests` · exit=`1` · artifact: docs/phases/17C-B/evidence/mypy-repo.log
+- `2026-09-11T20:23:57-06:00` **mypy-repo** → `uv run mypy src tests` · exit=`1` · artifact: docs/phases/17C-B/evidence/mypy-repo.log
+- `2026-09-11T20:23:57-06:00` **lint-repo** → `uv run ruff check src/ tests/` · exit=`0` · artifact: docs/phases/17C-B/evidence/lint-repo.log
+- `2026-09-11T20:23:57-06:00` **format-repo** → `uv run ruff format --check src/lab/splits.py tests/lab/test_splits.py tests/test_split_candidate_17c_a.py` · exit=`0` · artifact: docs/phases/17C-B/evidence/format-repo.log
+- `2026-09-11T20:24:07-06:00` **mypy-repo** → `uv run mypy src tests` · exit=`1` · artifact: docs/phases/17C-B/evidence/mypy-repo.log
+- `2026-09-11T20:24:14-06:00` **splits-tests** → `uv run pytest tests/lab/test_splits.py tests/lab/ tests/test_split_candidate_17c_a.py -q --no-cov` · exit=`0` · artifact: docs/phases/17C-B/evidence/splits-tests.log
+- `2026-09-11T20:24:25-06:00` **mypy-repo** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/17C-B/evidence/mypy-repo.log
+- `2026-09-11T20:24:25-06:00` **lint-repo** → `uv run ruff check src/ tests/` · exit=`0` · artifact: docs/phases/17C-B/evidence/lint-repo.log
+- `2026-09-11T20:24:25-06:00` **format-repo** → `uv run ruff format --check src/lab/splits.py tests/lab/test_splits.py tests/test_split_candidate_17c_a.py` · exit=`0` · artifact: docs/phases/17C-B/evidence/format-repo.log
+- `2026-09-11T20:24:32-06:00` **splits-tests** → `uv run pytest tests/lab/test_splits.py tests/lab/ tests/test_split_candidate_17c_a.py -q --no-cov` · exit=`0` · artifact: docs/phases/17C-B/evidence/splits-tests.log
+- `2026-09-11T20:26:09-06:00` **coverage-global** → `uv run pytest --cov=src --cov-branch --cov-fail-under=90` · exit=`1` · artifact: docs/phases/17C-B/evidence/coverage-global.log

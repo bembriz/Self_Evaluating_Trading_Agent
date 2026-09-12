@@ -1,0 +1,6 @@
+# evidencia: lint
+fecha: 2026-09-11T20:21:17-06:00
+fase: 17C-B
+comando: uv run ruff check src/lab/splits.py tests/lab/test_splits.py
+All checks passed!
+exit=0
