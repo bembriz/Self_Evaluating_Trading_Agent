@@ -1,0 +1,33 @@
+# evidencia: development-smoke
+fecha: 2026-09-12T16:11:52-06:00
+fase: 19A
+comando: uv run python harness/scripts/phase19a_development_smoke.py
+{
+  "ADX_MIN": 20,
+  "ADX_PERIOD": 14,
+  "COUNTER_UNIT": "strategy_decisions",
+  "DATASET_ID": "BYBIT_ETHBTC_V001",
+  "EDGE_PRESENT": "NOT_EVALUATED",
+  "ENTRY_DONCHIAN_LOOKBACK": 20,
+  "EXIT_DONCHIAN_LOOKBACK": 10,
+  "FINAL_HOLDOUT_EXECUTIONS": 0,
+  "FINAL_HOLDOUT_READS": 0,
+  "FIRST_ADX_INDEX": 27,
+  "PRIMARY_SYMBOL": "ETHUSDT",
+  "REQUESTED_RANGES": [
+    {
+      "row_end": 5000,
+      "row_start": 0,
+      "symbol": "ETHUSDT"
+    }
+  ],
+  "ROW_END": 5000,
+  "ROW_START": 0,
+  "SIGNALS_BUY": 150,
+  "SIGNALS_HOLD": 4565,
+  "SIGNALS_SELL": 285,
+  "STRATEGY": "EthDonchianBreakout-v1",
+  "STRATEGY_PROMOTABLE": "NOT_EVALUATED",
+  "TIMEFRAME": "15m"
+}
+exit=0

@@ -191,3 +191,67 @@ def relative_volume(candles: Sequence[Candle], window: int) -> list[float | None
         mean = sum(vols) / len(vols)
         out[i] = candles[i].volume / mean if mean > 0 else None
     return out
+
+
+def adx(candles: Sequence[Candle], period: int = 14) -> list[float | None]:
+    """Average Directional Index de Wilder (causal). ``None`` durante warmup.
+
+    TR/+DM/-DM empiezan en el índice 1. El primer suavizado (media de Wilder)
+    está en el índice ``period``; el primer DX también. El primer ADX está en el
+    índice ``2*period - 1``, sembrado con la media de Wilder de los DX
+    ``period..2*period-1``. Después: ``avg = (avg*(period-1) + value)/period``.
+    Cada valor en ``i`` depende solo de las velas ``0..i``.
+    """
+    _require_positive_period(period)
+    out: list[float | None] = [None] * len(candles)
+    if len(candles) < 2 * period:
+        return out
+
+    trs = [0.0] * len(candles)
+    plus_dm = [0.0] * len(candles)
+    minus_dm = [0.0] * len(candles)
+    for i in range(1, len(candles)):
+        prev = candles[i - 1]
+        cur = candles[i]
+        trs[i] = max(
+            cur.high - cur.low,
+            abs(cur.high - prev.close),
+            abs(cur.low - prev.close),
+        )
+        up = cur.high - prev.high
+        down = prev.low - cur.low
+        if up > down and up > 0.0:
+            plus_dm[i] = up
+        elif down > up and down > 0.0:
+            minus_dm[i] = down
+
+    smooth_tr = sum(trs[1 : period + 1]) / period
+    smooth_plus = sum(plus_dm[1 : period + 1]) / period
+    smooth_minus = sum(minus_dm[1 : period + 1]) / period
+
+    dx_sum = 0.0
+    dx_count = 0
+    adx_value = 0.0
+    for i in range(period, len(candles)):
+        if i > period:
+            smooth_tr = (smooth_tr * (period - 1) + trs[i]) / period
+            smooth_plus = (smooth_plus * (period - 1) + plus_dm[i]) / period
+            smooth_minus = (smooth_minus * (period - 1) + minus_dm[i]) / period
+        if smooth_tr == 0.0:
+            plus_di = 0.0
+            minus_di = 0.0
+        else:
+            plus_di = 100.0 * smooth_plus / smooth_tr
+            minus_di = 100.0 * smooth_minus / smooth_tr
+        denom = plus_di + minus_di
+        dx = 100.0 * abs(plus_di - minus_di) / denom if denom != 0.0 else 0.0
+        if dx_count < period:
+            dx_sum += dx
+            dx_count += 1
+            if dx_count == period:
+                adx_value = dx_sum / period
+                out[i] = adx_value
+        else:
+            adx_value = (adx_value * (period - 1) + dx) / period
+            out[i] = adx_value
+    return out

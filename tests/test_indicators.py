@@ -2,6 +2,7 @@ import pytest
 
 from domain.market.candle import Candle
 from domain.market.indicators import (
+    adx,
     atr,
     ema,
     macd,
@@ -97,3 +98,61 @@ def test_relative_volume() -> None:
 def test_invalid_period_raises() -> None:
     with pytest.raises(ValueError):
         sma([1.0, 2.0], 0)
+
+
+def _trend_candles(count: int) -> list[Candle]:
+    return [_c(100.0 + i, 101.0 + i, 99.0 + i, 100.5 + i) for i in range(count)]
+
+
+def test_adx_first_index_is_27_for_period_14() -> None:
+    out = adx(_trend_candles(30), 14)
+    assert out[26] is None
+    assert out[27] is not None
+
+
+def test_adx_values_before_first_index_are_none() -> None:
+    out = adx(_trend_candles(30), 14)
+    assert out[:27] == [None] * 27
+
+
+def test_adx_insufficient_history_returns_all_none() -> None:
+    out = adx(_trend_candles(20), 14)
+    assert out == [None] * 20
+
+
+def test_adx_downtrend_is_strong() -> None:
+    down = [_c(100.0 - i, 101.0 - i, 99.0 - i, 100.5 - i) for i in range(30)]
+    out = adx(down, 14)
+    assert out[27] is not None
+    assert out[27] > 20.0
+
+
+def test_adx_monotonic_trend_is_strong() -> None:
+    out = adx(_trend_candles(30), 14)
+    assert out[27] is not None
+    assert out[27] > 20.0
+
+
+def test_adx_flat_series_is_zero() -> None:
+    flat = [_c(100, 100, 100, 100) for _ in range(30)]
+    out = adx(flat, 14)
+    assert out[27] == pytest.approx(0.0)
+
+
+def test_adx_future_mutation_does_not_change_history() -> None:
+    candles = _trend_candles(40)
+    baseline = adx(candles, 14)
+    poisoned = list(candles)
+    poisoned[31] = _c(1_000_000, 1_000_000, 1_000_000, 1_000_000)
+    changed = adx(poisoned, 14)
+    assert changed[:31] == baseline[:31]
+
+
+def test_adx_is_deterministic() -> None:
+    candles = _trend_candles(40)
+    assert adx(candles, 14) == adx(candles, 14)
+
+
+def test_adx_invalid_period_raises() -> None:
+    with pytest.raises(ValueError):
+        adx(_trend_candles(30), 0)

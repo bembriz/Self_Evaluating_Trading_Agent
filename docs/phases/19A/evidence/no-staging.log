@@ -1,0 +1,5 @@
+# evidencia: no-staging
+fecha: 2026-09-12T16:11:53-06:00
+fase: 19A
+comando: git diff --cached --exit-code
+exit=0

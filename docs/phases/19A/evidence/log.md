@@ -1,0 +1,12 @@
+- `2026-09-12T16:07:37-06:00` **tests-lab** → `uv run pytest tests/lab` · exit=`0` · artifact: docs/phases/19A/evidence/tests-lab.log
+- `2026-09-12T16:08:06-06:00` **tests-integration** → `uv run pytest tests/integration` · exit=`0` · artifact: docs/phases/19A/evidence/tests-integration.log
+- `2026-09-12T16:08:37-06:00` **tests-e2e** → `uv run pytest tests/e2e` · exit=`0` · artifact: docs/phases/19A/evidence/tests-e2e.log
+- `2026-09-12T16:08:46-06:00` **coverage-19a** → `uv run pytest tests/test_indicators.py tests/lab/test_eth_donchian_breakout.py tests/lab/test_phase19a_development_smoke.py tests/integration/test_eth_donchian_breakout_integration.py tests/e2e/test_eth_donchian_breakout_e2e.py --cov=lab.strategies.eth_donchian_breakout --cov=domain.market.indicators --cov-branch --cov-report=json:docs/phases/19A/evidence/coverage-19a.json` · exit=`0` · artifact: docs/phases/19A/evidence/coverage-19a.log
+- `2026-09-12T16:11:51-06:00` **coverage-global** → `uv run pytest --cov=src --cov-branch --cov-report=json:docs/phases/19A/evidence/coverage.json --cov-fail-under=90` · exit=`0` · artifact: docs/phases/19A/evidence/coverage-global.log
+- `2026-09-12T16:11:51-06:00` **ruff** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/19A/evidence/ruff.log
+- `2026-09-12T16:11:51-06:00` **format** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/19A/evidence/format.log
+- `2026-09-12T16:11:52-06:00` **mypy** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/19A/evidence/mypy.log
+- `2026-09-12T16:11:53-06:00` **development-smoke** → `uv run python harness/scripts/phase19a_development_smoke.py` · exit=`0` · artifact: docs/phases/19A/evidence/development-smoke.log
+- `2026-09-12T16:11:53-06:00` **holdout-state** → `uv run python -c import json;print(json.load(open('holdout/v1.state.json'))['state'])` · exit=`0` · artifact: docs/phases/19A/evidence/holdout-state.log
+- `2026-09-12T16:11:53-06:00` **protected-runtime-diff** → `git diff --exit-code HEAD -- src/application/services/paper_runner.py src/application/services/paper_engine.py src/domain/risk src/domain/portfolio src/domain/trading/strategy.py src/infrastructure/bybit src/interfaces/cli/paper_runner.py` · exit=`0` · artifact: docs/phases/19A/evidence/protected-runtime-diff.log
+- `2026-09-12T16:11:53-06:00` **no-staging** → `git diff --cached --exit-code` · exit=`0` · artifact: docs/phases/19A/evidence/no-staging.log
