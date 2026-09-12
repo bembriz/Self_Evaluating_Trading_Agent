@@ -1,0 +1,97 @@
+{
+  "BASELINE": {
+    "average_loss": -0.08828265766107654,
+    "average_win": 0.3769880877762565,
+    "closed_trades": 406,
+    "expectancy": -0.049319097698344215,
+    "fees": 16.24271570528947,
+    "fills": 812,
+    "max_drawdown": 0.01677501041581718,
+    "net_pnl": -20.023553665527754,
+    "profit_factor": 0.3902907027103561,
+    "return_pct": -0.020023553665527754,
+    "signals_buy": 634,
+    "signals_hold": 60553,
+    "signals_sell": 1021,
+    "slippage": 3.248543249707467,
+    "win_rate": 0.08374384236453201
+  },
+  "BASELINE_SPEC_ID": "2a9b4abda1ef24d1ef854c0614b8bc97e38d532860b9bccf228f806343e6db4e",
+  "BTC_CONTEXT": {
+    "average_loss": -0.09349764015764372,
+    "average_win": 0.40822414113429883,
+    "closed_trades": 391,
+    "expectancy": -0.05115283508696826,
+    "fees": 15.641897518579206,
+    "fills": 782,
+    "max_drawdown": 0.016872378939369697,
+    "net_pnl": -20.000758519004588,
+    "profit_factor": 0.4024657685297594,
+    "return_pct": -0.02000075851900459,
+    "signals_buy": 421,
+    "signals_hold": 60766,
+    "signals_sell": 1021,
+    "slippage": 3.128379579631383,
+    "win_rate": 0.08439897698209718
+  },
+  "BTC_CONTEXT_SPEC_ID": "57ecf38f4f7e26355231414906375ea1b43d2e2a0d6ba2e3e773dff94789015f",
+  "BTC_FILTER_ATTRIBUTION": {
+    "baseline_buy_candidates": 634,
+    "blocked_baseline_avg_net_pnl": -0.03944266991075266,
+    "blocked_baseline_flats": 0,
+    "blocked_baseline_losers": 126,
+    "blocked_baseline_net_pnl": -5.403645777773114,
+    "blocked_baseline_trades": 137,
+    "blocked_baseline_winners": 11,
+    "btc_blocked_buys": 213,
+    "btc_confirmed_buys": 421
+  },
+  "COMPARISON": {
+    "delta_expectancy": -0.0018337373886240446,
+    "delta_fees": -0.6008181867102635,
+    "delta_max_drawdown": 9.736852355251777e-05,
+    "delta_net_pnl": 0.0227951465231655,
+    "delta_profit_factor": 0.012175065819403308,
+    "delta_return_pct": 2.2795146523164195e-05,
+    "delta_slippage": -0.12016367007608375,
+    "delta_trades": -15,
+    "trade_reduction_percent": 3.6945812807881775
+  },
+  "CONTEXT_SYMBOL": "BTCUSDT",
+  "DATASET_ID": "BYBIT_ETHBTC_V001",
+  "DEVELOPMENT_RESULT": "MIXED",
+  "EDGE_PRESENT": "NOT_EVALUATED_OUT_OF_SAMPLE",
+  "EVALUATION": "DEVELOPMENT_ECONOMIC",
+  "FINAL_HOLDOUT_EXECUTIONS": 0,
+  "FINAL_HOLDOUT_READS": 0,
+  "HOLDOUT_STATE": "PRISTINE",
+  "PHASE": "18B",
+  "PRIMARY_SYMBOL": "ETHUSDT",
+  "REPRODUCIBILITY": "PASS",
+  "REPRODUCIBILITY_DETAIL": {
+    "event_trace_hash_match": true,
+    "metrics_hash_match": true,
+    "same_spec_id": true
+  },
+  "REQUESTED_RANGES": [
+    {
+      "row_end": 62208,
+      "row_start": 0,
+      "symbol": "ETHUSDT"
+    },
+    {
+      "row_end": 62208,
+      "row_start": 0,
+      "symbol": "BTCUSDT"
+    }
+  ],
+  "ROW_END": 62208,
+  "ROW_START": 0,
+  "SPEC_IDS_DIFFERENT": true,
+  "STRATEGY_A": "baseline-v1",
+  "STRATEGY_B": "EmaRsiBtcContext-v1",
+  "STRATEGY_PROMOTABLE": "NOT_EVALUATED",
+  "TIMEFRAME": "15m",
+  "WALK_FORWARD_CANDIDATE": "NO",
+  "WALK_FORWARD_READS": 0
+}

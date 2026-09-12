@@ -1,0 +1,15 @@
+- `2026-09-12T13:53:09-06:00` **development-evaluation** → `uv run python harness/scripts/phase18b_development_evaluation.py` · exit=`0` · artifact: docs/phases/18B/evidence/development-evaluation.log
+- `2026-09-12T13:53:26-06:00` **coverage-18b** → `uv run pytest tests/lab/test_development_evaluation.py --cov=lab.development_evaluation --cov-branch --cov-report=json:docs/phases/18B/evidence/coverage-18b.json` · exit=`0` · artifact: docs/phases/18B/evidence/coverage-18b.log
+- `2026-09-12T13:53:47-06:00` **tests-lab** → `uv run pytest tests/lab -q` · exit=`0` · artifact: docs/phases/18B/evidence/tests-lab.log
+- `2026-09-12T13:54:04-06:00` **tests-integration** → `uv run pytest tests/integration -q` · exit=`0` · artifact: docs/phases/18B/evidence/tests-integration.log
+- `2026-09-12T13:54:25-06:00` **tests-e2e** → `uv run pytest tests/e2e -q` · exit=`0` · artifact: docs/phases/18B/evidence/tests-e2e.log
+- `2026-09-12T13:57:10-06:00` **coverage-global** → `uv run pytest --cov=src --cov-branch --cov-report=json:docs/phases/18B/evidence/coverage.json --cov-fail-under=90` · exit=`0` · artifact: docs/phases/18B/evidence/coverage-global.log
+- `2026-09-12T13:57:10-06:00` **ruff** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/18B/evidence/ruff.log
+- `2026-09-12T13:57:10-06:00` **format** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/18B/evidence/format.log
+- `2026-09-12T13:57:11-06:00` **mypy** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/18B/evidence/mypy.log
+- `2026-09-12T13:57:20-06:00` **holdout-state** → `uv run python -c import json;print(json.load(open('holdout/v1.state.json'))['state'])` · exit=`0` · artifact: docs/phases/18B/evidence/holdout-state.log
+- `2026-09-12T13:57:20-06:00` **protected-runtime-diff** → `git diff --exit-code HEAD -- src/application/services/paper_runner.py src/application/services/paper_engine.py src/domain/risk src/domain/portfolio src/domain/trading/strategy.py src/infrastructure/bybit src/interfaces/cli/paper_runner.py` · exit=`0` · artifact: docs/phases/18B/evidence/protected-runtime-diff.log
+- `2026-09-12T13:57:20-06:00` **no-staging** → `git diff --cached --exit-code` · exit=`0` · artifact: docs/phases/18B/evidence/no-staging.log
+- `2026-09-12T13:58:13-06:00` **tests-lab** → `uv run pytest tests/lab` · exit=`0` · artifact: docs/phases/18B/evidence/tests-lab.log
+- `2026-09-12T13:58:31-06:00` **tests-integration** → `uv run pytest tests/integration` · exit=`0` · artifact: docs/phases/18B/evidence/tests-integration.log
+- `2026-09-12T13:58:50-06:00` **tests-e2e** → `uv run pytest tests/e2e` · exit=`0` · artifact: docs/phases/18B/evidence/tests-e2e.log
