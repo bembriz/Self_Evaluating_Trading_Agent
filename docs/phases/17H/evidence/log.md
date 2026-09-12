@@ -1,0 +1,12 @@
+- `2026-09-12T02:01:55-06:00` **e2e-tests** → `uv run pytest tests/e2e/ -q --no-cov` · exit=`0` · artifact: docs/phases/17H/evidence/e2e-tests.log
+- `2026-09-12T02:02:43-06:00` **lint** → `uv run ruff check tests/e2e/test_strategy_lab_e2e.py` · exit=`1` · artifact: docs/phases/17H/evidence/lint.log
+- `2026-09-12T02:02:43-06:00` **format** → `uv run ruff format --check tests/e2e/test_strategy_lab_e2e.py` · exit=`1` · artifact: docs/phases/17H/evidence/format.log
+- `2026-09-12T02:02:44-06:00` **mypy** → `uv run mypy tests/e2e/test_strategy_lab_e2e.py` · exit=`1` · artifact: docs/phases/17H/evidence/mypy.log
+- `2026-09-12T02:02:51-06:00` **lint** → `uv run ruff check tests/e2e/test_strategy_lab_e2e.py` · exit=`0` · artifact: docs/phases/17H/evidence/lint.log
+- `2026-09-12T02:02:52-06:00` **format** → `uv run ruff format --check tests/e2e/test_strategy_lab_e2e.py` · exit=`0` · artifact: docs/phases/17H/evidence/format.log
+- `2026-09-12T02:02:53-06:00` **mypy** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/17H/evidence/mypy.log
+- `2026-09-12T02:03:11-06:00` **e2e-tests** → `uv run pytest tests/e2e/ -q --no-cov` · exit=`0` · artifact: docs/phases/17H/evidence/e2e-tests.log
+- `2026-09-12T02:03:32-06:00` **lab-tests** → `uv run pytest tests/lab/ -q --no-cov` · exit=`0` · artifact: docs/phases/17H/evidence/lab-tests.log
+- `2026-09-12T02:03:39-06:00` **integration-tests** → `uv run pytest tests/integration -q --no-cov` · exit=`0` · artifact: docs/phases/17H/evidence/integration-tests.log
+- `2026-09-12T02:03:53-06:00` **lint-repo** → `uv run ruff check src/ tests/` · exit=`0` · artifact: docs/phases/17H/evidence/lint-repo.log
+- `2026-09-12T02:06:21-06:00` **coverage-global** → `uv run pytest --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/17H/evidence/coverage-global.log

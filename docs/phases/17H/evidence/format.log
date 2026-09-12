@@ -1,0 +1,6 @@
+# evidencia: format
+fecha: 2026-09-12T02:02:52-06:00
+fase: 17H
+comando: uv run ruff format --check tests/e2e/test_strategy_lab_e2e.py
+1 file already formatted
+exit=0

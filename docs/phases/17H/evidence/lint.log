@@ -1,0 +1,6 @@
+# evidencia: lint
+fecha: 2026-09-12T02:02:51-06:00
+fase: 17H
+comando: uv run ruff check tests/e2e/test_strategy_lab_e2e.py
+All checks passed!
+exit=0
