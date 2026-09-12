@@ -1,0 +1,6 @@
+# evidencia: holdout-state
+fecha: 2026-09-12T12:35:52-06:00
+fase: 18A
+comando: jq -e .state == "PRISTINE" holdout/v1.state.json
+true
+exit=0

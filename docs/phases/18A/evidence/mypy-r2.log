@@ -1,0 +1,8 @@
+# evidencia: mypy-r2
+fecha: 2026-09-12T12:52:36-06:00
+fase: 18A
+comando: uv run mypy src tests
+tests/integration/test_ema_rsi_btc_context_integration.py:44: error: Argument 2 to "replace" of "FrozenRange" has incompatible type "**dict[str, object]"; expected "str"  [arg-type]
+tests/integration/test_ema_rsi_btc_context_integration.py:44: error: Argument 2 to "replace" of "FrozenRange" has incompatible type "**dict[str, object]"; expected "int"  [arg-type]
+Found 2 errors in 1 file (checked 229 source files)
+exit=1

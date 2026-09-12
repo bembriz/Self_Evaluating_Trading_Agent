@@ -1,0 +1,35 @@
+# evidencia: development-smoke-r2
+fecha: 2026-09-12T12:48:34-06:00
+fase: 18A
+comando: uv run python harness/scripts/phase18a_development_smoke.py
+{
+  "BASELINE_BUY_SIGNALS": 58,
+  "BTC_BLOCKED_BUYS": 21,
+  "BTC_CONTEXT_BUY_SIGNALS": 37,
+  "CONTEXT_SYMBOL": "BTCUSDT",
+  "COUNTER_UNIT": "strategy_decisions",
+  "DATASET_ID": "BYBIT_ETHBTC_V001",
+  "EDGE_PRESENT": "NOT_EVALUATED",
+  "FINAL_HOLDOUT_EXECUTIONS": 0,
+  "FINAL_HOLDOUT_READS": 0,
+  "PRIMARY_SYMBOL": "ETHUSDT",
+  "REQUESTED_RANGES": [
+    {
+      "row_end": 5000,
+      "row_start": 0,
+      "symbol": "ETHUSDT"
+    },
+    {
+      "row_end": 5000,
+      "row_start": 0,
+      "symbol": "BTCUSDT"
+    }
+  ],
+  "ROW_END": 5000,
+  "ROW_START": 0,
+  "STRATEGY": "EmaRsiBtcContext-v1",
+  "STRATEGY_PROMOTABLE": "NOT_EVALUATED",
+  "TIMEFRAME": "15m",
+  "TIMESTAMP_ALIGNMENT": "PASS"
+}
+exit=0

@@ -1,0 +1,17 @@
+# evidencia: format-r2
+fecha: 2026-09-12T12:52:10-06:00
+fase: 18A
+comando: uv run ruff format --check .
+unformatted: File would be reformatted
+  --> tests/integration/test_ema_rsi_btc_context_integration.py:42:17
+   |
+41 |
+   - def _with_range(
+   -     adapter: FrozenDatasetAdapter, **changes: object
+   - ) -> FrozenDatasetAdapter:
+42 + def _with_range(adapter: FrozenDatasetAdapter, **changes: object) -> FrozenDatasetAdapter:
+43 |     changed = copy.copy(adapter)
+   |
+
+1 file would be reformatted, 257 files already formatted
+exit=1
