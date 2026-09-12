@@ -1,0 +1,11 @@
+- `2026-09-12T15:26:52-06:00` **development-evaluation** → `uv run python harness/scripts/phase18d_development_evaluation.py` · exit=`0` · artifact: docs/phases/18D/evidence/development-evaluation.log
+- `2026-09-12T15:27:25-06:00` **tests-lab** → `uv run pytest tests/lab` · exit=`0` · artifact: docs/phases/18D/evidence/tests-lab.log
+- `2026-09-12T15:27:53-06:00` **tests-integration** → `uv run pytest tests/integration` · exit=`0` · artifact: docs/phases/18D/evidence/tests-integration.log
+- `2026-09-12T15:28:22-06:00` **tests-e2e** → `uv run pytest tests/e2e` · exit=`0` · artifact: docs/phases/18D/evidence/tests-e2e.log
+- `2026-09-12T15:31:26-06:00` **coverage-global** → `uv run pytest --cov=src --cov-branch --cov-report=json:docs/phases/18D/evidence/coverage.json --cov-fail-under=90` · exit=`0` · artifact: docs/phases/18D/evidence/coverage-global.log
+- `2026-09-12T15:31:26-06:00` **ruff** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/18D/evidence/ruff.log
+- `2026-09-12T15:31:26-06:00` **format** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/18D/evidence/format.log
+- `2026-09-12T15:31:27-06:00` **mypy** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/18D/evidence/mypy.log
+- `2026-09-12T15:36:35-06:00` **holdout-state** → `uv run python -c import json;print(json.load(open('holdout/v1.state.json'))['state'])` · exit=`0` · artifact: docs/phases/18D/evidence/holdout-state.log
+- `2026-09-12T15:36:35-06:00` **protected-runtime-diff** → `git diff --exit-code HEAD -- src/application/services/paper_runner.py src/application/services/paper_engine.py src/domain/risk src/domain/portfolio src/domain/trading/strategy.py src/infrastructure/bybit src/interfaces/cli/paper_runner.py` · exit=`0` · artifact: docs/phases/18D/evidence/protected-runtime-diff.log
+- `2026-09-12T15:36:35-06:00` **no-staging** → `git diff --cached --exit-code` · exit=`0` · artifact: docs/phases/18D/evidence/no-staging.log

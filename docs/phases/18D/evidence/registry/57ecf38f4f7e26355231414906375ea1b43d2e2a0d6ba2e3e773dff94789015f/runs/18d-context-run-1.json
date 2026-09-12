@@ -1,0 +1,12 @@
+{
+  "run": {
+    "application_git_sha": "ce7f2f32b251174f2d663b9a9b573fe0e2836f0f",
+    "created_at": "2026-09-12T22:00:00+00:00",
+    "event_trace_hash": "17fac4d4d86b52430b09df879820813e85c8511291f457c8afc72f7acf457201",
+    "experiment_spec_id": "57ecf38f4f7e26355231414906375ea1b43d2e2a0d6ba2e3e773dff94789015f",
+    "metrics_hash": "a1195b2ea4273d709152bad7bb890edf8cc096fc4e173cdecdf45b2f7598b1f5",
+    "run_id": "18d-context-run-1",
+    "status": "ok"
+  },
+  "run_id": "18d-context-run-1"
+}
