@@ -1,0 +1,10 @@
+# evidencia: coverage-17g-modules
+fecha: 2026-09-12T01:49:57-06:00
+fase: 17G
+comando: uv run coverage report --include=src/lab/promote.py --show-missing
+Name                 Stmts   Miss Branch BrPart  Cover   Missing
+----------------------------------------------------------------
+src/lab/promote.py     143      0     30      0   100%
+----------------------------------------------------------------
+TOTAL                  143      0     30      0   100%
+exit=0

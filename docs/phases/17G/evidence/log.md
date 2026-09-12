@@ -1,0 +1,20 @@
+- `2026-09-12T01:44:51-06:00` **promote-tests** → `uv run pytest tests/lab/test_promote.py -q --no-cov` · exit=`0` · artifact: docs/phases/17G/evidence/promote-tests.log
+- `2026-09-12T01:45:18-06:00` **baseline-evaluation** → `uv run python /tmp/opencode/gen_17g_evidence.py` · exit=`0` · artifact: docs/phases/17G/evidence/baseline-evaluation.log
+- `2026-09-12T01:45:36-06:00` **lint** → `uv run ruff check src/lab/promote.py tests/lab/test_promote.py` · exit=`1` · artifact: docs/phases/17G/evidence/lint.log
+- `2026-09-12T01:45:36-06:00` **format** → `uv run ruff format --check src/lab/promote.py tests/lab/test_promote.py` · exit=`1` · artifact: docs/phases/17G/evidence/format.log
+- `2026-09-12T01:45:37-06:00` **mypy** → `uv run mypy src/lab/promote.py tests/lab/test_promote.py` · exit=`0` · artifact: docs/phases/17G/evidence/mypy.log
+- `2026-09-12T01:45:49-06:00` **lint** → `uv run ruff check src/lab/promote.py tests/lab/test_promote.py` · exit=`0` · artifact: docs/phases/17G/evidence/lint.log
+- `2026-09-12T01:45:49-06:00` **format** → `uv run ruff format --check src/lab/promote.py tests/lab/test_promote.py` · exit=`0` · artifact: docs/phases/17G/evidence/format.log
+- `2026-09-12T01:45:49-06:00` **mypy** → `uv run mypy src/lab/promote.py tests/lab/test_promote.py` · exit=`0` · artifact: docs/phases/17G/evidence/mypy.log
+- `2026-09-12T01:45:52-06:00` **promote-tests** → `uv run pytest tests/lab/test_promote.py -q --no-cov` · exit=`0` · artifact: docs/phases/17G/evidence/promote-tests.log
+- `2026-09-12T01:46:16-06:00` **lab-tests** → `uv run pytest tests/lab/ -q --no-cov` · exit=`0` · artifact: docs/phases/17G/evidence/lab-tests.log
+- `2026-09-12T01:46:16-06:00` **lint-repo** → `uv run ruff check src/ tests/` · exit=`0` · artifact: docs/phases/17G/evidence/lint-repo.log
+- `2026-09-12T01:46:17-06:00` **mypy-repo** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/17G/evidence/mypy-repo.log
+- `2026-09-12T01:46:26-06:00` **integration-tests** → `uv run pytest tests/integration -q --no-cov` · exit=`0` · artifact: docs/phases/17G/evidence/integration-tests.log
+- `2026-09-12T01:48:56-06:00` **coverage-global** → `uv run pytest --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/17G/evidence/coverage-global.log
+- `2026-09-12T01:49:11-06:00` **coverage-17g-modules** → `uv run coverage report --include=src/lab/promote.py --show-missing` · exit=`0` · artifact: docs/phases/17G/evidence/coverage-17g-modules.log
+- `2026-09-12T01:49:38-06:00` **promote-tests** → `uv run pytest tests/lab/test_promote.py -q --no-cov` · exit=`0` · artifact: docs/phases/17G/evidence/promote-tests.log
+- `2026-09-12T01:49:57-06:00` **lab-tests** → `uv run pytest tests/lab/ -q --no-cov` · exit=`0` · artifact: docs/phases/17G/evidence/lab-tests.log
+- `2026-09-12T01:49:57-06:00` **coverage-17g-modules** → `uv run coverage report --include=src/lab/promote.py --show-missing` · exit=`0` · artifact: docs/phases/17G/evidence/coverage-17g-modules.log
+- `2026-09-12T01:49:57-06:00` **lint-repo** → `uv run ruff check src/ tests/` · exit=`0` · artifact: docs/phases/17G/evidence/lint-repo.log
+- `2026-09-12T01:49:59-06:00` **mypy-repo** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/17G/evidence/mypy-repo.log

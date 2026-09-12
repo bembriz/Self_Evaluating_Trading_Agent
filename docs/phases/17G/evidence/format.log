@@ -1,0 +1,6 @@
+# evidencia: format
+fecha: 2026-09-12T01:45:49-06:00
+fase: 17G
+comando: uv run ruff format --check src/lab/promote.py tests/lab/test_promote.py
+2 files already formatted
+exit=0

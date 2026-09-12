@@ -1,0 +1,15 @@
+{
+  "current_state": "PARITY_PASSED",
+  "history": [
+    {
+      "evidence": "{\"double_run_reproducibility\": true, \"runtime_parity\": true}",
+      "origin": "DRAFT",
+      "reason": "parity evidence complete",
+      "target": "PARITY_PASSED",
+      "timestamp": "2026-09-12T06:00:00+00:00"
+    }
+  ],
+  "spec_id": "a6e6b4c01d3791c65f85892ef70afa499520062ad586e4536e03d4cef2fcbcdb",
+  "state_hash": "b1683a054783d815440bab793da5a79fd79f815b5a4945d9403b35cfcbf9d149",
+  "strategy_identity": "cb60149d3d1c5495f929884ce5a7f157067c5dd6ae560df43b2a96864b430941"
+}
