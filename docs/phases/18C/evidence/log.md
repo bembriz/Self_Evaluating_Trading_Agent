@@ -1,0 +1,12 @@
+- `2026-09-12T15:07:28-06:00` **tests-lab** → `uv run pytest tests/lab` · exit=`0` · artifact: docs/phases/18C/evidence/tests-lab.log
+- `2026-09-12T15:07:52-06:00` **tests-integration** → `uv run pytest tests/integration` · exit=`0` · artifact: docs/phases/18C/evidence/tests-integration.log
+- `2026-09-12T15:08:15-06:00` **tests-e2e** → `uv run pytest tests/e2e` · exit=`0` · artifact: docs/phases/18C/evidence/tests-e2e.log
+- `2026-09-12T15:08:35-06:00` **coverage-18c** → `uv run pytest tests/lab/test_ema_rsi_btc_regime.py tests/lab/test_phase18c_development_smoke.py tests/integration/test_ema_rsi_btc_regime_integration.py tests/e2e/test_ema_rsi_btc_regime_e2e.py --cov=lab.strategies.ema_rsi_btc_regime --cov-branch --cov-report=json:docs/phases/18C/evidence/coverage-18c.json` · exit=`0` · artifact: docs/phases/18C/evidence/coverage-18c.log
+- `2026-09-12T15:11:32-06:00` **coverage-global** → `uv run pytest --cov=src --cov-branch --cov-report=json:docs/phases/18C/evidence/coverage.json --cov-fail-under=90` · exit=`0` · artifact: docs/phases/18C/evidence/coverage-global.log
+- `2026-09-12T15:11:32-06:00` **ruff** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/18C/evidence/ruff.log
+- `2026-09-12T15:11:32-06:00` **format** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/18C/evidence/format.log
+- `2026-09-12T15:11:33-06:00` **mypy** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/18C/evidence/mypy.log
+- `2026-09-12T15:11:36-06:00` **holdout-state** → `uv run python -c import json;print(json.load(open('holdout/v1.state.json'))['state'])` · exit=`0` · artifact: docs/phases/18C/evidence/holdout-state.log
+- `2026-09-12T15:11:37-06:00` **protected-runtime-diff** → `git diff --exit-code HEAD -- src/application/services/paper_runner.py src/application/services/paper_engine.py src/domain/risk src/domain/portfolio src/domain/trading/strategy.py src/infrastructure/bybit src/interfaces/cli/paper_runner.py` · exit=`0` · artifact: docs/phases/18C/evidence/protected-runtime-diff.log
+- `2026-09-12T15:11:37-06:00` **no-staging** → `git diff --cached --exit-code` · exit=`0` · artifact: docs/phases/18C/evidence/no-staging.log
+- `2026-09-12T15:11:48-06:00` **development-smoke** → `uv run python harness/scripts/phase18c_development_smoke.py` · exit=`0` · artifact: docs/phases/18C/evidence/development-smoke.log
