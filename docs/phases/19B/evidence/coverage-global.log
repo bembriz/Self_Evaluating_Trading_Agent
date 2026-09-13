@@ -1,0 +1,29 @@
+# evidencia: coverage-global
+fecha: 2026-09-12T18:11:06-06:00
+fase: 19B
+comando: uv run pytest --cov=src --cov-branch --cov-report=json:docs/phases/19B/evidence/coverage.json --cov-fail-under=90
+........................................................................ [  8%]
+........................................................................ [ 17%]
+........................................................................ [ 25%]
+........................................................................ [ 34%]
+........................................................................ [ 42%]
+........................................................................ [ 51%]
+........................................................................ [ 59%]
+................................................s....................... [ 68%]
+........................................................................ [ 76%]
+........................................................................ [ 85%]
+........................................................................ [ 93%]
+.....................................................                    [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Coverage JSON written to file docs/phases/19B/evidence/coverage.json
+Required test coverage of 90% reached. Total coverage: 96.17%
+844 passed, 1 skipped, 1 warning in 191.10s (0:03:11)
+exit=0

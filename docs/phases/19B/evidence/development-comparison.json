@@ -1,0 +1,108 @@
+{
+  "ADX_BREAKOUT_DIAGNOSTICS": {
+    "BREAKOUTS_BLOCKED_BY_ADX": 935,
+    "BREAKOUTS_CONFIRMED_BY_ADX": 2035,
+    "RAW_BREAKOUT_EVENTS": 2970
+  },
+  "BASELINE": {
+    "average_loss": -0.08828265766107654,
+    "average_win": 0.3769880877762565,
+    "closed_trades": 406,
+    "expectancy": -0.049319097698344215,
+    "fees": 16.24271570528947,
+    "fills": 812,
+    "max_drawdown": 0.01677501041581718,
+    "net_pnl": -20.023553665527754,
+    "profit_factor": 0.3902907027103561,
+    "return_pct": -0.020023553665527754,
+    "signals_buy": 634,
+    "signals_hold": 60553,
+    "signals_sell": 1021,
+    "slippage": 3.248543249707467,
+    "win_rate": 0.08374384236453201
+  },
+  "BASELINE_SPEC_ID": "8979ff8479d9e17ccc17da52f81f1fe25d7c83b5a69419257f307a151929da67",
+  "DATASET_ID": "BYBIT_ETHBTC_V001",
+  "DEVELOPMENT_RESULT": "IMPROVED",
+  "DONCHIAN": {
+    "average_loss": -0.0954018792261474,
+    "average_win": 0.34005837055868765,
+    "closed_trades": 406,
+    "expectancy": -0.04928170498785207,
+    "fees": 16.242730904970152,
+    "fills": 812,
+    "max_drawdown": 0.017006341500731693,
+    "net_pnl": -20.008372225067937,
+    "profit_factor": 0.4222390254700682,
+    "return_pct": -0.020008372225067936,
+    "signals_buy": 2035,
+    "signals_hold": 56168,
+    "signals_sell": 4005,
+    "slippage": 3.248546290251746,
+    "win_rate": 0.10591133004926108
+  },
+  "DONCHIAN_SPEC_ID": "9fa8f8e4a67da2e742e89c8bac74145e5bac02937f7e5b94b5363ee382216e45",
+  "EDGE_PRESENT": "NOT_EVALUATED_OUT_OF_SAMPLE",
+  "EVALUATION": "DEVELOPMENT_ECONOMIC",
+  "FINAL_HOLDOUT_EXECUTIONS": 0,
+  "FINAL_HOLDOUT_READS": 0,
+  "HOLDOUT_STATE": "PRISTINE",
+  "PHASE": "19B",
+  "PRIMARY_DELTAS": {
+    "DELTA_EXPECTANCY": 3.739271049214843e-05,
+    "DELTA_FEES": 1.5199680682087546e-05,
+    "DELTA_MAX_DRAWDOWN": 0.0002313310849145142,
+    "DELTA_NET_PNL": 0.015181440459816287,
+    "DELTA_PROFIT_FACTOR": 0.0319483227597121,
+    "DELTA_RETURN_PCT": 1.5181440459817452e-05,
+    "DELTA_SLIPPAGE": 3.0405442790204518e-06,
+    "DELTA_TRADES": 0,
+    "DELTA_WIN_RATE": 0.022167487684729065
+  },
+  "PRIMARY_SYMBOL": "ETHUSDT",
+  "REPRODUCIBILITY": "PASS",
+  "REPRODUCIBILITY_DETAIL": {
+    "event_trace_hash_match": true,
+    "metrics_hash_match": true,
+    "same_spec_id": true
+  },
+  "REQUESTED_RANGES": [
+    {
+      "row_end": 62208,
+      "row_start": 0,
+      "symbol": "ETHUSDT"
+    }
+  ],
+  "ROW_END": 62208,
+  "ROW_START": 0,
+  "SIGNAL_EXECUTION_ATTRIBUTION": {
+    "DONCHIAN_BUY_SIGNALS": 2035,
+    "DONCHIAN_SELL_SIGNALS": 4005,
+    "EXECUTED_BUYS": 406,
+    "EXECUTED_SELLS": 406,
+    "REJECTED_BUYS": 1629,
+    "SELL_SIGNALS_WITHOUT_POSITION": 1237,
+    "SUPERSEDED_BUYS": 0
+  },
+  "SPEC_IDS_DIFFERENT": true,
+  "STRATEGY_PROMOTABLE": "NOT_EVALUATED",
+  "TIMEFRAME": "15m",
+  "TRADE_STRUCTURE": {
+    "EthDonchianBreakout-v1": {
+      "average_holding_duration_ms": 7040394.088669951,
+      "average_trade_pnl": -0.04928170498785207,
+      "largest_loss": -0.49405959038263264,
+      "largest_win": 1.257031393486627,
+      "median_holding_duration_ms": 900000.0
+    },
+    "baseline-v1": {
+      "average_holding_duration_ms": 8264039.408866995,
+      "average_trade_pnl": -0.049319097698344215,
+      "largest_loss": -0.4194775729203637,
+      "largest_win": 2.403398801018388,
+      "median_holding_duration_ms": 900000.0
+    }
+  },
+  "WALK_FORWARD_CANDIDATE": "YES",
+  "WALK_FORWARD_READS": 0
+}

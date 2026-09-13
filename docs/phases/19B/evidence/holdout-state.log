@@ -1,0 +1,6 @@
+# evidencia: holdout-state
+fecha: 2026-09-12T18:14:29-06:00
+fase: 19B
+comando: uv run python -c import json;print(json.load(open('holdout/v1.state.json'))['state'])
+PRISTINE
+exit=0

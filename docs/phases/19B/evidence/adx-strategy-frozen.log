@@ -1,0 +1,5 @@
+# evidencia: adx-strategy-frozen
+fecha: 2026-09-12T18:14:29-06:00
+fase: 19B
+comando: git diff --exit-code HEAD -- src/domain/market/indicators.py src/lab/strategies/eth_donchian_breakout.py
+exit=0

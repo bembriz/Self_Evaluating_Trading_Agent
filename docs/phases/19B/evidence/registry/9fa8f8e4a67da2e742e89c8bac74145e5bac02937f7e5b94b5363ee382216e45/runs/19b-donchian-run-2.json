@@ -1,0 +1,12 @@
+{
+  "run": {
+    "application_git_sha": "c82226ff863eda1b8e4b96db6f390e5a614a0e0d",
+    "created_at": "2026-09-13T00:00:01+00:00",
+    "event_trace_hash": "d72ea6f3a727b49583a9047e6152cf5e54385a90ca5f03d63d5b57898806322b",
+    "experiment_spec_id": "9fa8f8e4a67da2e742e89c8bac74145e5bac02937f7e5b94b5363ee382216e45",
+    "metrics_hash": "83b91789c7764b16285e1a7020503bc7913616ca197023cd2ec59ba259d3c6ed",
+    "run_id": "19b-donchian-run-2",
+    "status": "ok"
+  },
+  "run_id": "19b-donchian-run-2"
+}

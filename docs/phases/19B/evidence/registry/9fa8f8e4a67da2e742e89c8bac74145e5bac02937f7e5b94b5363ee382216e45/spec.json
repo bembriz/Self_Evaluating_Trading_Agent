@@ -1,0 +1,39 @@
+{
+  "spec": {
+    "dataset": {
+      "dataset_id": "BYBIT_ETHBTC_V001",
+      "row_end": 62208,
+      "row_start": 0,
+      "symbol": "ETHUSDT",
+      "timeframe": "15m"
+    },
+    "execution": {
+      "model": "runtime-parity",
+      "version": "mvp-a"
+    },
+    "fees": {
+      "version": "bybit-spot-v1"
+    },
+    "holdout_protocol": "deny-holdout",
+    "kernel_identity": {
+      "kernel_bundle_version": 1,
+      "kernel_fingerprint": "48d6dd84b311f54628d527143a8363370ae745d9757196ebe3c4cf0fa2c674ca"
+    },
+    "risk": {
+      "capital": 1000.0,
+      "version": "risk-v1-nostop-mvp-a"
+    },
+    "seed": null,
+    "slippage": {
+      "version": "conservative-v1"
+    },
+    "strategy": {
+      "artifact_identity": "e393e3e607dab5815d3c10841188a8faa896fd03a68ce687b18023d757d515ae",
+      "name": "EthDonchianBreakout",
+      "version": "eth-donchian-breakout-v1"
+    },
+    "timing_model": "mvp-a",
+    "walk_forward": null
+  },
+  "spec_id": "9fa8f8e4a67da2e742e89c8bac74145e5bac02937f7e5b94b5363ee382216e45"
+}
