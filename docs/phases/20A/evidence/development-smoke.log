@@ -1,0 +1,35 @@
+# evidencia: development-smoke
+fecha: 2026-09-12T21:42:51-06:00
+fase: 20A
+comando: uv run python harness/scripts/phase20a_development_smoke.py
+{
+  "ABSOLUTE_VIABILITY_GATE": "NOT_EVALUATED",
+  "ADX_FIRST_INDEX": 27,
+  "ADX_MAX": 20.0,
+  "ADX_PERIOD": 14,
+  "BOLLINGER_FIRST_INDEX": 19,
+  "BOLLINGER_PERIOD": 20,
+  "BOLLINGER_STDDEV_MULTIPLIER": 2.0,
+  "COUNTER_UNIT": "strategy_decisions",
+  "DATASET_ID": "BYBIT_ETHBTC_V001",
+  "EDGE_PRESENT": "NOT_EVALUATED",
+  "FINAL_HOLDOUT_EXECUTIONS": 0,
+  "FINAL_HOLDOUT_READS": 0,
+  "PRIMARY_SYMBOL": "ETHUSDT",
+  "REQUESTED_RANGES": [
+    {
+      "row_end": 5000,
+      "row_start": 0,
+      "symbol": "ETHUSDT"
+    }
+  ],
+  "ROW_END": 5000,
+  "ROW_START": 0,
+  "SIGNALS_BUY": 31,
+  "SIGNALS_HOLD": 2424,
+  "SIGNALS_SELL": 2545,
+  "STRATEGY": "EthBollingerMeanReversion-v1",
+  "STRATEGY_PROMOTABLE": "NOT_EVALUATED",
+  "TIMEFRAME": "15m"
+}
+exit=0

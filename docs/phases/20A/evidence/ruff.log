@@ -1,0 +1,6 @@
+# evidencia: ruff
+fecha: 2026-09-12T21:42:53-06:00
+fase: 20A
+comando: uv run ruff check .
+All checks passed!
+exit=0

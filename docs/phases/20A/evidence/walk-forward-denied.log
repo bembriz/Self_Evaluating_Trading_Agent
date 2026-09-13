@@ -1,0 +1,6 @@
+# evidencia: walk-forward-denied
+fecha: 2026-09-12T21:43:03-06:00
+fase: 20A
+comando: bash -c rg -n 'guarded_walk_forward_open|62208|88128' tests/lab/test_eth_bollinger_mean_reversion.py tests/integration/test_eth_bollinger_mean_reversion_integration.py tests/e2e/test_eth_bollinger_mean_reversion_e2e.py harness/scripts/phase20a_development_smoke.py || echo NO_WALK_FORWARD_ACCESS
+NO_WALK_FORWARD_ACCESS
+exit=0

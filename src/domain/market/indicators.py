@@ -10,6 +10,8 @@ Convenciones:
 
 from __future__ import annotations
 
+import math
+import statistics
 from collections.abc import Sequence
 from dataclasses import dataclass
 
@@ -254,4 +256,37 @@ def adx(candles: Sequence[Candle], period: int = 14) -> list[float | None]:
         else:
             adx_value = (adx_value * (period - 1) + dx) / period
             out[i] = adx_value
+    return out
+
+
+@dataclass(frozen=True, slots=True)
+class BollingerBands:
+    """Bandas de Bollinger en un índice: media, banda superior e inferior."""
+
+    middle: float
+    upper: float
+    lower: float
+
+
+def bollinger(
+    values: Sequence[float], period: int = 20, multiplier: float = 2.0
+) -> list[BollingerBands | None]:
+    """Bandas de Bollinger causales con desviación poblacional (``ddof=0``).
+
+    La vela/valor actual se incluye en la ventana. Cada banda en ``i`` depende
+    solo de ``values[0..i]``. Primer índice disponible: ``period - 1``.
+    """
+    _require_positive_period(period)
+    if not math.isfinite(multiplier) or multiplier <= 0.0:
+        raise ValueError(f"multiplier must be finite and > 0: {multiplier!r}")
+    out: list[BollingerBands | None] = [None] * len(values)
+    for i in range(period - 1, len(values)):
+        window = values[i - period + 1 : i + 1]
+        middle = sum(window) / period
+        std = statistics.pstdev(window)
+        out[i] = BollingerBands(
+            middle=middle,
+            upper=middle + multiplier * std,
+            lower=middle - multiplier * std,
+        )
     return out

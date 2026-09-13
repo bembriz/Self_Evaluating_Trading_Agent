@@ -1,9 +1,12 @@
+import math
+
 import pytest
 
 from domain.market.candle import Candle
 from domain.market.indicators import (
     adx,
     atr,
+    bollinger,
     ema,
     macd,
     momentum,
@@ -156,3 +159,74 @@ def test_adx_is_deterministic() -> None:
 def test_adx_invalid_period_raises() -> None:
     with pytest.raises(ValueError):
         adx(_trend_candles(30), 0)
+
+
+def test_bollinger_first_ready_index_is_19() -> None:
+    out = bollinger([float(i) for i in range(30)], 20, 2.0)
+    assert out[18] is None
+    assert out[19] is not None
+
+
+def test_bollinger_indices_before_first_are_none() -> None:
+    out = bollinger([float(i) for i in range(30)], 20, 2.0)
+    assert out[:19] == [None] * 19
+
+
+def test_bollinger_uses_population_stddev_ddof_0() -> None:
+    out = bollinger([1.0, 2.0, 3.0, 4.0], 4, 2.0)
+    band = out[3]
+    assert band is not None
+    population_std = math.sqrt(1.25)  # ddof=0; sample std would be sqrt(5/3)
+    assert band.middle == pytest.approx(2.5)
+    assert band.upper == pytest.approx(2.5 + 2.0 * population_std)
+    assert band.lower == pytest.approx(2.5 - 2.0 * population_std)
+
+
+def test_bollinger_exact_values_on_hand_fixture() -> None:
+    out = bollinger([10.0, 11.0, 9.0, 10.0], 4, 1.0)
+    band = out[3]
+    assert band is not None
+    assert band.middle == pytest.approx(10.0)
+    assert band.upper == pytest.approx(10.0 + math.sqrt(0.5))
+    assert band.lower == pytest.approx(10.0 - math.sqrt(0.5))
+
+
+def test_bollinger_flat_values_have_equal_bands() -> None:
+    band = bollinger([10.0] * 25, 20, 2.0)[19]
+    assert band is not None
+    assert band.middle == pytest.approx(10.0)
+    assert band.upper == pytest.approx(10.0)
+    assert band.lower == pytest.approx(10.0)
+
+
+def test_bollinger_causal_prefix_equality() -> None:
+    series = [10.0 + (i % 7) * 0.1 for i in range(30)]
+    full = bollinger(series, 20, 2.0)
+    prefix = bollinger(series[:25], 20, 2.0)
+    assert full[:25] == prefix[:25]
+
+
+def test_bollinger_future_mutation_does_not_change_history() -> None:
+    series = [10.0 + (i % 7) * 0.1 for i in range(30)]
+    baseline = bollinger(series, 20, 2.0)
+    poisoned = list(series)
+    poisoned[26] = 1_000_000.0
+    changed = bollinger(poisoned, 20, 2.0)
+    assert changed[:26] == baseline[:26]
+
+
+def test_bollinger_is_deterministic() -> None:
+    series = [10.0 + (i % 5) * 0.2 for i in range(30)]
+    assert bollinger(series, 20, 2.0) == bollinger(series, 20, 2.0)
+
+
+@pytest.mark.parametrize("period", (0, -1))
+def test_bollinger_invalid_period_raises(period: int) -> None:
+    with pytest.raises(ValueError):
+        bollinger([1.0] * 30, period, 2.0)
+
+
+@pytest.mark.parametrize("multiplier", (0.0, -1.0, math.inf, math.nan))
+def test_bollinger_invalid_multiplier_raises(multiplier: float) -> None:
+    with pytest.raises(ValueError):
+        bollinger([1.0] * 30, 20, multiplier)
