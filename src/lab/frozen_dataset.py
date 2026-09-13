@@ -23,11 +23,40 @@ from pathlib import Path
 from typing import Any
 
 from domain.market.candle import Candle
-from lab.splits import is_holdout_range
+from lab.splits import WALK_FORWARD_END, WALK_FORWARD_START, is_holdout_range
 
 MANIFEST_REL = Path("docs/datasets/BYBIT_ETHBTC_V001.manifest.json")
 SPLIT_V1_REL = Path("splits/v1.json")
 CSV_DIR_REL = Path("datasets/BYBIT_ETHBTC_V001")
+
+# Token de capacidad para la ruta privada autorizada de WALK_FORWARD. El
+# constructor público deniega WALK_FORWARD salvo que reciba este token exacto.
+_WALK_FORWARD_TOKEN = object()
+
+
+def _intersects_walk_forward(start: int, end: int) -> bool:
+    """True si [start, end) intersecta WALK_FORWARD (acceso denegado por defecto)."""
+    return start < WALK_FORWARD_END and end > WALK_FORWARD_START
+
+
+def _validate_range(row_start: int, row_end: int, walk_forward_token: object | None) -> None:
+    """Valida el rango antes de cualquier IO de dataset (holdout y WALK_FORWARD)."""
+    if isinstance(row_start, bool) or isinstance(row_end, bool):
+        raise ValueError("range bounds must be integers")
+    if not isinstance(row_start, int) or not isinstance(row_end, int):
+        raise ValueError("range bounds must be integers")
+    if row_start < 0 or row_end <= row_start:
+        raise ValueError(f"invalid range: [{row_start}, {row_end})")
+    if is_holdout_range(row_start, row_end):
+        raise ValueError("range intersects FINAL_HOLDOUT: access denied")
+    if (
+        _intersects_walk_forward(row_start, row_end)
+        and walk_forward_token is not _WALK_FORWARD_TOKEN
+    ):
+        raise ValueError(
+            "range intersects WALK_FORWARD: access denied; use the guarded "
+            "walk-forward path (guarded_walk_forward_open)"
+        )
 
 
 def sha256_file(path: Path) -> str:
@@ -62,13 +91,9 @@ class FrozenDatasetAdapter:
         expected_manifest_sha: str,
         row_start: int,
         row_end: int,
+        _walk_forward_token: object | None = None,
     ) -> None:
-        if isinstance(row_start, bool) or isinstance(row_end, bool):
-            raise ValueError("range bounds must be integers")
-        if not isinstance(row_start, int) or not isinstance(row_end, int):
-            raise ValueError("range bounds must be integers")
-        if row_start < 0 or row_end <= row_start:
-            raise ValueError(f"invalid range: [{row_start}, {row_end})")
+        _validate_range(row_start, row_end, _walk_forward_token)
         if not manifest_path.is_file():
             raise ValueError(f"manifest not found: {manifest_path}")
         manifest_sha = sha256_file(manifest_path)
@@ -88,8 +113,6 @@ class FrozenDatasetAdapter:
             raise ValueError("csv row count mismatch vs manifest")
         if row_end > len(rows):
             raise ValueError(f"range end {row_end} beyond dataset rows {len(rows)}")
-        if is_holdout_range(row_start, row_end):
-            raise ValueError("range intersects FINAL_HOLDOUT: access denied")
         candles = tuple(self._to_candle(row) for row in rows[row_start:row_end])
         self._check_order(candles)
         self._range = FrozenRange(
@@ -107,7 +130,50 @@ class FrozenDatasetAdapter:
     def from_repo(
         cls, repo_root: Path, *, symbol: str, timeframe: str, row_start: int, row_end: int
     ) -> FrozenDatasetAdapter:
-        """Resuelve rutas oficiales + SHA esperado desde splits/v1.json."""
+        """Resuelve rutas oficiales + SHA esperado desde splits/v1.json.
+
+        Deniega por defecto cualquier rango que interseque WALK_FORWARD; el
+        acceso autorizado pasa por `guarded_walk_forward_open`.
+        """
+        return cls._from_repo(
+            repo_root,
+            symbol=symbol,
+            timeframe=timeframe,
+            row_start=row_start,
+            row_end=row_end,
+            walk_forward_token=None,
+        )
+
+    @classmethod
+    def _from_repo_authorized_walk_forward(
+        cls, repo_root: Path, *, symbol: str, timeframe: str, row_start: int, row_end: int
+    ) -> FrozenDatasetAdapter:
+        """Ruta privada autorizada para WALK_FORWARD.
+
+        Único caller de producción/lab: `guarded_walk_forward_open`. Nunca
+        autoriza FINAL_HOLDOUT (el guard de holdout sigue activo en `__init__`).
+        """
+        return cls._from_repo(
+            repo_root,
+            symbol=symbol,
+            timeframe=timeframe,
+            row_start=row_start,
+            row_end=row_end,
+            walk_forward_token=_WALK_FORWARD_TOKEN,
+        )
+
+    @classmethod
+    def _from_repo(
+        cls,
+        repo_root: Path,
+        *,
+        symbol: str,
+        timeframe: str,
+        row_start: int,
+        row_end: int,
+        walk_forward_token: object | None,
+    ) -> FrozenDatasetAdapter:
+        _validate_range(row_start, row_end, walk_forward_token)
         split_v1 = json.loads((repo_root / SPLIT_V1_REL).read_text(encoding="utf-8"))
         manifest_path = repo_root / MANIFEST_REL
         csv_path = repo_root / CSV_DIR_REL / f"{symbol}_{timeframe}.csv"
@@ -120,6 +186,7 @@ class FrozenDatasetAdapter:
             expected_manifest_sha=str(split_v1["dataset_manifest_sha"]),
             row_start=row_start,
             row_end=row_end,
+            _walk_forward_token=walk_forward_token,
         )
 
     @staticmethod

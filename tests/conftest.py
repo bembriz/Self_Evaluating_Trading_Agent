@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
+import csv
+import hashlib
+import json
 import os
 from collections.abc import AsyncIterator, Iterator
+from pathlib import Path
 
 import psycopg
 import pytest
@@ -85,3 +89,55 @@ def client(migrated_db: str, test_settings: Settings) -> Iterator[TestClient]:
     app = create_app(test_settings)
     with TestClient(app) as c:
         yield c
+
+
+SYNTHETIC_DATASET_ID = "BYBIT_ETHBTC_V001"
+SYNTHETIC_SYMBOL = "ETHUSDT"
+SYNTHETIC_TIMEFRAME = "15m"
+SYNTHETIC_ROWS = 88300
+
+
+def build_synthetic_frozen_repo(root: Path, *, rows: int = SYNTHETIC_ROWS) -> Path:
+    """Create a synthetic frozen dataset repo mirroring the official layout."""
+    csv_path = (
+        root / "datasets" / SYNTHETIC_DATASET_ID / f"{SYNTHETIC_SYMBOL}_{SYNTHETIC_TIMEFRAME}.csv"
+    )
+    csv_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(csv_path, "w", newline="", encoding="utf-8") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(["timestamp_ms", "open", "high", "low", "close", "volume", "turnover"])
+        for index in range(rows):
+            timestamp = 1_700_000_000_000 + index * 900_000
+            price = 100.0 + (index % 50) * 0.1
+            writer.writerow([timestamp, price, price + 1.0, price - 1.0, price, 1.0, price])
+
+    manifest = {
+        "dataset_version": SYNTHETIC_DATASET_ID,
+        "files": [
+            {
+                "symbol": SYNTHETIC_SYMBOL,
+                "timeframe": SYNTHETIC_TIMEFRAME,
+                "row_count": rows,
+                "sha256": hashlib.sha256(csv_path.read_bytes()).hexdigest(),
+            }
+        ],
+    }
+    manifest_path = root / "docs" / "datasets" / f"{SYNTHETIC_DATASET_ID}.manifest.json"
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+    split_v1 = {
+        "dataset_id": SYNTHETIC_DATASET_ID,
+        "dataset_manifest_sha": hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
+        "total_rows": rows,
+        "split_version": 1,
+    }
+    split_path = root / "splits" / "v1.json"
+    split_path.parent.mkdir(parents=True, exist_ok=True)
+    split_path.write_text(json.dumps(split_v1), encoding="utf-8")
+    return root
+
+
+@pytest.fixture
+def synthetic_frozen_repo(tmp_path: Path) -> Path:
+    return build_synthetic_frozen_repo(tmp_path)

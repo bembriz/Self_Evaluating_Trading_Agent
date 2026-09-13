@@ -1,0 +1,8 @@
+# evidencia: bypass-audit
+fecha: 2026-09-12T20:03:42-06:00
+fase: 19C
+comando: bash -c rg -n '_from_repo_authorized_walk_forward' src/ harness/ --glob '!**/__pycache__/**' && rg -n 'FrozenDatasetAdapter\.from_repo|FrozenDatasetAdapter\(' src/ --glob '!**/__pycache__/**' || true
+src/lab/frozen_dataset.py:148:    def _from_repo_authorized_walk_forward(
+src/lab/viability.py:88:    `FrozenDatasetAdapter._from_repo_authorized_walk_forward`. It validates the
+src/lab/viability.py:97:    return FrozenDatasetAdapter._from_repo_authorized_walk_forward(
+exit=0

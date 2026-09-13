@@ -1,0 +1,134 @@
+# evidencia: viability-evidence
+fecha: 2026-09-12T19:46:45-06:00
+fase: 19C
+comando: uv run python harness/scripts/phase19c_viability_evidence.py
+{
+  "ABSOLUTE_VIABILITY_TRUTH_TABLE": [
+    {
+      "actual": true,
+      "expectancy": 0.5,
+      "expected": true,
+      "net_pnl": 1.0,
+      "profit_factor": 1.5
+    },
+    {
+      "actual": false,
+      "expectancy": 0.5,
+      "expected": false,
+      "net_pnl": 0.0,
+      "profit_factor": 1.5
+    },
+    {
+      "actual": false,
+      "expectancy": 0.0,
+      "expected": false,
+      "net_pnl": 1.0,
+      "profit_factor": 1.5
+    },
+    {
+      "actual": false,
+      "expectancy": 0.5,
+      "expected": false,
+      "net_pnl": 1.0,
+      "profit_factor": 1.0
+    },
+    {
+      "actual": false,
+      "expectancy": 0.5,
+      "expected": false,
+      "net_pnl": -1.0,
+      "profit_factor": 1.5
+    },
+    {
+      "actual": false,
+      "expectancy": 0.5,
+      "expected": false,
+      "net_pnl": null,
+      "profit_factor": 1.5
+    },
+    {
+      "actual": false,
+      "expectancy": 0.5,
+      "expected": false,
+      "net_pnl": "NaN",
+      "profit_factor": 1.5
+    },
+    {
+      "actual": false,
+      "expectancy": 0.5,
+      "expected": false,
+      "net_pnl": "Infinity",
+      "profit_factor": 1.5
+    },
+    {
+      "actual": false,
+      "expectancy": 0.5,
+      "expected": false,
+      "net_pnl": "-Infinity",
+      "profit_factor": 1.5
+    },
+    {
+      "actual": false,
+      "expectancy": 0.5,
+      "expected": false,
+      "net_pnl": 1.0,
+      "profit_factor": "Infinity"
+    }
+  ],
+  "ELIGIBILITY_TRUTH_TABLE": [
+    {
+      "absolute_viability": "PASS",
+      "actual": true,
+      "development_result": "IMPROVED",
+      "expected": true
+    },
+    {
+      "absolute_viability": "FAIL",
+      "actual": false,
+      "development_result": "IMPROVED",
+      "expected": false
+    },
+    {
+      "absolute_viability": "PASS",
+      "actual": false,
+      "development_result": "MIXED",
+      "expected": false
+    },
+    {
+      "absolute_viability": "FAIL",
+      "actual": false,
+      "development_result": "MIXED",
+      "expected": false
+    },
+    {
+      "absolute_viability": "PASS",
+      "actual": false,
+      "development_result": "NOT_IMPROVED",
+      "expected": false
+    },
+    {
+      "absolute_viability": "FAIL",
+      "actual": false,
+      "development_result": "NOT_IMPROVED",
+      "expected": false
+    }
+  ],
+  "PARITY_COMPATIBILITY": {
+    "parity_semantics_unchanged": true,
+    "parity_state": "PARITY_PASSED",
+    "states": [
+      "DRAFT",
+      "PARITY_PASSED",
+      "ROBUSTNESS_PASSED",
+      "HOLDOUT_READY"
+    ]
+  },
+  "PHASE": "19C",
+  "ZERO_WALK_FORWARD_READS": {
+    "authorized_attempted_io": true,
+    "ineligible_result": null,
+    "unauthorized_result": null,
+    "zero_reads_for_ineligible": true
+  }
+}
+exit=0

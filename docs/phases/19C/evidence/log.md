@@ -1,0 +1,40 @@
+- `2026-09-12T19:03:52-06:00` **tests-lab** → `uv run pytest tests/lab` · exit=`0` · artifact: docs/phases/19C/evidence/tests-lab.log
+- `2026-09-12T19:04:23-06:00` **tests-integration** → `uv run pytest tests/integration` · exit=`0` · artifact: docs/phases/19C/evidence/tests-integration.log
+- `2026-09-12T19:05:00-06:00` **tests-e2e** → `uv run pytest tests/e2e` · exit=`0` · artifact: docs/phases/19C/evidence/tests-e2e.log
+- `2026-09-12T19:05:05-06:00` **coverage-19c** → `uv run pytest tests/lab/test_viability.py --cov=lab.viability --cov-branch --cov-report=json:docs/phases/19C/evidence/coverage-19c.json` · exit=`0` · artifact: docs/phases/19C/evidence/coverage-19c.log
+- `2026-09-12T19:05:06-06:00` **viability-evidence** → `uv run python harness/scripts/phase19c_viability_evidence.py` · exit=`0` · artifact: docs/phases/19C/evidence/viability-evidence.log
+- `2026-09-12T19:08:28-06:00` **coverage-global** → `uv run pytest --cov=src --cov-branch --cov-report=json:docs/phases/19C/evidence/coverage.json --cov-fail-under=90` · exit=`0` · artifact: docs/phases/19C/evidence/coverage-global.log
+- `2026-09-12T19:08:28-06:00` **ruff** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/19C/evidence/ruff.log
+- `2026-09-12T19:08:28-06:00` **format** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/19C/evidence/format.log
+- `2026-09-12T19:08:29-06:00` **mypy** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/19C/evidence/mypy.log
+- `2026-09-12T19:08:29-06:00` **holdout-state** → `uv run python -c import json;print(json.load(open('holdout/v1.state.json'))['state'])` · exit=`0` · artifact: docs/phases/19C/evidence/holdout-state.log
+- `2026-09-12T19:08:29-06:00` **protected-runtime-diff** → `git diff --exit-code HEAD -- src/application/services/paper_runner.py src/application/services/paper_engine.py src/domain/risk src/domain/portfolio src/domain/trading/strategy.py src/infrastructure/bybit src/interfaces/cli/paper_runner.py` · exit=`0` · artifact: docs/phases/19C/evidence/protected-runtime-diff.log
+- `2026-09-12T19:08:29-06:00` **historical-immutability** → `git diff --exit-code HEAD -- docs/phases/18B docs/phases/18D docs/phases/19B` · exit=`0` · artifact: docs/phases/19C/evidence/historical-immutability.log
+- `2026-09-12T19:08:29-06:00` **no-staging** → `git diff --cached --exit-code` · exit=`0` · artifact: docs/phases/19C/evidence/no-staging.log
+- `2026-09-12T19:44:24-06:00` **tests-lab** → `uv run pytest tests/lab` · exit=`0` · artifact: docs/phases/19C/evidence/tests-lab.log
+- `2026-09-12T19:44:58-06:00` **tests-integration** → `uv run pytest tests/integration` · exit=`0` · artifact: docs/phases/19C/evidence/tests-integration.log
+- `2026-09-12T19:45:34-06:00` **tests-e2e** → `uv run pytest tests/e2e` · exit=`0` · artifact: docs/phases/19C/evidence/tests-e2e.log
+- `2026-09-12T19:46:45-06:00` **coverage-19c** → `uv run pytest tests/lab tests/e2e --cov=lab.viability --cov=lab.frozen_dataset --cov-branch --cov-report=json:docs/phases/19C/evidence/coverage-19c.json` · exit=`0` · artifact: docs/phases/19C/evidence/coverage-19c.log
+- `2026-09-12T19:46:45-06:00` **viability-evidence** → `uv run python harness/scripts/phase19c_viability_evidence.py` · exit=`0` · artifact: docs/phases/19C/evidence/viability-evidence.log
+- `2026-09-12T19:50:01-06:00` **coverage-global** → `uv run pytest --cov=src --cov-branch --cov-report=json:docs/phases/19C/evidence/coverage.json --cov-fail-under=90` · exit=`0` · artifact: docs/phases/19C/evidence/coverage-global.log
+- `2026-09-12T19:50:02-06:00` **ruff** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/19C/evidence/ruff.log
+- `2026-09-12T19:50:02-06:00` **format** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/19C/evidence/format.log
+- `2026-09-12T19:50:03-06:00` **mypy** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/19C/evidence/mypy.log
+- `2026-09-12T19:50:03-06:00` **holdout-state** → `uv run python -c import json;print(json.load(open('holdout/v1.state.json'))['state'])` · exit=`0` · artifact: docs/phases/19C/evidence/holdout-state.log
+- `2026-09-12T19:50:03-06:00` **protected-runtime-diff** → `git diff --exit-code HEAD -- src/application/services/paper_runner.py src/application/services/paper_engine.py src/domain/risk src/domain/portfolio src/domain/trading/strategy.py src/infrastructure/bybit src/interfaces/cli/paper_runner.py` · exit=`0` · artifact: docs/phases/19C/evidence/protected-runtime-diff.log
+- `2026-09-12T19:50:03-06:00` **historical-immutability** → `git diff --exit-code HEAD -- docs/phases/18B docs/phases/18D docs/phases/19B` · exit=`0` · artifact: docs/phases/19C/evidence/historical-immutability.log
+- `2026-09-12T19:50:03-06:00` **no-staging** → `git diff --cached --exit-code` · exit=`0` · artifact: docs/phases/19C/evidence/no-staging.log
+- `2026-09-12T19:50:03-06:00` **bypass-audit** → `bash -c rg -n '_from_repo_authorized_walk_forward' src/ harness/ --glob '!**/__pycache__/**' && rg -n 'FrozenDatasetAdapter\.from_repo|FrozenDatasetAdapter\(' src/ --glob '!**/__pycache__/**' || true` · exit=`0` · artifact: docs/phases/19C/evidence/bypass-audit.log
+- `2026-09-12T19:57:52-06:00` **tests-lab** → `uv run pytest tests/lab` · exit=`0` · artifact: docs/phases/19C/evidence/tests-lab.log
+- `2026-09-12T19:58:27-06:00` **tests-integration** → `uv run pytest tests/integration` · exit=`0` · artifact: docs/phases/19C/evidence/tests-integration.log
+- `2026-09-12T19:59:03-06:00` **tests-e2e** → `uv run pytest tests/e2e` · exit=`0` · artifact: docs/phases/19C/evidence/tests-e2e.log
+- `2026-09-12T20:00:17-06:00` **coverage-19c** → `uv run pytest tests/lab tests/e2e --cov=lab.viability --cov=lab.frozen_dataset --cov-branch --cov-report=json:docs/phases/19C/evidence/coverage-19c.json` · exit=`0` · artifact: docs/phases/19C/evidence/coverage-19c.log
+- `2026-09-12T20:03:32-06:00` **coverage-global** → `uv run pytest --cov=src --cov-branch --cov-report=json:docs/phases/19C/evidence/coverage.json --cov-fail-under=90` · exit=`0` · artifact: docs/phases/19C/evidence/coverage-global.log
+- `2026-09-12T20:03:39-06:00` **ruff** → `uv run ruff check .` · exit=`0` · artifact: docs/phases/19C/evidence/ruff.log
+- `2026-09-12T20:03:40-06:00` **format** → `uv run ruff format --check .` · exit=`0` · artifact: docs/phases/19C/evidence/format.log
+- `2026-09-12T20:03:41-06:00` **mypy** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/19C/evidence/mypy.log
+- `2026-09-12T20:03:42-06:00` **holdout-state** → `uv run python -c import json;print(json.load(open('holdout/v1.state.json'))['state'])` · exit=`0` · artifact: docs/phases/19C/evidence/holdout-state.log
+- `2026-09-12T20:03:42-06:00` **protected-runtime-diff** → `git diff --exit-code HEAD -- src/application/services/paper_runner.py src/application/services/paper_engine.py src/domain/risk src/domain/portfolio src/domain/trading/strategy.py src/infrastructure/bybit src/interfaces/cli/paper_runner.py` · exit=`0` · artifact: docs/phases/19C/evidence/protected-runtime-diff.log
+- `2026-09-12T20:03:42-06:00` **historical-immutability** → `git diff --exit-code HEAD -- docs/phases/18B docs/phases/18D docs/phases/19B docs/phases/17F docs/phases/17H` · exit=`0` · artifact: docs/phases/19C/evidence/historical-immutability.log
+- `2026-09-12T20:03:42-06:00` **no-staging** → `git diff --cached --exit-code` · exit=`0` · artifact: docs/phases/19C/evidence/no-staging.log
+- `2026-09-12T20:03:42-06:00` **bypass-audit** → `bash -c rg -n '_from_repo_authorized_walk_forward' src/ harness/ --glob '!**/__pycache__/**' && rg -n 'FrozenDatasetAdapter\.from_repo|FrozenDatasetAdapter\(' src/ --glob '!**/__pycache__/**' || true` · exit=`0` · artifact: docs/phases/19C/evidence/bypass-audit.log

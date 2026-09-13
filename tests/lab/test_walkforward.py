@@ -89,11 +89,11 @@ def test_development_range_allowed() -> None:
     assert len(adapter) == 32
 
 
-def test_walk_forward_range_allowed() -> None:
-    adapter = FrozenDatasetAdapter.from_repo(
-        REPO, symbol="ETHUSDT", timeframe="15m", row_start=62208, row_end=62240
-    )
-    assert len(adapter) == 32
+def test_walk_forward_range_denied_by_public_adapter() -> None:
+    with pytest.raises(ValueError, match="WALK_FORWARD"):
+        FrozenDatasetAdapter.from_repo(
+            REPO, symbol="ETHUSDT", timeframe="15m", row_start=62208, row_end=62240
+        )
 
 
 def test_final_holdout_blocked() -> None:
@@ -127,17 +127,26 @@ def test_windows_cover_walk_forward_without_overlap() -> None:
         assert nxt.row_start == prev.row_end
 
 
-def test_windows_temporal_order_on_real_data() -> None:
-    windows = walk_forward_windows(3)
+def test_windows_temporal_order_on_synthetic_authorized_data(
+    synthetic_frozen_repo: Path,
+) -> None:
+    from lab.viability import AbsoluteViabilityEvidence, guarded_walk_forward_open
+
     last_ts = -1
-    for window in windows:
-        adapter = FrozenDatasetAdapter.from_repo(
-            REPO,
+    for window in walk_forward_windows(3):
+        adapter = guarded_walk_forward_open(
+            development_result="IMPROVED",
+            absolute_viability=AbsoluteViabilityEvidence(
+                net_pnl=1.0, expectancy=0.5, profit_factor=2.0
+            ),
+            human_authorized=True,
+            repo_root=synthetic_frozen_repo,
             symbol="ETHUSDT",
             timeframe="15m",
             row_start=window.row_start,
             row_end=window.row_start + 16,
         )
+        assert adapter is not None
         stamps = [candle.timestamp_ms for candle in adapter.candles]
         assert stamps == sorted(stamps)
         assert stamps[0] > last_ts

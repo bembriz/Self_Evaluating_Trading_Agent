@@ -33,7 +33,8 @@ from lab.promote import (
 from lab.registry import ExperimentRegistry, compare_runs
 from lab.robustness import ROBUSTNESS_VARIANTS, summarize_robustness, variant_config
 from lab.session_runner import LabSessionRunner
-from lab.splits import is_holdout_range
+from lab.splits import WALK_FORWARD_END, WALK_FORWARD_START, is_holdout_range
+from lab.viability import AbsoluteViabilityEvidence, guarded_walk_forward_open
 from lab.walk_forward import (
     aggregate_results,
     make_window_result,
@@ -46,19 +47,18 @@ APP_SHA = "43ecf5c"
 ENGINE_CONFIG = RiskConfig(stop_loss_required=False, version="risk-v1-nostop-mvp-a")
 HOLDOUT_FILE = REPO / "holdout" / "v1.state.json"
 
-EXPECTED_WINDOW_NETS = (-3.0835621892615013, -7.022150732859141, -5.968229890314542)
 EXPECTED_EXPECTANCY = -0.06353337080013907
 
 
 class _Chain:
     """Contexto E2E: componentes reales + contadores de acceso al holdout."""
 
-    def __init__(self, root: Path) -> None:
-        self.repo = REPO
+    def __init__(self, root: Path, *, repo: Path = REPO) -> None:
+        self.repo = repo
         self.registry = ExperimentRegistry(root / "registry")
         self.ranges_opened: list[tuple[int, int]] = []
         self.holdout_bytes_before = HOLDOUT_FILE.read_bytes()
-        manifest_path = REPO / "docs/datasets/BYBIT_ETHBTC_V001.manifest.json"
+        manifest_path = repo / "docs/datasets/BYBIT_ETHBTC_V001.manifest.json"
         self.manifest_sha = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
         resolver = ImportlibSourceResolver()
         defn = StrategyDefinition(
@@ -76,6 +76,22 @@ class _Chain:
     def open_range(self, row_start: int, row_end: int) -> FrozenDatasetAdapter:
         assert not is_holdout_range(row_start, row_end), "E2E never opens holdout"
         self.ranges_opened.append((row_start, row_end))
+        if row_start < WALK_FORWARD_END and row_end > WALK_FORWARD_START:
+            # WALK_FORWARD is a guarded boundary: route through the choke point.
+            adapter = guarded_walk_forward_open(
+                development_result="IMPROVED",
+                absolute_viability=AbsoluteViabilityEvidence(
+                    net_pnl=1.0, expectancy=0.5, profit_factor=2.0
+                ),
+                human_authorized=True,
+                repo_root=self.repo,
+                symbol="ETHUSDT",
+                timeframe="15m",
+                row_start=row_start,
+                row_end=row_end,
+            )
+            assert adapter is not None
+            return adapter
         return FrozenDatasetAdapter.from_repo(
             self.repo,
             symbol="ETHUSDT",
@@ -148,7 +164,7 @@ class _Chain:
         assert json.loads(HOLDOUT_FILE.read_text(encoding="utf-8"))["state"] == "PRISTINE"
 
 
-def test_e2e_strategy_lab_full_chain(tmp_path: Path) -> None:
+def test_e2e_strategy_lab_full_chain(tmp_path: Path, synthetic_frozen_repo: Path) -> None:
     chain = _Chain(tmp_path)
 
     # 1. Identidad del dataset + split v1.
@@ -171,27 +187,29 @@ def test_e2e_strategy_lab_full_chain(tmp_path: Path) -> None:
     assert chain.registry.load_run(linked, "e2e-dev-run").run_id == "e2e-dev-run"
     assert run.event_trace_hash is not None and run.metrics_hash is not None
 
-    # 6. Walk-forward completo (3 ventanas reales) + agregado.
+    # 6. Walk-forward completo (3 ventanas) sobre un dataset SINTÉTICO: el
+    #    bloque real [62208, 88128) no se lee en tests rutinarios.
+    wf_chain = _Chain(tmp_path / "wf", repo=synthetic_frozen_repo)
     windows = walk_forward_windows(3)
     results = []
     for position, window in enumerate(windows):
-        spec = chain.spec_for(window.row_start, window.row_end, chain.baseline_strategy())
-        window_linked = chain.registry.register_spec(spec)
-        window_result = chain.run_session(window.row_start, window.row_end, window_linked)
-        window_run = chain.register_run(
+        spec = wf_chain.spec_for(window.row_start, window.row_end, wf_chain.baseline_strategy())
+        window_linked = wf_chain.registry.register_spec(spec)
+        window_result = wf_chain.run_session(window.row_start, window.row_end, window_linked)
+        window_run = wf_chain.register_run(
             window_linked,
             f"e2e-wf-{position}",
             f"2026-09-12T07:01:0{position}+00:00",
             window_result,
         )
         results.append(make_window_result(window, window_result, run_id=window_run.run_id))
-    for item, expected_net in zip(results, EXPECTED_WINDOW_NETS, strict=True):
-        assert item.net_pnl == expected_net
     agg = aggregate_results(tuple(results))
     assert agg["total_windows"] == 3
-    assert agg["profitable_windows"] == 0
-    assert agg["losing_windows"] == 3
-    assert agg["expectancy"] == EXPECTED_EXPECTANCY
+    assert agg["profitable_windows"] + agg["losing_windows"] == 3
+    assert [item.row_start for item in results] == [window.row_start for window in windows]
+    assert [item.row_end for item in results] == [window.row_end for window in windows]
+    assert results[0].row_start == WALK_FORWARD_START
+    assert results[-1].row_end == WALK_FORWARD_END
 
     # 7. Robustness representativa (las 7 variantes, slice DEV).
     nets: dict[str, float] = {}
@@ -223,9 +241,9 @@ def test_e2e_strategy_lab_full_chain(tmp_path: Path) -> None:
     try:
         promotion.advance_to_robustness(
             RobustnessEvidence(
-                profitable_windows=agg["profitable_windows"],
-                losing_windows=agg["losing_windows"],
-                expectancy=agg["expectancy"],
+                profitable_windows=0,
+                losing_windows=3,
+                expectancy=-0.05,
                 robustness_interpretation="STABLE_NEGATIVE",
                 edge_present=False,
                 promotable=False,

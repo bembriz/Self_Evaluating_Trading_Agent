@@ -37,10 +37,84 @@ def test_development_range_allowed() -> None:
     assert adapter.range.row_end == 96
 
 
-def test_walk_forward_range_allowed() -> None:
-    adapter = open_repo_range(62208, 62304)
-    assert len(adapter) == 96
+def test_walk_forward_range_denied_by_public_from_repo() -> None:
+    with pytest.raises(ValueError, match="WALK_FORWARD"):
+        open_repo_range(62208, 62304)
+
+
+def test_walk_forward_range_denied_before_dataset_io() -> None:
+    # Denied even though the manifest/CSV do not exist at this synthetic root:
+    # the range check runs before any dataset IO.
+    with pytest.raises(ValueError, match="WALK_FORWARD"):
+        FrozenDatasetAdapter.from_repo(
+            Path("/nonexistent-frozen-repo"),
+            symbol="ETHUSDT",
+            timeframe="15m",
+            row_start=62208,
+            row_end=62304,
+        )
+
+
+def test_direct_construction_walk_forward_denied() -> None:
+    with pytest.raises(ValueError, match="WALK_FORWARD"):
+        FrozenDatasetAdapter(
+            dataset_id="BYBIT_ETHBTC_V001",
+            symbol="ETHUSDT",
+            timeframe="15m",
+            manifest_path=MANIFEST,
+            csv_path=CSV,
+            expected_manifest_sha=EXPECTED_SHA,
+            row_start=62208,
+            row_end=62304,
+        )
+
+
+def test_walk_forward_window_range_denied_by_public_adapter() -> None:
+    from lab.walk_forward import walk_forward_windows
+
+    window = walk_forward_windows(3)[0]
+    with pytest.raises(ValueError, match="WALK_FORWARD"):
+        open_repo_range(window.row_start, window.row_end)
+
+
+def test_authorized_walk_forward_opens_synthetic_fixture(synthetic_frozen_repo: Path) -> None:
+    from lab.viability import AbsoluteViabilityEvidence, guarded_walk_forward_open
+
+    adapter = guarded_walk_forward_open(
+        development_result="IMPROVED",
+        absolute_viability=AbsoluteViabilityEvidence(
+            net_pnl=1.0, expectancy=0.5, profit_factor=2.0
+        ),
+        human_authorized=True,
+        repo_root=synthetic_frozen_repo,
+        symbol="ETHUSDT",
+        timeframe="15m",
+        row_start=62208,
+        row_end=62220,
+    )
+    assert adapter is not None
+    assert len(adapter) == 12
     assert adapter.range.row_start == 62208
+
+
+def test_authorized_walk_forward_cannot_open_final_holdout(
+    synthetic_frozen_repo: Path,
+) -> None:
+    from lab.viability import AbsoluteViabilityEvidence, guarded_walk_forward_open
+
+    with pytest.raises(ValueError, match="FINAL_HOLDOUT"):
+        guarded_walk_forward_open(
+            development_result="IMPROVED",
+            absolute_viability=AbsoluteViabilityEvidence(
+                net_pnl=1.0, expectancy=0.5, profit_factor=2.0
+            ),
+            human_authorized=True,
+            repo_root=synthetic_frozen_repo,
+            symbol="ETHUSDT",
+            timeframe="15m",
+            row_start=88128,
+            row_end=88200,
+        )
 
 
 def test_final_holdout_rejected() -> None:

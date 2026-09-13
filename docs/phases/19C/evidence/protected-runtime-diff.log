@@ -1,0 +1,5 @@
+# evidencia: protected-runtime-diff
+fecha: 2026-09-12T20:03:42-06:00
+fase: 19C
+comando: git diff --exit-code HEAD -- src/application/services/paper_runner.py src/application/services/paper_engine.py src/domain/risk src/domain/portfolio src/domain/trading/strategy.py src/infrastructure/bybit src/interfaces/cli/paper_runner.py
+exit=0
