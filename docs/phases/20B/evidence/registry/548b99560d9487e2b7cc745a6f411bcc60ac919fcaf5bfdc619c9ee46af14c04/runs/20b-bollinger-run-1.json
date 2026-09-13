@@ -1,0 +1,12 @@
+{
+  "run": {
+    "application_git_sha": "7b608060ac68b3a3ccd85159b869cbc75bdae7a7",
+    "created_at": "2026-09-13T05:00:00+00:00",
+    "event_trace_hash": "02050dd40df78a59b374c8a0c557d33f8832763212875bd7b823a15c9c75a3b6",
+    "experiment_spec_id": "548b99560d9487e2b7cc745a6f411bcc60ac919fcaf5bfdc619c9ee46af14c04",
+    "metrics_hash": "2dc68d68c0625ea7d07f60fd5a3dc981bc2ec1e6eb8121b7d56cdfe8b243c091",
+    "run_id": "20b-bollinger-run-1",
+    "status": "ok"
+  },
+  "run_id": "20b-bollinger-run-1"
+}

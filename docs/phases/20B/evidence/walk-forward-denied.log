@@ -1,0 +1,7 @@
+# evidencia: walk-forward-denied
+fecha: 2026-09-12T22:32:22-06:00
+fase: 20B
+comando: bash -c rg -n 'guarded_walk_forward_open|62208|88128' harness/scripts/phase20b_development_evaluation.py || echo NO_WALK_FORWARD_ACCESS
+4:Runs both strategies over DEVELOPMENT [0, 62208) with the real
+11:Never touches WALK_FORWARD [62208, 88128) nor FINAL_HOLDOUT [88128, 103680).
+exit=0

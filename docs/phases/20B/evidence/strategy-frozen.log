@@ -1,0 +1,5 @@
+# evidencia: strategy-frozen
+fecha: 2026-09-12T22:32:22-06:00
+fase: 20B
+comando: git diff --exit-code HEAD -- src/lab/strategies/eth_bollinger_mean_reversion.py src/domain/market/indicators.py
+exit=0

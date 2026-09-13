@@ -1,0 +1,133 @@
+{
+  "ABSOLUTE_VIABILITY": {
+    "ABSOLUTE_VIABILITY_GATE": "FAIL",
+    "EXPECTANCY_GT_0": false,
+    "NET_PNL_GT_0": false,
+    "PROFIT_FACTOR_GT_1": false
+  },
+  "BASELINE": {
+    "average_loss": -0.08828265766107654,
+    "average_win": 0.3769880877762565,
+    "closed_trades": 406,
+    "expectancy": -0.049319097698344215,
+    "fees": 16.24271570528947,
+    "fills": 812,
+    "max_drawdown": 0.01677501041581718,
+    "net_pnl": -20.023553665527754,
+    "profit_factor": 0.3902907027103561,
+    "return_pct": -0.020023553665527754,
+    "signals_buy": 634,
+    "signals_hold": 60553,
+    "signals_sell": 1021,
+    "slippage": 3.248543249707467,
+    "win_rate": 0.08374384236453201
+  },
+  "BASELINE_ANCHOR": {
+    "actual_expectancy": -0.049319097698344215,
+    "actual_max_drawdown": 0.01677501041581718,
+    "actual_net_pnl": -20.023553665527754,
+    "actual_profit_factor": 0.3902907027103561,
+    "actual_trades": 406,
+    "expected_expectancy": -0.049319097698344215,
+    "expected_max_drawdown": 0.01677501041581718,
+    "expected_net_pnl": -20.023553665527754,
+    "expected_profit_factor": 0.3902907027103561,
+    "expected_trades": 406,
+    "match": true
+  },
+  "BASELINE_BEHAVIOR_CHANGED": false,
+  "BASELINE_IDENTITY_CHANGED": true,
+  "BASELINE_SPEC_ID": "281d065eb613c5e05869efc6b7a4d680ddc0c87b721502325224ea80d39a5dde",
+  "BOLLINGER": {
+    "average_loss": -0.0894557680244005,
+    "average_win": 0.09144643848851895,
+    "closed_trades": 403,
+    "expectancy": -0.0499535492324975,
+    "fees": 16.12243964733371,
+    "fills": 806,
+    "max_drawdown": 0.016906792313621962,
+    "net_pnl": -20.13128034069649,
+    "profit_factor": 0.2855818256351072,
+    "return_pct": -0.020131280340696493,
+    "signals_buy": 460,
+    "signals_hold": 29598,
+    "signals_sell": 32150,
+    "slippage": 3.2244880270717693,
+    "win_rate": 0.21836228287841192
+  },
+  "BOLLINGER_SPEC_ID": "548b99560d9487e2b7cc745a6f411bcc60ac919fcaf5bfdc619c9ee46af14c04",
+  "DATASET_ID": "BYBIT_ETHBTC_V001",
+  "DEVELOPMENT_RESULT": "NOT_IMPROVED",
+  "EDGE_PRESENT": "NOT_EVALUATED_OUT_OF_SAMPLE",
+  "EVALUATION": "DEVELOPMENT_ECONOMIC",
+  "FINAL_HOLDOUT_EXECUTIONS": 0,
+  "FINAL_HOLDOUT_READS": 0,
+  "HOLDOUT_STATE": "PRISTINE",
+  "MEAN_REVERSION_DIAGNOSTICS": {
+    "RAW_LOWER_BAND_EXCURSIONS": 3955,
+    "REENTRIES_BLOCKED_BY_ADX": 1526,
+    "REENTRIES_CONFIRMED_LOW_ADX": 470,
+    "REENTRY_EVENTS": 1996,
+    "SELL_PRECEDENCE_EVENTS": 10,
+    "SIMULTANEOUS_BUY_SELL_SETUPS": 10
+  },
+  "PHASE": "20B",
+  "PRIMARY_DELTAS": {
+    "DELTA_EXPECTANCY": -0.0006344515341532853,
+    "DELTA_FEES": -0.1202760579557598,
+    "DELTA_MAX_DRAWDOWN": 0.00013178189780478286,
+    "DELTA_NET_PNL": -0.10772667516873824,
+    "DELTA_PROFIT_FACTOR": -0.1047088770752489,
+    "DELTA_RETURN_PCT": -0.00010772667516873932,
+    "DELTA_SLIPPAGE": -0.024055222635697593,
+    "DELTA_TRADES": -3,
+    "DELTA_WIN_RATE": 0.1346184405138799
+  },
+  "PRIMARY_SYMBOL": "ETHUSDT",
+  "REPRODUCIBILITY": "PASS",
+  "REPRODUCIBILITY_DETAIL": {
+    "event_trace_hash_match": true,
+    "metrics_hash_match": true,
+    "same_spec_id": true
+  },
+  "REQUESTED_RANGES": [
+    {
+      "row_end": 62208,
+      "row_start": 0,
+      "symbol": "ETHUSDT"
+    }
+  ],
+  "ROW_END": 62208,
+  "ROW_START": 0,
+  "SIGNAL_EXECUTION_ATTRIBUTION": {
+    "BUY_SIGNALS": 460,
+    "EXECUTED_BUYS": 403,
+    "EXECUTED_SELLS": 403,
+    "REJECTED_BUYS": 57,
+    "SELL_SIGNALS": 32150,
+    "SELL_SIGNALS_WITHOUT_POSITION": 27936,
+    "SUPERSEDED_BUYS": 0
+  },
+  "SPEC_IDS_DIFFERENT": true,
+  "STRATEGY_PROMOTABLE": "NOT_EVALUATED",
+  "TIMEFRAME": "15m",
+  "TRADE_STRUCTURE": {
+    "EthBollingerMeanReversion-v1": {
+      "average_holding_duration_ms": 1960794.0446650125,
+      "average_trade_pnl": -0.0499535492324975,
+      "largest_loss": -0.32149895250910193,
+      "largest_win": 0.4790508713608593,
+      "median_holding_duration_ms": 900000
+    },
+    "baseline-v1": {
+      "average_holding_duration_ms": 8264039.408866995,
+      "average_trade_pnl": -0.049319097698344215,
+      "largest_loss": -0.4194775729203637,
+      "largest_win": 2.403398801018388,
+      "median_holding_duration_ms": 900000.0
+    }
+  },
+  "WALK_FORWARD_AUTHORIZED": "NO",
+  "WALK_FORWARD_ELIGIBLE": "NO",
+  "WALK_FORWARD_READS": 0
+}
