@@ -65,23 +65,22 @@ class RiskEngine:
 
     def evaluate(self, proposal: TradeProposal, state: PortfolioRiskState) -> RiskVerdict:
         cfg = self._config
-        if not state.kill_switch.active:
-            if drawdown_exceeded(peak_equity=state.peak_equity, equity=state.equity, config=cfg):
-                return self._reject("max_drawdown")
-            if daily_loss_exceeded(state.realized_pnl_today, capital=cfg.capital, config=cfg):
-                return self._reject("max_daily_loss")
-        else:
+        if state.kill_switch.active:
             return self._reject("kill_switch")
+        if drawdown_exceeded(peak_equity=state.peak_equity, equity=state.equity, config=cfg):
+            return self._reject("max_drawdown")
 
         if proposal.action is Action.HOLD:
             return RiskVerdict(approved=True, reason="no_op")
         if proposal.action is Action.SELL:
-            # Long-only: SELL solo reduce posición existente.
+            # Long-only: SELL solo reduce posición existente (reductor de riesgo).
             if state.open_positions == 0:
                 return self._reject("no_position_to_reduce")
             return RiskVerdict(approved=True, reason="reduce")
 
-        # Acción BUY.
+        # Acción BUY: nueva exposición. El límite diario solo aplica aquí.
+        if daily_loss_exceeded(state.realized_pnl_today, capital=cfg.capital, config=cfg):
+            return self._reject("max_daily_loss")
         if state.open_positions >= cfg.max_open_positions:
             return self._reject("max_open_positions")
         if cfg.stop_loss_required and (proposal.atr is None or proposal.atr <= 0.0):

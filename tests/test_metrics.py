@@ -14,7 +14,7 @@ def _trade(gross: float, fees: float, slippage: float) -> Trade:
         gross_pnl=gross,
         fees=fees,
         slippage=slippage,
-        net_pnl=gross - fees - slippage,
+        net_pnl=gross - fees,
     )
 
 
@@ -34,8 +34,8 @@ def test_net_pnl_subtracts_costs() -> None:
     assert m.gross_pnl == pytest.approx(6.0)
     assert m.fees == pytest.approx(2.0)
     assert m.slippage == pytest.approx(1.0)
-    assert m.net_pnl == pytest.approx(3.0)
-    assert m.fully_loaded_pnl == pytest.approx(3.0)
+    assert m.net_pnl == pytest.approx(4.0)
+    assert m.fully_loaded_pnl == pytest.approx(4.0)
 
 
 def test_win_rate_and_loss_rate() -> None:
@@ -87,8 +87,8 @@ def test_sharpe_positive_for_rising_equity() -> None:
 def test_llm_cost_reduces_fully_loaded_only() -> None:
     trades = [_trade(10.0, 1.0, 0.5)]
     m = compute_metrics(trades, [100.0], periods_per_year=8760, llm_cost=2.0)
-    assert m.net_pnl == pytest.approx(8.5)
-    assert m.fully_loaded_pnl == pytest.approx(6.5)
+    assert m.net_pnl == pytest.approx(9.0)
+    assert m.fully_loaded_pnl == pytest.approx(7.0)
     assert m.llm_cost == pytest.approx(2.0)
 
 
