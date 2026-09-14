@@ -141,6 +141,49 @@ def atr(candles: Sequence[Candle], period: int = 14) -> list[float | None]:
     return out
 
 
+class AtrTracker:
+    """ATR incremental (Wilder) vela a vela, causal y sin ventana.
+
+    Reproduce exactamente la serie de ``atr()`` (misma siembra SMA de los primeros
+    ``period`` TRs y misma recurrencia), permitiendo que el flujo en tiempo real
+    obtenga los mismos valores que el replay sobre la serie completa sin mantener
+    toda la historia en memoria. Devuelve ``None`` durante el warmup.
+    """
+
+    __slots__ = ("_period", "_prev_close", "_seed_trs", "_value")
+
+    def __init__(self, period: int = 14) -> None:
+        _require_positive_period(period)
+        self._period = period
+        self._prev_close: float | None = None
+        self._seed_trs: list[float] = []
+        self._value: float | None = None
+
+    @property
+    def value(self) -> float | None:
+        return self._value
+
+    def update(self, candle: Candle) -> float | None:
+        if self._prev_close is None:
+            self._prev_close = candle.close
+            return None
+        tr = max(
+            candle.high - candle.low,
+            abs(candle.high - self._prev_close),
+            abs(candle.low - self._prev_close),
+        )
+        self._prev_close = candle.close
+        if self._value is not None:
+            self._value = (self._value * (self._period - 1) + tr) / self._period
+            return self._value
+        self._seed_trs.append(tr)
+        if len(self._seed_trs) < self._period:
+            return None
+        self._value = sum(self._seed_trs) / self._period
+        self._seed_trs = []
+        return self._value
+
+
 def vwap(candles: Sequence[Candle]) -> list[float | None]:
     out: list[float | None] = [None] * len(candles)
     cum_pv = 0.0

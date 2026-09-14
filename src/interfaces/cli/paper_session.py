@@ -19,7 +19,7 @@ from application.services.paper_engine import PaperEngine
 from domain.evaluation.buy_hold import run_buy_and_hold
 from domain.evaluation.metrics import compute_metrics
 from domain.market.candle import Timeframe
-from domain.market.indicators import atr
+from domain.market.indicators import AtrTracker
 from domain.risk.config import RiskConfig
 from domain.trading.decision import TradingDecision
 from domain.trading.fees import FeeModel
@@ -74,7 +74,7 @@ def run_paper_session(
         return 2
 
     candles = store.read_candles(Path(entry.path))
-    atr_series = atr(candles)
+    atr_tracker = AtrTracker()
     risk_config = RiskConfig()
     fee_model = FeeModel()
     slippage_model = SlippageModel()
@@ -92,7 +92,7 @@ def run_paper_session(
     open_bars = 0
     equity: list[float] = []
 
-    for i, candle in enumerate(candles):
+    for candle in candles:
         signal = strategy.on_candle(candle)
         decisions[signal.action.value] += 1
         decision = TradingDecision(
@@ -105,7 +105,7 @@ def run_paper_session(
         event = paper.on_price(
             decision=decision,
             price=candle.close,
-            atr=atr_series[i],
+            atr=atr_tracker.update(candle),
             timestamp_ms=candle.timestamp_ms,
         )
         if event.fill is not None:

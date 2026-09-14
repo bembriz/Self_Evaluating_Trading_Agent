@@ -78,7 +78,7 @@ def trades_from_trace(events: tuple[LabCandleEvent, ...]) -> tuple[Trade, ...]:
                     gross_pnl=gross,
                     fees=fees,
                     slippage=slippage,
-                    net_pnl=gross - fees - slippage,
+                    net_pnl=gross - fees,
                 )
             )
     return tuple(trades)

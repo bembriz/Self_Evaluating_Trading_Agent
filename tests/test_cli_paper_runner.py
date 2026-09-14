@@ -2,12 +2,14 @@ import asyncio
 from pathlib import Path
 from typing import Any
 
+from application.services.certification_snapshot import RuntimeArtifact
 from application.services.paper_runner import (
     PaperRunner,
     PaperRunnerConfig,
 )
 from domain.market.candle import Timeframe
 from domain.market.stream import KlineUpdate
+from domain.risk.config import RiskConfig
 from interfaces.cli.paper_runner import _run_loop, paper_runner, run_paper_runner
 from settings import Settings
 
@@ -43,6 +45,26 @@ class FakeRepo:
         return list(self._events)
 
 
+class FakeCandleRepo:
+    async def upsert(self, *args: Any, **kwargs: Any) -> int:
+        return 0
+
+    async def count(self, *args: Any, **kwargs: Any) -> int:
+        return 0
+
+    async def range(self, *args: Any, **kwargs: Any) -> list[Any]:
+        return []
+
+    async def upsert_paper(self, *args: Any, **kwargs: Any) -> int:
+        return 0
+
+    async def session_range(self, *args: Any, **kwargs: Any) -> list[Any]:
+        return []
+
+    async def last_persisted_ms(self, *args: Any, **kwargs: Any) -> int | None:
+        return None
+
+
 def _kline(close: float, ts: int, confirm: bool = True) -> KlineUpdate:
     return KlineUpdate(
         "ETHUSDT", Timeframe.M15, ts, close, close, close, close, 10.0, 1000.0, confirm
@@ -63,9 +85,26 @@ def _paper_runner(repo: FakeRepo) -> PaperRunner:
 
 async def test_run_loop_emits_report_after_interval(tmp_path: Path) -> None:
     repo = FakeRepo([])
+    candle_repo = FakeCandleRepo()
     stream = FakeStream([_kline(100.0, 1_000)])
     report_dir = tmp_path / "reports"
     state_path = tmp_path / "certification-state.json"
+    now_ms = 1_000_000
+
+    artifact = RuntimeArtifact(
+        git_commit="test123",
+        application_version="0.2.0",
+        docker_image_digest="sha256:test",
+        strategy_version="baseline-v1",
+        strategy_hash="abc123",
+        risk_config_version=RiskConfig().version,
+        fees_slippage_config_version="v1",
+        symbol="ETHUSDT",
+        timeframe="15m",
+        initial_capital=RiskConfig().capital,
+        session_id="paper-baseline-test",
+        certification_started_at_ms=now_ms,
+    )
 
     async def fake_commit() -> None:
         pass
@@ -82,6 +121,10 @@ async def test_run_loop_emits_report_after_interval(tmp_path: Path) -> None:
         state_path=state_path,
         initial_equity=1000.0,
         deadline=asyncio.get_running_loop().time() + 1,
+        candle_repo=candle_repo,
+        artifact=artifact,
+        symbol="ETHUSDT",
+        timeframe=Timeframe.M15,
     )
 
     assert result.startswith("processed=")

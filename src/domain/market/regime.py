@@ -68,7 +68,7 @@ class RegimeClassifier:
     def _is_breakout(candles: Sequence[Candle], cfg: RegimeConfig) -> bool:
         lookback = cfg.breakout_lookback
         start = max(0, len(candles) - lookback - 1)
-        prior = candles[start:-1]
+        prior = list(candles)[start:-1]
         if not prior:
             return False
         last = candles[-1]

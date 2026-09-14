@@ -7,7 +7,7 @@ persistirlo en SystemState y sobrevivir reinicios hasta reset humano (PRD §50).
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Literal
+from typing import Any, Literal
 
 from domain.risk.config import RiskConfig
 
@@ -33,6 +33,21 @@ class KillSwitchState:
     active: bool = False
     reason: str = ""
     activated_at_ms: int = 0
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "active": self.active,
+            "reason": self.reason,
+            "activated_at_ms": self.activated_at_ms,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> KillSwitchState:
+        return cls(
+            active=bool(data.get("active", False)),
+            reason=str(data.get("reason", "")),
+            activated_at_ms=int(data.get("activated_at_ms", 0)),
+        )
 
 
 class KillSwitch:

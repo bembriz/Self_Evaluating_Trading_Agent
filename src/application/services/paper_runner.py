@@ -2,14 +2,23 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections import defaultdict, deque
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from application.ports.market_repositories import MarketCandleRepository
 from application.ports.paper_trading import PaperTradeEvent, PaperTradeEventRepository
-from application.services.paper_engine import PaperEngine
+from application.services.decision_context import SCHEMA_VERSION, DecisionContext
+from application.services.paper_engine import OutOfOrderTimestampError, PaperEngine
+from application.services.regime_confirmation import RegimeConfirmationTracker
+from domain.market.candle import Candle, Timeframe
+from domain.market.indicators import AtrTracker
+from domain.market.regime import RegimeClassifier
 from domain.market.stream import KlineUpdate
 from domain.risk.config import RiskConfig
+from domain.risk.guards import KillSwitch
 from domain.trading.decision import TradingDecision
 from domain.trading.signal import Intensity
 from domain.trading.strategy import EmaRsiBaseline
@@ -17,6 +26,61 @@ from domain.trading.strategy import EmaRsiBaseline
 
 class UnsafePaperModeError(RuntimeError):
     pass
+
+
+class RecoveryDivergenceError(RuntimeError):
+    """El replay determinista no reproduce el evento persistido: detener recovery."""
+
+
+class RecoveryGapError(RuntimeError):
+    """Falta un evento persistido para una vela: brecha de datos en recovery."""
+
+
+class DuplicateCandleError(RuntimeError):
+    """Vela con timestamp ya procesado pero payload distinto: inconsistencia de datos."""
+
+
+def _floats_close(a: float | None, b: float | None, tol: float) -> bool:
+    if a is None or b is None:
+        return a is None and b is None
+    return abs(a - b) <= tol * max(1.0, abs(a), abs(b))
+
+
+def events_equivalent(a: PaperTradeEvent, b: PaperTradeEvent, tol: float = 1e-9) -> bool:
+    """Compara los campos que determinan ejecución/estado (no identidad/versiones)."""
+    return (
+        a.action == b.action
+        and a.filled == b.filled
+        and a.risk_reason == b.risk_reason
+        and a.exit_reason == b.exit_reason
+        and a.kill_switch_active == b.kill_switch_active
+        and _floats_close(a.exec_price, b.exec_price, tol)
+        and _floats_close(a.quantity, b.quantity, tol)
+        and _floats_close(a.fee, b.fee, tol)
+        and _floats_close(a.slippage_cost, b.slippage_cost, tol)
+        and _floats_close(a.equity, b.equity, tol)
+        and _contexts_equivalent(a.decision_context, b.decision_context, tol)
+    )
+
+
+def _contexts_equivalent(a: dict[str, Any] | None, b: dict[str, Any] | None, tol: float) -> bool:
+    if a is None or b is None:
+        return a is None and b is None
+    keys = ("signal_reason", "regime")
+    for key in keys:
+        if a.get(key) != b.get(key):
+            return False
+    for key in ("atr", "ema_fast", "ema_slow", "rsi"):
+        av, bv = a.get(key), b.get(key)
+        if (av is None) != (bv is None):
+            return False
+        if (
+            av is not None
+            and bv is not None
+            and abs(float(av) - float(bv)) > tol * max(1.0, abs(float(av)), abs(float(bv)))
+        ):
+            return False
+    return True
 
 
 def strategy_hash(strategy_version: str, decision_source: str) -> str:
@@ -102,13 +166,37 @@ def summarize_events(
     )
 
 
-def write_periodic_report(summary: PaperRunSummary, report_path: Path) -> None:
+def write_periodic_report(
+    summary: PaperRunSummary,
+    report_path: Path,
+    *,
+    regime_evidence: list[dict[str, object]] | None = None,
+    rejected_regime_candidates: int = 0,
+) -> None:
     report_path.parent.mkdir(parents=True, exist_ok=True)
     delta_fills = summary.delta_fills if summary.delta_fills is not None else "n/a"
     delta_pnl = (
         f"{summary.delta_pnl_absolute:.8f}" if summary.delta_pnl_absolute is not None else "n/a"
     )
     delta_pnl_pct = f"{summary.delta_pnl_pct:.8f}" if summary.delta_pnl_pct is not None else "n/a"
+    evidence = regime_evidence or []
+    confirmation_candles = next(
+        (
+            item["confirmation_candles"]
+            for item in evidence
+            if isinstance(item.get("confirmation_candles"), int)
+        ),
+        3,
+    )
+    classifier_version = next(
+        (
+            item["classifier_version"]
+            for item in evidence
+            if isinstance(item.get("classifier_version"), str)
+        ),
+        RegimeClassifier.version,
+    )
+    regime_names = ", ".join(name for item in evidence if isinstance(name := item.get("name"), str))
     report_path.write_text(
         "\n".join(
             [
@@ -136,6 +224,10 @@ def write_periodic_report(summary: PaperRunSummary, report_path: Path) -> None:
                 f"delta_pnl_absolute: {delta_pnl}",
                 f"delta_pnl_pct: {delta_pnl_pct}",
                 f"kill_switch_active: {summary.kill_switch_active}",
+                f"regime_confirmation_candles: {confirmation_candles}",
+                f"regime_classifier_version: {classifier_version}",
+                f"confirmed_market_regimes: {regime_names}",
+                f"rejected_regime_candidates: {rejected_regime_candidates}",
                 "",
             ]
         ),
@@ -143,10 +235,56 @@ def write_periodic_report(summary: PaperRunSummary, report_path: Path) -> None:
     )
 
 
+def _merge_regime_evidence(
+    previous: object, current: list[dict[str, object]]
+) -> list[dict[str, object]]:
+    merged: dict[str, dict[str, object]] = {}
+    for item in [*previous, *current] if isinstance(previous, list) else current:
+        name = item.get("name")
+        if not isinstance(name, str) or not name:
+            continue
+        existing = merged.get(name)
+        if existing is None:
+            merged[name] = dict(item)
+            continue
+        combined = {**existing, **item}
+        for field in ("first_seen_at_ms", "confirmed_at_ms"):
+            values = [value.get(field) for value in (existing, item)]
+            ints = [value for value in values if isinstance(value, int)]
+            if ints:
+                combined[field] = min(ints)
+        values = [value.get("last_seen_at_ms") for value in (existing, item)]
+        ints = [value for value in values if isinstance(value, int)]
+        if ints:
+            combined["last_seen_at_ms"] = max(ints)
+        merged[name] = combined
+    return list(merged.values())
+
+
+def _existing_report_paths(paths: object) -> list[str]:
+    if not isinstance(paths, list):
+        return []
+    return list(
+        dict.fromkeys(path for path in paths if isinstance(path, str) and Path(path).exists())
+    )
+
+
+def load_certification_state(state_path: Path) -> dict[str, Any]:
+    if not state_path.exists():
+        return {}
+    data = json.loads(state_path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise ValueError("certification state must be a JSON object")
+    return data
+
+
 def write_certification_state(
     summary: PaperRunSummary,
     state_path: Path,
     previous: dict[str, Any] | None = None,
+    *,
+    regime_evidence: list[dict[str, object]] | None = None,
+    report_path: Path | None = None,
 ) -> None:
     first = summary.first_timestamp_ms
     latest = summary.latest_timestamp_ms
@@ -154,6 +292,9 @@ def write_certification_state(
     if first is not None and latest is not None:
         calendar_days = max(1, ((latest - first) // 86_400_000) + 1)
     data = dict(previous or {})
+    reports = data.get("periodic_reports", [])
+    if report_path is not None:
+        reports = [*reports, str(report_path)] if isinstance(reports, list) else [str(report_path)]
     data.update(
         {
             "strategy_version": summary.strategy_version,
@@ -161,12 +302,10 @@ def write_certification_state(
             "active_strategy_hash": summary.strategy_hash,
             "calendar_days": calendar_days,
             "trade_count": summary.fills,
-            "market_regimes": data.get("market_regimes", []),
-            "periodic_reports": [
-                report
-                for report in data.get("periodic_reports", [])
-                if isinstance(report, str) and Path(report).exists()
-            ],
+            "market_regimes": _merge_regime_evidence(
+                data.get("market_regimes", []), regime_evidence or []
+            ),
+            "periodic_reports": _existing_report_paths(reports),
             "latest_equity": summary.latest_equity,
             "initial_equity": summary.initial_equity,
             "pnl_absolute": summary.pnl_absolute,
@@ -174,7 +313,9 @@ def write_certification_state(
         }
     )
     state_path.parent.mkdir(parents=True, exist_ok=True)
-    state_path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temporary_path = state_path.with_suffix(f"{state_path.suffix}.tmp")
+    temporary_path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temporary_path.replace(state_path)
 
 
 @dataclass(frozen=True, slots=True)
@@ -209,19 +350,92 @@ class PaperRunner:
         event_repo: PaperTradeEventRepository,
         paper_engine: PaperEngine | None = None,
         strategy: EmaRsiBaseline | None = None,
+        regime_classifier: RegimeClassifier | None = None,
+        kill_switch: KillSwitch | None = None,
+        candle_repo: MarketCandleRepository | None = None,
     ) -> None:
         config.validate_safe()
         self._config = config
         self._repo = event_repo
+        self._candle_repo = candle_repo
         self._strategy = strategy or EmaRsiBaseline()
         self._engine = paper_engine or PaperEngine(config=RiskConfig())
+        if kill_switch is not None:
+            self._engine.attach_kill_switch(kill_switch)
         self._strategy_hash = strategy_hash(self._strategy.version, config.decision_source)
+        self._regime_classifier = regime_classifier or RegimeClassifier()
+        self._candles_by_symbol: dict[str, deque[Candle]] = defaultdict(lambda: deque(maxlen=100))
+        self._atr_trackers = {symbol: AtrTracker() for symbol in config.symbols}
+        self._regime_trackers = {
+            symbol: RegimeConfirmationTracker(symbol=symbol, timeframe=config.timeframe)
+            for symbol in config.symbols
+        }
+        self._last_candle: dict[tuple[str, str], Candle] = {}
+
+    @property
+    def rejected_regime_candidates(self) -> int:
+        return sum(tracker.rejected_candidates for tracker in self._regime_trackers.values())
+
+    @property
+    def atr_ready(self) -> bool:
+        """True si todos los ATR trackers completaron el warmup (velas suficientes)."""
+        return bool(self._atr_trackers) and all(
+            tracker.value is not None for tracker in self._atr_trackers.values()
+        )
+
+    def regime_evidence(self) -> list[dict[str, object]]:
+        return [
+            evidence
+            for tracker in self._regime_trackers.values()
+            for evidence in tracker.evidence()
+        ]
 
     async def handle_kline(self, kline: KlineUpdate) -> PaperTradeEvent | None:
         candle = kline.to_candle()
         if candle is None:
             return None
+        return await self.handle_candle(kline.symbol, kline.interval, candle)
+
+    async def handle_candle(
+        self, symbol: str, timeframe: Timeframe, candle: Candle
+    ) -> PaperTradeEvent | None:
+        """Procesa una vela confirmada y la persiste atómicamente (candle + evento).
+
+        Deduplicación de estado (16c.5a/D3): una vela con timestamp igual al último
+        procesado no vuelve a avanzar estado mutable en memoria. Si es idéntica es
+        no-op (None); si difiere el payload es inconsistencia de datos.
+        """
+        key = (symbol, timeframe.label)
+        previous = self._last_candle.get(key)
+        if previous is not None:
+            if candle.timestamp_ms < previous.timestamp_ms:
+                raise OutOfOrderTimestampError(
+                    f"timestamp fuera de orden: {candle.timestamp_ms} < {previous.timestamp_ms}"
+                )
+            if candle.timestamp_ms == previous.timestamp_ms:
+                if candle == previous:
+                    return None
+                raise DuplicateCandleError(
+                    f"vela duplicada con payload distinto en {symbol} {timeframe.label} "
+                    f"ts={candle.timestamp_ms}"
+                )
+        self._last_candle[key] = candle
+        event = self._process(symbol, timeframe.label, candle)
+        if self._candle_repo is not None:
+            await self._candle_repo.upsert_paper(
+                self._config.session_id, symbol, timeframe, [candle]
+            )
+        await self._repo.add(event)
+        return event
+
+    def _process(self, symbol: str, timeframe_label: str, candle: Candle) -> PaperTradeEvent:
+        """Pipeline puro (sin persistencia): vela → trackers → decision → engine → evento."""
+        candles = self._candles_by_symbol[symbol]
+        candles.append(candle)
+        regime = self._regime_classifier.classify(candles)
+        self._regime_trackers[symbol].observe(regime, candle.timestamp_ms)
         signal = self._strategy.on_candle(candle)
+        atr_value = self._atr_trackers[symbol].update(candle)
         decision = TradingDecision(
             timestamp_ms=candle.timestamp_ms,
             action=signal.action,
@@ -232,17 +446,26 @@ class PaperRunner:
         paper_event = self._engine.on_price(
             decision=decision,
             price=candle.close,
-            atr=None,
+            atr=atr_value,
             timestamp_ms=candle.timestamp_ms,
         )
         fill = paper_event.fill
-        event = PaperTradeEvent(
+        context = DecisionContext(
+            schema_version=SCHEMA_VERSION,
+            signal_reason=signal.reason,
+            atr=atr_value,
+            ema_fast=getattr(self._strategy, "ema_fast", None),
+            ema_slow=getattr(self._strategy, "ema_slow", None),
+            rsi=getattr(self._strategy, "rsi", None),
+            regime=regime.name if regime is not None else None,
+        )
+        return PaperTradeEvent(
             session_id=self._config.session_id,
             strategy_version=self._strategy.version,
             strategy_hash=self._strategy_hash,
             decision_source=self._config.decision_source,
-            symbol=kline.symbol,
-            timeframe=kline.interval.label,
+            symbol=symbol,
+            timeframe=timeframe_label,
             timestamp_ms=candle.timestamp_ms,
             action=paper_event.action.name,
             filled=paper_event.filled,
@@ -254,9 +477,36 @@ class PaperRunner:
             slippage_cost=fill.slippage_cost if fill is not None else 0.0,
             equity=self._engine.mark_to_market(price=candle.close),
             kill_switch_active=self._engine.kill_switch_state.active,
+            decision_context=context.to_dict(),
         )
-        await self._repo.add(event)
-        return event
+
+    def replay(
+        self,
+        candles: list[tuple[str, str, Candle]],
+        persisted: Mapping[tuple[str, str, int], PaperTradeEvent],
+    ) -> None:
+        """Reconstruye el estado replanteando velas y verificando contra lo persistido.
+
+        Levanta ``RecoveryGapError`` si falta un evento persistido y
+        ``RecoveryDivergenceError`` si el replay no reproduce el evento persistido.
+        No persiste nada: los fills persistidos son la evidencia autoritativa.
+        """
+        for symbol, timeframe_label, candle in candles:
+            event = self._process(symbol, timeframe_label, candle)
+            self._last_candle[(symbol, timeframe_label)] = candle
+            key = (symbol, timeframe_label, candle.timestamp_ms)
+            expected = persisted.get(key)
+            if expected is None:
+                raise RecoveryGapError(
+                    f"evento persistido faltante para {symbol} {timeframe_label} "
+                    f"ts={candle.timestamp_ms}"
+                )
+            if not events_equivalent(event, expected):
+                raise RecoveryDivergenceError(
+                    f"replay diverge de lo persistido en {symbol} {timeframe_label} "
+                    f"ts={candle.timestamp_ms}: recomputed={event.action}/{event.filled} "
+                    f"persisted={expected.action}/{expected.filled}"
+                )
 
     async def run_once(self) -> None:
         return None

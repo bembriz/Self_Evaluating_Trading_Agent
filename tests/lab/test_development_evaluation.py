@@ -76,20 +76,23 @@ def test_count_signals_splits_buy_sell_hold() -> None:
 
 def test_session_metrics_uses_existing_formulas() -> None:
     events = (
-        *_round_trip(1, 2, entry=100.0, exit=110.0, fee=0.02, slip=0.004),
-        *_round_trip(3, 4, entry=100.0, exit=90.0, fee=0.02, slip=0.004),
+        *_round_trip(1, 2, entry=100.004, exit=109.996, fee=0.02, slip=0.004),
+        *_round_trip(3, 4, entry=100.004, exit=90.004, fee=0.02, slip=0.004),
     )
     metrics = session_metrics(_result(events))
+    # exec_price includes slippage; gross = (exit-exec) * qty; net = gross - fees
+    # Trade 1: (109.996-100.004)*0.2 = 1.9984, fees=0.04, net=1.9584
+    # Trade 2: (90.004-100.004)*0.2 = -2.0, fees=0.04, net=-2.04
     assert metrics["closed_trades"] == 2
     assert metrics["fills"] == 4
     assert metrics["fees"] == pytest.approx(0.08)
     assert metrics["slippage"] == pytest.approx(0.016)
-    assert metrics["net_pnl"] == pytest.approx(1.952 - 2.048)
+    assert metrics["net_pnl"] == pytest.approx(1.9584 + (-2.04))
     assert metrics["return_pct"] == pytest.approx(metrics["net_pnl"] / 1000.0)
     assert metrics["win_rate"] == pytest.approx(0.5)
-    assert metrics["average_win"] == pytest.approx(1.952)
-    assert metrics["average_loss"] == pytest.approx(-2.048)
-    assert metrics["profit_factor"] == pytest.approx(1.952 / 2.048)
+    assert metrics["average_win"] == pytest.approx(1.9584)
+    assert metrics["average_loss"] == pytest.approx(-2.04)
+    assert metrics["profit_factor"] == pytest.approx(1.9584 / 2.04)
     assert metrics["expectancy"] == pytest.approx(metrics["net_pnl"] / 2)
     assert metrics["max_drawdown"] >= 0.0
 
@@ -221,8 +224,8 @@ def test_btc_filter_attribution_accounts_and_explains_blocked_buys() -> None:
     assert attribution["blocked_baseline_winners"] == 0
     assert attribution["blocked_baseline_losers"] == 1
     assert attribution["blocked_baseline_flats"] == 0
-    assert attribution["blocked_baseline_net_pnl"] == pytest.approx(-2.048)
-    assert attribution["blocked_baseline_avg_net_pnl"] == pytest.approx(-2.048)
+    assert attribution["blocked_baseline_net_pnl"] == pytest.approx(-2.04)
+    assert attribution["blocked_baseline_avg_net_pnl"] == pytest.approx(-2.04)
 
 
 def test_btc_filter_attribution_without_blocked_trades() -> None:

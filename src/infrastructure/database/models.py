@@ -9,12 +9,15 @@ from pgvector.sqlalchemy import Vector
 from sqlalchemy import (
     BigInteger,
     Boolean,
+    CheckConstraint,
     DateTime,
     Float,
     Index,
     String,
     Text,
     UniqueConstraint,
+    func,
+    text,
 )
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
@@ -42,7 +45,12 @@ class SystemState(Base):
 
 
 class MarketCandle(Base):
-    """Vela OHLCV persistida (PRD §55 market_candles)."""
+    """Vela OHLCV persistida (PRD §55 market_candles).
+
+    ``source`` separa la procedencia: ``download`` (histórico, sin sesión) y
+    ``paper-live`` (paper-runner, con ``session_id``). La unicidad se resuelve con
+    índices parciales por procedencia.
+    """
 
     __tablename__ = "market_candles"
 
@@ -56,12 +64,41 @@ class MarketCandle(Base):
     close: Mapped[float] = mapped_column(Float, nullable=False)
     volume: Mapped[float] = mapped_column(Float, nullable=False)
     turnover: Mapped[float] = mapped_column(Float, nullable=False)
+    session_id: Mapped[str | None] = mapped_column(String(96), nullable=True)
+    confirmed: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=True, server_default=text("true")
+    )
+    source: Mapped[str] = mapped_column(
+        String(16), nullable=False, default="download", server_default="download"
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=_utcnow, server_default=func.now()
+    )
 
     __table_args__ = (
-        UniqueConstraint(
-            "symbol", "timeframe", "timestamp_ms", name="uq_market_candles_symbol_tf_ts"
+        Index(
+            "uq_market_candles_download",
+            "symbol",
+            "timeframe",
+            "timestamp_ms",
+            unique=True,
+            postgresql_where=text("source = 'download'"),
+        ),
+        Index(
+            "uq_market_candles_paper",
+            "session_id",
+            "symbol",
+            "timeframe",
+            "timestamp_ms",
+            unique=True,
+            postgresql_where=text("source = 'paper-live'"),
+        ),
+        CheckConstraint(
+            "source <> 'paper-live' OR session_id IS NOT NULL",
+            name="ck_market_candles_paper_session",
         ),
         Index("ix_market_candles_symbol_tf_ts", "symbol", "timeframe", "timestamp_ms"),
+        Index("ix_market_candles_session_ts", "session_id", "timestamp_ms"),
     )
 
 
@@ -182,9 +219,17 @@ class PaperTradeEventRecord(Base):
     slippage_cost: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
     equity: Mapped[float] = mapped_column(Float, nullable=False)
     kill_switch_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    decision_context: Mapped[dict[str, Any] | None] = mapped_column(JSONB, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
 
     __table_args__ = (
+        UniqueConstraint(
+            "session_id",
+            "symbol",
+            "timeframe",
+            "timestamp_ms",
+            name="uq_paper_trade_events_session_symbol_tf_ts",
+        ),
         Index("ix_paper_trade_events_session_ts", "session_id", "timestamp_ms"),
         Index("ix_paper_trade_events_symbol_tf_ts", "symbol", "timeframe", "timestamp_ms"),
     )

@@ -15,11 +15,11 @@ def metrics() -> SetaMetrics:
 def test_counter_and_gauge_render(metrics: SetaMetrics) -> None:
     metrics.inc_error("llm")
     metrics.inc_reconnect()
-    metrics.set_ws_status(stale=False)
+    metrics.set_stale_status(stale=False)
     text = metrics.render()
     assert 'seta_errors_total{kind="llm"} 1.0' in text
     assert "seta_reconnects_total 1.0" in text
-    assert "seta_ws_stale 0.0" in text
+    assert "seta_ws_stale_status 0.0" in text
 
 
 def test_histogram_latencies_by_op(metrics: SetaMetrics) -> None:

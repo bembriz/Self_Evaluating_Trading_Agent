@@ -142,7 +142,7 @@ def test_net_pnl_includes_fees_and_slippage(cfg: RiskConfig) -> None:
     engine.on_price(decision=_decision(Action.BUY), price=2000.0, atr=10.0, timestamp_ms=1000)
     engine.on_price(decision=_decision(Action.SELL), price=2020.0, atr=10.0, timestamp_ms=1500)
     trade = engine.portfolio.trades[-1]
-    assert trade.gross_pnl != trade.net_pnl  # fees+slippage descontados
+    assert trade.gross_pnl != trade.net_pnl  # fees descontados (slippage in exec_price)
     assert trade.fees > 0 and trade.slippage > 0
 
 

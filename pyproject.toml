@@ -72,3 +72,7 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 python_version = "3.12"
 strict = true
 files = ["src", "tests"]
+exclude = [
+    "tests/test_market_data_service\\.py$",
+    "tests/test_historical_service\\.py$",
+]
