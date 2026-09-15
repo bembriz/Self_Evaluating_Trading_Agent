@@ -31,6 +31,28 @@ TEST_PASSWORD = os.environ.get("POSTGRES_PASSWORD", "trading")
 TEST_DB = "trading_agent_test"
 ADMIN_DB = "trading_agent"
 
+# El CSV del dataset oficial vive bajo /datasets/ (gitignored, PRD §40) y NO está
+# en CI. Los tests marcados `real_dataset` se saltan cuando falta; el manifest y
+# los splits sí están versionados, así que identidad/rangos corren siempre.
+REAL_DATASET_CSV = (
+    Path(__file__).resolve().parents[1] / "datasets" / "BYBIT_ETHBTC_V001" / "ETHUSDT_15m.csv"
+)
+REAL_DATASET_AVAILABLE = REAL_DATASET_CSV.is_file()
+
+
+def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
+    if REAL_DATASET_AVAILABLE:
+        return
+    skip = pytest.mark.skip(
+        reason=(
+            "official frozen dataset BYBIT_ETHBTC_V001 CSV not available "
+            "(gitignored under /datasets/, absent in CI)"
+        )
+    )
+    for item in items:
+        if "real_dataset" in item.keywords:
+            item.add_marker(skip)
+
 
 def make_test_settings() -> Settings:
     return Settings(

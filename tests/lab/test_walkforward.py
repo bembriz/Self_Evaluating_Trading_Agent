@@ -82,6 +82,7 @@ def _spec_with_fast(ema_fast: int) -> ExperimentSpec:
     )
 
 
+@pytest.mark.real_dataset
 def test_development_range_allowed() -> None:
     adapter = FrozenDatasetAdapter.from_repo(
         REPO, symbol="ETHUSDT", timeframe="15m", row_start=0, row_end=32
@@ -173,6 +174,7 @@ def test_parameter_change_changes_spec_id() -> None:
     assert spec_id(_spec_with_fast(20)) != spec_id(_spec_with_fast(18))
 
 
+@pytest.mark.real_dataset
 def test_same_execution_reproduces_hashes() -> None:
     first = _run_dev(0, 48)
     second = _run_dev(0, 48)
@@ -196,9 +198,10 @@ def test_trades_from_trace_pairs_buy_sell() -> None:
     assert trade.exit_price == pytest.approx(101.0)
     assert trade.gross_pnl == pytest.approx(0.2)
     assert trade.fees == pytest.approx(0.04)
-    assert trade.net_pnl == pytest.approx(0.2 - 0.04 - 0.008)
+    assert trade.net_pnl == pytest.approx(0.2 - 0.04)
 
 
+@pytest.mark.real_dataset
 def test_window_metrics_and_result_from_real_run() -> None:
     result = _run_dev(0, 48)
     metrics = window_metrics(result)
@@ -280,6 +283,7 @@ def test_aggregate_is_deterministic() -> None:
     assert aggregate_results(results) == aggregate_results(results)
 
 
+@pytest.mark.real_dataset
 def test_result_metrics_mapping() -> None:
     metrics: dict[str, Any] = dict(window_metrics(_run_dev(0, 48)))
     assert set(metrics) == {

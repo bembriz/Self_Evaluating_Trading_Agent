@@ -8,6 +8,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 from lab.development_evaluation import classify_development_result
 from lab.viability import AbsoluteViabilityEvidence, walk_forward_eligible
 
@@ -46,6 +48,7 @@ def _viability(report: dict[str, Any]) -> AbsoluteViabilityEvidence:
     )
 
 
+@pytest.mark.real_dataset
 def test_script_emits_complete_comparison_evidence(tmp_path: Path) -> None:
     output = tmp_path / "evidence"
     report = _run_script(output)
@@ -103,6 +106,7 @@ def test_script_emits_complete_comparison_evidence(tmp_path: Path) -> None:
     assert (registry / report["BOLLINGER_SPEC_ID"] / "runs" / "20b-bollinger-run-2.json").is_file()
 
 
+@pytest.mark.real_dataset
 def test_script_is_deterministic(tmp_path: Path) -> None:
     first = _run_script(tmp_path / "run-a")
     second = _run_script(tmp_path / "run-b")

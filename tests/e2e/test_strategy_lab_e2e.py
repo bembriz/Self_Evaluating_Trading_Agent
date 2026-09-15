@@ -14,6 +14,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 from application.services.paper_engine import PaperEngine
 from domain.risk.config import RiskConfig
 from domain.trading.strategy import EmaRsiBaseline
@@ -46,6 +48,8 @@ REPO = Path(__file__).resolve().parents[2]
 APP_SHA = "43ecf5c"
 ENGINE_CONFIG = RiskConfig(stop_loss_required=False, version="risk-v1-nostop-mvp-a")
 HOLDOUT_FILE = REPO / "holdout" / "v1.state.json"
+
+pytestmark = pytest.mark.real_dataset
 
 EXPECTED_EXPECTANCY = -0.06353337080013907
 

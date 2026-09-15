@@ -57,6 +57,7 @@ def _spec(artifact_identity: str) -> ExperimentSpec:
     )
 
 
+@pytest.mark.real_dataset
 @pytest.mark.e2e
 def test_bollinger_development_chain_and_holdout_pristine() -> None:
     assert ROW_END <= DEVELOPMENT_END

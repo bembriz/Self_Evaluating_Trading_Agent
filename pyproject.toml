@@ -49,6 +49,7 @@ markers = [
     "unit: unit tests (dominio puro)",
     "integration: integration tests",
     "e2e: end-to-end tests",
+    "real_dataset: requires the official BYBIT_ETHBTC_V001 CSV (gitignored, absent in CI)",
 ]
 
 [tool.coverage.run]
@@ -64,6 +65,7 @@ line-length = 100
 target-version = "py312"
 src = ["src", "tests"]
 include = ["*.py", "*.pyi"]
+extend-exclude = ["docs"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]

@@ -26,6 +26,8 @@ HOLDOUT_STATE = REPO / "holdout" / "v1.state.json"
 ROW_START = 0
 ROW_END = 5000
 
+pytestmark = pytest.mark.real_dataset
+
 
 def _dataset_spec() -> dict[str, dict[str, object]]:
     return {

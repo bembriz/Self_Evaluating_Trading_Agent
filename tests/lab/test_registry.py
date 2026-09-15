@@ -161,6 +161,7 @@ def test_unknown_ids_and_bad_ids_fail_closed(tmp_path: Path) -> None:
     assert registry.list_runs("ab" * 32) == ()
 
 
+@pytest.mark.real_dataset
 def test_double_run_reproducibility() -> None:
     spec = _dev_spec()
     linked = spec_id(spec)
@@ -171,6 +172,7 @@ def test_double_run_reproducibility() -> None:
     assert first.metrics_hash_value == second.metrics_hash_value
 
 
+@pytest.mark.real_dataset
 def test_double_run_registered_with_different_run_ids(tmp_path: Path) -> None:
     registry = ExperimentRegistry(tmp_path)
     linked = registry.register_spec(_dev_spec())

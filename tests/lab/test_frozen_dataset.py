@@ -30,6 +30,7 @@ def open_repo_range(row_start: int, row_end: int) -> FrozenDatasetAdapter:
     )
 
 
+@pytest.mark.real_dataset
 def test_development_range_allowed() -> None:
     adapter = open_repo_range(0, 96)
     assert len(adapter) == 96
@@ -298,6 +299,7 @@ def _open_tmp(
     return FrozenDatasetAdapter(**params)
 
 
+@pytest.mark.real_dataset
 def test_candles_preserve_exact_ohlcv() -> None:
     adapter = open_repo_range(0, 96)
     with open(CSV, newline="", encoding="utf-8") as handle:

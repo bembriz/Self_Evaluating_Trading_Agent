@@ -8,6 +8,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 from lab.development_evaluation import classify_development_result
 
 REPO = Path(__file__).resolve().parents[2]
@@ -37,6 +39,7 @@ def _run_script(output_dir: Path, *, row_start: int = 0, row_end: int = ROW_END)
     return report
 
 
+@pytest.mark.real_dataset
 def test_script_emits_complete_comparison_evidence(tmp_path: Path) -> None:
     output = tmp_path / "evidence"
     report = _run_script(output)
@@ -95,6 +98,7 @@ def test_script_emits_complete_comparison_evidence(tmp_path: Path) -> None:
     assert (registry / report["DONCHIAN_SPEC_ID"] / "runs" / "19b-donchian-run-2.json").is_file()
 
 
+@pytest.mark.real_dataset
 def test_script_is_deterministic(tmp_path: Path) -> None:
     first = _run_script(tmp_path / "run-a")
     second = _run_script(tmp_path / "run-b")

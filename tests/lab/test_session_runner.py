@@ -290,6 +290,7 @@ def test_run_linked_to_experiment_spec(tmp_path: Path) -> None:
     assert run.experiment_spec_id == linked_id
 
 
+@pytest.mark.real_dataset
 def test_real_frozen_development_range_runs() -> None:
     adapter = FrozenDatasetAdapter.from_repo(
         REPO, symbol="ETHUSDT", timeframe="15m", row_start=0, row_end=64

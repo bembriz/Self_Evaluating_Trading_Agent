@@ -84,6 +84,7 @@ def _adapter(symbol: str) -> FrozenDatasetAdapter:
     )
 
 
+@pytest.mark.real_dataset
 def test_both_strategies_share_economic_conditions_and_slices() -> None:
     primary = _adapter("ETHUSDT")
     context = _adapter("BTCUSDT")
@@ -122,6 +123,7 @@ def test_both_strategies_share_economic_conditions_and_slices() -> None:
     assert spec_id(baseline_spec) != spec_id(candidate_spec)
 
 
+@pytest.mark.real_dataset
 def test_metrics_and_comparison_are_deterministic_and_blocked_accounting_holds() -> None:
     primary = _adapter("ETHUSDT")
     context = _adapter("BTCUSDT")
@@ -178,6 +180,7 @@ def test_walk_forward_not_accessed_and_final_holdout_blocked() -> None:
         )
 
 
+@pytest.mark.real_dataset
 def test_holdout_file_remains_pristine() -> None:
     import json
 

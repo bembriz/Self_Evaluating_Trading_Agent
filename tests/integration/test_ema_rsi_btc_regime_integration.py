@@ -19,6 +19,8 @@ SPEC_ID = "18" * 32
 ROW_START = 0
 ROW_END = 128
 
+pytestmark = pytest.mark.real_dataset
+
 
 def _adapter(symbol: str, timeframe: str, start: int, end: int) -> FrozenDatasetAdapter:
     return FrozenDatasetAdapter.from_repo(

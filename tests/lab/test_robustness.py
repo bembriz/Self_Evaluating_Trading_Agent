@@ -7,6 +7,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from application.services.paper_engine import PaperEngine
 from domain.risk.config import RiskConfig
 from domain.trading.strategy import EmaRsiBaseline, EmaRsiConfig
@@ -100,6 +102,7 @@ def test_summarize_selects_no_winner() -> None:
     }
 
 
+@pytest.mark.real_dataset
 def test_all_variants_run_on_development_slice() -> None:
     adapter = FrozenDatasetAdapter.from_repo(
         REPO, symbol="ETHUSDT", timeframe="15m", row_start=0, row_end=64

@@ -120,6 +120,7 @@ def test_no_overlap_no_gaps_full_coverage() -> None:
     assert splits[-1]["row_end"] == cand["total_rows"]
 
 
+@pytest.mark.real_dataset
 def test_temporal_order_and_continuity() -> None:
     cand = load_candidate()
     ts = load_csv_timestamps()
@@ -132,6 +133,7 @@ def test_temporal_order_and_continuity() -> None:
         assert nxt_first_ms - prev_last_ms == STEP_MS
 
 
+@pytest.mark.real_dataset
 def test_final_holdout_ends_at_last_row() -> None:
     cand = load_candidate()
     ts = load_csv_timestamps()
@@ -142,6 +144,7 @@ def test_final_holdout_ends_at_last_row() -> None:
     assert hold["last_timestamp"] == last_iso
 
 
+@pytest.mark.real_dataset
 def test_split_timestamps_match_csv() -> None:
     cand = load_candidate()
     ts = load_csv_timestamps()
@@ -152,6 +155,7 @@ def test_split_timestamps_match_csv() -> None:
         assert s["last_timestamp"] == last
 
 
+@pytest.mark.real_dataset
 def test_deterministic_for_same_manifest() -> None:
     cand = load_candidate()
     exp = expected_from_source()

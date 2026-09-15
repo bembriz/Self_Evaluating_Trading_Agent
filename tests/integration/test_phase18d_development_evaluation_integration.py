@@ -9,6 +9,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from application.services.paper_engine import PaperEngine
 from domain.risk.config import RiskConfig
 from domain.trading.strategy import EmaRsiBaseline
@@ -45,6 +47,8 @@ ROW_START = DEVELOPMENT_START
 ROW_END = 512
 ENGINE_CONFIG = RiskConfig(stop_loss_required=False, version="risk-v1-nostop-mvp-a")
 HOLDOUT_FILE = REPO / "holdout" / "v1.state.json"
+
+pytestmark = pytest.mark.real_dataset
 
 
 def _dataset(*, with_context: bool) -> dict[str, object]:

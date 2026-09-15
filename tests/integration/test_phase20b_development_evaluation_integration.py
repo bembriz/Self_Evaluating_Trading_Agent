@@ -65,6 +65,7 @@ def _adapter() -> FrozenDatasetAdapter:
     )
 
 
+@pytest.mark.real_dataset
 def test_identical_conditions_and_distinct_spec_ids() -> None:
     resolver = ImportlibSourceResolver()
     baseline_identity = strategy_artifact_identity(
@@ -102,6 +103,7 @@ def test_identical_conditions_and_distinct_spec_ids() -> None:
     assert not (ROW_START < WALK_FORWARD_END and ROW_END > WALK_FORWARD_START)
 
 
+@pytest.mark.real_dataset
 def test_metrics_are_deterministic() -> None:
     primary = _adapter()
     linked = "20" * 32
@@ -148,6 +150,7 @@ def test_public_walk_forward_access_remains_denied() -> None:
         )
 
 
+@pytest.mark.real_dataset
 def test_holdout_file_remains_pristine() -> None:
     import json
 

@@ -8,6 +8,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 REPO = Path(__file__).resolve().parents[2]
 SCRIPT = "harness/scripts/phase18b_development_evaluation.py"
 ROW_END = 512
@@ -35,6 +37,7 @@ def _run_script(output_dir: Path, *, row_start: int = 0, row_end: int = ROW_END)
     return report
 
 
+@pytest.mark.real_dataset
 def test_script_emits_complete_development_evidence(tmp_path: Path) -> None:
     output = tmp_path / "evidence"
     report = _run_script(output)
@@ -75,6 +78,7 @@ def test_script_emits_complete_development_evidence(tmp_path: Path) -> None:
     ).is_file()
 
 
+@pytest.mark.real_dataset
 def test_script_is_deterministic(tmp_path: Path) -> None:
     first = _run_script(tmp_path / "run-a")
     second = _run_script(tmp_path / "run-b")

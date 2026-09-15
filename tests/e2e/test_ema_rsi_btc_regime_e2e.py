@@ -82,6 +82,7 @@ def _strategy_decisions(
     return baseline_signals, candidate_signals
 
 
+@pytest.mark.real_dataset
 @pytest.mark.e2e
 def test_regime_full_development_chain_filters_buy_only_and_preserves_holdout() -> None:
     assert ROW_END <= DEVELOPMENT_END

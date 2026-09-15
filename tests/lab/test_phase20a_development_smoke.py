@@ -7,7 +7,11 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 REPO = Path(__file__).resolve().parents[2]
+
+pytestmark = pytest.mark.real_dataset
 
 
 def test_smoke_exercises_all_paths_and_indicator_readiness() -> None:

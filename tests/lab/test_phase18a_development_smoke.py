@@ -7,7 +7,11 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 REPO = Path(__file__).resolve().parents[2]
+
+pytestmark = pytest.mark.real_dataset
 
 
 def test_smoke_counts_official_development_strategy_decisions() -> None:
