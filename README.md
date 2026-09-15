@@ -1,104 +1,117 @@
-# Self-Evaluating Trading Agent — ETH/USDT
+# Self-Evaluating Trading Agent
 
-Sistema de trading cuantitativo, observable, reproducible y auditable donde un **agente LLM** toma decisiones supervisadas sobre `ETH/USDT` (spot, long-only), las somete a un **Risk Engine determinista**, ejecuta en paper/testnet, evalúa resultados y acumula memoria experiencial — demostrando estadísticamente si aporta ventaja económica real.
+Sistema de trading cuantitativo donde un **agente LLM** toma decisiones supervisadas sobre mercados crypto (spot, long-only), las somete a un **Risk Engine determinista**, ejecuta en paper/testnet, evalúa resultados y acumula memoria experiencial — demostrando estadísticamente si aporta ventaja económica real.
 
-> **Fuente de verdad del producto:** [`docs/PRD — Self-Evaluating Trading Agent.md`](docs/PRD%20—%20Self-Evaluating%20Trading%20Agent.md)
+> **Fuente de verdad del producto:** [`docs/PRD.md`](docs/PRD.md)
+> **Rama canónica:** `main` (única fuente de verdad del código)
 
 ## Estado del proyecto
 
-| Fase | Título | Estado |
+| Fase | Estado | Notas |
 |---|---|---|
-| 00 | Governance & Agent Bootstrap (**arnés**) | done |
-| 01 | Python Project Foundation | done |
-| 02 | PostgreSQL & Application Skeleton | done |
-| 03 | Historical Market Data | done |
-| 04 | Real-Time Market Data | done |
-| 05–18 | Feature Engine → Cloud Evaluation | pending |
+| 00–05 | **done** | Foundations, DB, Market Data |
+| 06–15 | **done** | Backtesting, ML, LLM, Risk, Paper, Eval, Dashboard |
+| 16 | **done** | Paper Trading Certification (lenovosrv) |
+| 18 | **done** | LLM Development Evaluation |
+| 21R | **CLOSED** | Runtime Integrity Recovery — evidencia consolidada |
 
-Progreso objetivo y ETA:
+### Resultados Fase 21R
 
-```bash
-python3 harness/scripts/progress.py report
-```
+| Estrategia | Trades | Alpha Bruto | Alpha Net (post-fees) | Viabilidad Absoluta |
+|---|---|---|---|---|
+| Baseline (EMA/RSI) | 634 | +$65.65 | -$55.65 | **FAIL** |
+| Donchian Breakout | 1,086 | +$102.90 | -$84.70 | **FAIL** |
+| Bollinger Mean Reversion | 460 | +$46.73 | -$41.09 | **FAIL** |
 
-## Cómo se desarrolla este proyecto
+**Posicionamiento:** CAPPED_ALLOCATION_NOTIONAL (budget ATR, capped a $20 notional). NO es 2% capital-at-risk.
 
-El desarrollo lo ejecuta un agente (OpenCode) gobernado por un arnés de gobernanza:
+**Walk-Forward:** NO autorizado (todas las estrategias FAIL en viabilidad absoluta).
 
-- **[`AGENTS.md`](AGENTS.md)** — orquestador: ciclo operativo por fase, routing a skills, reglas críticas.
-- **`.opencode/skills/`** — catálogo especializado (22 skills): testing, infraestructura, dominio trading, IA.
-- **`harness/`** — scripts verificadores (`progress.py`, `gate_check.py`, `evidence.sh`, reportes) + ledger objetivo.
-- **`opencode.json`** — enforcement técnico: instalaciones y operaciones git destructivas requieren aprobación humana.
-- **`docs/phases/`** — reportes de fase con evidencia auditable · **`docs/uat/`** — pruebas de aceptación humana.
+**Holdout:** PRISTINE (0 reads, 0 ejecuciones).
 
-Reglas de oro: nada se instala ni se commitea sin autorización explícita; ninguna fase avanza sin gate humano; toda afirmación PASS lleva evidencia registrada.
+**Siguiente trabajo:** Phase 22 — Execution Economics (costos reales de ejecución).
 
-## Estructura
+## Arquitectura
 
 ```text
-AGENTS.md            # Orquestador del agente (leer primero)
-opencode.json        # Permission rules de enforcement
-pyproject.toml       # Config del producto (uv, ruff, mypy, pytest, coverage)
-uv.lock              # Lockfile versionado
-Dockerfile           # Imagen reproducible (python:3.12-slim)
-.github/workflows/   # CI (quality + security + docker)
-src/                 # Código del producto (layout hexagonal)
-│   ├── domain/      #   entidades y reglas puras (market, trading, portfolio, risk, ...)
-│   ├── application/ #   servicios y puertos
-│   ├── infrastructure/  # adaptadores (bybit, database, llm, ...)
-│   ├── interfaces/  #   api, web, cli
-│   ├── main.py      #   entry point
-│   └── version.py   #   versión única
-tests/               # Suite del producto (cobertura ≥90%)
-.opencode/skills/    # Catálogo de skills del proyecto
-harness/
-├── scripts/         # progress / gate_check / evidence / gen_report / gen_pdf / new_phase
-├── state/           # progress.yaml (ledger único de avance)
-├── templates/       # Plantillas: reporte, UAT, dependency-proposal, commit-candidate, ADR
-└── tests/           # Suite del propio arnés (cobertura ≥80%)
-docs/
-├── design/          # Diseño del arnés
-├── skill-gap/       # Skill Gap Report
-├── phases/          # phase-XX-report.md + evidence/
-├── uat/             # Instructivos UAT por fase
-└── adr/             # Decisiones arquitectónicas
+src/                     # Código del producto (layout hexagonal)
+├── domain/              #   entidades y reglas puras
+│   ├── market/          #     velas, timeframes, instrumentos
+│   ├── trading/         #     señales, decisiones, órdenes
+│   ├── portfolio/       #     posición, cash, PnL
+│   └── risk/            #     sizing, stops, kill switch, drawdown
+├── application/         #   servicios y puertos
+│   └── services/        #     paper_engine, decision_engine, backtest_runner
+├── infrastructure/      #   adaptadores (bybit, postgres, llm, embeddings)
+├── interfaces/          #   api, web, cli
+├── lab/                 #   session_runner, strategy_lab
+└── main.py              #   entry point
 ```
 
-## Desarrollo del producto
+### Componentes principales
 
-Python 3.12 gestionado con `uv`. El código vive en `src/` (layout hexagonal: `domain`, `application`, `infrastructure`, `interfaces`) y los tests en `tests/`.
+| Componente | Ubicación | Función |
+|---|---|---|
+| **PaperEngine** | `src/application/services/paper_engine.py` | Ejecución paper con fills, fees, PnL, exit_reason |
+| **RiskEngine** | `src/domain/risk/engine.py` | Determinista: sizing → stops → limits → kill_switch |
+| **DecisionEngine** | `src/application/services/decision_context.py` | Agrega features, contexto, llama LLM |
+| **Strategy Lab** | `src/lab/` | Evaluación de estrategias históricas |
+| **Trading Memory** | `src/infrastructure/memory/` | pgvector embeddings, RAG, reflexiones |
+
+### Mercado y ejecución
+
+- **Exchange:** Bybit (spot, REST + WebSocket)
+- **Par:** ETH/USDT
+- **Modo:** Long-only
+- **LIVE:** Deshabilitado permanentemente (PRD §49–50)
+
+## Desarrollo
+
+Python 3.12 gestionado con `uv`. PostgreSQL + pgvector para memoria.
 
 ```bash
-# 1) Entorno + dependencias
+# Entorno + dependencias
 uv sync
 
-# 2) PostgreSQL + pgvector (puerto 5433) — requiere .env con POSTGRES_PASSWORD
+# PostgreSQL (puerto 5433)
 docker compose up -d postgres
-uv run alembic upgrade head                  # migraciones
+uv run alembic upgrade head
 
-# 3) Calidad y tests (los tests de integración necesitan el postgres arriba)
+# Tests y calidad
 uv run pytest --cov=src --cov-branch --cov-fail-under=90
 uv run ruff check . && uv run ruff format --check .
 uv run mypy src tests
-uv run pip-audit
 
-# 4) Ejecutar la API localmente
-uv run uvicorn interfaces.api.app:app --reload
-#   GET /health  GET /ready  GET /api/v1/system/state
-
-# 5) Imagen reproducible
-docker build -t self-evaluating-trading-agent:dev .
+# API local
+uv run uvicorn src.interfaces.api.app:app --reload
 ```
 
-Configuración: `config/*.yaml` (base + modos) con defaults seguros; secretos solo en `.env` (nunca versionado). Variables de Postgres en `.env`: `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`.
+## Estructura del repositorio
 
-CI (GitHub Actions, `.github/workflows/ci.yml`) ejecuta: `quality` (ruff + mypy), `integration` (postgres + migraciones up/down + tests/cobertura ≥90%), `security` (gitleaks + pip-audit) y `docker` (build).
+```text
+main                  # Rama canónica (source of truth)
+AGENTS.md             # Orquestador del agente (leer primero)
+opencode.json         # Permission rules de enforcement
+pyproject.toml        # Config del producto
+src/                  # Código del producto
+tests/                # Suite del producto (≥90% coverage)
+harness/              # Scripts verificadores + ledger
+├── scripts/          #   progress, gate_check, evidence, gen_report
+├── state/            #   progress.yaml (ledger de avance)
+└── templates/        #   plantillas de reportes
+docs/
+├── PRD.md            #   Product Requirements Document
+├── phases/           #   reportes de fase + evidence/
+│   └── 21R/          #   Phase 21R closure + authoritative evidence
+├── design/           #   diseño del arnés
+└── adr/              #   decisiones arquitectónicas
+```
 
 ## Comandos del arnés
 
 ```bash
-python3 harness/scripts/progress.py report                    # progreso + ETA objetivo
-python3 harness/scripts/gate_check.py --phase XX              # checklist DoD de fase
+python3 harness/scripts/progress.py report                    # progreso + ETA
+python3 harness/scripts/gate_check.py --phase XX              # checklist DoD
 bash harness/scripts/evidence.sh <fase> <nombre> -- <cmd...>  # evidencia auditable
 uv run --project harness pytest harness/tests                 # tests del arnés
 ```
