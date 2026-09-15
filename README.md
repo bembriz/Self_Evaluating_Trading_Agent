@@ -11,7 +11,7 @@ Sistema de trading cuantitativo donde un **agente LLM** toma decisiones supervis
 |---|---|---|
 | 00–05 | **done** | Foundations, DB, Market Data |
 | 06–15 | **done** | Backtesting, ML, LLM, Risk, Paper, Eval, Dashboard |
-| 16 | **done** | Paper Trading Certification (lenovosrv) |
+| 16 | **ACTIVE** | Paper Trading Certification en curso (lenovosrv) |
 | 18 | **done** | LLM Development Evaluation |
 | 21R | **CLOSED** | Runtime Integrity Recovery — evidencia consolidada |
 
