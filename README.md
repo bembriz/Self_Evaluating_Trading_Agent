@@ -15,19 +15,21 @@ Sistema de trading cuantitativo donde un **agente LLM** toma decisiones supervis
 | 18 | **done** | LLM Development Evaluation |
 | 21R | **CLOSED** | Runtime Integrity Recovery — evidencia consolidada |
 
-### Resultados Fase 21R
+### Resultados Fase 21R (Autoritativos)
 
-| Estrategia | Trades | Alpha Bruto | Alpha Net (post-fees) | Viabilidad Absoluta |
+| Estrategia | Trades | Gross Ref PnL | Net PnL | Viabilidad Absoluta |
 |---|---|---|---|---|
-| Baseline (EMA/RSI) | 634 | +$65.65 | -$55.65 | **FAIL** |
-| Donchian Breakout | 1,086 | +$102.90 | -$84.70 | **FAIL** |
-| Bollinger Mean Reversion | 460 | +$46.73 | -$41.09 | **FAIL** |
+| Baseline (EMA/RSI) | 634 | +$4.96 | -$25.48 | **FAIL** |
+| Donchian Breakout | 1,086 | +$6.86 | -$45.27 | **FAIL** |
+| Bollinger Mean Reversion | 460 | +$1.65 | -$20.43 | **FAIL** |
 
 **Posicionamiento:** CAPPED_ALLOCATION_NOTIONAL (budget ATR, capped a $20 notional). NO es 2% capital-at-risk.
 
 **Walk-Forward:** NO autorizado (todas las estrategias FAIL en viabilidad absoluta).
 
 **Holdout:** PRISTINE (0 reads, 0 ejecuciones).
+
+**Certificación Paper:** ACTIVA en lenovosrv. Phase 21R = CLOSED. Certification restart required = NO.
 
 **Siguiente trabajo:** Phase 22 — Execution Economics (costos reales de ejecución).
 
