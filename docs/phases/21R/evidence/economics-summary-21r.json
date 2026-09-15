@@ -1,0 +1,199 @@
+{
+  "strategies": {
+    "baseline-v1": {
+      "completed_trades": 392,
+      "gross_pnl_reference": 1.7350673327134674,
+      "gross_pnl_exec": -1.4012796807527494,
+      "total_fees": 15.681734720319247,
+      "total_analytical_slippage": 3.136347013466217,
+      "net_pnl_corrected": -17.083014401071996,
+      "winning_trades": 115,
+      "losing_trades": 277,
+      "exit_reason_counts": {
+        "llm_sell": 67,
+        "stop_loss": 194,
+        "take_profit": 94,
+        "trailing_stop": 37
+      }
+    },
+    "EthDonchianBreakout-v1": {
+      "completed_trades": 482,
+      "gross_pnl_reference": 6.975832361980705,
+      "gross_pnl_exec": 3.1184371955087133,
+      "total_fees": 19.286974437195507,
+      "total_analytical_slippage": 3.8573951664719917,
+      "net_pnl_corrected": -16.168537241686796,
+      "winning_trades": 144,
+      "losing_trades": 338,
+      "exit_reason_counts": {
+        "take_profit": 115,
+        "stop_loss": 191,
+        "llm_sell": 157,
+        "trailing_stop": 19
+      }
+    },
+    "EthBollingerMeanReversion-v1": {
+      "completed_trades": 394,
+      "gross_pnl_reference": 1.9562310506844005,
+      "gross_pnl_exec": -1.1961601955253562,
+      "total_fees": 15.761955839804473,
+      "total_analytical_slippage": 3.1523912462097567,
+      "net_pnl_corrected": -16.95811603532983,
+      "winning_trades": 182,
+      "losing_trades": 212,
+      "exit_reason_counts": {
+        "llm_sell": 276,
+        "stop_loss": 116,
+        "take_profit": 2
+      }
+    }
+  },
+  "exit_reason_analysis": {
+    "baseline-v1": {
+      "llm_sell": {
+        "count": 67,
+        "avg_gross_ref": -0.06314306478303047,
+        "avg_gross_exec": -0.07113043617007327,
+        "avg_fees": 0.03993686956382993,
+        "avg_slippage": 0.007987371387042799,
+        "avg_net_corrected": -0.1110673057339032,
+        "win_rate": 0.08955223880597014
+      },
+      "stop_loss": {
+        "count": 194,
+        "avg_gross_ref": -0.1420686554774263,
+        "avg_gross_exec": -0.15004024174633,
+        "avg_fees": 0.03985795975825367,
+        "avg_slippage": 0.007971586268903675,
+        "avg_net_corrected": -0.18989820150458364,
+        "win_rate": 0.0
+      },
+      "take_profit": {
+        "count": 94,
+        "avg_gross_ref": 0.3363302368928862,
+        "avg_gross_exec": 0.32826297084550865,
+        "avg_fees": 0.040336262970845506,
+        "avg_slippage": 0.008067266047377578,
+        "avg_net_corrected": 0.2879267078746631,
+        "win_rate": 1.0
+      },
+      "trailing_stop": {
+        "count": 37,
+        "avg_gross_ref": 0.05167377210448397,
+        "avg_gross_exec": 0.043663437350063866,
+        "avg_fees": 0.04005166343735006,
+        "avg_slippage": 0.008010334754420104,
+        "avg_net_corrected": 0.0036117739127138004,
+        "win_rate": 0.40540540540540543
+      }
+    },
+    "EthDonchianBreakout-v1": {
+      "llm_sell": {
+        "count": 157,
+        "avg_gross_ref": -0.03432564606507575,
+        "avg_gross_exec": -0.042318780935861944,
+        "avg_fees": 0.03996568121906414,
+        "avg_slippage": 0.007993134870786189,
+        "avg_net_corrected": -0.08228446215492607,
+        "win_rate": 0.16560509554140126
+      },
+      "stop_loss": {
+        "count": 191,
+        "avg_gross_ref": -0.16293045448188867,
+        "avg_gross_exec": -0.17089786839099133,
+        "avg_fees": 0.03983710213160901,
+        "avg_slippage": 0.007967413909102663,
+        "avg_net_corrected": -0.21073497052260035,
+        "win_rate": 0.0
+      },
+      "take_profit": {
+        "count": 115,
+        "avg_gross_ref": 0.37691946933653825,
+        "avg_gross_exec": 0.36884408544267167,
+        "avg_fees": 0.04037684408544267,
+        "avg_slippage": 0.008075383893866576,
+        "avg_net_corrected": 0.328467241357229,
+        "win_rate": 1.0
+      },
+      "trailing_stop": {
+        "count": 19,
+        "avg_gross_ref": 0.0073124540282335495,
+        "avg_gross_exec": -0.0006890084625714748,
+        "avg_fees": 0.040007310991537426,
+        "avg_slippage": 0.008001462490805024,
+        "avg_net_corrected": -0.040696319454108905,
+        "win_rate": 0.15789473684210525
+      }
+    },
+    "EthBollingerMeanReversion-v1": {
+      "llm_sell": {
+        "count": 276,
+        "avg_gross_ref": 0.08235782997534845,
+        "avg_gross_exec": 0.07434135840935434,
+        "avg_fees": 0.04008234135840935,
+        "avg_slippage": 0.008016471565994115,
+        "avg_net_corrected": 0.03425901705094498,
+        "win_rate": 0.6521739130434783
+      },
+      "stop_loss": {
+        "count": 116,
+        "avg_gross_ref": -0.1858003032710667,
+        "avg_gross_exec": -0.19376314321041152,
+        "avg_fees": 0.03981423685678959,
+        "avg_slippage": 0.007962839939344801,
+        "avg_net_corrected": -0.2335773800672011,
+        "win_rate": 0.0
+      },
+      "take_profit": {
+        "count": 2,
+        "avg_gross_ref": 0.38915257846598317,
+        "avg_gross_exec": 0.3810747479502911,
+        "avg_fees": 0.040389074747950296,
+        "avg_slippage": 0.008077830515692053,
+        "avg_net_corrected": 0.34068567320234083,
+        "win_rate": 1.0
+      }
+    }
+  },
+  "csv_precision_audit": {
+    "max_reconciliation_error": 6.938893903907228e-18,
+    "csv_reconciliation_tolerance": 1e-06,
+    "csv_reconciliation": "PASS",
+    "field_precision": {
+      "total_fees": {
+        "sample_value": 0.03998997032089159,
+        "repr": "0.03998997032089159",
+        "decimal_places": 17
+      },
+      "gross_pnl_exec": {
+        "sample_value": -0.018029679108401492,
+        "repr": "-0.018029679108401492",
+        "decimal_places": 18
+      },
+      "net_pnl_corrected": {
+        "sample_value": -0.05801964942929308,
+        "repr": "-0.05801964942929308",
+        "decimal_places": 17
+      },
+      "quantity": {
+        "sample_value": 0.012233762738405452,
+        "repr": "0.012233762738405452",
+        "decimal_places": 18
+      }
+    }
+  },
+  "sizing_semantics": {
+    "formula": "risk_amount = config.capital * budget_pct * drawdown_scale; quantity = risk_amount / stop_distance; notional = quantity * price",
+    "capital_source": "config.capital (fixed 1000.0)",
+    "max_notional_per_trade": 20.0,
+    "classification": "2_PERCENT_CONFIGURED_CAPITAL_NOTIONAL",
+    "does_order_size_change_as_equity_changes": false,
+    "capital_at_risk_with_stop": false
+  },
+  "safety": {
+    "real_walk_forward_reads": 0,
+    "final_holdout_reads": 0,
+    "final_holdout_executions": 0,
+    "holdout_state": "PRISTINE"
+  }
+}

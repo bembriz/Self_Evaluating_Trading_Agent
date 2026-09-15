@@ -1,0 +1,63 @@
+{
+  "canonical_source": {
+    "branch": "main",
+    "commit": "d2ea5afb4b19976711ab80068b1578505694a902",
+    "dataset_id": "BYBIT_ETHBTC_V001",
+    "dataset_fingerprint": "f561207c018d0f4ade1afdaca3d349a53faec49d732bb5f50933db64e2cbb31d"
+  },
+  "strategies": {
+    "baseline": {
+      "trades": 634,
+      "gross_reference_pnl": 4.957389,
+      "slippage": 5.072991,
+      "gross_execution_pnl": -0.115603,
+      "fees": 25.364956,
+      "net_pnl": -25.480559,
+      "absolute_viability": "FAIL"
+    },
+    "donchian": {
+      "trades": 1086,
+      "gross_reference_pnl": 6.863966,
+      "slippage": 8.689373,
+      "gross_execution_pnl": -1.825407,
+      "fees": 43.446863,
+      "net_pnl": -45.272269,
+      "absolute_viability": "FAIL"
+    },
+    "bollinger": {
+      "trades": 460,
+      "gross_reference_pnl": 1.652245,
+      "slippage": 3.680330,
+      "gross_execution_pnl": -2.028086,
+      "fees": 18.401652,
+      "net_pnl": -20.429737,
+      "absolute_viability": "FAIL"
+    }
+  },
+  "reconciliation": {
+    "trade_level": "PASS",
+    "account_level": "PASS",
+    "manual_hand_check": "PASS"
+  },
+  "holdout_state": "PRISTINE",
+  "safety": {
+    "real_walk_forward_reads": 0,
+    "final_holdout_reads": 0,
+    "final_holdout_executions": 0
+  },
+  "exit_reasons": {
+    "status": "NOT_AVAILABLE_FOR_AUTHORITATIVE_POPULATION",
+    "note": "Exit reasons require replay with exact authoritative configuration. The diagnostic run (392/482/394 trades) used different RiskConfig defaults than the authoritative run (634/1086/460 trades). Exit reasons from the diagnostic population are INVALID_FOR_AUTHORITATIVE_CLOSURE.",
+    "diagnostic_baseline": {"stop_loss": 194, "take_profit": 94, "llm_sell": 67, "trailing_stop": 37, "total": 392},
+    "diagnostic_donchian": {"stop_loss": 191, "take_profit": 115, "llm_sell": 157, "trailing_stop": 19, "total": 482},
+    "diagnostic_bollinger": {"stop_loss": 116, "take_profit": 2, "llm_sell": 276, "trailing_stop": 0, "total": 394}
+  },
+  "position_sizing": {
+    "budget_usdt_formula": "config.capital * risk_budget_pct(intensity) * drawdown_scale",
+    "order_quantity_formula": "budget_usdt / (stop_atr_multiplier * ATR)",
+    "reference_notional_formula": "min(quantity * reference_price, max_position_allocation * config.capital)",
+    "classification": "CAPPED_ALLOCATION_NOTIONAL",
+    "capital_at_risk_with_stop": false,
+    "twenty_dollar_cause": "B — risk budget converted through ATR/stop distance, then capped at max_position_allocation * capital"
+  }
+}
