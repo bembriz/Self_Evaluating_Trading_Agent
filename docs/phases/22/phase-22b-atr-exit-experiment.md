@@ -32,7 +32,7 @@ Measure how many trades hit real Stop Loss and Take Profit when the Risk Engine 
 
 | Label | exit_reason | Meaning |
 |---|---|---|
-| `INITIAL_OR_BELOW_ENTRY_STOP_EXIT` | `stop_loss` | Price hit the initial stop (at or below entry - 2*ATR) |
+| `INITIAL_OR_BELOW_ENTRY_STOP_EXIT` | `stop_loss` | Engine closed via stop_loss while active stop was at or below entry; this is not necessarily the immutable initial stop |
 | `PROFIT_TRAILING_EXIT` | `trailing_stop` | Price hit trailing stop above entry (protecting profits) |
 | `TAKE_PROFIT_EXIT` | `take_profit` | Price reached target (entry + 2*ATR) |
 | `STRATEGY_EXIT` | `llm_sell` | Strategy/LLM decided to sell |
@@ -131,10 +131,10 @@ Measure how many trades hit real Stop Loss and Take Profit when the Risk Engine 
 
 ### 5.3 Key Observations
 
-1. **baseline**: 273 of 634 trades (43.1%) touch the initial stop intrabar before exit; 185 trades (29.2%) touch the target intrabar. 185 trades touch neither fixed level.
-2. **donchian**: 342 of 841 trades (40.7%) touch the initial stop intrabar; 235 trades (27.9%) touch the target. Only 1 same-bar ambiguous event.
-3. **bollinger**: 143 of 394 trades (36.3%) touch the initial stop intrabar; only 5 trades (1.3%) touch the target — consistent with short holding periods.
-4. **Same-bar ambiguities** are extremely rare (0-1 per strategy), confirming clean separation between stop and target levels.
+1. **baseline**: 273 of 634 trades (43.1%) have fixed initial-stop level touched in post-entry bars up to and including the exit bar; 185 trades (29.2%) touch the target. 185 trades touch neither fixed level.
+2. **donchian**: 342 of 841 trades (40.7%) have fixed initial-stop level touched; 235 trades (27.9%) touch the target. Only 1 same-bar ambiguous event.
+3. **bollinger**: 143 of 394 trades (36.3%) have fixed initial-stop level touched; only 5 trades (1.3%) touch the target — consistent with short holding periods.
+4. **Same-bar fixed-level ambiguities** were rare in this DEVELOPMENT dataset.
 
 ---
 
@@ -142,12 +142,8 @@ Measure how many trades hit real Stop Loss and Take Profit when the Risk Engine 
 
 | Metric | Phase 21R baseline | Phase 22B baseline | Phase 21R donchian | Phase 22B donchian | Phase 21R bollinger | Phase 22B bollinger |
 |---|---|---|---|---|---|---|
-| Trade Count | 392 | 634 | 482 | 841 | 394 | 394 |
-| Net PnL | -17.08 | -23.08 | -16.17 | -28.00 | -16.96 | -16.96 |
-| SL Count | 194 | 324 | 191 | 326 | 116 | 116 |
-| TP Count | 94 | 155 | 115 | 199 | 2 | 2 |
-| Trailing Count | 37 | 62 | 19 | 36 | 0 | 0 |
-| llm_sell Count | 67 | 93 | 157 | 280 | 276 | 276 |
+| Trade Count | 634 | 634 | 1086 | 841 | 460 | 394 |
+| Net PnL | -25.48 | -23.08 | -45.27 | -28.00 | -20.43 | -16.96 |
 
 ```
 POPULATIONS_DIRECTLY_COMPARABLE = NO
