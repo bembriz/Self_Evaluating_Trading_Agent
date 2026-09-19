@@ -1,0 +1,295 @@
+{
+  "experiment": "Phase 22-B \u2014 REAL ATR STOP / TARGET EXPERIMENT",
+  "config": {
+    "stop_loss_required": true,
+    "version": "risk-v2-atr-exit",
+    "capital": 1000.0,
+    "stop_atr_multiplier": 2.0,
+    "take_profit_r_multiple": 2.0,
+    "trailing_atr_multiplier": 3.0
+  },
+  "populations_directly_comparable": "NO",
+  "reason": "Real SL/TP materially changes trade trajectory vs no-stop baseline",
+  "strategies": {
+    "baseline": {
+      "completed_trades": 634,
+      "config_version": "risk-v2-atr-exit",
+      "stop_loss_required": true,
+      "stop_atr_multiplier": 2.0,
+      "take_profit_r_multiple": 2.0,
+      "trailing_atr_multiplier": 3.0,
+      "gross_pnl_reference": 7.362854028953856,
+      "gross_pnl_exec": 2.289381458148607,
+      "total_fees": 25.36736138145815,
+      "total_analytical_slippage": 5.073472570805249,
+      "net_pnl_corrected": -23.07797992330954,
+      "winning_trades": 192,
+      "losing_trades": 442,
+      "engine_exit_counts": {
+        "STRATEGY_EXIT": 93,
+        "INITIAL_OR_BELOW_ENTRY_STOP_EXIT": 324,
+        "TAKE_PROFIT_EXIT": 155,
+        "PROFIT_TRAILING_EXIT": 62
+      },
+      "intrabar_trade_counts": {
+        "TOTAL_TRADES": 634,
+        "TARGET_TOUCHED_TRADES": 185,
+        "INITIAL_STOP_TOUCHED_TRADES": 273,
+        "TARGET_AND_INITIAL_STOP_SAME_BAR_TRADES": 0,
+        "NEITHER_FIXED_LEVEL_TOUCHED_TRADES": 185
+      },
+      "intrabar_bar_events": {
+        "target_touch_bar_events": 329,
+        "initial_stop_touch_bar_events": 413,
+        "same_bar_ambiguous_bar_events": 0
+      }
+    },
+    "donchian": {
+      "completed_trades": 841,
+      "config_version": "risk-v2-atr-exit",
+      "stop_loss_required": true,
+      "stop_atr_multiplier": 2.0,
+      "take_profit_r_multiple": 2.0,
+      "trailing_atr_multiplier": 3.0,
+      "gross_pnl_reference": 12.387118319294151,
+      "gross_pnl_exec": 5.65664089563097,
+      "total_fees": 33.65238464089563,
+      "total_analytical_slippage": 6.730477423663181,
+      "net_pnl_corrected": -27.99574374526466,
+      "winning_trades": 254,
+      "losing_trades": 587,
+      "engine_exit_counts": {
+        "TAKE_PROFIT_EXIT": 199,
+        "INITIAL_OR_BELOW_ENTRY_STOP_EXIT": 326,
+        "STRATEGY_EXIT": 280,
+        "PROFIT_TRAILING_EXIT": 36
+      },
+      "intrabar_trade_counts": {
+        "TOTAL_TRADES": 841,
+        "TARGET_TOUCHED_TRADES": 235,
+        "INITIAL_STOP_TOUCHED_TRADES": 342,
+        "TARGET_AND_INITIAL_STOP_SAME_BAR_TRADES": 1,
+        "NEITHER_FIXED_LEVEL_TOUCHED_TRADES": 289
+      },
+      "intrabar_bar_events": {
+        "target_touch_bar_events": 429,
+        "initial_stop_touch_bar_events": 597,
+        "same_bar_ambiguous_bar_events": 1
+      }
+    },
+    "bollinger": {
+      "completed_trades": 394,
+      "config_version": "risk-v2-atr-exit",
+      "stop_loss_required": true,
+      "stop_atr_multiplier": 2.0,
+      "take_profit_r_multiple": 2.0,
+      "trailing_atr_multiplier": 3.0,
+      "gross_pnl_reference": 1.9562310506844005,
+      "gross_pnl_exec": -1.1961601955253562,
+      "total_fees": 15.761955839804473,
+      "total_analytical_slippage": 3.1523912462097567,
+      "net_pnl_corrected": -16.95811603532983,
+      "winning_trades": 182,
+      "losing_trades": 212,
+      "engine_exit_counts": {
+        "STRATEGY_EXIT": 276,
+        "INITIAL_OR_BELOW_ENTRY_STOP_EXIT": 116,
+        "TAKE_PROFIT_EXIT": 2
+      },
+      "intrabar_trade_counts": {
+        "TOTAL_TRADES": 394,
+        "TARGET_TOUCHED_TRADES": 5,
+        "INITIAL_STOP_TOUCHED_TRADES": 143,
+        "TARGET_AND_INITIAL_STOP_SAME_BAR_TRADES": 0,
+        "NEITHER_FIXED_LEVEL_TOUCHED_TRADES": 247
+      },
+      "intrabar_bar_events": {
+        "target_touch_bar_events": 5,
+        "initial_stop_touch_bar_events": 255,
+        "same_bar_ambiguous_bar_events": 0
+      }
+    }
+  },
+  "exit_reason_analysis": {
+    "baseline": {
+      "llm_sell": {
+        "count": 93,
+        "rate": 0.14668769716088328,
+        "avg_gross_ref": -0.067288876376851,
+        "avg_gross_exec": -0.07527541860157502,
+        "avg_fees": 0.039932724581398425,
+        "avg_slippage": 0.007986542224724022,
+        "avg_net_corrected": -0.11520814318297345,
+        "total_net_pnl": -10.714357316016532,
+        "win_rate": 0.08602150537634409,
+        "avg_holding_bars": 5.967741935483871,
+        "median_holding_bars": 4,
+        "avg_return_bps": -33.644438188425504
+      },
+      "stop_loss": {
+        "count": 324,
+        "rate": 0.5110410094637224,
+        "avg_gross_ref": -0.16510617226263305,
+        "avg_gross_exec": -0.17307315102817966,
+        "avg_fees": 0.039834926848971816,
+        "avg_slippage": 0.007966978765546633,
+        "avg_net_corrected": -0.2129080778771515,
+        "total_net_pnl": -68.98221723219709,
+        "win_rate": 0.0,
+        "avg_holding_bars": 16.123456790123456,
+        "median_holding_bars": 13.0,
+        "avg_return_bps": -82.55308613131652
+      },
+      "take_profit": {
+        "count": 155,
+        "rate": 0.2444794952681388,
+        "avg_gross_ref": 0.4090373245464249,
+        "avg_gross_exec": 0.4009555170815166,
+        "avg_fees": 0.04040895551708151,
+        "avg_slippage": 0.008081807464908256,
+        "avg_net_corrected": 0.3605465615644351,
+        "total_net_pnl": 55.88471704248744,
+        "win_rate": 1.0,
+        "avg_holding_bars": 22.52258064516129,
+        "median_holding_bars": 19,
+        "avg_return_bps": 204.51866227321244
+      },
+      "trailing_stop": {
+        "count": 62,
+        "rate": 0.09779179810725552,
+        "avg_gross_ref": 0.059908613554810475,
+        "avg_gross_exec": 0.05189663183210037,
+        "avg_fees": 0.0400598966318321,
+        "avg_slippage": 0.008011981722710101,
+        "avg_net_corrected": 0.011836735200268275,
+        "total_net_pnl": 0.7338775824166331,
+        "win_rate": 0.46774193548387094,
+        "avg_holding_bars": 42.79032258064516,
+        "median_holding_bars": 38.5,
+        "avg_return_bps": 29.95430677740524
+      }
+    },
+    "donchian": {
+      "llm_sell": {
+        "count": 280,
+        "rate": 0.3329369797859691,
+        "avg_gross_ref": -0.040678265814288773,
+        "avg_gross_exec": -0.04867013016112502,
+        "avg_fees": 0.039959329869838876,
+        "avg_slippage": 0.007991864346836249,
+        "avg_net_corrected": -0.08862946003096389,
+        "total_net_pnl": -24.81624880866989,
+        "win_rate": 0.175,
+        "avg_holding_bars": 20.27857142857143,
+        "median_holding_bars": 17.0,
+        "avg_return_bps": -20.339132907144386
+      },
+      "stop_loss": {
+        "count": 326,
+        "rate": 0.3876337693222354,
+        "avg_gross_ref": -0.1920126443548274,
+        "avg_gross_exec": -0.1999742418259556,
+        "avg_fees": 0.03980802575817404,
+        "avg_slippage": 0.007961597471128222,
+        "avg_net_corrected": -0.23978226758412965,
+        "total_net_pnl": -78.16901923242627,
+        "win_rate": 0.0,
+        "avg_holding_bars": 11.174846625766872,
+        "median_holding_bars": 9.0,
+        "avg_return_bps": -96.0063221774137
+      },
+      "take_profit": {
+        "count": 199,
+        "rate": 0.23662306777645659,
+        "avg_gross_ref": 0.42985379959861364,
+        "avg_gross_exec": 0.4217678288386946,
+        "avg_fees": 0.0404297678288387,
+        "avg_slippage": 0.008085970759918982,
+        "avg_net_corrected": 0.38133806100985596,
+        "total_net_pnl": 75.88627414096133,
+        "win_rate": 1.0,
+        "avg_holding_bars": 18.814070351758794,
+        "median_holding_bars": 16,
+        "avg_return_bps": 214.9268997993068
+      },
+      "trailing_stop": {
+        "count": 36,
+        "rate": 0.04280618311533888,
+        "avg_gross_ref": 0.023118019079017383,
+        "avg_gross_exec": 0.015113395475202013,
+        "avg_fees": 0.0400231133954752,
+        "avg_slippage": 0.00800462360381537,
+        "avg_net_corrected": -0.02490971792027319,
+        "total_net_pnl": -0.8967498451298348,
+        "win_rate": 0.16666666666666666,
+        "avg_holding_bars": 31,
+        "median_holding_bars": 27.5,
+        "avg_return_bps": 11.559009539508692
+      }
+    },
+    "bollinger": {
+      "llm_sell": {
+        "count": 276,
+        "rate": 0.700507614213198,
+        "avg_gross_ref": 0.08235782997534845,
+        "avg_gross_exec": 0.07434135840935434,
+        "avg_fees": 0.04008234135840935,
+        "avg_slippage": 0.008016471565994115,
+        "avg_net_corrected": 0.03425901705094498,
+        "total_net_pnl": 9.455488706060814,
+        "win_rate": 0.6521739130434783,
+        "avg_holding_bars": 6.855072463768116,
+        "median_holding_bars": 6.0,
+        "avg_return_bps": 41.178914987674226
+      },
+      "stop_loss": {
+        "count": 116,
+        "rate": 0.29441624365482233,
+        "avg_gross_ref": -0.1858003032710667,
+        "avg_gross_exec": -0.19376314321041152,
+        "avg_fees": 0.03981423685678959,
+        "avg_slippage": 0.007962839939344801,
+        "avg_net_corrected": -0.2335773800672011,
+        "total_net_pnl": -27.094976087795327,
+        "win_rate": 0.0,
+        "avg_holding_bars": 7.267241379310345,
+        "median_holding_bars": 6.0,
+        "avg_return_bps": -92.90015163553335
+      },
+      "take_profit": {
+        "count": 2,
+        "rate": 0.005076142131979695,
+        "avg_gross_ref": 0.38915257846598317,
+        "avg_gross_exec": 0.3810747479502911,
+        "avg_fees": 0.040389074747950296,
+        "avg_slippage": 0.008077830515692053,
+        "avg_net_corrected": 0.34068567320234083,
+        "total_net_pnl": 0.6813713464046817,
+        "win_rate": 1.0,
+        "avg_holding_bars": 4,
+        "median_holding_bars": 4.0,
+        "avg_return_bps": 194.5762892329916
+      }
+    }
+  },
+  "cross_strategy_comparison": {
+    "baseline_vs_donchian": {
+      "net_pnl_diff": 4.91776382195512,
+      "trades_diff": -207
+    },
+    "baseline_vs_bollinger": {
+      "net_pnl_diff": -6.119863887979712,
+      "trades_diff": 240
+    },
+    "donchian_vs_bollinger": {
+      "net_pnl_diff": -11.037627709934831,
+      "trades_diff": 447
+    }
+  },
+  "safety": {
+    "real_walk_forward_reads": 0,
+    "final_holdout_reads": 0,
+    "final_holdout_executions": 0,
+    "holdout_state": "PRISTINE"
+  }
+}
