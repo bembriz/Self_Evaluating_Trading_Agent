@@ -114,7 +114,10 @@ Las skills del proyecto viven en `.opencode/skills/<nombre>/SKILL.md`. Las globa
 | Reportes de fase / PDF | `reporting-fases` | documentation-standards |
 | Release readiness | `release-readiness` | — |
 | Bybit (REST/WS/Testnet) | `bybit-integration` | api-client-standards |
+| Market-data Medallion (Bronze/Silver/Gold) | `medallion-market-data` | data-pipeline-quality |
 | Backtesting / replay | `backtesting` | — |
+| Trade-level replay (dos relojes, trigger/fill) | `backtesting` | data-leakage, risk-engine |
+| Plataforma compartida lenovosrv (PG/Caddy/red/backup) | — | infra-control, docker-standards |
 | Risk Engine | `risk-engine` | — |
 | Data leakage / no-lookahead | `data-leakage` | — |
 | Walk-forward | `walk-forward-validacion` | — |

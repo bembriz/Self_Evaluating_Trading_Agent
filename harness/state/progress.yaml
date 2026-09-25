@@ -3,7 +3,7 @@ meta:
   prd: docs/PRD — Self-Evaluating Trading Agent.md
   diseno_arnes: docs/design/harness-design.md
   creado: '2026-08-22'
-  actualizado: '2026-09-06'
+  actualizado: '2026-09-24'
   reglas:
     peso_fase_igual: true
     peso_entregable_igual: true
@@ -1022,6 +1022,69 @@ phases:
       estado: pending
       solicitado: null
       resuelto: null
+  '23':
+    titulo: Medallion Market Data & Trade-Level Replay
+    estado: in_progress
+    iniciada: '2026-09-24'
+    cerrada: null
+    entregables:
+    - id: m0-architecture
+      descripcion: Architecture, governance, skills and storage/platform design
+      estado: done
+      evidencia:
+      - docs/design/medallion-replay-architecture.md
+    - id: m0i-infra-discovery
+      descripcion: Read-only lenovosrv infrastructure revalidation
+      estado: pending
+      evidencia: []
+    - id: m0ii-gastosia-rescue
+      descripcion: GastosIA backup and isolated restore validation
+      estado: pending
+      evidencia: []
+    - id: m1-storage
+      descripcion: Secondary HDD reformat and /srv/data mount
+      estado: pending
+      evidencia: []
+    - id: m2-platform
+      descripcion: Shared platform directory and network foundation
+      estado: pending
+      evidencia: []
+    - id: m3-bronze
+      descripcion: Idempotent Bybit Bronze historical trade ingestion
+      estado: pending
+      evidencia: []
+    - id: m4-silver-trades
+      descripcion: Canonical deterministic Silver trade layer
+      estado: pending
+      evidencia: []
+    - id: m5-silver-candles
+      descripcion: Deterministic Silver multi-timeframe candles
+      estado: pending
+      evidencia: []
+    - id: m6-gold
+      descripcion: Immutable Gold replay dataset manifest
+      estado: pending
+      evidencia: []
+    - id: m7-trade-replay
+      descripcion: Two-clock trade-level replay engine
+      estado: pending
+      evidencia: []
+    - id: m8-deploy
+      descripcion: Medallion deployment on lenovosrv
+      estado: pending
+      evidencia: []
+    - id: m9-strategy-validation
+      descripcion: Rerun existing strategies on validated replay
+      estado: pending
+      evidencia: []
+    - id: m10-uat-integration
+      descripcion: UAT, audit and main integration candidate
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
 time_log:
 - fecha: '2026-08-22'
   fase: '00'
@@ -1845,4 +1908,16 @@ time_log:
   fase: 16b
   evento: done
   detalle: session-id-override
+- fecha: '2026-09-24'
+  fase: '23'
+  evento: phase_added
+  detalle: Medallion Market Data & Trade-Level Replay
+- fecha: '2026-09-24'
+  fase: '23'
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-09-24'
+  fase: '23'
+  evento: done
+  detalle: m0-architecture
 blockers: []

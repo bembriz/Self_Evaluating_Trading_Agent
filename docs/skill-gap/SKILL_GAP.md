@@ -93,3 +93,12 @@ Agrupación funcional:
 
 - Ninguna skill nueva duplica una existente; donde hay solapamiento parcial (database-sql-standards, api-client-standards, documentation-standards), la nueva referencia explícitamente a la global y solo añade lo específico del proyecto.
 - La instalación de codebase-memory-mcp NO ocurre en G1: se gestiona vía Dependency Proposal gated (skill `codebase-memory-mcp`, requisito #8 del PRD).
+
+## 5. Evolución post-G1 (iniciativa Medallion, gate M0)
+
+Evolución identificada **después del catálogo G1**, documentada y aprobada en el gate M0 (rama `medallion`):
+
+- **Crear:** `medallion-market-data` (`.opencode/skills/medallion-market-data/SKILL.md`) — pipeline Bronze/Silver/Gold de trades Bybit, inmutabilidad/idempotencia, tiering NVMe/HDD, guards de splits en ingestas, workers M8. Cubre el dominio "data eng de mercado" que G1 solo cubría parcialmente vía `data-pipeline-quality` (genérico).
+- **Actualizar (no duplicar):** `backtesting` (replay de dos relojes, trigger vs fill, fidelidad `TRADE_SEQUENCE_TAKER_PROXY`, auditoría trade-a-trade — ADR-0005) y `bybit-integration` (archivos históricos públicos de trades: descubrimiento, descarga atómica con sha256, preservación raw, detección/versionado de esquema de archivo).
+- **Routing:** nuevas filas en AGENTS.md §5 (Medallion, trade-level replay, plataforma compartida).
+- Futuras evoluciones esperadas (M3+): extras de `medallion-market-data` cuando existan workers reales; posible skill de "platform-ops" si la plataforma compartida (ADR-0006) crece — no se crean hasta que haya código real que las sustente.
