@@ -1,0 +1,12 @@
+# evidencia: m6-03-preflight
+fecha: 2026-09-28T10:33:46-06:00
+fase: 23
+comando: bash /tmp/opencode/m6-03-preflight.sh
+== M6 PREFLIGHT ==
+37cd798a64f359ebde49cb2decce6689666746be
+-- marker --
+LENOVO_DATA
+Traceback (most recent call last):
+  File "<stdin>", line 21, in <module>
+TypeError: unsupported operand type(s) for %: 'PosixPath' and 'tuple'
+exit=1

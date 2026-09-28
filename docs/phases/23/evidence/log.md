@@ -294,3 +294,12 @@ print("BRONZE_UNTOUCHED=PASS")
 PYEOF
 echo "-- contenedores --"
 docker compose ls -a` · exit=`0` · artifact: docs/phases/23/evidence/m5-09-bronze-untouched.log
+- `2026-09-28T10:29:47-06:00` **m6-01-unit-tests** → `bash -c uv run ruff check . && uv run ruff format --check . && uv run mypy src tests && uv run pytest tests/test_bronze_ingest.py tests/test_silver_trades.py tests/test_silver_candles.py tests/test_gold_dataset.py tests/test_split_candidate_17c_a.py --cov=infrastructure.medallion --cov-branch --cov-fail-under=90 --cov-report=term-missing --cov-report=json:/tmp/opencode/coverage-m6.json` · exit=`0` · artifact: docs/phases/23/evidence/m6-01-unit-tests.log
+- `2026-09-28T10:31:30-06:00` **m6-02-repo-quality** → `bash -c uv run ruff check . && uv run ruff format --check . && uv run mypy src tests && uv run pytest tests --ignore=tests/integration` · exit=`0` · artifact: docs/phases/23/evidence/m6-02-repo-quality.log
+- `2026-09-28T10:33:47-06:00` **m6-03-preflight** → `bash /tmp/opencode/m6-03-preflight.sh` · exit=`1` · artifact: docs/phases/23/evidence/m6-03-preflight.log
+- `2026-09-28T10:34:21-06:00` **m6-03-preflight-ok** → `bash /tmp/opencode/m6-03-preflight.sh` · exit=`0` · artifact: docs/phases/23/evidence/m6-03-preflight-ok.log
+- `2026-09-28T10:34:35-06:00` **m6-04-deploy-copy** → `bash /tmp/opencode/m6-04-deploy.sh` · exit=`0` · artifact: docs/phases/23/evidence/m6-04-deploy-copy.log
+- `2026-09-28T10:34:42-06:00` **m6-05-uat-run1** → `bash /tmp/opencode/m6-05-run1.sh` · exit=`0` · artifact: docs/phases/23/evidence/m6-05-uat-run1.log
+- `2026-09-28T10:34:53-06:00` **m6-06-uat-run2-determinism** → `bash /tmp/opencode/m6-06-run2.sh` · exit=`0` · artifact: docs/phases/23/evidence/m6-06-uat-run2-determinism.log
+- `2026-09-28T10:35:03-06:00` **m6-07-uat-verify** → `bash /tmp/opencode/m6-07-verify.sh` · exit=`0` · artifact: docs/phases/23/evidence/m6-07-uat-verify.log
+- `2026-09-28T10:36:24-06:00` **m6-08-uat-negative** → `bash /tmp/opencode/m6-08-negative.sh` · exit=`0` · artifact: docs/phases/23/evidence/m6-08-uat-negative.log

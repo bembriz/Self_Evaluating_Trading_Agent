@@ -1,0 +1,18 @@
+# evidencia: m6-07-uat-verify
+fecha: 2026-09-28T10:35:01-06:00
+fase: 23
+comando: bash /tmp/opencode/m6-07-verify.sh
+== M6 VERIFICACIÓN INDEPENDIENTE (refs/hashes/linaje/id/Silver/Bronze) ==
+TRADE_PARTITIONS=3 HASHES=OK
+CANDLE_OUTPUTS=21 HASHES=OK
+TIMEFRAMES=1m,5m,15m,30m,1h,4h,1d
+LINEAGE_VALIDATION=PASS
+REPLAY_CONFIG=PASS
+DATASET_ID_RECOMPUTED=YES
+NO_WALL_CLOCK=YES
+SILVER_UNTOUCHED=YES trades=3 candles=21
+BRONZE_UNTOUCHED=YES files=3
+DATASET_FILES=manifest.json,replay-config.json
+M6_VERIFY=PASS
+M6_VERIFY_ALL=PASS
+exit=0

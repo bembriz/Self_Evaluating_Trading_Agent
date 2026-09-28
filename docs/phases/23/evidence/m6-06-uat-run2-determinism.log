@@ -1,0 +1,25 @@
+# evidencia: m6-06-uat-run2-determinism
+fecha: 2026-09-28T10:34:51-06:00
+fase: 23
+comando: bash /tmp/opencode/m6-06-run2.sh
+== M6 RUN2 (0 cambios) + determinismo ==
+-- RUN2 (idempotencia) --
+SKIPPED dataset_id=gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3 manifest_sha256=9411a4e01a5adccbb448df062f0eca857213e8259441535b5812ee4688af99df trades=3 candles=21
+SUMMARY created=0 skipped=1
+RUN2_ID_MATCH=YES
+-- RUN2 0 cambios --
+RUN2_CHANGED=0
+MANIFEST_STABLE=YES
+CONFIG_STABLE=YES
+-- determinismo: dataset fresco en destino nuevo --
+CREATED dataset_id=gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3 manifest_sha256=9411a4e01a5adccbb448df062f0eca857213e8259441535b5812ee4688af99df trades=3 candles=21
+SUMMARY created=1 skipped=0
+DATASET_ID_DETERMINISTIC=YES
+REPLAY_CONFIG_DETERMINISTIC=YES
+-- ops log (fuera del dataset) --
+2 /srv/data/medallion/gold/replay-datasets/ETHUSDT/ops-gold.jsonl
+manifest.json
+replay-config.json
+M6_RUN2=PASS
+M6_UAT_RUN2=PASS
+exit=0

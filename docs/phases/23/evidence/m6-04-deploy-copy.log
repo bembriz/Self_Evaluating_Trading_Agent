@@ -1,0 +1,17 @@
+# evidencia: m6-04-deploy-copy
+fecha: 2026-09-28T10:34:32-06:00
+fase: 23
+comando: bash /tmp/opencode/m6-04-deploy.sh
+== M6 DEPLOY COPY ==
+IMPORT_OK gold-replay-dataset-v1 replay-config-v1
+EXPORTS DATASET_ID_PREFIX,GOLD_MANIFEST_VERSION,MANIFEST_FILENAME,OPS_FILENAME,REPLAY_CONFIG_FILENAME,REPLAY_CONFIG_VERSION,DatasetConflictError,GoldError,GoldResult,InputHashMismatchError,LineageMismatchError,build_replay_config,compute_dataset_id,create_dataset
+CONFIG_VERSION replay-config-v1 MODEL TRADE_SEQUENCE_TAKER_PROXY
+ID_DETERMINISM_OK gold-replay-c5e1c113d5c75240d109ea470244fa988c5d9970f26bdbbb885876ae1da9d2d7
+usage: gold_cli.py [-h] --trades-dir TRADES_DIR --candles-dir CANDLES_DIR
+                   --dest-dir DEST_DIR [--symbol SYMBOL] --dates DATES
+                   [--require-marker REQUIRE_MARKER]
+
+Gold replay dataset (idempotente)
+
+M6_DEPLOY=PASS
+exit=0

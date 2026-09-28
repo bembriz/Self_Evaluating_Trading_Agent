@@ -1,0 +1,21 @@
+# evidencia: m6-03-preflight-ok
+fecha: 2026-09-28T10:34:20-06:00
+fase: 23
+comando: bash /tmp/opencode/m6-03-preflight.sh
+== M6 PREFLIGHT ==
+37cd798a64f359ebde49cb2decce6689666746be
+-- marker --
+LENOVO_DATA
+TRADE_PARTITIONS=3 CANDLE_OUTPUTS=21 SOURCE_TRADES=1880793
+FIDELITY=PARTIAL SOURCE_ORDER_PRESERVED=YES
+GOLD_DEST_AUSENTE=SI
+-- Bronze intacto --
+3
+-- python --
+Python 3.12.3
+-- baseline contenedores --
+NAME                            STATUS              CONFIG FILES
+gastos-ia                       running(3)          /srv/docker/gastos-ia/compose.yaml
+self-evaluating-trading-agent   running(4)          /srv/docker/self-evaluating-trading-agent/compose.yaml
+M6_PREFLIGHT=PASS
+exit=0

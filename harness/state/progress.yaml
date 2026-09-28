@@ -1072,8 +1072,9 @@ phases:
       - docs/phases/23/evidence/m5-07-uat-run2-determinism.log
     - id: m6-gold
       descripcion: Immutable Gold replay dataset manifest
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/23/evidence/m6-06-uat-run2-determinism.log
     - id: m7-trade-replay
       descripcion: Two-clock trade-level replay engine
       estado: pending
@@ -1957,4 +1958,8 @@ time_log:
   fase: '23'
   evento: done
   detalle: m5-silver-candles
+- fecha: '2026-09-28'
+  fase: '23'
+  evento: done
+  detalle: m6-gold
 blockers: []

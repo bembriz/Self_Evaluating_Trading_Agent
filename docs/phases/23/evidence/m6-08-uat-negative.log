@@ -1,0 +1,34 @@
+# evidencia: m6-08-uat-negative
+fecha: 2026-09-28T10:36:22-06:00
+fase: 23
+comando: bash /tmp/opencode/m6-08-negative.sh
+== M6 NEGATIVOS: guards FAIL CLOSED sin tocar canónico ==
+-- 1. split guard ANTES de leer (dirs inexistentes) --
+date=2025-06-17 exit=1
+date=2026-04-01 exit=1
+date=2023-09-01 exit=1
+SPLIT_GUARD_BEFORE_READ=PASS
+-- 2. fecha inválida -> exit 2 / marker ausente -> exit 1 --
+EXIT_CODES=OK
+-- 3. sandbox: symlinks a Silver real + manifests copiados --
+SANDBOX_READY=YES
+-- 4. hash mismatch (manifest trades alterado) -> FAIL CLOSED --
+tampered_hash_exit=1
+HASH_GUARD_FAIL_CLOSED=PASS
+-- 5. lineage mismatch (candles source_trades alterado) -> FAIL CLOSED --
+lineage_tamper_exit=1
+LINEAGE_GUARD_FAIL_CLOSED=PASS
+-- 6. partición ausente -> FAIL CLOSED --
+missing_partition_exit=1
+MISSING_PARTITION_FAIL_CLOSED=PASS
+-- 7. dataset canónico intacto tras negativos --
+CANONICAL_INTACT=YES
+-- 8. sin lecturas WF/holdout en ops --
+ops_events=2
+OPS_DEVELOPMENT_ONLY=PASS
+1
+WALK_FORWARD_READS=0
+FINAL_HOLDOUT_READS=0
+M6_NEGATIVE=PASS
+M6_NEGATIVES=PASS
+exit=0
