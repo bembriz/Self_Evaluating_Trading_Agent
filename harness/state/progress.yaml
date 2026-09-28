@@ -3,7 +3,7 @@ meta:
   prd: docs/PRD — Self-Evaluating Trading Agent.md
   diseno_arnes: docs/design/harness-design.md
   creado: '2026-08-22'
-  actualizado: '2026-09-27'
+  actualizado: '2026-09-28'
   reglas:
     peso_fase_igual: true
     peso_entregable_igual: true
@@ -1057,8 +1057,9 @@ phases:
       - docs/phases/23/evidence/m2-04b-validate.log
     - id: m3-bronze
       descripcion: Idempotent Bybit Bronze historical trade ingestion
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/23/evidence/m3-06-uat-run2-idempotent.log
     - id: m4-silver-trades
       descripcion: Canonical deterministic Silver trade layer
       estado: pending
@@ -1942,4 +1943,8 @@ time_log:
   fase: '23'
   evento: done
   detalle: m2-platform
+- fecha: '2026-09-28'
+  fase: '23'
+  evento: done
+  detalle: m3-bronze
 blockers: []

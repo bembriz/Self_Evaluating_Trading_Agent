@@ -1,0 +1,10 @@
+# evidencia: m3-02c-lint-quality
+fecha: 2026-09-28T00:20:58-06:00
+fase: 23
+comando: bash -c uv run ruff check src/infrastructure/medallion tests/test_bronze_ingest.py && uv run ruff format --check src/infrastructure/medallion tests/test_bronze_ingest.py && uv run mypy src/infrastructure/medallion tests/test_bronze_ingest.py && uv run pytest tests/test_bronze_ingest.py -q --cov=infrastructure.medallion --cov-branch --cov-fail-under=90
+All checks passed!
+5 files already formatted
+tests/test_bronze_ingest.py:256: error: Missing type arguments for generic type "CaptureFixture"  [type-arg]
+tests/test_bronze_ingest.py:283: error: Missing type arguments for generic type "CaptureFixture"  [type-arg]
+Found 2 errors in 1 file (checked 5 source files)
+exit=1

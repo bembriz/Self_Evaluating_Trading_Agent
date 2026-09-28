@@ -1,0 +1,29 @@
+# evidencia: m3-03-preflight
+fecha: 2026-09-28T00:22:17-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 bash -s
+== M3 PREFLIGHT ==
+utc=2026-09-28T06:22:18Z
+Python 3.12.3
+-- marker --
+LENOVO_DATA
+-- dest --
+DEST_WRITABLE /srv/data/medallion/bronze/bybit/spot/ETHUSDT
+total 12
+drwxrwxr-x 3 administrador administrador 4096 sep 28 06:22 .
+drwxr-xr-x 3 administrador administrador 4096 sep 28 06:22 ..
+drwxrwxr-x 3 administrador administrador 4096 sep 28 06:22 bybit
+-- disk --
+/dev/sda1       916G  704K  870G   1% /srv/data
+-- containers (baseline) --
+gastos-ia-app|f0866dba0802|gastos-ia-app:latest
+gastos-ia-caddy|612427ee2033|caddy:2-alpine
+gastos-ia-samba|f9542a5b0b22|servercontainers/samba:smbd-only-latest
+self-evaluating-trading-agent-grafana-1|b796f67478d7|grafana/grafana:11.1.0
+self-evaluating-trading-agent-paper-runner-1|b061332c3572|self-evaluating-trading-agent-paper-runner:0.2.0
+self-evaluating-trading-agent-postgres-1|0c79b6b5d1cd|pgvector/pgvector:pg16
+self-evaluating-trading-agent-prometheus-1|1431d8e01dd6|prom/prometheus:v2.53.0
+-- repo worktree clean check (local module copy not yet present) --
+NO_PRIOR_M3_DIR
+M3_PREFLIGHT=PASS
+exit=0

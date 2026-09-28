@@ -1,0 +1,24 @@
+# evidencia: m3-05b-uat-run1
+fecha: 2026-09-28T00:23:22-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 bash -s
+== M3 UAT RUN1 ==
+DOWNLOADED ETHUSDT_2024-06-01.csv.gz sha256=f5dd2cc8a8f52bd568625cc4023c810aea2041eec9d9616ddc33fbf0a69660c3 bytes=2995239
+DOWNLOADED ETHUSDT_2024-06-02.csv.gz sha256=ca1a6b37d96ae32929a5b20e3bf37f8f1776f6c90a5a658c20a62dac0a7da84b bytes=4262139
+DOWNLOADED ETHUSDT_2024-06-03.csv.gz sha256=f13105dbe6c978d7dcf0f1eab754db89354fb03e4632a2dbd4895e0fdfe9ec69 bytes=6612661
+SUMMARY downloaded=3 skipped=0 total=3
+-- tree --
+/srv/data/medallion/bronze/bybit/spot/ETHUSDT/date=2024-06-01/ETHUSDT_2024-06-01.csv.gz
+/srv/data/medallion/bronze/bybit/spot/ETHUSDT/date=2024-06-02/ETHUSDT_2024-06-02.csv.gz
+/srv/data/medallion/bronze/bybit/spot/ETHUSDT/date=2024-06-03/ETHUSDT_2024-06-03.csv.gz
+/srv/data/medallion/bronze/bybit/spot/ETHUSDT/manifest.json
+/srv/data/medallion/bronze/bybit/spot/ETHUSDT/ops-downloads.jsonl
+-- canonical hash check (2024-06-01) --
+remote_sha256=f5dd2cc8a8f52bd568625cc4023c810aea2041eec9d9616ddc33fbf0a69660c3
+CANONICAL_HASH_MATCH
+-- save sha256 list + manifest for RUN2 compare --
+f5dd2cc8a8f52bd568625cc4023c810aea2041eec9d9616ddc33fbf0a69660c3  /srv/data/medallion/bronze/bybit/spot/ETHUSDT/date=2024-06-01/ETHUSDT_2024-06-01.csv.gz
+ca1a6b37d96ae32929a5b20e3bf37f8f1776f6c90a5a658c20a62dac0a7da84b  /srv/data/medallion/bronze/bybit/spot/ETHUSDT/date=2024-06-02/ETHUSDT_2024-06-02.csv.gz
+f13105dbe6c978d7dcf0f1eab754db89354fb03e4632a2dbd4895e0fdfe9ec69  /srv/data/medallion/bronze/bybit/spot/ETHUSDT/date=2024-06-03/ETHUSDT_2024-06-03.csv.gz
+M3_RUN1=PASS
+exit=0

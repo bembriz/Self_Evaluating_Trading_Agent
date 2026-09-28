@@ -1,0 +1,27 @@
+# evidencia: m3-07-uat-negative
+fecha: 2026-09-28T00:23:42-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 bash -s
+== M3 UAT NEGATIVE (split guard fail-closed) ==
+ERROR: 2025-06-17 fuera de DEVELOPMENT [2023-09-09..2025-06-16] (split v1, dataset BYBIT_ETHBTC_V001)
+WF_DAY exit=1
+ERROR: 2023-09-08 fuera de DEVELOPMENT [2023-09-09..2025-06-16] (split v1, dataset BYBIT_ETHBTC_V001)
+PRE_DEV exit=1
+ERROR: 2026-03-15 fuera de DEVELOPMENT [2023-09-09..2025-06-16] (split v1, dataset BYBIT_ETHBTC_V001)
+HOLDOUT exit=1
+ERROR fechas: Invalid isoformat string: 'ayer'
+BAD_DATE exit=2
+ERROR: base URL no permitida: 'https://public.bybit.com/trading/ETHUSDT'
+TRADING_BASE exit=1
+ERROR: marker ausente: /srv/data/.lenovosrv-data-volume-MISSING
+MISSING_MARKER exit=1
+-- no partition files for rejected dates --
+NO_REJECTED_PARTITIONS
+-- final state --
+/srv/data/medallion/bronze/bybit/spot/ETHUSDT/date=2024-06-01/ETHUSDT_2024-06-01.csv.gz
+/srv/data/medallion/bronze/bybit/spot/ETHUSDT/date=2024-06-02/ETHUSDT_2024-06-02.csv.gz
+/srv/data/medallion/bronze/bybit/spot/ETHUSDT/date=2024-06-03/ETHUSDT_2024-06-03.csv.gz
+/srv/data/medallion/bronze/bybit/spot/ETHUSDT/manifest.json
+/srv/data/medallion/bronze/bybit/spot/ETHUSDT/ops-downloads.jsonl
+M3_NEGATIVE=PASS
+exit=0

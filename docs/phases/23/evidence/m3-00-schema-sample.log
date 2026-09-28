@@ -1,0 +1,34 @@
+# evidencia: m3-00-schema-sample
+fecha: 2026-09-28T00:14:06-06:00
+fase: 23
+comando: bash -c cd /tmp/opencode/m3-sample && echo "== source ==" && echo "https://public.bybit.com/spot/ETHUSDT/ETHUSDT_2024-06-01.csv.gz" && curl -sS -o /dev/null -w "http=%{http_code} bytes=%{size_download}\n" --max-time 120 "https://public.bybit.com/spot/ETHUSDT/ETHUSDT_2024-06-01.csv.gz" -o /dev/null; sha256sum ETHUSDT_2024-06-01.csv.gz && file ETHUSDT_2024-06-01.csv.gz && echo "== header + 3 filas ==" && python3 -c "
+import gzip
+with gzip.open(\"ETHUSDT_2024-06-01.csv.gz\",\"rt\") as f:
+    for i,line in enumerate(f):
+        print(line.rstrip())
+        if i>=3: break
+" && echo "== tail + filas ==" && python3 -c "
+import gzip
+n=0
+last=\"\"
+with gzip.open(\"ETHUSDT_2024-06-01.csv.gz\",\"rt\") as f:
+    for line in f:
+        n+=1; last=line.rstrip()
+print(\"lines_total=\",n)
+print(\"last_row=\",last)
+"; echo "SCHEMA_DOC=id,timestamp,price,volume,side"
+== source ==
+https://public.bybit.com/spot/ETHUSDT/ETHUSDT_2024-06-01.csv.gz
+http=200 bytes=2995239
+f5dd2cc8a8f52bd568625cc4023c810aea2041eec9d9616ddc33fbf0a69660c3  ETHUSDT_2024-06-01.csv.gz
+ETHUSDT_2024-06-01.csv.gz: gzip compressed data, original size modulo 2^32 16406349
+== header + 3 filas ==
+id,timestamp,price,volume,side
+1,1717200000274,3762.62,0.07674,sell
+2,1717200000274,3762.62,0.13443,sell
+3,1717200000274,3762.62,0.07674,sell
+== tail + filas ==
+lines_total= 402115
+last_row= 402114,1717286399627,3815.79,0.01254,sell
+SCHEMA_DOC=id,timestamp,price,volume,side
+exit=0

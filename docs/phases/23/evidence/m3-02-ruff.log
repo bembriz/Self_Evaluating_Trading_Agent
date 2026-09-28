@@ -1,0 +1,79 @@
+# evidencia: m3-02-ruff
+fecha: 2026-09-28T00:19:20-06:00
+fase: 23
+comando: bash -c uv run ruff check src/infrastructure/medallion tests/test_bronze_ingest.py && uv run ruff format --check src/infrastructure/medallion tests/test_bronze_ingest.py
+I001 [*] Import block is un-sorted or un-formatted
+  --> src/infrastructure/medallion/bronze.py:20:1
+   |
+18 |   """
+19 |
+20 | / from __future__ import annotations
+21 | |
+22 | | import gzip
+23 | | import hashlib
+24 | | import json
+25 | | import os
+26 | | import re
+27 | | from collections.abc import Callable, Iterable
+28 | | from dataclasses import dataclass
+29 | | from datetime import date, datetime, UTC
+30 | | from pathlib import Path
+31 | | from urllib.request import Request, urlopen
+32 | |
+33 | | from infrastructure.medallion.split_guard import SplitGuardError, ensure_development_day
+   | |________________________________________________________________________________________^
+34 |
+35 |   __all__ = [
+   |
+help: Organize imports
+   |
+28 | from dataclasses import dataclass
+   - from datetime import date, datetime, UTC
+29 + from datetime import UTC, date, datetime
+30 | from pathlib import Path
+   |
+
+SIM300 [*] Yoda condition detected
+   --> tests/test_bronze_ingest.py:233:16
+    |
+231 |     assert raw["split_version"] == 1
+232 |     if first.time() != datetime.min.time():
+233 |         assert DEVELOPMENT_FIRST_DAY == first.date() + timedelta(days=1)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+234 |     if last.time() != datetime.max.time().replace(microsecond=0):
+235 |         assert DEVELOPMENT_LAST_DAY == last.date() - timedelta(days=1)
+    |
+    |
+232 |     if first.time() != datetime.min.time():
+    -         assert DEVELOPMENT_FIRST_DAY == first.date() + timedelta(days=1)
+233 +         assert first.date() + timedelta(days=1) == DEVELOPMENT_FIRST_DAY
+234 |     if last.time() != datetime.max.time().replace(microsecond=0):
+    |
+
+SIM300 [*] Yoda condition detected
+   --> tests/test_bronze_ingest.py:235:16
+    |
+233 |         assert DEVELOPMENT_FIRST_DAY == first.date() + timedelta(days=1)
+234 |     if last.time() != datetime.max.time().replace(microsecond=0):
+235 |         assert DEVELOPMENT_LAST_DAY == last.date() - timedelta(days=1)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+234 |     if last.time() != datetime.max.time().replace(microsecond=0):
+    -         assert DEVELOPMENT_LAST_DAY == last.date() - timedelta(days=1)
+235 +         assert last.date() - timedelta(days=1) == DEVELOPMENT_LAST_DAY
+236 |
+    |
+
+E501 Line too long (103 > 100)
+   --> tests/test_bronze_ingest.py:288:101
+    |
+287 |     rc_missing = cli.main(
+288 |         ["--dest-dir", str(dest), "--dates", "2024-06-01", "--require-marker", str(tmp_path / "nope")],
+    |                                                                                                     ^^^
+289 |         fetcher=FakeFetcher(_payload()),
+290 |     )
+    |
+
+Found 4 errors.
+[*] 3 fixable with the `--fix` option.
+exit=1

@@ -1,0 +1,55 @@
+# evidencia: m3-02b-ruff-format
+fecha: 2026-09-28T00:20:43-06:00
+fase: 23
+comando: bash -c uv run ruff check src/infrastructure/medallion tests/test_bronze_ingest.py && uv run ruff format --check src/infrastructure/medallion tests/test_bronze_ingest.py && uv run mypy src/infrastructure/medallion tests/test_bronze_ingest.py && uv run pytest tests/test_bronze_ingest.py -q --cov=infrastructure.medallion --cov-branch --cov-fail-under=90
+All checks passed!
+unformatted: File would be reformatted
+   --> src/infrastructure/medallion/bronze.py:228:37
+    |
+227 |         if recorded != local_sha:
+    -             raise HashConflictError(
+    -                 f"{name}: hash local {local_sha} != manifest {recorded!r}"
+    -             )
+228 +             raise HashConflictError(f"{name}: hash local {local_sha} != manifest {recorded!r}")
+229 |         _append_ops(symbol_dir, {"event": "skipped", "filename": name, "sha256": local_sha})
+--------------------------------------------------------------------------------
+258 |     os.replace(part, final)
+    -     _append_ops(
+    -         symbol_dir, {"event": "downloaded", "filename": name, "sha256": payload_sha}
+    -     )
+259 +     _append_ops(symbol_dir, {"event": "downloaded", "filename": name, "sha256": payload_sha})
+260 |     return DownloadResult(name, "downloaded", payload_sha, payload_bytes)
+--------------------------------------------------------------------------------
+273 |     for day in days:
+    -         results.append(
+    -             download_day(symbol_dir, symbol, day, fetcher=fetcher, base_url=base_url)
+    -         )
+274 +         results.append(download_day(symbol_dir, symbol, day, fetcher=fetcher, base_url=base_url))
+275 |     return results
+    |
+
+unformatted: File would be reformatted
+   --> tests/test_bronze_ingest.py:128:12
+    |
+127 |     assert final.read_bytes() == _payload("contenido B\n")
+    -     assert sha256_file(final) != json.loads((tmp_path / "manifest.json").read_text())[
+    -         "files"
+    -     ]["ETHUSDT_2024-06-01.csv.gz"]["sha256"]
+128 +     assert (
+129 +         sha256_file(final)
+130 +         != json.loads((tmp_path / "manifest.json").read_text())["files"][
+131 +             "ETHUSDT_2024-06-01.csv.gz"
+132 +         ]["sha256"]
+133 +     )
+134 |
+--------------------------------------------------------------------------------
+273 |     fetcher = FakeFetcher(_payload())
+    -     rc = cli.main(
+    -         ["--dest-dir", str(tmp_path), "--dates", "2025-06-17"], fetcher=fetcher
+    -     )
+274 +     rc = cli.main(["--dest-dir", str(tmp_path), "--dates", "2025-06-17"], fetcher=fetcher)
+275 |     assert rc == 1
+    |
+
+2 files would be reformatted, 3 files already formatted
+exit=1

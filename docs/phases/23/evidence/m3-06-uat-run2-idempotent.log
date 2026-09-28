@@ -1,0 +1,25 @@
+# evidencia: m3-06-uat-run2-idempotent
+fecha: 2026-09-28T00:23:33-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 bash -s
+== M3 UAT RUN2 (idempotencia) ==
+SKIPPED ETHUSDT_2024-06-01.csv.gz sha256=f5dd2cc8a8f52bd568625cc4023c810aea2041eec9d9616ddc33fbf0a69660c3 bytes=2995239
+SKIPPED ETHUSDT_2024-06-02.csv.gz sha256=ca1a6b37d96ae32929a5b20e3bf37f8f1776f6c90a5a658c20a62dac0a7da84b bytes=4262139
+SKIPPED ETHUSDT_2024-06-03.csv.gz sha256=f13105dbe6c978d7dcf0f1eab754db89354fb03e4632a2dbd4895e0fdfe9ec69 bytes=6612661
+SUMMARY downloaded=0 skipped=3 total=3
+-- compare hashes RUN1 vs RUN2 --
+HASHES_IDENTICAL
+-- compare manifest RUN1 vs RUN2 --
+MANIFEST_IDENTICAL
+-- gzip integrity + line count (2024-06-01) --
+lines_2024-06-01= 402115
+GZIP_CRC_AND_LINES_OK
+-- ops log (timestamped, separado del manifest) --
+{"at": "2026-09-28T06:23:23.692327+00:00", "event": "downloaded", "filename": "ETHUSDT_2024-06-01.csv.gz", "sha256": "f5dd2cc8a8f52bd568625cc4023c810aea2041eec9d9616ddc33fbf0a69660c3"}
+{"at": "2026-09-28T06:23:26.092903+00:00", "event": "downloaded", "filename": "ETHUSDT_2024-06-02.csv.gz", "sha256": "ca1a6b37d96ae32929a5b20e3bf37f8f1776f6c90a5a658c20a62dac0a7da84b"}
+{"at": "2026-09-28T06:23:28.548922+00:00", "event": "downloaded", "filename": "ETHUSDT_2024-06-03.csv.gz", "sha256": "f13105dbe6c978d7dcf0f1eab754db89354fb03e4632a2dbd4895e0fdfe9ec69"}
+{"at": "2026-09-28T06:23:34.239903+00:00", "event": "skipped", "filename": "ETHUSDT_2024-06-01.csv.gz", "sha256": "f5dd2cc8a8f52bd568625cc4023c810aea2041eec9d9616ddc33fbf0a69660c3"}
+{"at": "2026-09-28T06:23:34.250762+00:00", "event": "skipped", "filename": "ETHUSDT_2024-06-02.csv.gz", "sha256": "ca1a6b37d96ae32929a5b20e3bf37f8f1776f6c90a5a658c20a62dac0a7da84b"}
+{"at": "2026-09-28T06:23:34.267135+00:00", "event": "skipped", "filename": "ETHUSDT_2024-06-03.csv.gz", "sha256": "f13105dbe6c978d7dcf0f1eab754db89354fb03e4632a2dbd4895e0fdfe9ec69"}
+M3_RUN2=PASS
+exit=0

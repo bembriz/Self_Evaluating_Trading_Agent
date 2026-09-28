@@ -1,0 +1,7 @@
+# evidencia: m3-05-uat-run1
+fecha: 2026-09-28T00:23:16-06:00
+fase: 23
+comando: bash /tmp/opencode/m3-05-run1.sh
+== M3 UAT RUN1 ==
+/tmp/opencode/m3-05-run1.sh: línea 5: cd: /tmp/m3/src: No existe el archivo o el directorio
+exit=1

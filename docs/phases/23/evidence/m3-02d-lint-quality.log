@@ -1,0 +1,15 @@
+# evidencia: m3-02d-lint-quality
+fecha: 2026-09-28T00:21:18-06:00
+fase: 23
+comando: bash -c uv run ruff check src/infrastructure/medallion tests/test_bronze_ingest.py && uv run ruff format --check src/infrastructure/medallion tests/test_bronze_ingest.py && uv run mypy src/infrastructure/medallion tests/test_bronze_ingest.py && uv run pytest tests/test_bronze_ingest.py -q --cov=infrastructure.medallion --cov-branch --cov-fail-under=90
+E501 Line too long (103 > 100)
+   --> tests/test_bronze_ingest.py:256:101
+    |
+256 | def test_cli_two_days_and_idempotent_rerun(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    |                                                                                                     ^^^
+257 |     dest = tmp_path / "ETHUSDT"
+258 |     fetcher = FakeFetcher(_payload())
+    |
+
+Found 1 error.
+exit=1

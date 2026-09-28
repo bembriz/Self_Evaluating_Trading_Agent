@@ -224,3 +224,35 @@ echo "CORRECCION_CAPACIDAD=PASS (395.09 GiB, margen 345.09, raw preservado, diff
 - `2026-09-27T23:42:56-06:00` **m2-04b-validate** → `bash -c ( printf "%s\n" "$SUDO_PASS"; cat docs/phases/23/evidence/m2-04-validate.sh ) | ssh -o BatchMode=yes administrador@192.168.100.24 "sudo -S -p \"\" bash -s"` · exit=`0` · artifact: docs/phases/23/evidence/m2-04b-validate.log
 - `2026-09-27T23:44:21-06:00` **m2-05-repo-compose** → `bash -c docker compose -f deployment/platform/compose.yaml config -q && echo COMPOSE_CONFIG_PASS; echo "services:"; docker compose -f deployment/platform/compose.yaml config --services; echo "network:"; docker compose -f deployment/platform/compose.yaml config | grep -A3 "platform-net"; echo "platform containers locales:"; docker ps -a --format "{{.Names}}" | grep -c platform- || echo 0; find deployment/platform -type f | sort` · exit=`0` · artifact: docs/phases/23/evidence/m2-05-repo-compose.log
 - `2026-09-27T23:44:46-06:00` **m2-06-ledger-tests** → `uv run pytest harness/tests/test_ledger.py harness/tests/test_progress_cli.py -q` · exit=`0` · artifact: docs/phases/23/evidence/m2-06-ledger-tests.log
+- `2026-09-28T00:14:07-06:00` **m3-00-schema-sample** → `bash -c cd /tmp/opencode/m3-sample && echo "== source ==" && echo "https://public.bybit.com/spot/ETHUSDT/ETHUSDT_2024-06-01.csv.gz" && curl -sS -o /dev/null -w "http=%{http_code} bytes=%{size_download}\n" --max-time 120 "https://public.bybit.com/spot/ETHUSDT/ETHUSDT_2024-06-01.csv.gz" -o /dev/null; sha256sum ETHUSDT_2024-06-01.csv.gz && file ETHUSDT_2024-06-01.csv.gz && echo "== header + 3 filas ==" && python3 -c "
+import gzip
+with gzip.open(\"ETHUSDT_2024-06-01.csv.gz\",\"rt\") as f:
+    for i,line in enumerate(f):
+        print(line.rstrip())
+        if i>=3: break
+" && echo "== tail + filas ==" && python3 -c "
+import gzip
+n=0
+last=\"\"
+with gzip.open(\"ETHUSDT_2024-06-01.csv.gz\",\"rt\") as f:
+    for line in f:
+        n+=1; last=line.rstrip()
+print(\"lines_total=\",n)
+print(\"last_row=\",last)
+"; echo "SCHEMA_DOC=id,timestamp,price,volume,side"` · exit=`0` · artifact: docs/phases/23/evidence/m3-00-schema-sample.log
+- `2026-09-28T00:19:04-06:00` **m3-01-unit-tests** → `uv run pytest tests/test_bronze_ingest.py -q --cov=infrastructure.medallion --cov-branch --cov-report=term-missing` · exit=`0` · artifact: docs/phases/23/evidence/m3-01-unit-tests.log
+- `2026-09-28T00:19:20-06:00` **m3-02-ruff** → `bash -c uv run ruff check src/infrastructure/medallion tests/test_bronze_ingest.py && uv run ruff format --check src/infrastructure/medallion tests/test_bronze_ingest.py` · exit=`1` · artifact: docs/phases/23/evidence/m3-02-ruff.log
+- `2026-09-28T00:20:43-06:00` **m3-02b-ruff-format** → `bash -c uv run ruff check src/infrastructure/medallion tests/test_bronze_ingest.py && uv run ruff format --check src/infrastructure/medallion tests/test_bronze_ingest.py && uv run mypy src/infrastructure/medallion tests/test_bronze_ingest.py && uv run pytest tests/test_bronze_ingest.py -q --cov=infrastructure.medallion --cov-branch --cov-fail-under=90` · exit=`1` · artifact: docs/phases/23/evidence/m3-02b-ruff-format.log
+- `2026-09-28T00:20:59-06:00` **m3-02c-lint-quality** → `bash -c uv run ruff check src/infrastructure/medallion tests/test_bronze_ingest.py && uv run ruff format --check src/infrastructure/medallion tests/test_bronze_ingest.py && uv run mypy src/infrastructure/medallion tests/test_bronze_ingest.py && uv run pytest tests/test_bronze_ingest.py -q --cov=infrastructure.medallion --cov-branch --cov-fail-under=90` · exit=`1` · artifact: docs/phases/23/evidence/m3-02c-lint-quality.log
+- `2026-09-28T00:21:19-06:00` **m3-02d-lint-quality** → `bash -c uv run ruff check src/infrastructure/medallion tests/test_bronze_ingest.py && uv run ruff format --check src/infrastructure/medallion tests/test_bronze_ingest.py && uv run mypy src/infrastructure/medallion tests/test_bronze_ingest.py && uv run pytest tests/test_bronze_ingest.py -q --cov=infrastructure.medallion --cov-branch --cov-fail-under=90` · exit=`1` · artifact: docs/phases/23/evidence/m3-02d-lint-quality.log
+- `2026-09-28T00:21:36-06:00` **m3-02e-lint-quality** → `bash -c uv run ruff check src/infrastructure/medallion tests/test_bronze_ingest.py && uv run ruff format --check src/infrastructure/medallion tests/test_bronze_ingest.py && uv run mypy src/infrastructure/medallion tests/test_bronze_ingest.py && uv run pytest tests/test_bronze_ingest.py -q --cov=infrastructure.medallion --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/23/evidence/m3-02e-lint-quality.log
+- `2026-09-28T00:22:19-06:00` **m3-03-preflight** → `ssh -o BatchMode=yes administrador@192.168.100.24 bash -s` · exit=`0` · artifact: docs/phases/23/evidence/m3-03-preflight.log
+- `2026-09-28T00:23:09-06:00` **m3-04-deploy-copy** → `bash /tmp/opencode/m3-04-copy.sh` · exit=`0` · artifact: docs/phases/23/evidence/m3-04-deploy-copy.log
+- `2026-09-28T00:23:16-06:00` **m3-05-uat-run1** → `bash /tmp/opencode/m3-05-run1.sh` · exit=`1` · artifact: docs/phases/23/evidence/m3-05-uat-run1.log
+- `2026-09-28T00:23:28-06:00` **m3-05b-uat-run1** → `ssh -o BatchMode=yes administrador@192.168.100.24 bash -s` · exit=`0` · artifact: docs/phases/23/evidence/m3-05b-uat-run1.log
+- `2026-09-28T00:23:34-06:00` **m3-06-uat-run2-idempotent** → `ssh -o BatchMode=yes administrador@192.168.100.24 bash -s` · exit=`0` · artifact: docs/phases/23/evidence/m3-06-uat-run2-idempotent.log
+- `2026-09-28T00:23:43-06:00` **m3-07-uat-negative** → `ssh -o BatchMode=yes administrador@192.168.100.24 bash -s` · exit=`0` · artifact: docs/phases/23/evidence/m3-07-uat-negative.log
+- `2026-09-28T00:25:47-06:00` **m3-08-product-unit-tests** → `uv run pytest tests -q --ignore=tests/integration` · exit=`0` · artifact: docs/phases/23/evidence/m3-08-product-unit-tests.log
+- `2026-09-28T00:26:02-06:00` **m3-09-repo-quality** → `bash -c uv run ruff check . && uv run ruff format --check . && uv run mypy src tests` · exit=`0` · artifact: docs/phases/23/evidence/m3-09-repo-quality.log
+- `2026-09-28T00:30:54-06:00` **m3-08b-product-unit-tests-with-count** → `uv run pytest tests --ignore=tests/integration` · exit=`0` · artifact: docs/phases/23/evidence/m3-08b-product-unit-tests-with-count.log
+- `2026-09-28T00:44:01-06:00` **m3-10-precommit-verify** → `bash -c uv run ruff check . && uv run ruff format --check . && uv run mypy src tests && uv run pytest tests/test_bronze_ingest.py` · exit=`0` · artifact: docs/phases/23/evidence/m3-10-precommit-verify.log
