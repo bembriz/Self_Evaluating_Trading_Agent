@@ -1,0 +1,19 @@
+# evidencia: m4-05-deploy-copy
+fecha: 2026-09-28T01:13:14-06:00
+fase: 23
+comando: bash /tmp/opencode/m4-05-copy.sh
+== M4 DEPLOY COPY ==
+49f204b39388e0c6ba4057bbe61f1c32cc41caa0093685981a7d280599556146  infrastructure/medallion/bronze.py
+7d541055f2dc65efcc388ab9cfa2eced35bb2073cf947f559f35e19ae7644c36  infrastructure/medallion/cli.py
+9bfbd74a965bf4453ff454081cdbd487aedb91ad06affc97a822c28e99492f9b  infrastructure/medallion/__init__.py
+cd820a39bcf5cefe47818ee4a76a4dce40e71452d3a484a8bfeb3a120d841e96  infrastructure/medallion/silver_cli.py
+9e1259859bb512889e4393262dd0606e1239a06cb9aed2884e914c06e7587a33  infrastructure/medallion/silver.py
+1bed53208403d9f652012c9c24c99f982505e7ed10a7218e58d12b133f4b73a5  infrastructure/medallion/split_guard.py
+IMPORT_OK 0
+usage: silver_cli.py [-h] --bronze-dir BRONZE_DIR --dest-dir DEST_DIR
+                     [--symbol SYMBOL] --dates DATES
+                     [--require-marker REQUIRE_MARKER]
+
+Silver trades canónicos (idempotente)
+M4_COPY=PASS
+exit=0

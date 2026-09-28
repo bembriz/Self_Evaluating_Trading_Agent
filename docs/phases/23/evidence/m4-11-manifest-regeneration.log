@@ -1,0 +1,36 @@
+# evidencia: m4-11-manifest-regeneration
+fecha: 2026-09-28T01:32:14-06:00
+fase: 23
+comando: bash /tmp/opencode/m4-11-regenerate.sh
+== M4 CORRECTION: deploy + regeneración de manifest/output ==
+-- 1. deploy código corregido --
+ORDERING_FIDELITY=PARTIAL
+-- 2. backup + snapshot previos --
+BACKUP_OK
+      3 "ordering_fidelity": "FULL"
+-- 3. regenerar SOLO las 3 particiones existentes (sin descargas) --
+TRANSFORMED ETHUSDT_2024-06-01.csv.gz sha256=c98549d053e89478b393f543006c835803fe0f0719ebaa20d13f8759878d2506 rows=402114
+TRANSFORMED ETHUSDT_2024-06-02.csv.gz sha256=241b5704c84851c9617df396ab40b05df83b98e6f408b6aaac8d99976daf99a3 rows=572158
+TRANSFORMED ETHUSDT_2024-06-03.csv.gz sha256=45ecb3bfa4bb350bf2789f5f9e24bbf9044adab7eec3003a490f28f6130ea59b rows=906521
+SUMMARY transformed=3 skipped=0 total=3
+-- 4. validación pos-corrección --
+-- outputs idénticos al RUN1 original? --
+OUTPUT_DATA_HASH_CHANGED=NO
+-- outputs idénticos al backup inmediato? --
+BACKUP_MATCH=YES
+-- manifest nuevo --
+day=2024-06-01 rows=402114 fidelity=PARTIAL source_order_preserved=True lineage=OK
+day=2024-06-02 rows=572158 fidelity=PARTIAL source_order_preserved=True lineage=OK
+day=2024-06-03 rows=906521 fidelity=PARTIAL source_order_preserved=True lineage=OK
+SILVER_ROWS=1880793 ROW_COUNT_MATCH=YES
+-- manifest pre vs post (esperado: FULL→PARTIAL + source_order_preserved) --
+MANIFEST_HASH_CHANGED=YES
+1c1
+< {"files":{"ETHUSDT_2024-06-01.csv.gz":{"date":"2024-06-01","filename":"ETHUSDT_2024-06-01.csv.gz","max_timestamp":1717286399627,"min_timestamp":1717200000274,"ordering_fidelity":"FULL","output_path":"date=2024-06-01/ETHUSDT_2024-06-01.csv.gz","output_sha256":"c98549d053e89478b393f543006c835803fe0f0719ebaa20d13f8759878d2506","row_count":402114,"schema_version":"bybit-spot-trades-silver-v1","source_bronze_path":"date=2024-06-01/ETHUSDT_2024-06-01.csv.gz","source_bronze_sha256":"f5dd2cc8a8f52bd568625cc4023c810aea2041eec9d9616ddc33fbf0a69660c3","symbol":"ETHUSDT"},"ETHUSDT_2024-06-02.csv.gz":{"date":"2024-06-02","filename":"ETHUSDT_2024-06-02.csv.gz","max_timestamp":1717372798547,"min_timestamp":1717286401401,"ordering_fidelity":"FULL","output_path":"date=2024-06-02/ETHUSDT_2024-06-02.csv.gz","output_sha256":"241b5704c84851c9617df396ab40b05df83b98e6f408b6aaac8d99976daf99a3","row_count":572158,"schema_version":"bybit-spot-trades-silver-v1","source_bronze_path":"date=2024-06-02/ETHUSDT_2024-06-02.csv.gz","source_bronze_sha256":"ca1a6b37d96ae32929a5b20e3bf37f8f1776f6c90a5a658c20a62dac0a7da84b","symbol":"ETHUSDT"},"ETHUSDT_2024-06-03.csv.gz":{"date":"2024-06-03","filename":"ETHUSDT_2024-06-03.csv.gz","max_timestamp":1717459198719,"min_timestamp":1717372804460,"ordering_fidelity":"FULL","output_path":"date=2024-06-03/ETHUSDT_2024-06-03.csv.gz","output_sha256":"45ecb3bfa4bb350bf2789f5f9e24bbf9044adab7eec3003a490f28f6130ea59b","row_count":906521,"schema_version":"bybit-spot-trades-silver-v1","source_bronze_path":"date=2024-06-03/ETHUSDT_2024-06-03.csv.gz","source_bronze_sha256":"f13105dbe6c978d7dcf0f1eab754db89354fb03e4632a2dbd4895e0fdfe9ec69","symbol":"ETHUSDT"}},"schema_version":"bybit-spot-trades-silver-v1"}
+\ No newline at end of file
+---
+> {"files":{"ETHUSDT_2024-06-01.csv.gz":{"date":"2024-06-01","filename":"ETHUSDT_2024-06-01.csv.gz","max_timestamp":1717286399627,"min_timestamp":1717200000274,"ordering_fidelity":"PARTIAL","output_path":"date=2024-06-01/ETHUSDT_2024-06-01.csv.gz","output_sha256":"c98549d053e89478b393f543006c835803fe0f0719ebaa20d13f8759878d2506","row_count":402114,"schema_version":"bybit-spot-trades-silver-v1","source_bronze_path":"date=2024-06-01/ETHUSDT_2024-06-01.csv.gz","source_bronze_sha256":"f5dd2cc8a8f52bd568625cc4023c810aea2041eec9d9616ddc33fbf0a69660c3","source_order_preserved":true,"symbol":"ETHUSDT"},"ETHUSDT_2024-06-02.csv.gz":{"date":"2024-06-02","filename":"ETHUSDT_2024-06-02.csv.gz","max_timestamp":1717372798547,"min_timestamp":1717286401401,"ordering_fidelity":"PARTIAL","output_path":"date=2024-06-02/ETHUSDT_2024-06-02.csv.gz","output_sha256":"241b5704c84851c9617df396ab40b05df83b98e6f408b6aaac8d99976daf99a3","row_count":572158,"schema_version":"bybit-spot-trades-silver-v1","source_bronze_path":"date=2024-06-02/ETHUSDT_2024-06-02.csv.gz","source_bronze_sha256":"ca1a6b37d96ae32929a5b20e3bf37f8f1776f6c90a5a658c20a62dac0a7da84b","source_order_preserved":true,"symbol":"ETHUSDT"},"ETHUSDT_2024-06-03.csv.gz":{"date":"2024-06-03","filename":"ETHUSDT_2024-06-03.csv.gz","max_timestamp":1717459198719,"min_timestamp":1717372804460,"ordering_fidelity":"PARTIAL","output_path":"date=2024-06-03/ETHUSDT_2024-06-03.csv.gz","output_sha256":"45ecb3bfa4bb350bf2789f5f9e24bbf9044adab7eec3003a490f28f6130ea59b","row_count":906521,"schema_version":"bybit-spot-trades-silver-v1","source_bronze_path":"date=2024-06-03/ETHUSDT_2024-06-03.csv.gz","source_bronze_sha256":"f13105dbe6c978d7dcf0f1eab754db89354fb03e4632a2dbd4895e0fdfe9ec69","source_order_preserved":true,"symbol":"ETHUSDT"}},"schema_version":"bybit-spot-trades-silver-v1"}
+\ No newline at end of file
+M4_REGENERATION=PASS
+M4_MANIFEST_REGENERATION=PASS
+exit=0

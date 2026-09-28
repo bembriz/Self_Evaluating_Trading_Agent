@@ -1062,8 +1062,9 @@ phases:
       - docs/phases/23/evidence/m3-06-uat-run2-idempotent.log
     - id: m4-silver-trades
       descripcion: Canonical deterministic Silver trade layer
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/23/evidence/m4-07-uat-run2.log
     - id: m5-silver-candles
       descripcion: Deterministic Silver multi-timeframe candles
       estado: pending
@@ -1947,4 +1948,8 @@ time_log:
   fase: '23'
   evento: done
   detalle: m3-bronze
+- fecha: '2026-09-28'
+  fase: '23'
+  evento: done
+  detalle: m4-silver-trades
 blockers: []

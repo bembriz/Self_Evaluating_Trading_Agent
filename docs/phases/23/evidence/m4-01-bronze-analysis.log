@@ -1,0 +1,12 @@
+# evidencia: m4-01-bronze-analysis
+fecha: 2026-09-28T00:58:49-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 bash -s
+== M4 BRONZE ANALYSIS (3 días) ==
+day=2024-06-01 header=['id', 'timestamp', 'price', 'volume', 'side'] rows=402114 sha_match=OK ts_inv=0 id_inv=0 sides=['buy', 'sell'] bad_rows=0 min_ts=1717200000274 max_ts=1717286399627 dup_ts_price_qty_side=47420
+day=2024-06-02 header=['id', 'timestamp', 'price', 'volume', 'side'] rows=572158 sha_match=OK ts_inv=0 id_inv=0 sides=['buy', 'sell'] bad_rows=0 min_ts=1717286401401 max_ts=1717372798547 dup_ts_price_qty_side=49476
+day=2024-06-03 header=['id', 'timestamp', 'price', 'volume', 'side'] rows=906521 sha_match=OK ts_inv=0 id_inv=0 sides=['buy', 'sell'] bad_rows=0 min_ts=1717372804460 max_ts=1717459198719 dup_ts_price_qty_side=80751
+GRAND_ROWS=1880793
+SOURCE_ORDER_TIMESTAMP_NONDECREASING=YES
+M4_BRONZE_ANALYSIS=PASS
+exit=0

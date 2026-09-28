@@ -1,0 +1,26 @@
+# evidencia: m4-12-run2-revalidation
+fecha: 2026-09-28T01:33:36-06:00
+fase: 23
+comando: bash /tmp/opencode/m4-12-run2-revalidate.sh
+== M4 CORRECTION: RUN2 idempotencia + revalidación negativa ==
+-- 1. RUN2 (skip, 0 changed) --
+SKIPPED ETHUSDT_2024-06-01.csv.gz sha256=c98549d053e89478b393f543006c835803fe0f0719ebaa20d13f8759878d2506 rows=402114
+SKIPPED ETHUSDT_2024-06-02.csv.gz sha256=241b5704c84851c9617df396ab40b05df83b98e6f408b6aaac8d99976daf99a3 rows=572158
+SKIPPED ETHUSDT_2024-06-03.csv.gz sha256=45ecb3bfa4bb350bf2789f5f9e24bbf9044adab7eec3003a490f28f6130ea59b rows=906521
+SUMMARY transformed=0 skipped=3 total=3
+-- 2. outputs y manifest sin cambios post-skip --
+OUTPUT_DATA_HASH_CHANGED=NO
+MANIFEST_STABLE=YES (0 changed)
+PARTIAL_FILES=0
+PARTITION_COUNT=3
+-- 3. revalidación: filas, linaje, fidelity, split guard negativo --
+3
+3
+ERROR: 2025-07-01 fuera de DEVELOPMENT [2023-09-09..2025-06-16] (split v1, dataset BYBIT_ETHBTC_V001)
+WF_EXIT=1
+WF_READS_DELTA=0
+SILVER_ROWS=1880793 ROW_COUNT_MATCH=YES LINEAGE=PASS
+ORDERING_FIDELITY=PARTIAL SOURCE_ORDER_PRESERVED=YES
+M4_RUN2_REVALIDATION=PASS
+M4_ORDERING_CORRECTION_REMOTE=PASS
+exit=0

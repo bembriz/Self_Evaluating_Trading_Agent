@@ -1,0 +1,19 @@
+# evidencia: m4-08-uat-negative
+fecha: 2026-09-28T01:14:29-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 bash -s
+== M4 UAT NEGATIVE (0 WF / 0 holdout, fail-closed) ==
+ERROR: 2025-06-17 fuera de DEVELOPMENT [2023-09-09..2025-06-16] (split v1, dataset BYBIT_ETHBTC_V001)
+WF_DAY exit=1
+ERROR: 2026-03-15 fuera de DEVELOPMENT [2023-09-09..2025-06-16] (split v1, dataset BYBIT_ETHBTC_V001)
+HOLDOUT exit=1
+ERROR: 2023-09-08 fuera de DEVELOPMENT [2023-09-09..2025-06-16] (split v1, dataset BYBIT_ETHBTC_V001)
+PRE_DEV exit=1
+ERROR fechas: Invalid isoformat string: 'ayer'
+BAD_DATE exit=2
+ERROR: marker ausente: /srv/data/.lenovosrv-data-volume-MISSING
+MISSING_MARKER exit=1
+-- sin particiones WF/holdout en Silver --
+WF_READS=0 HOLDOUT_READS=0
+M4_NEGATIVE=PASS
+exit=0

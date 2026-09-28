@@ -1,0 +1,25 @@
+# evidencia: m4-06-uat-run1
+fecha: 2026-09-28T01:13:29-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 bash -s
+== M4 UAT RUN1 ==
+TRANSFORMED ETHUSDT_2024-06-01.csv.gz sha256=c98549d053e89478b393f543006c835803fe0f0719ebaa20d13f8759878d2506 rows=402114
+TRANSFORMED ETHUSDT_2024-06-02.csv.gz sha256=241b5704c84851c9617df396ab40b05df83b98e6f408b6aaac8d99976daf99a3 rows=572158
+TRANSFORMED ETHUSDT_2024-06-03.csv.gz sha256=45ecb3bfa4bb350bf2789f5f9e24bbf9044adab7eec3003a490f28f6130ea59b rows=906521
+SUMMARY transformed=3 skipped=0 total=3
+-- verificación RUN1 (row counts, lineage, orden, hashes) --
+day=2024-06-01 src_rows=402114 silver_rows=402114 bronze_sha=f5dd2cc8a8f5… output_sha=c98549d053e8… lineage=OK order=OK min_ts=1717200000274 max_ts=1717286399627
+day=2024-06-02 src_rows=572158 silver_rows=572158 bronze_sha=ca1a6b37d96a… output_sha=241b5704c848… lineage=OK order=OK min_ts=1717286401401 max_ts=1717372798547
+day=2024-06-03 src_rows=906521 silver_rows=906521 bronze_sha=f13105dbe6c9… output_sha=45ecb3bfa4bb… lineage=OK order=OK min_ts=1717372804460 max_ts=1717459198719
+SOURCE_ROWS=1880793 SILVER_ROWS=1880793 ROW_COUNT_MATCH=YES
+SAMPLE_ROW: 1717200000274,ETHUSDT,3762.62,0.07674,sell,1,,date=2024-06-01/ETHUSDT_2024-06-01.csv.gz,f5dd2cc8a8f52bd568625cc4023c810aea2041eec9d9616ddc33fbf0a69660c3,1
+-- guardar hashes para RUN2 --
+c98549d053e89478b393f543006c835803fe0f0719ebaa20d13f8759878d2506  /srv/data/medallion/silver/trades/ETHUSDT/date=2024-06-01/ETHUSDT_2024-06-01.csv.gz
+241b5704c84851c9617df396ab40b05df83b98e6f408b6aaac8d99976daf99a3  /srv/data/medallion/silver/trades/ETHUSDT/date=2024-06-02/ETHUSDT_2024-06-02.csv.gz
+45ecb3bfa4bb350bf2789f5f9e24bbf9044adab7eec3003a490f28f6130ea59b  /srv/data/medallion/silver/trades/ETHUSDT/date=2024-06-03/ETHUSDT_2024-06-03.csv.gz
+-- particiones (solo DEVELOPMENT) --
+/srv/data/medallion/silver/trades/ETHUSDT/date=2024-06-01
+/srv/data/medallion/silver/trades/ETHUSDT/date=2024-06-02
+/srv/data/medallion/silver/trades/ETHUSDT/date=2024-06-03
+M4_RUN1=PASS
+exit=0

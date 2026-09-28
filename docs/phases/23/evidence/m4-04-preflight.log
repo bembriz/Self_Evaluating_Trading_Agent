@@ -1,0 +1,31 @@
+# evidencia: m4-04-preflight
+fecha: 2026-09-28T01:12:56-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 bash -s
+== M4 PREFLIGHT ==
+utc=2026-09-28T07:12:58Z
+LENOVO_DATA
+-- bronze intacto --
+
+
+ETHUSDT_2024-06-01.csv.gz
+ETHUSDT_2024-06-02.csv.gz
+ETHUSDT_2024-06-03.csv.gz
+/srv/data/medallion/bronze/bybit/spot/ETHUSDT/date=2024-06-01/:
+/srv/data/medallion/bronze/bybit/spot/ETHUSDT/date=2024-06-02/:
+/srv/data/medallion/bronze/bybit/spot/ETHUSDT/date=2024-06-03/:
+BRONZE_MANIFEST_OK
+-- silver destino (debe NO existir aún) --
+SILVER_ABSENT_OK
+-- python --
+Python 3.12.3
+-- baseline contenedores --
+gastos-ia-app|f0866dba0802|gastos-ia-app:latest
+gastos-ia-caddy|612427ee2033|caddy:2-alpine
+gastos-ia-samba|f9542a5b0b22|servercontainers/samba:smbd-only-latest
+self-evaluating-trading-agent-grafana-1|b796f67478d7|grafana/grafana:11.1.0
+self-evaluating-trading-agent-paper-runner-1|b061332c3572|self-evaluating-trading-agent-paper-runner:0.2.0
+self-evaluating-trading-agent-postgres-1|0c79b6b5d1cd|pgvector/pgvector:pg16
+self-evaluating-trading-agent-prometheus-1|1431d8e01dd6|prom/prometheus:v2.53.0
+M4_PREFLIGHT=PASS
+exit=0
