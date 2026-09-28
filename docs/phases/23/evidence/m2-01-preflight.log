@@ -1,0 +1,9 @@
+# evidencia: m2-01-preflight
+fecha: 2026-09-27T23:39:55-06:00
+fase: 23
+comando: bash -c ( printf "%s\n" "$SUDO_PASS"; cat docs/phases/23/evidence/m2-01-preflight.sh ) | ssh -o BatchMode=yes administrador@192.168.100.24 "sudo -S -p \"\" bash -s"
+== disks ==
+sda     931,5G disk ST1000LM035-1RK1
+nvme0n1 465,8G disk Samsung SSD 970 EVO 500GB
+== mounts ==
+exit=1

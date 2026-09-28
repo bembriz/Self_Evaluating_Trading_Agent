@@ -1,0 +1,38 @@
+# evidencia: m2-01b-preflight
+fecha: 2026-09-27T23:40:30-06:00
+fase: 23
+comando: bash -c ( printf "%s\n" "$SUDO_PASS"; cat docs/phases/23/evidence/m2-01-preflight.sh ) | ssh -o BatchMode=yes administrador@192.168.100.24 "sudo -S -p \"\" bash -s"
+== disks ==
+sda     931,5G disk ST1000LM035-1RK1
+nvme0n1 465,8G disk Samsung SSD 970 EVO 500GB
+== mounts ==
+/dev/mapper/ubuntu--vg-ubuntu--lv ext4   611446da-869e-4f19-a07d-b345b4cca71a
+/dev/sda1 ext4   10fff707-60e4-4321-afa0-a3c4704d9e8d
+SRV_FAST_ABSENT (esperado en M2)
+== marker /srv/data ==
+LENOVO_DATA
+uuid=10fff707-60e4-4321-afa0-a3c4704d9e8d
+mounted_at=/srv/data
+created=2026-09-28T02:52:06+00:00
+== dirs existentes ==
+drwxr-xr-x 2 administrador administrador 4096 sep 28 02:52 /srv/data/backups
+drwxr-xr-x 4 administrador administrador 4096 sep  3 15:23 /srv/data/gastosia
+drwxr-xr-x 2 administrador administrador 4096 sep 28 02:52 /srv/data/medallion
+ls: cannot access '/srv/docker/platform': No such file or directory
+PLATFORM_DIR_ABSENT (esperado en M2)
+== red platform-net (esperado ausente) ==
+PLATFORM_NET_ABSENT (esperado en M2)
+== baseline contenedores ==
+/self-evaluating-trading-agent-paper-runner-1 id=b061332c35724a2147df3c76acdd8ba4cace12157b958766e2d66cb3f34e22bb imageid=sha256:e41718c572e15fbc7ff8d927c820e091aee0acc565ba79dcf97ab1aad8a9d0a0 started=2026-09-19T04:00:04.763010163Z status=running
+/self-evaluating-trading-agent-postgres-1 id=0c79b6b5d1cdf9f2cf5a503b0557e0fc0ba3b463e5a0007632399b431b97926d imageid=sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b started=2026-09-02T01:24:46.267698675Z status=running
+/self-evaluating-trading-agent-grafana-1 id=b796f67478d7f38394767dc80057809fff5a75df4235bb76dfbbba71cf13630b imageid=sha256:079600c9517b678c10cda6006b4487d3174512fd4c6cface37df7822756ed7a5 started=2026-09-10T16:35:47.19847038Z status=running
+/self-evaluating-trading-agent-prometheus-1 id=1431d8e01dd62c59bd630c74f018a53d8c82087e6903a1d2f924b48c01a5a843 imageid=sha256:075b1ba2c4ebb04bc3a6ab86c06ec8d8099f8fda1c96ef6d104d9bb1def1d8bc started=2026-09-10T16:35:46.985901731Z status=running
+/gastos-ia-app id=f0866dba0802afe323af07bab1d2eb3510330e3e7e8d3f9f3c6313f9cc9904fc imageid=sha256:b624dd56cd96cb033a8653b949bd157491ab511977566d0c3ac1da80ccd6f2b9 started=2026-09-28T02:53:15.850515764Z status=running
+/gastos-ia-samba id=f9542a5b0b22ec00350e29b78f8f17ebdad37307b3985a1ba3c463ee17f3e69e imageid=sha256:60300f74c48754a1945de56b05e6cbad6a4ea836d6173b47b6d1050b8b412cfe started=2026-09-28T02:53:15.848610612Z status=running
+/gastos-ia-caddy id=612427ee20334e3443d90881b307f9df80977341260a711daae978073aa786bf imageid=sha256:5f5c8640aae01df9654968d946d8f1a56c497f1dd5c5cda4cf95ab7c14d58648 started=2026-09-03T03:43:05.671661606Z status=running
+== health postgres ==
+/self-evaluating-trading-agent-postgres-1 health=healthy
+== gastosia http ==
+HTTP_STATUS=200
+M2_PREFLIGHT_OK
+exit=0

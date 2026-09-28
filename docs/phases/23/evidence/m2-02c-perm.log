@@ -1,0 +1,12 @@
+# evidencia: m2-02c-perm
+fecha: 2026-09-27T23:42:09-06:00
+fase: 23
+comando: bash -c ( printf "%s\n" "$SUDO_PASS"; cat docs/phases/23/evidence/m2-02c-perm.sh ) | ssh -o BatchMode=yes administrador@192.168.100.24 "sudo -S -p \"\" bash -s"
+drwxr-xr-x 3 root          root          4096 sep 28 05:41 /srv/fast
+drwxr-xr-x 6 administrador administrador 4096 sep 28 05:41 /srv/fast/medallion
+drwxr-xr-x 2 administrador administrador 4096 sep 28 05:41 /srv/fast/medallion/cache
+drwxr-xr-x 2 administrador administrador 4096 sep 28 05:41 /srv/fast/medallion/indexes
+drwxr-xr-x 2 administrador administrador 4096 sep 28 05:41 /srv/fast/medallion/replay-work
+drwxr-xr-x 2 administrador administrador 4096 sep 28 05:41 /srv/fast/medallion/tmp
+PERM_OK
+exit=0

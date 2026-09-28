@@ -1,0 +1,30 @@
+# evidencia: m2-02b-create
+fecha: 2026-09-27T23:41:24-06:00
+fase: 23
+comando: bash -c ( printf "%s\n" "$SUDO_PASS"; cat docs/phases/23/evidence/m2-02-create.sh ) | ssh -o BatchMode=yes administrador@192.168.100.24 "sudo -S -p \"\" bash -s"
+== GUARD 1: /srv/data = source/ext4/UUID ==
+source=/dev/sda1 fstype=ext4 uuid=10fff707-60e4-4321-afa0-a3c4704d9e8d
+GUARD1_OK
+== GUARD 2: marker ==
+marker=LENOVO_DATA
+uuid=10fff707-60e4-4321-afa0-a3c4704d9e8d
+mounted_at=/srv/data
+created=2026-09-28T02:52:06+00:00
+GUARD2_OK
+== GUARD 3: raíz (y por tanto /srv/fast) sobre NVMe ==
+root_src=/dev/mapper/ubuntu--vg-ubuntu--lv
+root_disk=nvme0n1
+GUARD3_OK
+== creación ==
+total 8
+drwxr-xr-x  2 administrador administrador 4096 sep 28 05:41 .
+drwx--x--- 15 root          root          4096 sep 28 05:41 ..
+total 24
+drwxr-xr-x 6 administrador administrador 4096 sep 28 05:41 .
+drwxr-xr-x 3 root          root          4096 sep 28 05:41 ..
+drwxr-xr-x 2 administrador administrador 4096 sep 28 05:41 cache
+drwxr-xr-x 2 administrador administrador 4096 sep 28 05:41 indexes
+drwxr-xr-x 2 administrador administrador 4096 sep 28 05:41 replay-work
+drwxr-xr-x 2 administrador administrador 4096 sep 28 05:41 tmp
+M2_CREATE_OK
+exit=0

@@ -1,0 +1,32 @@
+# Plataforma compartida lenovosrv — compose base (ADR-0006 · Medallion M2)
+#
+# ESTE ARCHIVO NO LEVANTA NADA POR SÍ SOLO:
+#   - la red platform-net es externa y ya existe en lenovosrv (creada en M2);
+#   - todos los servicios van bajo `profiles` explícitos — `docker compose up`
+#     sin perfil no arranca ningún contenedor;
+#   - la migración de servicios productivos (postgres/prometheus/grafana/caddy)
+#     requiere gate propio: la certificación paper no puede interrumpirse.
+#
+# Uso previsto (futuro, tras gate):
+#   docker compose -f deployment/platform/compose.yaml --profile platform up -d
+name: seta-platform
+
+networks:
+  platform-net:
+    external: true
+    name: platform-net
+
+services:
+  platform-postgres:
+    image: postgres:17
+    profiles: ["platform"]
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${PLATFORM_PG_PASSWORD:-}
+    networks:
+      platform-net: {}
+    volumes:
+      - platform-pgdata:/var/lib/postgresql/data
+
+volumes:
+  platform-pgdata:

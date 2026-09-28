@@ -1,0 +1,6 @@
+# evidencia: m2-06-ledger-tests
+fecha: 2026-09-27T23:44:43-06:00
+fase: 23
+comando: uv run pytest harness/tests/test_ledger.py harness/tests/test_progress_cli.py -q
+.......................................                                  [100%]
+exit=0

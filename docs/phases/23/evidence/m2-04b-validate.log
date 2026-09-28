@@ -1,0 +1,39 @@
+# evidencia: m2-04b-validate
+fecha: 2026-09-27T23:42:54-06:00
+fase: 23
+comando: bash -c ( printf "%s\n" "$SUDO_PASS"; cat docs/phases/23/evidence/m2-04-validate.sh ) | ssh -o BatchMode=yes administrador@192.168.100.24 "sudo -S -p \"\" bash -s"
+== dirs ==
+OK   /srv/docker/platform
+OK   /srv/fast/medallion/cache
+OK   /srv/fast/medallion/replay-work
+OK   /srv/fast/medallion/tmp
+OK   /srv/fast/medallion/indexes
+OK   /srv/data/medallion
+OK   /srv/data/gastosia
+OK   /srv/data/backups
+== /srv/fast sobre NVMe ==
+OK   /srv/fast=/dev/mapper/ubuntu--vg-ubuntu--lv (NVMe, disk=nvme0n1)
+== /srv/data sobre HDD LENOVO_DATA ==
+OK   /srv/data=/dev/sda1 ext4 uuid=10fff707-60e4-4321-afa0-a3c4704d9e8d disk=sda
+OK   marker=LENOVO_DATA
+uuid=10fff707-60e4-4321-afa0-a3c4704d9e8d
+mounted_at=/srv/data
+created=2026-09-28T02:52:06+00:00
+== platform-net ==
+OK   platform-net attached_containers=0
+== paper-runner intacto ==
+OK   paper-runner id/image/started sin cambios
+== productivos sin migración (IDs y StartedAt fijos) ==
+OK   self-evaluating-trading-agent-postgres-1
+OK   self-evaluating-trading-agent-grafana-1
+OK   self-evaluating-trading-agent-prometheus-1
+OK   gastos-ia-app
+OK   gastos-ia-samba
+OK   gastos-ia-caddy
+== salud ==
+OK   postgres health=healthy
+OK   gastosia HTTP=200
+== cero servicios platform corriendo ==
+OK   contenedores platform=0
+M2_VALIDATE_OK
+exit=0

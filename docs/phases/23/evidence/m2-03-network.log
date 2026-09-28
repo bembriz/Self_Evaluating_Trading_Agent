@@ -1,0 +1,10 @@
+# evidencia: m2-03-network
+fecha: 2026-09-27T23:42:19-06:00
+fase: 23
+comando: bash -c ssh -o BatchMode=yes administrador@192.168.100.24 bash -s < docs/phases/23/evidence/m2-03-network.sh
+9fc54c67f7ef32874771a3d0f89101b6b8eb84af51b597b78a4d82f60cb2f65c
+PLATFORM_NET_CREATED
+id=9fc54c67f7ef32874771a3d0f89101b6b8eb84af51b597b78a4d82f60cb2f65c driver=bridge scope=local attached_containers=0
+platform-net
+M2_NETWORK_OK
+exit=0

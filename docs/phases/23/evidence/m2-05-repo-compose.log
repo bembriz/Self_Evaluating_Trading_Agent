@@ -1,0 +1,14 @@
+# evidencia: m2-05-repo-compose
+fecha: 2026-09-27T23:44:20-06:00
+fase: 23
+comando: bash -c docker compose -f deployment/platform/compose.yaml config -q && echo COMPOSE_CONFIG_PASS; echo "services:"; docker compose -f deployment/platform/compose.yaml config --services; echo "network:"; docker compose -f deployment/platform/compose.yaml config | grep -A3 "platform-net"; echo "platform containers locales:"; docker ps -a --format "{{.Names}}" | grep -c platform- || echo 0; find deployment/platform -type f | sort
+COMPOSE_CONFIG_PASS
+services:
+network:
+platform containers locales:
+permission denied while trying to connect to the docker API at unix:///var/run/docker.sock
+0
+0
+deployment/platform/compose.yaml
+deployment/platform/README.md
+exit=0

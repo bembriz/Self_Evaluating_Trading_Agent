@@ -1,0 +1,15 @@
+# evidencia: m2-04-validate
+fecha: 2026-09-27T23:42:25-06:00
+fase: 23
+comando: bash -c ( printf "%s\n" "$SUDO_PASS"; cat docs/phases/23/evidence/m2-04-validate.sh ) | ssh -o BatchMode=yes administrador@192.168.100.24 "sudo -S -p \"\" bash -s"
+== dirs ==
+OK   /srv/docker/platform
+OK   /srv/fast/medallion/cache
+OK   /srv/fast/medallion/replay-work
+OK   /srv/fast/medallion/tmp
+OK   /srv/fast/medallion/indexes
+OK   /srv/data/medallion
+OK   /srv/data/gastosia
+OK   /srv/data/backups
+== /srv/fast sobre NVMe ==
+exit=1
