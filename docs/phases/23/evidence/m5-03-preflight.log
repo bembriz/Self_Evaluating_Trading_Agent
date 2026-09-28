@@ -1,0 +1,24 @@
+# evidencia: m5-03-preflight
+fecha: 2026-09-28T09:37:20-06:00
+fase: 23
+comando: bash /tmp/opencode/m5-03-preflight.sh
+== M5 PREFLIGHT remoto ==
+-- marker --
+LENOVO_DATA
+-- Silver trades intacto (fuente) --
+source=ETHUSDT_2024-06-01.csv.gz rows=402114 sha=OK fidelity=PARTIAL source_order_preserved=True
+source=ETHUSDT_2024-06-02.csv.gz rows=572158 sha=OK fidelity=PARTIAL source_order_preserved=True
+source=ETHUSDT_2024-06-03.csv.gz rows=906521 sha=OK fidelity=PARTIAL source_order_preserved=True
+SOURCE_TRADES=1880793
+-- destino candles ausente --
+DESTINO_AUSENTE=SI
+-- Bronze intacto (conteo csv.gz) --
+3
+-- baseline contenedores --
+NAME                            STATUS              CONFIG FILES
+gastos-ia                       running(3)          /srv/docker/gastos-ia/compose.yaml
+self-evaluating-trading-agent   running(4)          /srv/docker/self-evaluating-trading-agent/compose.yaml
+-- python --
+Python 3.12.3
+M5_PREFLIGHT=PASS
+exit=0

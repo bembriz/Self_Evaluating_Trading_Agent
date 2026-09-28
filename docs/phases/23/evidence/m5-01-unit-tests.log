@@ -1,0 +1,26 @@
+# evidencia: m5-01-unit-tests
+fecha: 2026-09-28T09:33:02-06:00
+fase: 23
+comando: bash -c uv run ruff check src/infrastructure/medallion tests/test_silver_candles.py && uv run ruff format --check src/infrastructure/medallion tests/test_silver_candles.py && uv run mypy src tests && uv run pytest tests/test_silver_candles.py tests/test_silver_trades.py tests/test_bronze_ingest.py --cov=infrastructure.medallion --cov-branch --cov-fail-under=90 --cov-report=term-missing | tail -18
+All checks passed!
+9 files already formatted
+Success: no issues found in 279 source files
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                                          Stmts   Miss Branch BrPart  Cover   Missing
+-----------------------------------------------------------------------------------------
+src/infrastructure/medallion/__init__.py          3      0      0      0   100%
+src/infrastructure/medallion/bronze.py          145      6     32      2    95%   97, 150-151, 169-170, 172
+src/infrastructure/medallion/candles.py         227      0     80      0   100%
+src/infrastructure/medallion/candles_cli.py      51      2     12      2    94%   46, 77
+src/infrastructure/medallion/cli.py              50      3     12      3    90%   46, 49, 83
+src/infrastructure/medallion/silver.py          153     10     48      8    91%   132-133, 147, 160, 204, 207, 232, 251, 258, 274
+src/infrastructure/medallion/silver_cli.py       51      3     12      3    90%   43, 46, 74
+src/infrastructure/medallion/split_guard.py      18      1      4      1    91%   44
+-----------------------------------------------------------------------------------------
+TOTAL                                           698     25    200     19    95%
+Required test coverage of 90% reached. Total coverage: 95.10%
+112 passed, 1 warning in 2.65s
+exit=0

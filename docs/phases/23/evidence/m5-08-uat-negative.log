@@ -1,0 +1,28 @@
+# evidencia: m5-08-uat-negative
+fecha: 2026-09-28T09:43:16-06:00
+fase: 23
+comando: bash /tmp/opencode/m5-08-negative.sh
+== M5 NEGATIVOS: split guard / marker / hash guard / sin WF ==
+-- 1. split guard ANTES de leer fuente (trades-dir inexistente) --
+date=2025-06-17 exit=1
+date=2026-04-01 exit=1
+date=2023-09-01 exit=1
+SPLIT_GUARD_BEFORE_READ=PASS
+-- 2. fecha inválida -> exit 2 --
+bad_date_exit=2
+-- 3. marker ausente -> exit 1 --
+missing_marker_exit=1
+-- 4. Silver hash guard (sandbox: trades alterado) --
+tampered_trades_exit=1
+SILVER_HASH_GUARD_FAIL_CLOSED=PASS
+-- 5. destino canónico intacto tras negativos --
+CANONICAL_OUTPUTS=21
+-- 6. sin lecturas WF/holdout --
+ops_events=42 wf_events=0
+OPS_DEVELOPMENT_ONLY=PASS
+OUT_OF_DEV_DIRS=0
+WALK_FORWARD_READS=0
+FINAL_HOLDOUT_READS=0
+M5_NEGATIVE=PASS
+M5_NEGATIVES=PASS
+exit=0

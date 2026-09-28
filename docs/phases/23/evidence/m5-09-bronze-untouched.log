@@ -1,0 +1,29 @@
+# evidencia: m5-09-bronze-untouched
+fecha: 2026-09-28T09:43:37-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 set -euo pipefail
+python3 - <<'PYEOF'
+import hashlib, json
+from pathlib import Path
+B = Path("/srv/data/medallion/bronze/bybit/spot/ETHUSDT")
+mf = json.loads((B / "manifest.json").read_text())
+for day in ("2024-06-01", "2024-06-02", "2024-06-03"):
+    name = "ETHUSDT_%s.csv.gz" % day
+    e = mf["files"][name]
+    p = B / ("date=" + day) / name
+    h = hashlib.sha256(p.read_bytes()).hexdigest()
+    assert h == e["sha256"], (day, h)
+    print("bronze=%s sha=OK" % name)
+print("BRONZE_UNTOUCHED=PASS")
+PYEOF
+echo "-- contenedores --"
+docker compose ls -a
+bronze=ETHUSDT_2024-06-01.csv.gz sha=OK
+bronze=ETHUSDT_2024-06-02.csv.gz sha=OK
+bronze=ETHUSDT_2024-06-03.csv.gz sha=OK
+BRONZE_UNTOUCHED=PASS
+-- contenedores --
+NAME                            STATUS              CONFIG FILES
+gastos-ia                       running(3)          /srv/docker/gastos-ia/compose.yaml
+self-evaluating-trading-agent   running(4)          /srv/docker/self-evaluating-trading-agent/compose.yaml
+exit=0

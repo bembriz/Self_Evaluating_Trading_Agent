@@ -1067,8 +1067,9 @@ phases:
       - docs/phases/23/evidence/m4-07-uat-run2.log
     - id: m5-silver-candles
       descripcion: Deterministic Silver multi-timeframe candles
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/23/evidence/m5-07-uat-run2-determinism.log
     - id: m6-gold
       descripcion: Immutable Gold replay dataset manifest
       estado: pending
@@ -1952,4 +1953,8 @@ time_log:
   fase: '23'
   evento: done
   detalle: m4-silver-trades
+- fecha: '2026-09-28'
+  fase: '23'
+  evento: done
+  detalle: m5-silver-candles
 blockers: []

@@ -269,3 +269,28 @@ print(\"last_row=\",last)
 - `2026-09-28T01:29:00-06:00` **m4-10-correction-quality** → `bash -c uv run ruff check . && uv run ruff format --check . && uv run mypy src tests && uv run pytest tests/test_silver_trades.py tests/test_bronze_ingest.py --cov=infrastructure.medallion --cov-branch --cov-fail-under=90 && uv run pytest tests --ignore=tests/integration` · exit=`0` · artifact: docs/phases/23/evidence/m4-10-correction-quality.log
 - `2026-09-28T01:32:42-06:00` **m4-11-manifest-regeneration** → `bash /tmp/opencode/m4-11-regenerate.sh` · exit=`0` · artifact: docs/phases/23/evidence/m4-11-manifest-regeneration.log
 - `2026-09-28T01:33:39-06:00` **m4-12-run2-revalidation** → `bash /tmp/opencode/m4-12-run2-revalidate.sh` · exit=`0` · artifact: docs/phases/23/evidence/m4-12-run2-revalidation.log
+- `2026-09-28T09:33:11-06:00` **m5-01-unit-tests** → `bash -c uv run ruff check src/infrastructure/medallion tests/test_silver_candles.py && uv run ruff format --check src/infrastructure/medallion tests/test_silver_candles.py && uv run mypy src tests && uv run pytest tests/test_silver_candles.py tests/test_silver_trades.py tests/test_bronze_ingest.py --cov=infrastructure.medallion --cov-branch --cov-fail-under=90 --cov-report=term-missing | tail -18` · exit=`0` · artifact: docs/phases/23/evidence/m5-01-unit-tests.log
+- `2026-09-28T09:34:58-06:00` **m5-02-repo-quality** → `bash -c uv run ruff check . && uv run ruff format --check . && uv run mypy src tests && uv run pytest tests --ignore=tests/integration` · exit=`0` · artifact: docs/phases/23/evidence/m5-02-repo-quality.log
+- `2026-09-28T09:37:21-06:00` **m5-03-preflight** → `bash /tmp/opencode/m5-03-preflight.sh` · exit=`0` · artifact: docs/phases/23/evidence/m5-03-preflight.log
+- `2026-09-28T09:38:08-06:00` **m5-04-deploy-copy** → `bash /tmp/opencode/m5-04-deploy.sh` · exit=`0` · artifact: docs/phases/23/evidence/m5-04-deploy-copy.log
+- `2026-09-28T09:38:43-06:00` **m5-05-uat-run1** → `bash /tmp/opencode/m5-05-uat-run1.sh` · exit=`0` · artifact: docs/phases/23/evidence/m5-05-uat-run1.log
+- `2026-09-28T09:40:19-06:00` **m5-06-ohlc-validation** → `bash /tmp/opencode/m5-06-validation.sh` · exit=`0` · artifact: docs/phases/23/evidence/m5-06-ohlc-validation.log
+- `2026-09-28T09:41:07-06:00` **m5-07-uat-run2-determinism** → `bash /tmp/opencode/m5-07-run2.sh` · exit=`0` · artifact: docs/phases/23/evidence/m5-07-uat-run2-determinism.log
+- `2026-09-28T09:43:19-06:00` **m5-08-uat-negative** → `bash /tmp/opencode/m5-08-negative.sh` · exit=`0` · artifact: docs/phases/23/evidence/m5-08-uat-negative.log
+- `2026-09-28T09:43:38-06:00` **m5-09-bronze-untouched** → `ssh -o BatchMode=yes administrador@192.168.100.24 set -euo pipefail
+python3 - <<'PYEOF'
+import hashlib, json
+from pathlib import Path
+B = Path("/srv/data/medallion/bronze/bybit/spot/ETHUSDT")
+mf = json.loads((B / "manifest.json").read_text())
+for day in ("2024-06-01", "2024-06-02", "2024-06-03"):
+    name = "ETHUSDT_%s.csv.gz" % day
+    e = mf["files"][name]
+    p = B / ("date=" + day) / name
+    h = hashlib.sha256(p.read_bytes()).hexdigest()
+    assert h == e["sha256"], (day, h)
+    print("bronze=%s sha=OK" % name)
+print("BRONZE_UNTOUCHED=PASS")
+PYEOF
+echo "-- contenedores --"
+docker compose ls -a` · exit=`0` · artifact: docs/phases/23/evidence/m5-09-bronze-untouched.log
