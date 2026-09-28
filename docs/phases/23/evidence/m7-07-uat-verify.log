@@ -1,0 +1,50 @@
+# evidencia: m7-07-uat-verify
+fecha: 2026-09-28T12:19:01-06:00
+fase: 23
+comando: bash /tmp/opencode/m7-07-verify.sh
+== M7 VERIFICACIÓN INDEPENDIENTE (re-walk + FAIL CLOSED + guards) ==
+== 1. RE-WALK INDEPENDIENTE (sin el motor) ==
+RECORDS_OK=23 REASONS={"stop_loss": 16, "take_profit": 2, "trailing_stop": 5}
+CANDLE_TRIGGER_CONFIRMED=YES indexes=288
+TRADES_STREAM=OK total=1880793 monotonic=YES collected=92
+FIRST_ELIGIBLE_FILL=PASS risk_trigger_fill=PASS
+ENTRY_FILL=PASS NO_LOOKAHEAD=PASS TRIGGER_PRICE_MATCH=PASS
+RISK_BEFORE_SELL_NOOP=PASS(orden avanzado)
+== 2. LEDGER: campos requeridos ==
+LEDGER_REQUIRED_FIELDS=PASS records=23
+== 3. NEGATIVO: split guard antes de leer ==
+SANDBOX_SPLIT_READY=YES
+split_guard_exit=1
+N1_SPLIT_GUARD_BEFORE_READ=PASS
+== 4. NEGATIVO: replay-config.json alterado ==
+SANDBOX_CFG_READY=YES
+config_tamper_exit=1
+N2_CONFIG_HASH_FAIL_CLOSED=PASS
+== 5. sandbox de estructura (symlinks a Silver real, estructura source_roots) ==
+SANDBOX_STRUCTURE_READY=YES
+== 6. NEGATIVO: identidad (symbol alterado) ==
+SANDBOX_IDENT_READY=YES
+identity_tamper_exit=1
+N3_IDENTITY_FAIL_CLOSED=PASS
+== 7. NEGATIVO: partición Silver alterada (copia, no el canónico) ==
+SANDBOX_HASH_TAMPER_READY=YES
+silver_tamper_exit=1
+N4_INPUT_HASH_FAIL_CLOSED=PASS
+== 8. NEGATIVO: ledger existente con contenido distinto ==
+LEDGER_CONFLICT_FAIL_CLOSED=PASS
+== 9. NEGATIVO: usage error -> exit 2 ==
+usage_exit=2
+N6_USAGE_EXIT_2=PASS
+== 10. CANÓNICO INTACTO ==
+GOLD_INTACT=YES LEDGER_SHA_UNCHANGED=YES PART_FILES=0
+== 11. SILVER INTACTO (re-hash vs Gold) ==
+SILVER_UNTOUCHED=YES trades=3 candles=21
+== 12. PAPER RUNNER (solo lectura) ==
+PAPER_BASELINE=2026-09-19T04:00:04.763010163Z|running
+PAPER_CONTAINER_CHANGED=NO
+== 13. SIN LECTURAS WF/HOLDOUT ==
+WALK_FORWARD_READS=0
+FINAL_HOLDOUT_READS=0
+M7_VERIFY=PASS
+M7_VERIFY_ALL=PASS
+exit=0

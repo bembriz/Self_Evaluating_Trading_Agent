@@ -1,0 +1,28 @@
+# evidencia: m7-03-preflight
+fecha: 2026-09-28T12:02:13-06:00
+fase: 23
+comando: bash /tmp/opencode/m7-03-preflight.sh
+== M7 PREFLIGHT (Gold intacto, Silver intacto, paper baseline, replay-work limpio) ==
+-- marker --
+LENOVO_DATA
+GOLD_DATASET=OK id=gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3 files=2 split=DEVELOPMENT
+MANIFEST_SHA256=9411a4e01a5adccbb448df062f0eca857213e8259441535b5812ee4688af99df
+REPLAY_CONFIG_SHA256=be8aae2df45670e1f987ab11e68f1471d0cb89104c0e53483d2d0de90fa18314
+SILVER_UNTOUCHED=YES source_trades=1880793
+PART_FILES=0
+-- baseline paper runner (solo lectura) --
+self-evaluating-trading-agent-paper-runner-1|Up 9 days
+PAPER_CONTAINER=READ_ONLY
+-- /srv/fast --
+/dev/mapper/ubuntu--vg-ubuntu--lv  455G   40G  396G  10% /
+total 8
+drwxr-xr-x 2 administrador administrador 4096 sep 28 05:41 .
+drwxr-xr-x 6 administrador administrador 4096 sep 28 05:41 ..
+REPLAY_WORK=LIMPIO
+-- python --
+Python 3.12.3
+-- estado git local (solo info) --
+no-git-copia
+M7_PREFLIGHT=PASS
+M7_PREFLIGHT=PASS
+exit=0

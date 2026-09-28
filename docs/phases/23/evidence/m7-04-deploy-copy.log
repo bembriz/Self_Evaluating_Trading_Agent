@@ -1,0 +1,11 @@
+# evidencia: m7-04-deploy-copy
+fecha: 2026-09-28T12:03:36-06:00
+fase: 23
+comando: bash /tmp/opencode/m7-04-deploy.sh
+== M7 DEPLOY COPY ==
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/tmp/m7/src/infrastructure/medallion/replay.py", line 40, in <module>
+    from domain.market.candle import Candle
+ModuleNotFoundError: No module named 'domain'
+exit=1

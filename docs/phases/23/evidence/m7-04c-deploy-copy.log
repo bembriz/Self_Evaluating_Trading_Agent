@@ -1,0 +1,26 @@
+# evidencia: m7-04c-deploy-copy
+fecha: 2026-09-28T12:04:55-06:00
+fase: 23
+comando: bash /tmp/opencode/m7-04-deploy.sh
+== M7 DEPLOY COPY ==
+IMPORT_OK TRADE_SEQUENCE_TAKER_PROXY-v1 replay-ledger-v1
+EXIT_REASONS stop_loss,take_profit,trailing_stop,strategy_exit,max_time_in_position,end_of_dataset
+REQUIRED_RECORD_FIELDS 27
+SCENARIO scripted-default-v1 qty=0.01 fee=0.001 slip_bps=5.0
+RISK replay-risk-v1
+EXPORTS CANDLE_HEADER,SILVER_HEADER,DAY_MS,LEDGER_VERSION,EXECUTION_MODEL_VERSION,EXIT_REASONS,REQUIRED_RECORD_FIELDS,DEFAULT_SCENARIO,CandleFile,CandleRow,ContextSnapshot,DatasetValidationError,Decision,DecisionProvider,InputHashMismatchError,LedgerConflictError,ReplayError,ReplayResult,ReplayScenario,ReplayTrade,ScriptedScheduleProvider,TradeFile,ValidatedDataset,iter_trades,ledger_payload,load_candles,replay_engine,validate_dataset,write_ledger
+usage: replay_cli.py [-h] --dataset-dir DATASET_DIR --trades-dir TRADES_DIR
+                     --candles-dir CANDLES_DIR --ledger-path LEDGER_PATH
+                     [--require-marker REQUIRE_MARKER]
+
+Trade-level replay (dos relojes, idempotente)
+
+options:
+  -h, --help            show this help message and exit
+  --dataset-dir DATASET_DIR
+  --trades-dir TRADES_DIR
+  --candles-dir CANDLES_DIR
+  --ledger-path LEDGER_PATH
+  --require-marker REQUIRE_MARKER
+M7_DEPLOY=PASS
+exit=0

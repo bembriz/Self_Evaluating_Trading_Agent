@@ -1077,8 +1077,9 @@ phases:
       - docs/phases/23/evidence/m6-06-uat-run2-determinism.log
     - id: m7-trade-replay
       descripcion: Two-clock trade-level replay engine
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/23/evidence/m7-07-uat-verify.log
     - id: m8-deploy
       descripcion: Medallion deployment on lenovosrv
       estado: pending
@@ -1962,4 +1963,8 @@ time_log:
   fase: '23'
   evento: done
   detalle: m6-gold
+- fecha: '2026-09-28'
+  fase: '23'
+  evento: done
+  detalle: m7-trade-replay
 blockers: []

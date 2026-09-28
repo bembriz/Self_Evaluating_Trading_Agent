@@ -1,0 +1,9 @@
+# evidencia: m7-04b-deploy-copy
+fecha: 2026-09-28T12:04:17-06:00
+fase: 23
+comando: bash /tmp/opencode/m7-04-deploy.sh
+== M7 DEPLOY COPY ==
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ImportError: cannot import name 'LineageMismatchError' from 'infrastructure.medallion.replay' (/tmp/m7/src/infrastructure/medallion/replay.py). Did you mean: 'InputHashMismatchError'?
+exit=1

@@ -1,0 +1,23 @@
+# evidencia: m7-06b-uat-run2-determinism
+fecha: 2026-09-28T12:09:07-06:00
+fase: 23
+comando: bash /tmp/opencode/m7-06-run2.sh
+== M7 RUN2 (determinismo byte-a-byte + idempotencia skipped) ==
+-- run2: segunda salida (ledger-run2.jsonl) --
+STATUS=created dataset_id=gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3 dataset_sha256=9411a4e01a5adccbb448df062f0eca857213e8259441535b5812ee4688af99df ledger_sha256=6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625
+SUMMARY created=1 skipped=0 decisions_total=45 decisions_filled=23 decisions_dropped=22 decisions_unfilled=0 closed_trades=23 trades=1880793
+-- byte-idéntico --
+RUN2_LEDGER_IDENTICAL=YES
+6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625  /srv/fast/medallion/replay-work/ledger-run2.jsonl
+-- re-ejecución sobre ledger canónico -> skipped --
+STATUS=skipped dataset_id=gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3 dataset_sha256=9411a4e01a5adccbb448df062f0eca857213e8259441535b5812ee4688af99df ledger_sha256=6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625
+SUMMARY created=0 skipped=1 decisions_total=45 decisions_filled=23 decisions_dropped=22 decisions_unfilled=0 closed_trades=23 trades=1880793
+-- ledger canónico sin cambios --
+REPLAY_WORK_FINAL:
+total 40
+drwxr-xr-x 2 administrador administrador  4096 sep 28 18:09 .
+drwxr-xr-x 6 administrador administrador  4096 sep 28 05:41 ..
+-rw-rw-r-- 1 administrador administrador 28913 sep 28 18:07 ledger.jsonl
+M7_RUN2=PASS
+M7_UAT_RUN2=PASS
+exit=0

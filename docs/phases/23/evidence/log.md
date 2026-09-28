@@ -303,3 +303,13 @@ docker compose ls -a` · exit=`0` · artifact: docs/phases/23/evidence/m5-09-bro
 - `2026-09-28T10:34:53-06:00` **m6-06-uat-run2-determinism** → `bash /tmp/opencode/m6-06-run2.sh` · exit=`0` · artifact: docs/phases/23/evidence/m6-06-uat-run2-determinism.log
 - `2026-09-28T10:35:03-06:00` **m6-07-uat-verify** → `bash /tmp/opencode/m6-07-verify.sh` · exit=`0` · artifact: docs/phases/23/evidence/m6-07-uat-verify.log
 - `2026-09-28T10:36:24-06:00` **m6-08-uat-negative** → `bash /tmp/opencode/m6-08-negative.sh` · exit=`0` · artifact: docs/phases/23/evidence/m6-08-uat-negative.log
+- `2026-09-28T11:56:53-06:00` **m7-01-unit-tests** → `bash -c uv run ruff check . && uv run ruff format --check . && uv run mypy src tests && uv run pytest tests/test_bronze_ingest.py tests/test_silver_trades.py tests/test_silver_candles.py tests/test_gold_dataset.py tests/test_split_candidate_17c_a.py tests/test_trade_replay.py --cov=infrastructure.medallion --cov-branch --cov-fail-under=90 --cov-report=term-missing --cov-report=json:/tmp/opencode/coverage-m7.json` · exit=`0` · artifact: docs/phases/23/evidence/m7-01-unit-tests.log
+- `2026-09-28T11:58:35-06:00` **m7-02-repo-quality** → `bash -c uv run ruff check . && uv run ruff format --check . && uv run mypy src tests && uv run pytest tests --ignore=tests/integration` · exit=`0` · artifact: docs/phases/23/evidence/m7-02-repo-quality.log
+- `2026-09-28T12:02:14-06:00` **m7-03-preflight** → `bash /tmp/opencode/m7-03-preflight.sh` · exit=`0` · artifact: docs/phases/23/evidence/m7-03-preflight.log
+- `2026-09-28T12:03:38-06:00` **m7-04-deploy-copy** → `bash /tmp/opencode/m7-04-deploy.sh` · exit=`1` · artifact: docs/phases/23/evidence/m7-04-deploy-copy.log
+- `2026-09-28T12:04:19-06:00` **m7-04b-deploy-copy** → `bash /tmp/opencode/m7-04-deploy.sh` · exit=`1` · artifact: docs/phases/23/evidence/m7-04b-deploy-copy.log
+- `2026-09-28T12:04:57-06:00` **m7-04c-deploy-copy** → `bash /tmp/opencode/m7-04-deploy.sh` · exit=`0` · artifact: docs/phases/23/evidence/m7-04c-deploy-copy.log
+- `2026-09-28T12:07:27-06:00` **m7-05-uat-run1** → `bash /tmp/opencode/m7-05-run1.sh` · exit=`0` · artifact: docs/phases/23/evidence/m7-05-uat-run1.log
+- `2026-09-28T12:08:36-06:00` **m7-06-uat-run2-determinism** → `bash /tmp/opencode/m7-06-run2.sh` · exit=`1` · artifact: docs/phases/23/evidence/m7-06-uat-run2-determinism.log
+- `2026-09-28T12:09:27-06:00` **m7-06b-uat-run2-determinism** → `bash /tmp/opencode/m7-06-run2.sh` · exit=`0` · artifact: docs/phases/23/evidence/m7-06b-uat-run2-determinism.log
+- `2026-09-28T12:19:07-06:00` **m7-07-uat-verify** → `bash /tmp/opencode/m7-07-verify.sh` · exit=`0` · artifact: docs/phases/23/evidence/m7-07-uat-verify.log
