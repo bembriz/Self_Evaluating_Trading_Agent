@@ -1,0 +1,14 @@
+# evidencia: m8-10-ledger-mark-done
+fecha: 2026-09-28T13:56:16-06:00
+fase: 23
+comando: bash -c python3 harness/scripts/progress.py mark-done --phase 23 --deliverable m8-deploy --evidence docs/phases/23/evidence/m8-08-postcheck.log && python3 harness/scripts/progress.py report | tail -8
+registrado: 23/m8-deploy
+| 23 | Medallion Market Data & Trade-Level Re | in_progress | 11/13 | 2 | 0 | 84.62% | pending |
+
+**Totales:** 152 done · 14 pendiente · 4 bloqueados · 16/19 fases con gate aprobado
+
+**ETA:** 1–2 días (velocidad 15.4 entregables/día, banda ±50%) → 2026-09-29 … 2026-09-30
+
+**Bloqueos:** ninguno
+
+exit=0

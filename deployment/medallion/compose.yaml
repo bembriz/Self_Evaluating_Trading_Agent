@@ -1,0 +1,65 @@
+# seta-medallion — runtime Medallion en lenovosrv (Fase 23 · M8)
+#
+# MODELO: batch/one-shot. Este archivo NO levanta ningún daemon:
+#   - no hay `restart`, no hay scheduler, no hay puertos publicados;
+#   - no hay red de plataforma (network_mode: none ⇒ también sin platform-net);
+#   - no hay PostgreSQL, credenciales ni variables de secretos;
+#   - replay aislado: canónico /srv/data/medallion en READ-ONLY (HDD LENOVO_DATA),
+#     escritura solo en /srv/fast/medallion (NVMe) y marker montado ro (FAIL-CLOSED).
+#
+# Uso (en lenovosrv, con el contexto de build espejo en /srv/docker/medallion):
+#   export MEDALLION_GIT_SHA=<sha1 de 40 hex> MEDALLION_IMAGE_TAG=<tag>
+#   docker compose -f deployment/medallion/compose.yaml build
+#   docker compose -f deployment/medallion/compose.yaml run --rm medallion
+#   docker compose -f deployment/medallion/compose.yaml run --rm medallion \
+#     python3 -m infrastructure.medallion.gold_cli --help
+#
+# Ambas variables son obligatorias (?): sin ellas el build/run falla antes de hacer nada.
+name: seta-medallion
+
+services:
+  medallion:
+    image: seta-medallion:${MEDALLION_IMAGE_TAG:?define MEDALLION_IMAGE_TAG}
+    build:
+      context: ../..
+      dockerfile: deployment/medallion/Dockerfile
+      args:
+        GIT_SHA: ${MEDALLION_GIT_SHA:?define MEDALLION_GIT_SHA (sha1 de 40 hex)}
+
+    # --- aislamiento (M8) ---
+    network_mode: none
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    user: "1000:1000"
+
+    # Declarativos (auditoría de splits); el guard real es split_guard en código.
+    environment:
+      WALK_FORWARD_READS: "0"
+      FINAL_HOLDOUT_READS: "0"
+
+    # Rutas reales conservadas; canónico ro, replay output rw, marker ro.
+    volumes:
+      - /srv/data/medallion:/srv/data/medallion:ro
+      - /srv/fast/medallion:/srv/fast/medallion:rw
+      - /srv/data/.lenovosrv-data-volume:/srv/data/.lenovosrv-data-volume:ro
+
+    # Mismo escenario scripted de M7 (scripted-default-v1 · ScriptedScheduleProvider).
+    command:
+      - python3
+      - -m
+      - infrastructure.medallion.replay_cli
+      - --dataset-dir
+      - /srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3
+      - --trades-dir
+      - /srv/data/medallion/silver/trades/ETHUSDT
+      - --candles-dir
+      - /srv/data/medallion/silver/candles/ETHUSDT
+      - --ledger-path
+      - /srv/fast/medallion/replay-work/m8/ledger.jsonl
+      - --require-marker
+      - /srv/data/.lenovosrv-data-volume

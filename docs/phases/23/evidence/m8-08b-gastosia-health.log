@@ -1,0 +1,18 @@
+# evidencia: m8-08b-gastosia-health
+fecha: 2026-09-28T13:52:28-06:00
+fase: 23
+comando: bash /tmp/opencode/m8-08b-gastosia.sh
+== M8 GASTOSIA HEALTH (read-only) ==
+-- contenedores gastos-ia --
+gastos-ia-app | gastos-ia-app:latest | Up 17 hours | 8000/tcp
+gastos-ia-samba | servercontainers/samba:smbd-only-latest | Up 17 hours (healthy) | 0.0.0.0:139->139/tcp, [::]:139->139/tcp, 137/udp, 0.0.0.0:445->445/tcp, [::]:445->445/tcp
+gastos-ia-caddy | caddy:2-alpine | Up 3 weeks | 0.0.0.0:80->80/tcp, [::]:80->80/tcp, 0.0.0.0:443->443/tcp, [::]:443->443/tcp, 443/udp, 2019/tcp
+-- health app (GET / dentro del contenedor) --
+GASTOSIA_APP_HTTP=200
+-- samba healthcheck --
+SAMBA_HEALTH=healthy
+-- caddy status --
+CADDY_STATUS=running
+GASTOSIA_CHECK=OK
+M8_GASTOSIA=PASS
+exit=0

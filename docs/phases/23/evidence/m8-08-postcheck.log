@@ -1,0 +1,69 @@
+# evidencia: m8-08-postcheck
+fecha: 2026-09-28T13:49:03-06:00
+fase: 23
+comando: bash /tmp/opencode/m8-08-postcheck.sh
+== M8 POSTCHECK (remoto) ==
+== POSTCHECK M8 (read-only) ==
+-- 1. canónico /srv/data/medallion intacto --
+CANON_BASELINE_MANIFEST=154bf7f5de7c0860b4dde50cb3cf14130684d01da5e101350a4620f06306cf6a
+CANON_AFTER_MANIFEST=154bf7f5de7c0860b4dde50cb3cf14130684d01da5e101350a4620f06306cf6a
+CANONICAL_DATA_CHANGED=NO
+-- 2. hashes por capa (bronze/silver/gold) --
+LAYER_bronze files=5 manifest_sha=7eddd83807140c74bb7de76fe6d84588259263bd69f67e4d2b56dd9db6adade9
+LAYER_silver files=28 manifest_sha=851a3297eb8158892863e3bb95d012f2370e655fa09851ef171113ee0f39cd29
+LAYER_gold files=3 manifest_sha=28a2f1e299ad202d5f19cc25191a8fe471068fd2c4c3e55b9f9c9ec6e116f6de
+9411a4e01a5adccbb448df062f0eca857213e8259441535b5812ee4688af99df  replay-datasets/ETHUSDT/gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3/manifest.json
+be8aae2df45670e1f987ab11e68f1471d0cb89104c0e53483d2d0de90fa18314  replay-datasets/ETHUSDT/gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3/replay-config.json
+76a873d96561ce58e3c059ffb01c8fd2b95c7e6faaf3aed60323d78452636793  replay-datasets/ETHUSDT/ops-gold.jsonl
+-- 3. paper-runner baseline --
+PAPER_ID=b061332c35724a2147df3c76acdd8ba4cace12157b958766e2d66cb3f34e22bb
+PAPER_IMAGE=sha256:e41718c572e15fbc7ff8d927c820e091aee0acc565ba79dcf97ab1aad8a9d0a0
+PAPER_TAG=self-evaluating-trading-agent-paper-runner:0.2.0
+PAPER_STARTED=2026-09-19T04:00:04.763010163Z STATUS=running
+PAPER_CONTAINER_CHANGED=NO
+PAPER_BASELINE_OK=YES
+-- 4. postgres / prometheus / grafana / gastosia baseline --
+POSTGRES id=0c79b6b5d1cdf9f2cf5a503b0557e0fc0ba3b463e5a0007632399b431b97926d started=2026-09-02T01:24:46.267698675Z health=healthy
+POSTGRES_HEALTHY=YES
+CONTAINER self-evaluating-trading-agent-prometheus-1 status=running started=2026-09-10T16:35:46.985901731Z
+CONTAINER self-evaluating-trading-agent-grafana-1 status=running started=2026-09-10T16:35:47.19847038Z
+CONTAINER gastos-ia-app status=running started=2026-09-28T02:53:15.850515764Z
+CONTAINER gastos-ia-caddy status=running started=2026-09-03T03:43:05.671661606Z
+CONTAINER gastos-ia-samba status=running started=2026-09-28T02:53:15.848610612Z
+SAMBa_HEALTH=healthy
+GASTOSIA_HTTP=308ERR (informativo) status=running
+GASTOSIA_HEALTHY=YES
+-- 5. sin puertos nuevos publicados --
+NEW_PORTS_PUBLISHED=0
+-- 6. sin contenedores/imagenes residuales de medallion --
+MEDALLION_CONTAINERS_RUNNING=0
+MEDALLION_NETWORKS=0
+IMAGE_PRESENT=sha256:df82686bfd6d87bacf9fdb2e01767b5c94c6d6040655fe93097ea9f065b73001
+-- 7. sin lecturas WF/holdout --
+WALK_FORWARD_READS=0
+FINAL_HOLDOUT_READS=0
+-- 8. deploy dir --
+DEPLOY_CTX_FILES=175
+POSTCHECK_REMOTE=OK
+M8_REMOTE_SENTINEL_COMPLETE=YES
+== M8 POSTCHECK (local: git + certificación) ==
+HEAD=79b1de5b8fc827397e608b698d315498b36ca92d
+CERTIFICATION_STATE_UNCHANGED=YES (harness/state limpio vs HEAD)
+   M docs/phases/23/evidence/log.md
+  ?? deployment/medallion/
+  ?? docs/phases/23/evidence/m8-03-preflight.log
+  ?? docs/phases/23/evidence/m8-04-deploy-copy.log
+  ?? docs/phases/23/evidence/m8-04a-deploy-copy-fail.log
+  ?? docs/phases/23/evidence/m8-04b-deploy-copy-fail.log
+  ?? docs/phases/23/evidence/m8-05-build.log
+  ?? docs/phases/23/evidence/m8-05b-build-verify-fail.log
+  ?? docs/phases/23/evidence/m8-05c-build-verify.log
+  ?? docs/phases/23/evidence/m8-06-uat-clis.log
+  ?? docs/phases/23/evidence/m8-06a-uat-clis-fail.log
+  ?? docs/phases/23/evidence/m8-06b-uat-clis-incomplete.log
+  ?? docs/phases/23/evidence/m8-07-uat-replay.log
+  ?? docs/phases/23/evidence/m8-08-postcheck.log
+-- paridad contexto deploy final --
+DEPLOY_CTX_PARITY_FINAL=YES
+M8_POSTCHECK=PASS
+exit=0

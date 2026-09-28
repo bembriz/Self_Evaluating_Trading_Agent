@@ -1,0 +1,230 @@
+# evidencia: m8-04-deploy-copy
+fecha: 2026-09-28T13:36:18-06:00
+fase: 23
+comando: bash /tmp/opencode/m8-04-deploy-copy.sh
+== M8 DEPLOY COPY (espejo de build -> /srv/docker/medallion, extracción vía sudo) ==
+-- git local --
+HEAD=79b1de5b8fc827397e608b698d315498b36ca92d
+BRANCH=medalion
+TRACKED_CLEAN=YES
+   M docs/phases/23/evidence/log.md
+  ?? deployment/medallion/
+  ?? docs/phases/23/evidence/m8-03-preflight.log
+  ?? docs/phases/23/evidence/m8-04-deploy-copy.log
+  ?? docs/phases/23/evidence/m8-04a-deploy-copy-fail.log
+  ?? docs/phases/23/evidence/m8-04b-deploy-copy-fail.log
+-- manifiesto local --
+LOCAL_FILES=175
+LOCAL_MANIFEST_SHA=08d3227cb85889441660d2f449d5714f1414f0563401c62b401cf18ce0b5fd08
+-- empaquetar + scp --
+-rw-rw-r-- 1 xuum xuum 175K Sep 28 13:36 /tmp/m8-ctx.tgz
+SCP_OK
+-- remoto (sudo -S): extracción + manifiesto + compose config --
+-- limpieza + extracción como root --
+total 20
+drwxr-xr-x  4 administrador administrador 4096 Sep 28 19:36 .
+drwx--x--- 16 root          root          4096 Sep 28 19:34 ..
+-rw-rw-r--  1 administrador administrador  178 Aug 23 15:02 .dockerignore
+drwxr-xr-x  3 administrador administrador 4096 Sep 28 19:36 deployment
+drwxrwxr-x  7 administrador administrador 4096 Sep 15 07:24 src
+-- estructura --
+./.dockerignore
+./deployment/medallion/Dockerfile
+./deployment/medallion/Dockerfile.dockerignore
+./deployment/medallion/README.md
+./deployment/medallion/compose.yaml
+./src/application/__init__.py
+./src/application/commands/__init__.py
+./src/application/ports/__init__.py
+./src/application/ports/dataset_store.py
+./src/application/ports/embeddings.py
+./src/application/ports/llm.py
+./src/application/ports/market_data.py
+./src/application/ports/market_repositories.py
+./src/application/ports/market_stream.py
+./src/application/ports/memory_repository.py
+./src/application/ports/orderbook_features.py
+./src/application/ports/paper_trading.py
+./src/application/ports/repositories.py
+./src/application/queries/__init__.py
+./src/application/services/__init__.py
+./src/application/services/accounting_reconciliation.py
+./src/application/services/approval_workflow.py
+./src/application/services/audit_log.py
+./src/application/services/backfill.py
+./src/application/services/backtest_engine.py
+./src/application/services/certification_snapshot.py
+./src/application/services/connection_supervisor.py
+./src/application/services/cost_monitor.py
+./src/application/services/decision_agent.py
+./src/application/services/decision_context.py
+./src/application/services/historical_data.py
+./src/application/services/market_data_service.py
+./src/application/services/memory_comparison.py
+./src/application/services/memory_writer.py
+./src/application/services/ml_pipeline.py
+./src/application/services/paper_engine.py
+./src/application/services/paper_runner.py
+./src/application/services/reconciliation.py
+./src/application/services/recovery.py
+./src/application/services/reflection_engine.py
+./src/application/services/regime_confirmation.py
+./src/application/services/validation.py
+./src/domain/__init__.py
+./src/domain/evaluation/__init__.py
+./src/domain/evaluation/bootstrap.py
+./src/domain/evaluation/buy_hold.py
+./src/domain/evaluation/comparison.py
+./src/domain/evaluation/metrics.py
+./src/domain/evaluation/outcome.py
+./src/domain/evaluation/sensitivity.py
+./src/domain/experiments/__init__.py
+./src/domain/experiments/experiment.py
+./src/domain/experiments/features.py
+./src/domain/experiments/improvement.py
+./src/domain/experiments/logistic_regression.py
+./src/domain/experiments/walk_forward.py
+./src/domain/llm/__init__.py
+./src/domain/llm/budget.py
+./src/domain/llm/call.py
+./src/domain/llm/cost.py
+./src/domain/llm/prompt.py
+./src/domain/market/__init__.py
+./src/domain/market/candle.py
+./src/domain/market/dataset.py
+./src/domain/market/feature_engine.py
+./src/domain/market/features.py
+./src/domain/market/indicators.py
+./src/domain/market/orderbook.py
+./src/domain/market/regime.py
+./src/domain/market/state.py
+./src/domain/market/stream.py
+./src/domain/memory/__init__.py
+./src/domain/memory/guards.py
+./src/domain/memory/memory.py
+./src/domain/memory/reflection.py
+./src/domain/memory/space.py
+./src/domain/portfolio/__init__.py
+./src/domain/portfolio/portfolio.py
+./src/domain/risk/__init__.py
+./src/domain/risk/config.py
+./src/domain/risk/engine.py
+./src/domain/risk/guards.py
+./src/domain/risk/sizing.py
+./src/domain/risk/stops.py
+./src/domain/time/__init__.py
+./src/domain/time/day.py
+./src/domain/trading/__init__.py
+./src/domain/trading/decision.py
+./src/domain/trading/fees.py
+./src/domain/trading/fill.py
+./src/domain/trading/order.py
+./src/domain/trading/signal.py
+./src/domain/trading/slippage.py
+./src/domain/trading/strategy.py
+./src/infrastructure/__init__.py
+./src/infrastructure/bybit/__init__.py
+./src/infrastructure/bybit/auth.py
+./src/infrastructure/bybit/client.py
+./src/infrastructure/bybit/schemas.py
+./src/infrastructure/bybit/trade_client.py
+./src/infrastructure/bybit/ws.py
+./src/infrastructure/bybit/ws_schemas.py
+./src/infrastructure/database/__init__.py
+./src/infrastructure/database/base.py
+./src/infrastructure/database/memory_repository.py
+./src/infrastructure/database/models.py
+./src/infrastructure/database/repositories.py
+./src/infrastructure/database/session.py
+./src/infrastructure/embeddings/__init__.py
+./src/infrastructure/embeddings/fastembed_provider.py
+./src/infrastructure/execution/__init__.py
+./src/infrastructure/llm/__init__.py
+./src/infrastructure/llm/deepseek.py
+./src/infrastructure/llm/prompts.py
+./src/infrastructure/llm/schemas.py
+./src/infrastructure/medallion/__init__.py
+./src/infrastructure/medallion/bronze.py
+./src/infrastructure/medallion/candles.py
+./src/infrastructure/medallion/candles_cli.py
+./src/infrastructure/medallion/cli.py
+./src/infrastructure/medallion/gold.py
+./src/infrastructure/medallion/gold_cli.py
+./src/infrastructure/medallion/replay.py
+./src/infrastructure/medallion/replay_cli.py
+./src/infrastructure/medallion/silver.py
+./src/infrastructure/medallion/silver_cli.py
+./src/infrastructure/medallion/split_guard.py
+./src/infrastructure/observability/__init__.py
+./src/infrastructure/observability/logging.py
+./src/infrastructure/observability/metrics.py
+./src/infrastructure/observability/server.py
+./src/infrastructure/observability/tracing.py
+./src/infrastructure/storage/dataset_store.py
+./src/interfaces/__init__.py
+./src/interfaces/api/__init__.py
+./src/interfaces/api/app.py
+./src/interfaces/api/deps.py
+./src/interfaces/api/routers/__init__.py
+./src/interfaces/api/routers/dashboard.py
+./src/interfaces/api/routers/health.py
+./src/interfaces/api/routers/system.py
+./src/interfaces/cli/__init__.py
+./src/interfaces/cli/backtest.py
+./src/interfaces/cli/download.py
+./src/interfaces/cli/market_worker.py
+./src/interfaces/cli/paper_runner.py
+./src/interfaces/cli/paper_session.py
+./src/interfaces/cli/replay.py
+./src/interfaces/web/__init__.py
+./src/interfaces/web/static/htmx.min.js
+./src/interfaces/web/templates/audit.html
+./src/interfaces/web/templates/base.html
+./src/interfaces/web/templates/dashboard.html
+./src/interfaces/web/templates/summary.html
+./src/lab/__init__.py
+./src/lab/development_evaluation.py
+./src/lab/experiment_spec.py
+./src/lab/fingerprints.py
+./src/lab/frozen_dataset.py
+./src/lab/kernel_bundle.py
+./src/lab/promote.py
+./src/lab/registry.py
+./src/lab/robustness.py
+./src/lab/session_runner.py
+./src/lab/splits.py
+./src/lab/strategies/__init__.py
+./src/lab/strategies/ema_rsi_btc_context.py
+./src/lab/strategies/ema_rsi_btc_regime.py
+./src/lab/strategies/eth_bollinger_mean_reversion.py
+./src/lab/strategies/eth_donchian_breakout.py
+./src/lab/viability.py
+./src/lab/walk_forward.py
+./src/main.py
+./src/settings.py
+./src/version.py
+1.2M	.
+-- manifiesto sha256 remoto (a /tmp legible) --
+175 /tmp/m8-ctx-remote.sha256
+08d3227cb85889441660d2f449d5714f1414f0563401c62b401cf18ce0b5fd08  /tmp/m8-ctx-remote.sha256
+-- git sha en contexto: sin .git (esperado) --
+NO_GIT_DIR_OK
+-- compose config (validación read-only, root) --
+COMPOSE_CONFIG_OK
+      cap_drop:
+      network_mode: none
+      read_only: true
+        - no-new-privileges:true
+      user: 1000:1000
+          source: /srv/data/medallion
+          read_only: true
+          source: /srv/fast/medallion
+          source: /srv/data/.lenovosrv-data-volume
+          read_only: true
+M8_DEPLOY_REMOTE=OK
+-- paridad sha256 local vs remoto --
+LOCAL_MANIFEST_SHA=08d3227cb85889441660d2f449d5714f1414f0563401c62b401cf18ce0b5fd08
+REMOTE_MANIFEST_SHA=08d3227cb85889441660d2f449d5714f1414f0563401c62b401cf18ce0b5fd08
+CONTEXT_PARITY=YES
+M8_DEPLOY_COPY=PASS
+exit=0

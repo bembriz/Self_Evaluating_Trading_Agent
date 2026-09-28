@@ -1082,8 +1082,9 @@ phases:
       - docs/phases/23/evidence/m7-07-uat-verify.log
     - id: m8-deploy
       descripcion: Medallion deployment on lenovosrv
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/23/evidence/m8-08-postcheck.log
     - id: m9-strategy-validation
       descripcion: Rerun existing strategies on validated replay
       estado: pending
@@ -1967,4 +1968,8 @@ time_log:
   fase: '23'
   evento: done
   detalle: m7-trade-replay
+- fecha: '2026-09-28'
+  fase: '23'
+  evento: done
+  detalle: m8-deploy
 blockers: []

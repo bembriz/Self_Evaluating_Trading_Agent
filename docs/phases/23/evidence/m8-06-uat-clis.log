@@ -1,0 +1,81 @@
+# evidencia: m8-06-uat-clis
+fecha: 2026-09-28T13:43:23-06:00
+fase: 23
+comando: bash /tmp/opencode/m8-06-uat-clis.sh
+== M8 UAT 3 (CLIs en contenedor) ==
+== UAT M8-3: CLIs disponibles en el contenedor (sin writes) ==
+-- aislamiento según compose config --
+NETWORK_MODE_NONE=OK
+READ_ONLY_ROOTFS=OK
+NO_NEW_PRIVILEGES=OK
+CAP_DROP_ALL=OK
+NO_PUBLISHED_PORTS=OK
+NO_PLATFORM_NET=OK
+READ_ONLY_ENTRIES=3 (rootfs + canónico + marker = 3)
+CANONICAL_RO=OK
+MARKER_RO=OK
+FAST_RW_MOUNT=OK
+NO_SECRETS_IN_CONFIG=OK
+-- runtime: red solo lo, uid 1000, rootfs ro, canónico ro --
+ Container seta-medallion-medallion-run-c2d5e01a5232 Creating 
+ Container seta-medallion-medallion-run-c2d5e01a5232 Created 
+IFACES=['lo']
+NETWORK_ONLY_LOOPBACK=OK
+UID=1000 GID=1000
+ROOTFS_READONLY=OK ([Errno 30] Read-only file system: '/m8-probe')
+OS_ACCESS_WRITABLE=False
+CANONICAL_WRITE_BLOCKED=OK ([Errno 30] Read-only file system: '/srv/data/medallion/.m8-probe')
+WALK_FORWARD_READS=0 FINAL_HOLDOUT_READS=0
+-- env del contenedor (sin credenciales) --
+ Container seta-medallion-medallion-run-a89675b9be3d Creating 
+ Container seta-medallion-medallion-run-a89675b9be3d Created 
+FINAL_HOLDOUT_READS=0
+GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305
+HOME=/
+HOSTNAME=73aca645f1df
+LANG=C.UTF-8
+MEDALLION_GIT_SHA=79b1de5b8fc827397e608b698d315498b36ca92d
+PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+PYTHONDONTWRITEBYTECODE=1
+PYTHONPATH=/app/src
+PYTHONUNBUFFERED=1
+PYTHON_SHA256=5c8462af5790baf43a321a1559dbe0db06d1be4300fb85fb53c40060668e548a
+PYTHON_VERSION=3.12.14
+WALK_FORWARD_READS=0
+CONTAINER_ENV_CLEAN=OK
+-- 5 CLIs disponibles --
+== cli ==
+ Container seta-medallion-medallion-run-e3a6a7128669 Creating 
+ Container seta-medallion-medallion-run-e3a6a7128669 Created 
+usage: cli.py [-h] --dest-dir DEST_DIR [--symbol SYMBOL] --dates DATES
+CLI_cli=OK
+== silver_cli ==
+ Container seta-medallion-medallion-run-8338bd566bbe Creating 
+ Container seta-medallion-medallion-run-8338bd566bbe Created 
+usage: silver_cli.py [-h] --bronze-dir BRONZE_DIR --dest-dir DEST_DIR
+CLI_silver_cli=OK
+== candles_cli ==
+ Container seta-medallion-medallion-run-5b52a49f03e3 Creating 
+ Container seta-medallion-medallion-run-5b52a49f03e3 Created 
+usage: candles_cli.py [-h] --trades-dir TRADES_DIR --dest-dir DEST_DIR
+CLI_candles_cli=OK
+== gold_cli ==
+ Container seta-medallion-medallion-run-90f11ec5c3d0 Creating 
+ Container seta-medallion-medallion-run-90f11ec5c3d0 Created 
+usage: gold_cli.py [-h] --trades-dir TRADES_DIR --candles-dir CANDLES_DIR
+CLI_gold_cli=OK
+== replay_cli ==
+ Container seta-medallion-medallion-run-1d7bc46a69d6 Creating 
+ Container seta-medallion-medallion-run-1d7bc46a69d6 Created 
+usage: replay_cli.py [-h] --dataset-dir DATASET_DIR --trades-dir TRADES_DIR
+CLI_replay_cli=OK
+-- importación del paquete completo --
+ Container seta-medallion-medallion-run-135354d13beb Creating 
+ Container seta-medallion-medallion-run-135354d13beb Created 
+IMPORTS_OK
+-- sin contenedores medallion residuales --
+NO_RESIDUAL_CONTAINERS=OK
+M8_UAT_CLIS=PASS
+M8_REMOTE_SENTINEL_COMPLETE=YES
+M8_UAT3=PASS
+exit=0

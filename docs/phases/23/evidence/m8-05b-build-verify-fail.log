@@ -1,0 +1,15 @@
+# evidencia: m8-05b-build-verify
+fecha: 2026-09-28T13:37:57-06:00
+fase: 23
+comando: bash /tmp/opencode/m8-05b-build-verify.sh
+== M8 BUILD VERIFY ==
+== M8 BUILD VERIFY (inspección idempotente) ==
+IMAGE_ID=sha256:df82686bfd6d87bacf9fdb2e01767b5c94c6d6040655fe93097ea9f065b73001
+REPO_DIGESTS=[seta-medallion@sha256:df82686bfd6d87bacf9fdb2e01767b5c94c6d6040655fe93097ea9f065b73001]
+REPO_TAGS=[seta-medallion:79b1de5b8fc827397e608b698d315498b36ca92d seta-medallion:m8-79b1de5b8fc8]
+LABEL_revision=79b1de5b8fc827397e608b698d315498b36ca92d
+APP_GIT_SHA=79b1de5b8fc827397e608b698d315498b36ca92d
+SHA_BINDING=PASS
+-- base image presente (pull de python:3.12-slim) --
+ABORT: python base ausente
+exit=1

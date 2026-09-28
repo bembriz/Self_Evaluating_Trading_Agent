@@ -1,0 +1,31 @@
+# evidencia: m8-05c-build-verify
+fecha: 2026-09-28T13:38:35-06:00
+fase: 23
+comando: bash /tmp/opencode/m8-05b-build-verify.sh
+== M8 BUILD VERIFY ==
+== M8 BUILD VERIFY (inspección idempotente) ==
+IMAGE_ID=sha256:df82686bfd6d87bacf9fdb2e01767b5c94c6d6040655fe93097ea9f065b73001
+REPO_DIGESTS=[seta-medallion@sha256:df82686bfd6d87bacf9fdb2e01767b5c94c6d6040655fe93097ea9f065b73001]
+REPO_TAGS=[seta-medallion:79b1de5b8fc827397e608b698d315498b36ca92d seta-medallion:m8-79b1de5b8fc8]
+LABEL_revision=79b1de5b8fc827397e608b698d315498b36ca92d
+APP_GIT_SHA=79b1de5b8fc827397e608b698d315498b36ca92d
+SHA_BINDING=PASS
+-- runtime Python de la imagen (base python:3.12-slim) --
+PYTHON_VERSION=Python 3.12.14
+BASE=docker.io/library/python:3.12-slim
+(nota: el base vive en el content store de BuildKit; docker images no lo lista)
+-- history (sin pipe a head) --
+CMD ["python3" "-m" "infrastructure.medallio… | 0B
+USER 1000:1000 | 0B
+RUN |1 GIT_SHA=79b1de5b8fc827397e608b698d315… | 12.3kB
+COPY src ./src # buildkit | 1.15MB
+WORKDIR /app | 8.19kB
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECO… | 0B
+LABEL org.opencontainers.image.title=seta-me… | 0B
+RUN |1 GIT_SHA=79b1de5b8fc827397e608b698d315… | 4.1kB
+-- toda imagen medallion --
+seta-medallion:79b1de5b8fc827397e608b698d315498b36ca92d df82686bfd6d
+seta-medallion:m8-79b1de5b8fc8 df82686bfd6d
+M8_BUILD_VERIFY=PASS
+M8_UAT_BUILD_VERIFY=PASS
+exit=0

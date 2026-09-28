@@ -1,0 +1,30 @@
+# evidencia: m8-06-uat-clis
+fecha: 2026-09-28T13:41:34-06:00
+fase: 23
+comando: bash /tmp/opencode/m8-06-uat-clis.sh
+== M8 UAT 3 (CLIs en contenedor) ==
+== UAT M8-3: CLIs disponibles en el contenedor (sin writes) ==
+-- aislamiento según compose config --
+NETWORK_MODE_NONE=OK
+READ_ONLY_ROOTFS=OK
+NO_NEW_PRIVILEGES=OK
+CAP_DROP_ALL=OK
+NO_PUBLISHED_PORTS=OK
+NO_PLATFORM_NET=OK
+READ_ONLY_VOLUMES=3 (esperado 3: canónico + marker + rootfs => >=2 en volumes)
+CANONICAL_RO=OK
+MARKER_RO=OK
+FAST_RW_MOUNT=OK
+NO_SECRETS_IN_CONFIG=OK
+-- runtime: red solo lo, uid 1000, rootfs ro, canónico ro --
+ Container seta-medallion-medallion-run-552f5ea6b644 Creating 
+ Container seta-medallion-medallion-run-552f5ea6b644 Created 
+IFACES=['lo']
+NETWORK_ONLY_LOOPBACK=OK
+UID=1000 GID=1000
+ROOTFS_READONLY=OK ([Errno 30] Read-only file system: '/m8-probe')
+OS_ACCESS_WRITABLE=False
+CANONICAL_WRITE_BLOCKED=OK ([Errno 30] Read-only file system: '/srv/data/medallion/.m8-probe')
+WALK_FORWARD_READS=0 FINAL_HOLDOUT_READS=0
+M8_UAT3=PASS
+exit=0

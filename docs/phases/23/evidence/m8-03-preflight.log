@@ -1,0 +1,94 @@
+# evidencia: m8-03-preflight
+fecha: 2026-09-28T13:01:54-06:00
+fase: 23
+comando: bash /tmp/opencode/m8-03-preflight.sh
+== M8 PREFLIGHT (read-only) ==
+-- worktree local --
+?? docs/phases/23/evidence/m8-03-preflight.log
+HEAD_OK=YES HEAD=79b1de5b8fc827397e608b698d315498b36ca92d
+-- remoto --
+== PREFLIGHT M8 (read-only) ==
+-- host --
+lenovosrv
+6.8.0-138-generic
+2026-09-28T19:01:55+00:00
+-- git worktree (remote no aplica; local se verifica aparte) --
+-- marker /srv/data --
+LENOVO_DATA
+uuid=10fff707-60e4-4321-afa0-a3c4704d9e8d
+mounted_at=/srv/data
+created=2026-09-28T02:52:06+00:00
+-- fstab /srv/data --
+/dev/sda1 /srv/data ext4   10fff707-60e4-4321-afa0-a3c4704d9e8d
+-- blkid del device de /srv/data --
+SRC=/dev/sda1
+sda1 LENOVO_DATA 10fff707-60e4-4321-afa0-a3c4704d9e8d ext4   931,5G part
+-- /srv/data en LENOVO_DATA? --
+LABEL=LENOVO_DATA
+LENOVO_DATA_OK=YES
+-- /srv/fast en NVMe? --
+/
+/srv/fast device=64512
+/srv/data device=2049
+/ device=64512
+sda        1 931,5G disk
+nvme0n1    0 465,8G disk
+-- espacio NVMe --
+Filesystem                        Mounted on 1G-blocks Avail
+/dev/mapper/ubuntu--vg-ubuntu--lv /               455G  396G
+/dev/sda1                         /srv/data       916G  870G
+/dev/mapper/ubuntu--vg-ubuntu--lv /               455G  396G
+SSD_AVAIL_KB=415058260 SSD_AVAIL_GB=395
+-- baseline paper-runner --
+PAPER id=b061332c35724a2147df3c76acdd8ba4cace12157b958766e2d66cb3f34e22bb image=sha256:e41718c572e15fbc7ff8d927c820e091aee0acc565ba79dcf97ab1aad8a9d0a0 imageid=self-evaluating-trading-agent-paper-runner:0.2.0 started=2026-09-19T04:00:04.763010163Z status=running name=/self-evaluating-trading-agent-paper-runner-1
+gastos-ia-app|f0866dba0802|gastos-ia-app:latest|Up 16 hours|8000/tcp
+gastos-ia-samba|f9542a5b0b22|servercontainers/samba:smbd-only-latest|Up 16 hours (healthy)|0.0.0.0:139->139/tcp, [::]:139->139/tcp, 137/udp, 0.0.0.0:445->445/tcp, [::]:445->445/tcp
+self-evaluating-trading-agent-paper-runner-1|b061332c3572|self-evaluating-trading-agent-paper-runner:0.2.0|Up 9 days|
+self-evaluating-trading-agent-grafana-1|b796f67478d7|grafana/grafana:11.1.0|Up 2 weeks|127.0.0.1:3000->3000/tcp
+self-evaluating-trading-agent-prometheus-1|1431d8e01dd6|prom/prometheus:v2.53.0|Up 2 weeks|127.0.0.1:9090->9090/tcp
+gastos-ia-caddy|612427ee2033|caddy:2-alpine|Up 3 weeks|0.0.0.0:80->80/tcp, [::]:80->80/tcp, 0.0.0.0:443->443/tcp, [::]:443->443/tcp, 443/udp, 2019/tcp
+self-evaluating-trading-agent-postgres-1|0c79b6b5d1cd|pgvector/pgvector:pg16|Up 3 weeks (healthy)|127.0.0.1:5433->5432/tcp
+-- baseline postgres/prometheus/grafana/gastosia --
+NAMEFILTER=postgres IDS=0c79b6b5d1cd 
+  /self-evaluating-trading-agent-postgres-1 id=0c79b6b5d1cdf9f2cf5a503b0557e0fc0ba3b463e5a0007632399b431b97926d imageid=sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b started=2026-09-02T01:24:46.267698675Z status=running health=healthy
+NAMEFILTER=prometheus IDS=1431d8e01dd6 
+
+template parsing error: template: :1:111: executing "" at <.State.Health.Status>: map has no entry for key "Health"
+NAMEFILTER=grafana IDS=b796f67478d7 
+
+template parsing error: template: :1:111: executing "" at <.State.Health.Status>: map has no entry for key "Health"
+NAMEFILTER=gastosia IDS=
+-- puertos publicados baseline --
+gastos-ia-app => 8000/tcp
+gastos-ia-samba => 0.0.0.0:139->139/tcp, [::]:139->139/tcp, 137/udp, 0.0.0.0:445->445/tcp, [::]:445->445/tcp
+self-evaluating-trading-agent-paper-runner-1 => 
+self-evaluating-trading-agent-grafana-1 => 127.0.0.1:3000->3000/tcp
+self-evaluating-trading-agent-prometheus-1 => 127.0.0.1:9090->9090/tcp
+gastos-ia-caddy => 0.0.0.0:80->80/tcp, [::]:80->80/tcp, 0.0.0.0:443->443/tcp, [::]:443->443/tcp, 443/udp, 2019/tcp
+self-evaluating-trading-agent-postgres-1 => 127.0.0.1:5433->5432/tcp
+-- contenedores medallion existentes --
+NONE
+-- /srv/docker/medallion --
+ls: cannot access '/srv/docker/medallion': Permission denied
+ABSENT
+-- docker images python --
+NONE
+-- docker version --
+29.7.2
+-- replay-work estado --
+total 40
+drwxr-xr-x 2 administrador administrador  4096 sep 28 18:09 .
+drwxr-xr-x 6 administrador administrador  4096 sep 28 05:41 ..
+-rw-rw-r-- 1 administrador administrador 28913 sep 28 18:07 ledger.jsonl
+6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625  /srv/fast/medallion/replay-work/ledger.jsonl
+-- medallion canonico tamano --
+35M	/srv/data/medallion
+36
+-- hash canonico baseline --
+154bf7f5de7c0860b4dde50cb3cf14130684d01da5e101350a4620f06306cf6a  /tmp/m8-canon-baseline.sha256
+36 /tmp/m8-canon-baseline.sha256
+-- variables split --
+WALK_FORWARD_READS=0 FINAL_HOLDOUT_READS=0 (no vars en entorno)
+PREFLIGHT_REMOTE=OK
+M8_PREFLIGHT=PASS
+exit=0

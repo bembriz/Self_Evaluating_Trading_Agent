@@ -313,3 +313,19 @@ docker compose ls -a` · exit=`0` · artifact: docs/phases/23/evidence/m5-09-bro
 - `2026-09-28T12:08:36-06:00` **m7-06-uat-run2-determinism** → `bash /tmp/opencode/m7-06-run2.sh` · exit=`1` · artifact: docs/phases/23/evidence/m7-06-uat-run2-determinism.log
 - `2026-09-28T12:09:27-06:00` **m7-06b-uat-run2-determinism** → `bash /tmp/opencode/m7-06-run2.sh` · exit=`0` · artifact: docs/phases/23/evidence/m7-06b-uat-run2-determinism.log
 - `2026-09-28T12:19:07-06:00` **m7-07-uat-verify** → `bash /tmp/opencode/m7-07-verify.sh` · exit=`0` · artifact: docs/phases/23/evidence/m7-07-uat-verify.log
+- `2026-09-28T13:01:56-06:00` **m8-03-preflight** → `bash /tmp/opencode/m8-03-preflight.sh` · exit=`0` · artifact: docs/phases/23/evidence/m8-03-preflight.log
+- `2026-09-28T13:12:02-06:00` **m8-04a-deploy-copy-fail** → `bash /tmp/opencode/m8-04-deploy-copy.sh` · exit=`1` · artifact: docs/phases/23/evidence/m8-04a-deploy-copy-fail.log
+- `2026-09-28T13:34:18-06:00` **m8-04b-deploy-copy-fail** → `bash /tmp/opencode/m8-04-deploy-copy.sh` · exit=`1` · artifact: docs/phases/23/evidence/m8-04b-deploy-copy-fail.log
+- `2026-09-28T13:36:21-06:00` **m8-04-deploy-copy** → `bash /tmp/opencode/m8-04-deploy-copy.sh` · exit=`0` · artifact: docs/phases/23/evidence/m8-04-deploy-copy.log
+- `2026-09-28T13:37:04-06:00` **m8-05-build** → `bash /tmp/opencode/m8-05-build.sh` · exit=`141` · artifact: docs/phases/23/evidence/m8-05-build.log
+- `2026-09-28T13:37:58-06:00` **m8-05b-build-verify-fail** → `bash /tmp/opencode/m8-05b-build-verify.sh` · exit=`1` · artifact: docs/phases/23/evidence/m8-05b-build-verify-fail.log
+- `2026-09-28T13:38:37-06:00` **m8-05c-build-verify** → `bash /tmp/opencode/m8-05b-build-verify.sh` · exit=`0` · artifact: docs/phases/23/evidence/m8-05c-build-verify.log
+- `2026-09-28T13:40:33-06:00` **m8-06a-uat-clis-fail** → `bash /tmp/opencode/m8-06-uat-clis.sh` · exit=`1` · artifact: docs/phases/23/evidence/m8-06a-uat-clis-fail.log
+- `2026-09-28T13:41:36-06:00` **m8-06b-uat-clis-incomplete** → `bash /tmp/opencode/m8-06-uat-clis.sh` · exit=`0` (script remota truncada por stdin de compose run: falso PASS) · artifact: docs/phases/23/evidence/m8-06b-uat-clis-incomplete.log
+- `2026-09-28T13:43:31-06:00` **m8-06-uat-clis** → `bash /tmp/opencode/m8-06-uat-clis.sh` · exit=`0` · artifact: docs/phases/23/evidence/m8-06-uat-clis.log
+- `2026-09-28T13:45:36-06:00` **m8-07-uat-replay** → `bash /tmp/opencode/m8-07-uat-replay.sh` · exit=`0` · artifact: docs/phases/23/evidence/m8-07-uat-replay.log
+- `2026-09-28T13:49:05-06:00` **m8-08-postcheck** → `bash /tmp/opencode/m8-08-postcheck.sh` · exit=`0` · artifact: docs/phases/23/evidence/m8-08-postcheck.log
+- `2026-09-28T13:52:20-06:00` **m8-09-repo-quality** → `bash -c uv run ruff check . && uv run ruff format --check . && uv run mypy src tests && uv run pytest tests --ignore=tests/integration -q` · exit=`0` · artifact: docs/phases/23/evidence/m8-09-repo-quality.log
+- `2026-09-28T13:52:30-06:00` **m8-08b-gastosia-health** → `bash /tmp/opencode/m8-08b-gastosia.sh` · exit=`0` · artifact: docs/phases/23/evidence/m8-08b-gastosia-health.log
+- `2026-09-28T13:54:56-06:00` **m8-09b-repo-quality-count** → `bash -c uv run ruff check . && uv run ruff format --check . && uv run mypy src tests && uv run pytest tests --ignore=tests/integration` · exit=`0` · artifact: docs/phases/23/evidence/m8-09b-repo-quality-count.log
+- `2026-09-28T13:56:18-06:00` **m8-10-ledger-mark-done** → `bash -c python3 harness/scripts/progress.py mark-done --phase 23 --deliverable m8-deploy --evidence docs/phases/23/evidence/m8-08-postcheck.log && python3 harness/scripts/progress.py report | tail -8` · exit=`0` · artifact: docs/phases/23/evidence/m8-10-ledger-mark-done.log

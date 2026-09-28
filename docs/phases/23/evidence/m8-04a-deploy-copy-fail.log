@@ -1,0 +1,16 @@
+# evidencia: m8-04-deploy-copy
+fecha: 2026-09-28T13:12:01-06:00
+fase: 23
+comando: bash /tmp/opencode/m8-04-deploy-copy.sh
+== M8 DEPLOY COPY (espejo de build -> /srv/docker/medallion) ==
+-- git local --
+HEAD=79b1de5b8fc827397e608b698d315498b36ca92d
+BRANCH=medalion
+TRACKED_CLEAN=YES (nuevos sin trackear: deployment/medallion/)
+  ?? deployment/medallion/
+-- crear /srv/docker/medallion (sudo -S) --
+/tmp/opencode/m8-04-deploy-copy.sh: línea 21: SUDO_PASS: variable sin asignar
+
+sudo: no password was provided
+sudo: a password is required
+exit=1
