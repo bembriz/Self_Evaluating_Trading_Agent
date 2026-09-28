@@ -1,0 +1,44 @@
+# evidencia: m0i-15-gastosia-backup-sizing
+fecha: 2026-09-27T18:40:12-06:00
+fase: 23
+comando: ssh -o BatchMode=yes -o ConnectTimeout=10 administrador@192.168.100.24 set +e
+echo "=== NVMe libre actual (bytes) ==="; df -B1 --output=size,used,avail,pcent,target /
+echo
+echo "=== activo HDD (bytes) ==="; du -sb /mnt/warehouse/GastosIA 2>&1
+echo "=== legado Hyper-V (bytes) ==="; du -sb /mnt/warehouse/Hyper-V/VirtualMachines 2>&1
+echo "=== legado PostgreSQL (bytes) ==="; du -sb /mnt/warehouse/PostgreSQL 2>&1
+echo
+echo "=== config/cred via contenedor (read-only) ==="; docker exec gastos-ia-app du -sb /app/cred 2>&1; docker exec gastos-ia-app du -sb /app 2>&1
+echo "=== caddy config+data via contenedor ==="; docker exec gastos-ia-caddy du -sb /etc/caddy /data /config 2>&1
+echo "=== samba share no-GastosIA ==="; docker exec gastos-ia-samba du -sb /shares 2>/dev/null; docker exec gastos-ia-samba sh -c "du -sb /shares/* 2>/dev/null" 2>&1
+echo
+echo "=== imagenes docker (tamano) ==="; docker images --format "{{.Repository}}:{{.Tag}} {{.Size}}" | grep -i "gastos" 2>&1
+echo "=== volumenes gastos-ia (via docker system df -v no aplica; inspeccion de rutas) ==="; docker inspect --format "{{range .Mounts}}{{.Name}} {{.Source}}={{.Destination}};{{end}}" gastos-ia-caddy gastos-ia-samba 2>&1
+=== NVMe libre actual (bytes) ===
+   1B-blocks        Used        Avail Use% Mounted on
+488420507648 20013592576 447422193664   5% /
+
+=== activo HDD (bytes) ===
+597764	/mnt/warehouse/GastosIA
+=== legado Hyper-V (bytes) ===
+21885878272	/mnt/warehouse/Hyper-V/VirtualMachines
+=== legado PostgreSQL (bytes) ===
+237550396	/mnt/warehouse/PostgreSQL
+
+=== config/cred via contenedor (read-only) ===
+2368	/app/cred
+249839206	/app
+=== caddy config+data via contenedor ===
+4151	/etc/caddy
+40395	/data
+8535	/config
+=== samba share no-GastosIA ===
+610052	/shares
+605956	/shares/gastos
+
+=== imagenes docker (tamano) ===
+gastos-ia-app:latest 944MB
+=== volumenes gastos-ia (via docker system df -v no aplica; inspeccion de rutas) ===
+ /srv/docker/gastos-ia/Caddyfile=/etc/caddy/Caddyfile;gastos-ia_caddy_data /srv/docker/volumes/gastos-ia_caddy_data/_data=/data;gastos-ia_caddy_config /srv/docker/volumes/gastos-ia_caddy_config/_data=/config;
+ /mnt/warehouse/GastosIA=/shares/gastos;1d34dbebc186166377fc89cd0407d44c8e1065ed78dc09994557a5f0511ee514 /srv/docker/volumes/1d34dbebc186166377fc89cd0407d44c8e1065ed78dc09994557a5f0511ee514/_data=/shares;
+exit=0

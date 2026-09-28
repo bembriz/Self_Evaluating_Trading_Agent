@@ -1,0 +1,30 @@
+# evidencia: m0i-03-nvme-fast-tier
+fecha: 2026-09-27T18:18:57-06:00
+fase: 23
+comando: ssh -o BatchMode=yes -o ConnectTimeout=10 administrador@192.168.100.24 echo "=== docker root ==="; docker info --format "DockerRootDir={{.DockerRootDir}} StorageDriver={{.Driver}} ServerVersion={{.ServerVersion}} Containers={{.Containers}} Running={{.ContainersRunning}} Images={{.Images}}"; echo; echo "=== docker dirs on disk ==="; ls -ld /srv/docker /var/lib/docker /var/lib/containerd 2>&1; readlink -f /var/lib/docker 2>&1; readlink -f /var/lib/containerd 2>&1; echo; echo "=== df root (BG) ==="; df -BG /; echo; echo "=== df root (bytes) ==="; df -B1 --output=size,used,avail,pcent,target /; echo; echo "=== LVM ==="; lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINTS /dev/nvme0n1
+=== docker root ===
+DockerRootDir=/srv/docker StorageDriver=overlayfs ServerVersion=29.7.2 Containers=7 Running=7 Images=10
+
+=== docker dirs on disk ===
+drwx--x--- 14 root root 4096 sep  3 03:40 /srv/docker
+drwx------ 13 root root 4096 ago 26 03:47 /var/lib/containerd
+drwx--x--- 12 root root 4096 ago 26 03:54 /var/lib/docker
+/var/lib/docker
+/var/lib/containerd
+
+=== df root (BG) ===
+Filesystem                        1G-blocks  Used Available Use% Mounted on
+/dev/mapper/ubuntu--vg-ubuntu--lv      455G   19G      417G   5% /
+
+=== df root (bytes) ===
+   1B-blocks        Used        Avail Use% Mounted on
+488420507648 20013490176 447422296064   5% /
+
+=== LVM ===
+NAME                        SIZE FSTYPE      MOUNTPOINTS
+nvme0n1                   465,8G             
+├─nvme0n1p1                   1G vfat        /boot/efi
+├─nvme0n1p2                   2G ext4        /boot
+└─nvme0n1p3               462,7G LVM2_member 
+  └─ubuntu--vg-ubuntu--lv 462,7G ext4        /
+exit=0

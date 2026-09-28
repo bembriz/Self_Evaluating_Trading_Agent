@@ -1,0 +1,82 @@
+# evidencia: m0i-05-docker-inventory
+fecha: 2026-09-27T18:19:06-06:00
+fase: 23
+comando: ssh -o BatchMode=yes -o ConnectTimeout=10 administrador@192.168.100.24 set +e; echo "=== docker version ==="; docker version; echo; echo "=== docker ps -a ==="; docker ps -a --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"; echo; echo "=== compose ls ==="; docker compose ls -a; echo; echo "=== network ls ==="; docker network ls; echo; echo "=== volume ls ==="; docker volume ls; echo; echo "=== system df ==="; docker system df; echo; echo "=== container detail (sin env) ==="; for c in $(docker ps -aq); do docker inspect --format "{{.Name}} | image={{.Config.Image}} | proj={{index .Config.Labels \"com.docker.compose.project\"}} | projdir={{index .Config.Labels \"com.docker.compose.project.working_dir\"}} | restart={{.HostConfig.RestartPolicy.Name}} | state={{.State.Status}} | health={{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}} | nets={{range \$k,\$v := .NetworkSettings.Networks}}{{\$k}},{{end}} | mounts={{range .Mounts}}{{.Type}}:{{.Source}}->{{.Destination}};{{end}} | ports={{range \$p,\$c := .HostConfig.PortBindings}}{{\$p}}={{index \$c 0}};{{end}}" $c; done
+=== docker version ===
+Client: Docker Engine - Community
+ Version:           29.7.2
+ API version:       1.55
+ Go version:        go1.26.5
+ Git commit:        a7dcaa6
+ Built:             Wed Aug  5 18:28:53 2026
+ OS/Arch:           linux/amd64
+ Context:           default
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          29.7.2
+  API version:      1.55 (minimum version 1.40)
+  Go version:       go1.26.5
+  Git commit:       6a43e3d
+  Built:            Wed Aug  5 18:28:53 2026
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+  Version:          v2.3.3
+  GitCommit:        aad11006b869517fcd3009450b6f82da282e1a9b
+ runc:
+  Version:          1.4.3
+  GitCommit:        v1.4.3-0-gbb14dabe
+ docker-init:
+  Version:          0.19.0
+  GitCommit:        de40ad0
+
+=== docker ps -a ===
+NAMES                                          IMAGE                                              STATUS                 PORTS
+self-evaluating-trading-agent-paper-runner-1   self-evaluating-trading-agent-paper-runner:0.2.0   Up 8 days              
+self-evaluating-trading-agent-grafana-1        grafana/grafana:11.1.0                             Up 2 weeks             127.0.0.1:3000->3000/tcp
+self-evaluating-trading-agent-prometheus-1     prom/prometheus:v2.53.0                            Up 2 weeks             127.0.0.1:9090->9090/tcp
+gastos-ia-app                                  gastos-ia-app:latest                               Up 3 weeks             8000/tcp
+gastos-ia-caddy                                caddy:2-alpine                                     Up 3 weeks             0.0.0.0:80->80/tcp, [::]:80->80/tcp, 0.0.0.0:443->443/tcp, [::]:443->443/tcp, 443/udp, 2019/tcp
+gastos-ia-samba                                servercontainers/samba:smbd-only-latest            Up 3 weeks (healthy)   0.0.0.0:139->139/tcp, [::]:139->139/tcp, 137/udp, 0.0.0.0:445->445/tcp, [::]:445->445/tcp
+self-evaluating-trading-agent-postgres-1       pgvector/pgvector:pg16                             Up 3 weeks (healthy)   127.0.0.1:5433->5432/tcp
+
+=== compose ls ===
+NAME                            STATUS              CONFIG FILES
+gastos-ia                       running(3)          /srv/docker/gastos-ia/compose.yaml
+self-evaluating-trading-agent   running(4)          /srv/docker/self-evaluating-trading-agent/compose.yaml
+
+=== network ls ===
+NETWORK ID     NAME                                    DRIVER    SCOPE
+6e3496cd8996   bridge                                  bridge    local
+9279d917b997   gastos-ia_default                       bridge    local
+788187f7998e   gastos-ia_gastos                        bridge    local
+d8e8818e2a40   host                                    host      local
+945d16cd7a80   none                                    null      local
+277c3a2c8cda   self-evaluating-trading-agent_default   bridge    local
+
+=== volume ls ===
+DRIVER    VOLUME NAME
+local     1d34dbebc186166377fc89cd0407d44c8e1065ed78dc09994557a5f0511ee514
+local     gastos-ia_caddy_config
+local     gastos-ia_caddy_data
+local     self-evaluating-trading-agent_grafanadata
+local     self-evaluating-trading-agent_pgdata
+local     self-evaluating-trading-agent_promdata
+
+=== system df ===
+TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+Images          10        7         3.234GB   161.5MB (4%)
+Containers      7         7         24.88MB   0B (0%)
+Local Volumes   6         6         93.33MB   0B (0%)
+Build Cache     75        0         2.478GB   1.196GB
+
+=== container detail (sin env) ===
+/self-evaluating-trading-agent-paper-runner-1 | image=self-evaluating-trading-agent-paper-runner:0.2.0 | proj=self-evaluating-trading-agent | projdir=/srv/docker/self-evaluating-trading-agent | restart=unless-stopped | state=running | health=none | nets=self-evaluating-trading-agent_default, | mounts=bind:/srv/docker/self-evaluating-trading-agent/reports->/app/reports;bind:/srv/docker/self-evaluating-trading-agent/certification->/app/certification;bind:/srv/docker/self-evaluating-trading-agent/safeguard->/app/safeguard; | ports=
+/self-evaluating-trading-agent-grafana-1 | image=grafana/grafana:11.1.0 | proj=self-evaluating-trading-agent | projdir=/srv/docker/self-evaluating-trading-agent | restart=no | state=running | health=none | nets=self-evaluating-trading-agent_default, | mounts=bind:/srv/docker/self-evaluating-trading-agent/deploy/grafana/provisioning->/etc/grafana/provisioning;volume:/srv/docker/volumes/self-evaluating-trading-agent_grafanadata/_data->/var/lib/grafana; | ports=3000/tcp={127.0.0.1 3000};
+/self-evaluating-trading-agent-prometheus-1 | image=prom/prometheus:v2.53.0 | proj=self-evaluating-trading-agent | projdir=/srv/docker/self-evaluating-trading-agent | restart=no | state=running | health=none | nets=self-evaluating-trading-agent_default, | mounts=bind:/srv/docker/self-evaluating-trading-agent/deploy/prometheus.yml->/etc/prometheus/prometheus.yml;volume:/srv/docker/volumes/self-evaluating-trading-agent_promdata/_data->/prometheus; | ports=9090/tcp={127.0.0.1 9090};
+/gastos-ia-app | image=gastos-ia-app:latest | proj=gastos-ia | projdir=/srv/docker/gastos-ia | restart=unless-stopped | state=running | health=none | nets=gastos-ia_gastos,self-evaluating-trading-agent_default, | mounts=bind:/srv/docker/gastos-ia/cred->/app/cred;bind:/mnt/warehouse/GastosIA->/data/gastos; | ports=
+/gastos-ia-caddy | image=caddy:2-alpine | proj=gastos-ia | projdir=/srv/docker/gastos-ia | restart=unless-stopped | state=running | health=none | nets=gastos-ia_gastos, | mounts=bind:/srv/docker/gastos-ia/Caddyfile->/etc/caddy/Caddyfile;volume:/srv/docker/volumes/gastos-ia_caddy_data/_data->/data;volume:/srv/docker/volumes/gastos-ia_caddy_config/_data->/config; | ports=80/tcp={invalid IP 80};443/tcp={invalid IP 443};
+/gastos-ia-samba | image=servercontainers/samba:smbd-only-latest | proj=gastos-ia | projdir=/srv/docker/gastos-ia | restart=unless-stopped | state=running | health=healthy | nets=gastos-ia_default, | mounts=bind:/mnt/warehouse/GastosIA->/shares/gastos;volume:/srv/docker/volumes/1d34dbebc186166377fc89cd0407d44c8e1065ed78dc09994557a5f0511ee514/_data->/shares; | ports=139/tcp={invalid IP 139};445/tcp={invalid IP 445};
+/self-evaluating-trading-agent-postgres-1 | image=pgvector/pgvector:pg16 | proj=self-evaluating-trading-agent | projdir=/srv/docker/self-evaluating-trading-agent | restart=no | state=running | health=healthy | nets=self-evaluating-trading-agent_default, | mounts=volume:/srv/docker/volumes/self-evaluating-trading-agent_pgdata/_data->/var/lib/postgresql/data; | ports=5432/tcp={127.0.0.1 5433};
+exit=0

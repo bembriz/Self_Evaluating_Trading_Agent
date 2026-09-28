@@ -1,0 +1,36 @@
+# evidencia: m0i-07-proxy-monitoring
+fecha: 2026-09-27T18:20:31-06:00
+fase: 23
+comando: ssh -o BatchMode=yes -o ConnectTimeout=10 administrador@192.168.100.24 echo "=== puertos escuchando ==="; ss -tlnp 2>/dev/null | sed -n "1,40p"; echo; echo "=== Caddyfile (config, sin secretos) ==="; cat /srv/docker/gastos-ia/Caddyfile; echo; echo "=== compose projects config ==="; docker compose ls -a; echo; echo "=== prometheus/grafana mounts+data ==="; docker inspect --format "{{.Name}} mounts={{range .Mounts}}{{.Type}}:{{.Source}}->{{.Destination}};{{end}}" self-evaluating-trading-agent-prometheus-1 self-evaluating-trading-agent-grafana-1; echo; echo "=== tamano volumenes monitoring (NVMe) ==="; du -sh /srv/docker/volumes/self-evaluating-trading-agent_promdata /srv/docker/volumes/self-evaluating-trading-agent_grafanadata /srv/docker/volumes/self-evaluating-trading-agent_pgdata 2>/dev/null
+=== puertos escuchando ===
+State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess
+LISTEN 0      4096       127.0.0.1:3000      0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:5433      0.0.0.0:*          
+LISTEN 0      4096   127.0.0.53%lo:53        0.0.0.0:*          
+LISTEN 0      4096       127.0.0.1:9090      0.0.0.0:*          
+LISTEN 0      4096         0.0.0.0:443       0.0.0.0:*          
+LISTEN 0      4096         0.0.0.0:445       0.0.0.0:*          
+LISTEN 0      4096         0.0.0.0:139       0.0.0.0:*          
+LISTEN 0      4096      127.0.0.54:53        0.0.0.0:*          
+LISTEN 0      4096         0.0.0.0:22        0.0.0.0:*          
+LISTEN 0      4096         0.0.0.0:80        0.0.0.0:*          
+LISTEN 0      4096            [::]:443          [::]:*          
+LISTEN 0      4096            [::]:445          [::]:*          
+LISTEN 0      4096            [::]:139          [::]:*          
+LISTEN 0      4096            [::]:22           [::]:*          
+LISTEN 0      4096            [::]:80           [::]:*          
+
+=== Caddyfile (config, sin secretos) ===
+
+=== compose projects config ===
+cat: /srv/docker/gastos-ia/Caddyfile: Permission denied
+NAME                            STATUS              CONFIG FILES
+gastos-ia                       running(3)          /srv/docker/gastos-ia/compose.yaml
+self-evaluating-trading-agent   running(4)          /srv/docker/self-evaluating-trading-agent/compose.yaml
+
+=== prometheus/grafana mounts+data ===
+/self-evaluating-trading-agent-prometheus-1 mounts=bind:/srv/docker/self-evaluating-trading-agent/deploy/prometheus.yml->/etc/prometheus/prometheus.yml;volume:/srv/docker/volumes/self-evaluating-trading-agent_promdata/_data->/prometheus;
+/self-evaluating-trading-agent-grafana-1 mounts=bind:/srv/docker/self-evaluating-trading-agent/deploy/grafana/provisioning->/etc/grafana/provisioning;volume:/srv/docker/volumes/self-evaluating-trading-agent_grafanadata/_data->/var/lib/grafana;
+
+=== tamano volumenes monitoring (NVMe) ===
+exit=1

@@ -1,0 +1,61 @@
+# evidencia: m0i-08-gastosia
+fecha: 2026-09-27T18:21:38-06:00
+fase: 23
+comando: ssh -o BatchMode=yes -o ConnectTimeout=10 administrador@192.168.100.24 set +e; echo "=== config en NVMe: /srv/docker/gastos-ia (listado) ==="; ls -la /srv/docker/gastos-ia 2>&1; echo; echo "=== bind activo GastosIA (HDD) ==="; ls -la /mnt/warehouse/GastosIA 2>&1 | sed -n "1,30p"; echo; echo "=== bytes activo ==="; du -sb /mnt/warehouse/GastosIA 2>&1; du -s -BG /mnt/warehouse/GastosIA 2>&1; echo; echo "=== candidatos legados ==="; ls -la /mnt/warehouse/Hyper-V/VirtualMachines 2>&1; du -sb /mnt/warehouse/Hyper-V/VirtualMachines 2>&1; du -s -BG /mnt/warehouse/Hyper-V/VirtualMachines 2>&1; echo; du -sb /mnt/warehouse/PostgreSQL 2>&1; du -s -BG /mnt/warehouse/PostgreSQL 2>&1; echo; echo "=== raiz warehouse (solo listado, sin recorrido completo) ==="; ls -la /mnt/warehouse 2>&1; echo; echo "=== contenedores GastosIA ==="; docker ps -a --filter "name=gastos-ia" --format "{{.Names}} | {{.Image}} | {{.Status}} | {{.Ports}}"
+=== config en NVMe: /srv/docker/gastos-ia (listado) ===
+ls: cannot access '/srv/docker/gastos-ia': Permission denied
+
+=== bind activo GastosIA (HDD) ===
+total 12
+drwxr-xr-x 1 administrador administrador    0 sep  3 15:23 .
+drwxrwxrwx 1 administrador administrador 8192 ago 24 23:42 ..
+drwxr-xr-x 1 administrador administrador    0 jul 29 21:51 Esme
+-rw-r--r-- 1 administrador administrador  631 sep  3 15:23 gastos-local-root.crt
+drwxr-xr-x 1 administrador administrador    0 jul 29 21:51 Ruben
+
+=== bytes activo ===
+597764	/mnt/warehouse/GastosIA
+1G	/mnt/warehouse/GastosIA
+
+=== candidatos legados ===
+total 0
+drwxr-xr-x 1 administrador administrador 0 jul 29 00:04 .
+drwxr-xr-x 1 administrador administrador 0 jul 29 03:25 ..
+drwxr-xr-x 1 administrador administrador 0 jul 29 03:36 GastosIA
+21885878272	/mnt/warehouse/Hyper-V/VirtualMachines
+21G	/mnt/warehouse/Hyper-V/VirtualMachines
+
+237550396	/mnt/warehouse/PostgreSQL
+1G	/mnt/warehouse/PostgreSQL
+
+=== raiz warehouse (solo listado, sin recorrido completo) ===
+total 332
+drwxrwxrwx 1 administrador administrador   8192 ago 24 23:42 .
+drwxr-xr-x 3 root          root            4096 ago 26 03:46 ..
+drwxr-xr-x 1 administrador administrador   4096 ago 25  2022 $RECYCLE.BIN
+drwxr-xr-x 1 administrador administrador      0 ago 24 23:42 Accesos
+drwxr-xr-x 1 administrador administrador 262144 jul  4  2022 Descargas
+drwxr-xr-x 1 administrador administrador   4096 jun 28  2022 Documentos
+drwxr-xr-x 1 administrador administrador      0 sep  3 15:23 GastosIA
+dr-xr-xr-x 1 administrador administrador   4096 jul  4  2022 GoogleDrive
+dr-xr-xr-x 1 administrador administrador   4096 jul  4  2022 GoogleDriveDiplo
+drwxr-xr-x 1 administrador administrador      0 jul 29 03:25 Hyper-V
+drwxr-xr-x 1 administrador administrador      0 jun 28  2022 Meme
+drwxr-xr-x 1 administrador administrador      0 oct  8  2021 One Drive
+drwxr-xr-x 1 administrador administrador      0 oct  8  2021 OneDriveTemp
+drwxr-xr-x 1 administrador administrador   4096 ago 25 06:00 PostgreSQL
+drwxr-xr-x 1 administrador administrador      0 ago 24 23:40 Python
+drwxr-xr-x 1 administrador administrador      0 oct  7  2021 Recovery
+drwxr-xr-x 1 administrador administrador  16384 sep 15  2021 RStudio
+drwxr-xr-x 1 administrador administrador  12288 ago 24 23:43 Software
+drwxr-xr-x 1 administrador administrador      0 feb 16  2023 SQL Server
+drwxr-xr-x 1 administrador administrador   4096 dic  4  2020 System Volume Information
+drwxr-xr-x 1 administrador administrador  12288 jun 28  2022 VisualStudio
+drwxr-xr-x 1 administrador administrador      0 jun 30 05:21 VS_Work
+drwxr-xr-x 1 administrador administrador      0 jun 30 05:21 xuum DB
+
+=== contenedores GastosIA ===
+gastos-ia-app | gastos-ia-app:latest | Up 3 weeks | 8000/tcp
+gastos-ia-caddy | caddy:2-alpine | Up 3 weeks | 0.0.0.0:80->80/tcp, [::]:80->80/tcp, 0.0.0.0:443->443/tcp, [::]:443->443/tcp, 443/udp, 2019/tcp
+gastos-ia-samba | servercontainers/samba:smbd-only-latest | Up 3 weeks (healthy) | 0.0.0.0:139->139/tcp, [::]:139->139/tcp, 137/udp, 0.0.0.0:445->445/tcp, [::]:445->445/tcp
+exit=0

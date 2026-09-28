@@ -1,0 +1,15 @@
+# evidencia: m0i-10-global-governance
+fecha: 2026-09-27T18:21:59-06:00
+fase: 23
+comando: bash -c echo "=== ~/.config/opencode/AGENTS.md: restriccion warehouse ==="; grep -n "warehouse" ~/.config/opencode/AGENTS.md; echo; echo "=== contexto lineas ==="; grep -n -B2 -A2 "NO formatear ni borrar jamás" ~/.config/opencode/AGENTS.md
+=== ~/.config/opencode/AGENTS.md: restriccion warehouse ===
+49:- **Almacenamiento:** raíz `/` = 455 GB (LVM sobre NVMe Samsung 970 EVO) · `/mnt/warehouse` = disco NTFS de 1 TB montado automático vía fstab (ntfs3), contiene datos personales — NO formatear ni borrar jamás
+52:- **Servicios legados:** había SQL Server y una VM Hyper-V "GastosIA" en el Windows anterior (ya migrado); sus datos están en warehouse y en el respaldo
+
+=== contexto lineas ===
+47-- **GPUs:** NVIDIA GTX 1050 2GB (driver 580 firmado por Canonical, CUDA 13, módulo `nvidia`, nouveau en blacklist) + Intel HD 630 (i915, VAAPI/QSV). En Docker: `--gpus all` disponible (runtime nvidia configurado)
+48-- **Docker:** Engine desde repositorio oficial. **Data-root: `/srv/docker`** (NO usar `/var/lib/docker`). Convención para bind-mounts: `/srv/docker/<servicio>/...`. Usuario `administrador` está en grupo docker
+49:- **Almacenamiento:** raíz `/` = 455 GB (LVM sobre NVMe Samsung 970 EVO) · `/mnt/warehouse` = disco NTFS de 1 TB montado automático vía fstab (ntfs3), contiene datos personales — NO formatear ni borrar jamás
+50-- **Respaldos:** copia completa de Warehouse en el USB externo ADATA "Repo" (`E:\Backup_D_Warehouse` visto desde Windows; normalmente desconectado)
+51-- **Firewall:** ufw activo, solo OpenSSH permitido; abrir puertos explícitamente antes de exponer servicios
+exit=0

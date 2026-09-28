@@ -3,7 +3,7 @@ meta:
   prd: docs/PRD — Self-Evaluating Trading Agent.md
   diseno_arnes: docs/design/harness-design.md
   creado: '2026-08-22'
-  actualizado: '2026-09-24'
+  actualizado: '2026-09-27'
   reglas:
     peso_fase_igual: true
     peso_entregable_igual: true
@@ -1035,8 +1035,10 @@ phases:
       - docs/design/medallion-replay-architecture.md
     - id: m0i-infra-discovery
       descripcion: Read-only lenovosrv infrastructure revalidation
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/23/evidence/log.md
+      - docs/phases/23/m0-i-infrastructure-revalidation.md
     - id: m0ii-gastosia-rescue
       descripcion: GastosIA backup and isolated restore validation
       estado: pending
@@ -1920,4 +1922,8 @@ time_log:
   fase: '23'
   evento: done
   detalle: m0-architecture
+- fecha: '2026-09-27'
+  fase: '23'
+  evento: done
+  detalle: m0i-infra-discovery
 blockers: []

@@ -1,0 +1,23 @@
+# evidencia: m0i-07b-proxy-monitoring-fix
+fecha: 2026-09-27T18:21:29-06:00
+fase: 23
+comando: ssh -o BatchMode=yes -o ConnectTimeout=10 administrador@192.168.100.24 echo "=== sudo -n disponible? ==="; sudo -n true 2>&1 && echo SUDO_NOPASSWD=YES || echo SUDO_NOPASSWD=NO; echo; echo "=== Caddyfile via docker exec (read-only) ==="; docker exec gastos-ia-caddy cat /etc/caddy/Caddyfile 2>&1; echo "caddyfile_exit=$?"; echo; echo "=== Caddy backends declarados (routes) ==="; docker exec gastos-ia-caddy sh -c "grep -E \"reverse_proxy|respond|file_server|:80|:443|domain|host\" /etc/caddy/Caddyfile" 2>&1; echo; echo "=== tamanos de datos de volumenes via docker exec ==="; docker exec self-evaluating-trading-agent-prometheus-1 du -sh /prometheus 2>&1; docker exec self-evaluating-trading-agent-grafana-1 du -sh /var/lib/grafana 2>&1; docker exec self-evaluating-trading-agent-postgres-1 du -sh /var/lib/postgresql/data 2>&1
+=== sudo -n disponible? ===
+sudo: a password is required
+SUDO_NOPASSWD=NO
+
+=== Caddyfile via docker exec (read-only) ===
+gastos.local {
+	tls internal
+	reverse_proxy app:8000
+}
+caddyfile_exit=0
+
+=== Caddy backends declarados (routes) ===
+	reverse_proxy app:8000
+
+=== tamanos de datos de volumenes via docker exec ===
+7.2M	/prometheus
+1020.0K	/var/lib/grafana
+82M	/var/lib/postgresql/data
+exit=0

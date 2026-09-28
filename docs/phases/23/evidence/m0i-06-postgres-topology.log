@@ -1,0 +1,25 @@
+# evidencia: m0i-06-postgres-topology
+fecha: 2026-09-27T18:20:29-06:00
+fase: 23
+comando: ssh -o BatchMode=yes -o ConnectTimeout=10 administrador@192.168.100.24 echo "=== pg container ==="; docker ps --filter "name=postgres" --format "{{.Names}} | {{.Image}} | {{.Status}} | {{.Ports}}"; echo; echo "=== databases (nombre/owner/tamano) ==="; docker exec self-evaluating-trading-agent-postgres-1 bash -c 'psql -U "$POSTGRES_USER" -d postgres -t -A -F" | " -c "SELECT datname, pg_get_userbyid(datdba), pg_size_pretty(pg_database_size(datname)) FROM pg_database ORDER BY datname;"'; echo "psql_exit=$?"; echo; echo "=== red del contenedor PG ==="; docker inspect --format "{{range \$k,\$v := .NetworkSettings.Networks}}{{\$k}} {{end}}" self-evaluating-trading-agent-postgres-1; echo "=== pertenencia de red SETA_default ==="; docker network inspect --format "{{.Name}}: {{range .Containers}}[{{.Name}}] {{end}}" self-evaluating-trading-agent_default; echo "=== pertenencia gastos-ia_gastos ==="; docker network inspect --format "{{.Name}}: {{range .Containers}}[{{.Name}}] {{end}}" gastos-ia_gastos; echo "=== pertenencia gastos-ia_default ==="; docker network inspect --format "{{.Name}}: {{range .Containers}}[{{.Name}}] {{end}}" gastos-ia_default
+=== pg container ===
+self-evaluating-trading-agent-postgres-1 | pgvector/pgvector:pg16 | Up 3 weeks (healthy) | 127.0.0.1:5433->5432/tcp
+
+=== databases (nombre/owner/tamano) ===
+gastos_ia | gastos_app | 8503 kB
+gastos_ia_test | gastos_app | 8223 kB
+postgres | trading | 7487 kB
+template0 | trading | 7329 kB
+template1 | trading | 7551 kB
+trading_agent | trading | 10 MB
+psql_exit=0
+
+=== red del contenedor PG ===
+self-evaluating-trading-agent_default 
+=== pertenencia de red SETA_default ===
+self-evaluating-trading-agent_default: [self-evaluating-trading-agent-postgres-1] [self-evaluating-trading-agent-prometheus-1] [self-evaluating-trading-agent-paper-runner-1] [gastos-ia-app] [self-evaluating-trading-agent-grafana-1] 
+=== pertenencia gastos-ia_gastos ===
+gastos-ia_gastos: [gastos-ia-caddy] [gastos-ia-app] 
+=== pertenencia gastos-ia_default ===
+gastos-ia_default: [gastos-ia-samba] 
+exit=0

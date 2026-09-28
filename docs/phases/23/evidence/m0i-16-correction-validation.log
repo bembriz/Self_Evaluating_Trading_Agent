@@ -1,0 +1,38 @@
+# evidencia: m0i-16-correction-validation
+fecha: 2026-09-27T18:44:11-06:00
+fase: 23
+comando: bash -c 
+set -e
+R=docs/phases/23/m0-i-infrastructure-revalidation.md
+CC=docs/phases/23/commit-candidate-001.md
+# 1) valores corregidos presentes
+grep -q "EXPECTED_NVME_FREE_AFTER_BACKUP_GIB=395.09" "$R"
+grep -q "NVME_FREE_BEFORE_BACKUP_GIB=416.69" "$R"
+grep -q "GASTOSIA_TOTAL_BACKUP_ESTIMATE_GIB=21.60" "$R"
+grep -q "POST_BACKUP_MARGIN_ABOVE_MIN_GIB=345.09" "$R"
+grep -q "SSD_MIN_FREE_POLICY_AFTER_BACKUP=PASS" "$R"
+grep -q "395,09" "$CC"
+# 2) sin valor obsoleto como campo normalizado activo (solo permitido como documentacion del error)
+! grep -qE "^EXPECTED_NVME_FREE_AFTER_BACKUP_GB=416.6$" "$R"
+! grep -qE "EXPECTED_NVME_FREE_AFTER_BACKUP_GB=416.6$" "$CC"
+# 3) git diff --check limpio
+git diff --check
+# 4) sin cambios fuera de docs/ + progress.yaml; sin src/deploy/compose
+git status --porcelain | grep -vE "^(.M harness/state/progress.yaml|\?\? docs/phases/23/)$" && { echo "ARCHIVOS_INESPERADOS"; exit 1; } || true
+test -z "$(git status --porcelain -- src deploy docker-compose.yml compose.yaml 2>/dev/null)"
+# 5) progress.yaml sigue con la mutacion exclusiva de mark-done (9+/3-), sin edicion manual nueva
+test "$(git diff --numstat harness/state/progress.yaml)" = "9	3	harness/state/progress.yaml"
+grep -q "estado: done" <(sed -n "/id: m0i-infra-discovery/,/id: m0ii/p" harness/state/progress.yaml)
+# 6) evidencia raw preservada (headers originales intactos, 18 logs previos)
+for f in m0i-01-host-identity m0i-02-storage-inventory m0i-03-nvme-fast-tier m0i-08-gastosia m0i-14-harness-coverage; do
+  grep -q "fecha: 2026-09-27T18:" "docs/phases/23/evidence/$f.log"
+done
+test -f docs/phases/23/evidence/m0i-15-gastosia-backup-sizing.log
+test -f docs/phases/23/evidence/m0i-capacity-correction.log
+# 7) alcance legados incluido en la estimacion
+grep -q "LEGADOS" "$R"
+grep -q "GASTOSIA_LEGACY_BACKUP_ESTIMATE_GIB=20.60" "$R"
+echo "CORRECCION_CAPACIDAD=PASS (395.09 GiB, margen 345.09, raw preservado, diff limpio, solo docs+ledger)"
+
+CORRECCION_CAPACIDAD=PASS (395.09 GiB, margen 345.09, raw preservado, diff limpio, solo docs+ledger)
+exit=0

@@ -1,0 +1,110 @@
+# evidencia: m0i-02-storage-inventory
+fecha: 2026-09-27T18:18:16-06:00
+fase: 23
+comando: ssh -o BatchMode=yes -o ConnectTimeout=10 administrador@192.168.100.24 echo "=== lsblk -d ==="; lsblk -d -o NAME,PATH,SIZE,MODEL,SERIAL,ROTA,TRAN; echo; echo "=== lsblk tree ==="; lsblk -o NAME,PATH,SIZE,TYPE,FSTYPE,FSVER,LABEL,UUID,MOUNTPOINTS,MODEL,SERIAL,ROTA; echo; echo "=== blkid ==="; blkid; echo; echo "=== findmnt ==="; findmnt; echo; echo "=== df -hT ==="; df -hT; echo; echo "=== by-id ==="; ls -l /dev/disk/by-id/
+=== lsblk -d ===
+NAME    PATH           SIZE MODEL                     SERIAL          ROTA TRAN
+sda     /dev/sda     931,5G ST1000LM035-1RK1          WDEV3QGR           1 sata
+nvme0n1 /dev/nvme0n1 465,8G Samsung SSD 970 EVO 500GB S466NX0KC36133J    0 nvme
+
+=== lsblk tree ===
+NAME                      PATH                                SIZE TYPE FSTYPE      FSVER    LABEL     UUID                                   MOUNTPOINTS    MODEL                     SERIAL          ROTA
+sda                       /dev/sda                          931,5G disk                                                                                      ST1000LM035-1RK1          WDEV3QGR           1
+└─sda1                    /dev/sda1                         931,5G part ntfs                 Warehouse 0ADC29B7DC299DC7                       /mnt/warehouse                                              1
+nvme0n1                   /dev/nvme0n1                      465,8G disk                                                                                      Samsung SSD 970 EVO 500GB S466NX0KC36133J    0
+├─nvme0n1p1               /dev/nvme0n1p1                        1G part vfat        FAT32              C069-BE53                              /boot/efi                                                   0
+├─nvme0n1p2               /dev/nvme0n1p2                        2G part ext4        1.0                b0a2ebb3-6189-4893-8964-a1fd861d80a6   /boot                                                       0
+└─nvme0n1p3               /dev/nvme0n1p3                    462,7G part LVM2_member LVM2 001           2SZnVu-tgnd-MLp2-aXVs-83mh-mvmm-yILfWn                                                             0
+  └─ubuntu--vg-ubuntu--lv /dev/mapper/ubuntu--vg-ubuntu--lv 462,7G lvm  ext4        1.0                611446da-869e-4f19-a07d-b345b4cca71a   /                                                           0
+
+=== blkid ===
+/dev/nvme0n1p3: UUID="2SZnVu-tgnd-MLp2-aXVs-83mh-mvmm-yILfWn" TYPE="LVM2_member" PARTUUID="6362b5eb-92dd-4067-81c8-fd68287d41d2"
+/dev/nvme0n1p1: UUID="C069-BE53" BLOCK_SIZE="512" TYPE="vfat" PARTUUID="a94fb0a5-1eb8-4a13-8c28-d4fd6aff6c66"
+/dev/nvme0n1p2: UUID="b0a2ebb3-6189-4893-8964-a1fd861d80a6" BLOCK_SIZE="4096" TYPE="ext4" PARTUUID="c4d75e4f-58db-4e0a-8060-8668d4f30ce5"
+/dev/mapper/ubuntu--vg-ubuntu--lv: UUID="611446da-869e-4f19-a07d-b345b4cca71a" BLOCK_SIZE="4096" TYPE="ext4"
+/dev/sda1: LABEL="Warehouse" BLOCK_SIZE="512" UUID="0ADC29B7DC299DC7" TYPE="ntfs" PARTLABEL="Basic data partition" PARTUUID="69bf94f4-38ce-480e-a126-89dcb6f8af5f"
+
+=== findmnt ===
+TARGET                                                                                          SOURCE                            FSTYPE      OPTIONS
+/                                                                                               /dev/mapper/ubuntu--vg-ubuntu--lv ext4        rw,relatime
+├─/sys                                                                                          sysfs                             sysfs       rw,nosuid,nodev,noexec,relatime
+│ ├─/sys/firmware/efi/efivars                                                                   efivarfs                          efivarfs    rw,nosuid,nodev,noexec,relatime
+│ ├─/sys/kernel/security                                                                        securityfs                        securityfs  rw,nosuid,nodev,noexec,relatime
+│ ├─/sys/fs/cgroup                                                                              cgroup2                           cgroup2     rw,nosuid,nodev,noexec,relatime,nsdelegate,memory_recursiveprot
+│ ├─/sys/fs/pstore                                                                              pstore                            pstore      rw,nosuid,nodev,noexec,relatime
+│ ├─/sys/fs/bpf                                                                                 bpf                               bpf         rw,nosuid,nodev,noexec,relatime,mode=700
+│ ├─/sys/kernel/debug                                                                           debugfs                           debugfs     rw,nosuid,nodev,noexec,relatime
+│ ├─/sys/kernel/tracing                                                                         tracefs                           tracefs     rw,nosuid,nodev,noexec,relatime
+│ ├─/sys/fs/fuse/connections                                                                    fusectl                           fusectl     rw,nosuid,nodev,noexec,relatime
+│ └─/sys/kernel/config                                                                          configfs                          configfs    rw,nosuid,nodev,noexec,relatime
+├─/proc                                                                                         proc                              proc        rw,nosuid,nodev,noexec,relatime
+│ └─/proc/sys/fs/binfmt_misc                                                                    systemd-1                         autofs      rw,relatime,fd=32,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=6145
+│   └─/proc/sys/fs/binfmt_misc                                                                  binfmt_misc                       binfmt_misc rw,nosuid,nodev,noexec,relatime
+├─/dev                                                                                          udev                              devtmpfs    rw,nosuid,relatime,size=16321384k,nr_inodes=4080346,mode=755,inode64
+│ ├─/dev/pts                                                                                    devpts                            devpts      rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000
+│ ├─/dev/shm                                                                                    tmpfs                             tmpfs       rw,nosuid,nodev,inode64
+│ ├─/dev/hugepages                                                                              hugetlbfs                         hugetlbfs   rw,nosuid,nodev,relatime,pagesize=2M
+│ └─/dev/mqueue                                                                                 mqueue                            mqueue      rw,nosuid,nodev,noexec,relatime
+├─/run                                                                                          tmpfs                             tmpfs       rw,nosuid,nodev,noexec,relatime,size=3275636k,mode=755,inode64
+│ ├─/run/lock                                                                                   tmpfs                             tmpfs       rw,nosuid,nodev,noexec,relatime,size=5120k,inode64
+│ ├─/run/user/1000                                                                              tmpfs                             tmpfs       rw,nosuid,nodev,relatime,size=3275632k,nr_inodes=818908,mode=700,uid=1000,gid=1000,inode64
+│ ├─/run/docker/netns/6a8e1f8a5459                                                              nsfs[net:[4026532639]]            nsfs        rw
+│ ├─/run/docker/netns/24cd9505a1e7                                                              nsfs[net:[4026532672]]            nsfs        rw
+│ ├─/run/docker/netns/9b36a0738f69                                                              nsfs[net:[4026532518]]            nsfs        rw
+│ ├─/run/docker/netns/a723215ca9d4                                                              nsfs[net:[4026532652]]            nsfs        rw
+│ ├─/run/docker/netns/205fe8168614                                                              nsfs[net:[4026532587]]            nsfs        rw
+│ ├─/run/docker/netns/a94f2e39f7c4                                                              nsfs[net:[4026532783]]            nsfs        rw
+│ └─/run/docker/netns/f08201f06ca1                                                              nsfs[net:[4026532913]]            nsfs        rw
+├─/boot                                                                                         /dev/nvme0n1p2                    ext4        rw,relatime
+│ └─/boot/efi                                                                                   /dev/nvme0n1p1                    vfat        rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro
+├─/mnt/warehouse                                                                                /dev/sda1                         ntfs3       rw,relatime,uid=1000,gid=1000,iocharset=utf8
+├─/srv/docker/rootfs/overlayfs/b061332c35724a2147df3c76acdd8ba4cace12157b958766e2d66cb3f34e22bb overlay                           overlay     rw,relatime,lowerdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/301/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/254/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/253/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/252/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/251/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/52/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/51/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/34/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/33/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/32/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/31/fs,upperdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/302/fs,workdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/302/work,nouserxattr
+├─/srv/docker/rootfs/overlayfs/b5cb239223e0904f14e6d97786490e8552a011a2172a8b323816fddd0207464f overlay                           overlay     rw,relatime,lowerdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/172/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/171/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/170/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/169/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/168/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/167/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/166/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/165/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/164/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/125/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/124/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/123/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/122/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/121/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/34/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/33/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/32/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/31/fs,upperdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/173/fs,workdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/173/work,nouserxattr
+├─/srv/docker/rootfs/overlayfs/0c79b6b5d1cdf9f2cf5a503b0557e0fc0ba3b463e5a0007632399b431b97926d overlay                           overlay     rw,relatime,lowerdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/26/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/25/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/24/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/23/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/22/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/21/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/20/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/19/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/18/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/17/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/16/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/15/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/14/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/13/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/12/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/11/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/10/fs,upperdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/27/fs,workdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/27/work,nouserxattr
+├─/srv/docker/rootfs/overlayfs/c1b12f0848316fffdfee2ddfcc70e474c1348c31b64a8fe23ed493ceaceb606b overlay                           overlay     rw,relatime,lowerdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/143/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/141/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/140/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/135/fs,upperdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/144/fs,workdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/144/work,nouserxattr
+├─/srv/docker/rootfs/overlayfs/1431d8e01dd62c59bd630c74f018a53d8c82087e6903a1d2f924b48c01a5a843 overlay                           overlay     rw,relatime,lowerdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/295/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/292/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/291/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/290/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/289/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/288/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/287/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/286/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/285/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/284/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/282/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/281/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/274/fs,upperdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/296/fs,workdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/296/work,nouserxattr
+├─/srv/docker/rootfs/overlayfs/612427ee20334e3443d90881b307f9df80977341260a711daae978073aa786bf overlay                           overlay     rw,relatime,lowerdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/146/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/139/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/138/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/137/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/136/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/134/fs,upperdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/147/fs,workdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/147/work,nouserxattr
+└─/srv/docker/rootfs/overlayfs/b796f67478d7f38394767dc80057809fff5a75df4235bb76dfbbba71cf13630b overlay                           overlay     rw,relatime,lowerdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/297/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/294/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/293/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/283/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/280/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/279/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/278/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/277/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/276/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/275/fs:/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/273/fs,upperdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/298/fs,workdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/298/work,nouserxattr
+
+=== df -hT ===
+Filesystem                        Type      Size  Used Avail Use% Mounted on
+tmpfs                             tmpfs     3,2G  2,2M  3,2G   1% /run
+efivarfs                          efivarfs  100K   91K  4,0K  96% /sys/firmware/efi/efivars
+/dev/mapper/ubuntu--vg-ubuntu--lv ext4      455G   19G  417G   5% /
+tmpfs                             tmpfs      16G     0   16G   0% /dev/shm
+tmpfs                             tmpfs     5,0M     0  5,0M   0% /run/lock
+/dev/nvme0n1p2                    ext4      2,0G  298M  1,5G  17% /boot
+/dev/nvme0n1p1                    vfat      1,1G  6,2M  1,1G   1% /boot/efi
+/dev/sda1                         ntfs3     932G  489G  443G  53% /mnt/warehouse
+tmpfs                             tmpfs     3,2G   12K  3,2G   1% /run/user/1000
+
+=== by-id ===
+total 0
+lrwxrwxrwx 1 root root  9 ago 26 03:52 ata-ST1000LM035-1RK172_WDEV3QGR -> ../../sda
+lrwxrwxrwx 1 root root 10 ago 26 03:52 ata-ST1000LM035-1RK172_WDEV3QGR-part1 -> ../../sda1
+lrwxrwxrwx 1 root root 10 ago 26 03:52 dm-name-ubuntu--vg-ubuntu--lv -> ../../dm-0
+lrwxrwxrwx 1 root root 10 ago 26 03:52 dm-uuid-LVM-wUmA2uxeSdeEPP4popnFCxTzQsMe6ZmO9M5kL68h1r8gPUBhdreXLQvDpA41p4VM -> ../../dm-0
+lrwxrwxrwx 1 root root 15 ago 26 03:52 lvm-pv-uuid-2SZnVu-tgnd-MLp2-aXVs-83mh-mvmm-yILfWn -> ../../nvme0n1p3
+lrwxrwxrwx 1 root root 13 ago 26 03:52 nvme-eui.0025385c81b1453b -> ../../nvme0n1
+lrwxrwxrwx 1 root root 15 ago 26 03:52 nvme-eui.0025385c81b1453b-part1 -> ../../nvme0n1p1
+lrwxrwxrwx 1 root root 15 ago 26 03:52 nvme-eui.0025385c81b1453b-part2 -> ../../nvme0n1p2
+lrwxrwxrwx 1 root root 15 ago 26 03:52 nvme-eui.0025385c81b1453b-part3 -> ../../nvme0n1p3
+lrwxrwxrwx 1 root root 13 ago 26 03:52 nvme-Samsung_SSD_970_EVO_500GB_S466NX0KC36133J -> ../../nvme0n1
+lrwxrwxrwx 1 root root 13 ago 26 03:52 nvme-Samsung_SSD_970_EVO_500GB_S466NX0KC36133J_1 -> ../../nvme0n1
+lrwxrwxrwx 1 root root 15 ago 26 03:52 nvme-Samsung_SSD_970_EVO_500GB_S466NX0KC36133J_1-part1 -> ../../nvme0n1p1
+lrwxrwxrwx 1 root root 15 ago 26 03:52 nvme-Samsung_SSD_970_EVO_500GB_S466NX0KC36133J_1-part2 -> ../../nvme0n1p2
+lrwxrwxrwx 1 root root 15 ago 26 03:52 nvme-Samsung_SSD_970_EVO_500GB_S466NX0KC36133J_1-part3 -> ../../nvme0n1p3
+lrwxrwxrwx 1 root root 15 ago 26 03:52 nvme-Samsung_SSD_970_EVO_500GB_S466NX0KC36133J-part1 -> ../../nvme0n1p1
+lrwxrwxrwx 1 root root 15 ago 26 03:52 nvme-Samsung_SSD_970_EVO_500GB_S466NX0KC36133J-part2 -> ../../nvme0n1p2
+lrwxrwxrwx 1 root root 15 ago 26 03:52 nvme-Samsung_SSD_970_EVO_500GB_S466NX0KC36133J-part3 -> ../../nvme0n1p3
+lrwxrwxrwx 1 root root  9 ago 26 03:52 scsi-0ATA_ST1000LM035-1RK1_WDEV3QGR -> ../../sda
+lrwxrwxrwx 1 root root 10 ago 26 03:52 scsi-0ATA_ST1000LM035-1RK1_WDEV3QGR-part1 -> ../../sda1
+lrwxrwxrwx 1 root root  9 ago 26 03:52 scsi-1ATA_ST1000LM035-1RK172_WDEV3QGR -> ../../sda
+lrwxrwxrwx 1 root root 10 ago 26 03:52 scsi-1ATA_ST1000LM035-1RK172_WDEV3QGR-part1 -> ../../sda1
+lrwxrwxrwx 1 root root  9 ago 26 03:52 scsi-35000c500ac970d02 -> ../../sda
+lrwxrwxrwx 1 root root 10 ago 26 03:52 scsi-35000c500ac970d02-part1 -> ../../sda1
+lrwxrwxrwx 1 root root  9 ago 26 03:52 scsi-SATA_ST1000LM035-1RK1_WDEV3QGR -> ../../sda
+lrwxrwxrwx 1 root root 10 ago 26 03:52 scsi-SATA_ST1000LM035-1RK1_WDEV3QGR-part1 -> ../../sda1
+lrwxrwxrwx 1 root root  9 ago 26 03:52 wwn-0x5000c500ac970d02 -> ../../sda
+lrwxrwxrwx 1 root root 10 ago 26 03:52 wwn-0x5000c500ac970d02-part1 -> ../../sda1
+exit=0

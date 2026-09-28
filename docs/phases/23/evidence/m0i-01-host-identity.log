@@ -1,0 +1,40 @@
+# evidencia: m0i-01-host-identity
+fecha: 2026-09-27T18:18:15-06:00
+fase: 23
+comando: ssh -o BatchMode=yes -o ConnectTimeout=10 administrador@192.168.100.24 echo "=== hostnamectl ==="; hostnamectl; echo; echo "=== os-release ==="; cat /etc/os-release; echo; echo "=== uname ==="; uname -a; echo; echo "=== uptime ==="; uptime
+=== hostnamectl ===
+ Static hostname: lenovosrv
+       Icon name: computer-laptop
+         Chassis: laptop 💻
+      Machine ID: 254bbce90ec34fb1b7acec4f2525fc1d
+         Boot ID: 0a8d479316ca415ab6eeffd72c7975f5
+Operating System: Ubuntu 24.04.4 LTS
+          Kernel: Linux 6.8.0-138-generic
+    Architecture: x86-64
+ Hardware Vendor: Lenovo
+  Hardware Model: Lenovo Y520-15IKBN
+Firmware Version: 4KCN40WW
+   Firmware Date: Tue 2017-10-17
+    Firmware Age: 8y 11month 1w 4d
+
+=== os-release ===
+PRETTY_NAME="Ubuntu 24.04.4 LTS"
+NAME="Ubuntu"
+VERSION_ID="24.04"
+VERSION="24.04.4 LTS (Noble Numbat)"
+VERSION_CODENAME=noble
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=noble
+LOGO=ubuntu-logo
+
+=== uname ===
+Linux lenovosrv 6.8.0-138-generic #138-Ubuntu SMP PREEMPT_DYNAMIC Fri Jul 31 22:41:49 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+
+=== uptime ===
+ 00:18:16 up 32 days, 20:25,  1 user,  load average: 0,17, 0,05, 0,01
+exit=0

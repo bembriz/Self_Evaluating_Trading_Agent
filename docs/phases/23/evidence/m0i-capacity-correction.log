@@ -1,0 +1,89 @@
+# evidencia: m0i-capacity-correction
+fecha: 2026-09-27T18:41:31-06:00
+fase: 23
+comando: bash -c 
+set -e
+python3 - <<PY
+# --- Unidad: GiB (2^30). Fuentes: evidencias raw sin editar ---
+# NVME libre: m0i-15-gastosia-backup-sizing.log (df -B1 avail) = 447422193664 B
+# (m0i-03: 447422296064 B minutos antes; deriva 102400 B, irrelevante)
+FREE = 447422193664
+# activo: m0i-08 / m0i-15 du -sb /mnt/warehouse/GastosIA = 597764 B
+ACTIVE = 597764
+# legado: m0i-08 / m0i-15 Hyper-V 21885878272 + PostgreSQL 237550396
+LEGACY = 21885878272 + 237550396
+# config/DB/docker medido (m0i-15): dump logico gastos_ia 8503kB=8707072B,
+# cred 2368, Caddyfile 4151, caddy /data 40395, /config 8535, samba vol 4096
+CFG_DB_DOCKER_MEASURED = 8707072 + 2368 + 4151 + 40395 + 8535 + 4096
+# imagen local gastos-ia-app:latest = 944MB (docker images, decimal) = 944000000 B
+IMAGE = 944000000
+# ALOCACION CONSERVADORA config/code/docker = 1 GiB exacto:
+# cubre imagen 0.879 + medido 0.008 + margen 0.112 GiB para el build context/compose
+# de /srv/docker/gastos-ia NO listable sin root (sudo -n NO disponible; m0i-07b)
+ALLOC = 2**30
+assert CFG_DB_DOCKER_MEASURED + IMAGE < ALLOC, "alocacion debe cubrir medido+imagen"
+def gib(b): return b / 2**30
+free = gib(FREE); active = gib(ACTIVE); legacy = gib(LEGACY)
+cfg = gib(ALLOC)
+total = active + legacy + cfg
+expected = free - total
+margin = expected - 50
+print("=== CORRECCION DE CAPACIDAD M0-I (unidad: GiB) ===")
+print()
+print("VALORES ORIGINALES INCONSISTENTES (reporte M0-I v1):")
+print("  NVME_FREE_GB=417")
+print("  GASTOSIA_LEGACY_HDD_GB=20.60")
+print("  EXPECTED_NVME_FREE_AFTER_BACKUP_GB=416.6  <- INCONSISTENTE: solo descontaba activo+config (~0.1 GB),")
+print("  resumen ejecutivo: backup ~0.1 GB          <- excluia ilegitimamente los LEGADOS")
+print()
+print("FUENTES (raw sin editar): m0i-03, m0i-08, m0i-15")
+print(f"  NVME_FREE_BEFORE_BACKUP_GIB        = {free:.2f}  ({FREE} B)")
+print(f"  GASTOSIA_ACTIVE_BACKUP_ESTIMATE_GIB= {active:.4f} ({ACTIVE} B)")
+print(f"  GASTOSIA_LEGACY_BACKUP_ESTIMATE_GIB= {legacy:.2f}  ({LEGACY} B = Hyper-V 21885878272 + PostgreSQL 237550396)")
+print(f"  GASTOSIA_CONFIG_DB_DOCKER_ESTIMATE_GIB = {cfg:.2f}  (alocacion conservadora 1 GiB = imagen 0.879 + medido 0.008 + margen 0.112; medido sin imagen = {gib(CFG_DB_DOCKER_MEASURED):.4f} GiB)")
+print(f"  GASTOSIA_TOTAL_BACKUP_ESTIMATE_GIB = {total:.2f}")
+print()
+print(f"  EXPECTED_NVME_FREE_AFTER_BACKUP_GIB = {expected:.2f}")
+print(f"  POST_BACKUP_MARGIN_ABOVE_MIN_GIB    = {margin:.2f}")
+print()
+fits = "YES" if expected >= 50 else "NO"
+pol = "PASS" if margin >= 0 else "FAIL"
+print(f"  GASTOSIA_BACKUP_FITS_NVME={fits}")
+print(f"  SSD_MIN_FREE_POLICY_AFTER_BACKUP={pol}")
+print()
+print("RAZON DE LA CORRECCION: el alcance de preservacion M0-II aprobado incluye ACTIVO + LEGADOS + config/DB/docker;")
+print("la estimacion original omitia los legados (~20.60 GiB) y por tanto sobreestimaba el espacio libre resultante.")
+# aserciones de validacion
+assert 395.0 <= expected <= 396.0, f"esperado en rango 395-396, obtuvo {expected:.2f}"
+assert abs(free - 416.69) < 0.05
+assert abs(legacy - 20.60) < 0.01
+assert margin > 300
+assert fits == "YES" and pol == "PASS"
+print("VALIDACION: rango 395-396 GiB OK; politica SSD OK; aserciones=PASS")
+PY
+
+=== CORRECCION DE CAPACIDAD M0-I (unidad: GiB) ===
+
+VALORES ORIGINALES INCONSISTENTES (reporte M0-I v1):
+  NVME_FREE_GB=417
+  GASTOSIA_LEGACY_HDD_GB=20.60
+  EXPECTED_NVME_FREE_AFTER_BACKUP_GB=416.6  <- INCONSISTENTE: solo descontaba activo+config (~0.1 GB),
+  resumen ejecutivo: backup ~0.1 GB          <- excluia ilegitimamente los LEGADOS
+
+FUENTES (raw sin editar): m0i-03, m0i-08, m0i-15
+  NVME_FREE_BEFORE_BACKUP_GIB        = 416.69  (447422193664 B)
+  GASTOSIA_ACTIVE_BACKUP_ESTIMATE_GIB= 0.0006 (597764 B)
+  GASTOSIA_LEGACY_BACKUP_ESTIMATE_GIB= 20.60  (22123428668 B = Hyper-V 21885878272 + PostgreSQL 237550396)
+  GASTOSIA_CONFIG_DB_DOCKER_ESTIMATE_GIB = 1.00  (alocacion conservadora 1 GiB = imagen 0.879 + medido 0.008 + margen 0.112; medido sin imagen = 0.0082 GiB)
+  GASTOSIA_TOTAL_BACKUP_ESTIMATE_GIB = 21.60
+
+  EXPECTED_NVME_FREE_AFTER_BACKUP_GIB = 395.09
+  POST_BACKUP_MARGIN_ABOVE_MIN_GIB    = 345.09
+
+  GASTOSIA_BACKUP_FITS_NVME=YES
+  SSD_MIN_FREE_POLICY_AFTER_BACKUP=PASS
+
+RAZON DE LA CORRECCION: el alcance de preservacion M0-II aprobado incluye ACTIVO + LEGADOS + config/DB/docker;
+la estimacion original omitia los legados (~20.60 GiB) y por tanto sobreestimaba el espacio libre resultante.
+VALIDACION: rango 395-396 GiB OK; politica SSD OK; aserciones=PASS
+exit=0

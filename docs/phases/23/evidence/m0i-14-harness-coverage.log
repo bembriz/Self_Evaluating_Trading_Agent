@@ -1,0 +1,61 @@
+# evidencia: m0i-14-harness-coverage
+fecha: 2026-09-27T18:30:48-06:00
+fase: 23
+comando: uv run pytest harness/tests -q --cov=harness/scripts --cov-branch --cov-report=json:docs/phases/23/evidence/coverage.json --cov-fail-under=80
+...............FF....................................................
+ERROR: Coverage failure: total of 33 is less than fail-under=80
+                                                                         [100%]
+=================================== FAILURES ===================================
+____________________ test_dependencias_presentes_genera_pdf ____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xuum/pytest-2/test_dependencias_presentes_ge0')
+
+    def test_dependencias_presentes_genera_pdf(tmp_path):
+        md = tmp_path / "mini.md"
+        md.write_text(
+            "# Título\n\n| A | B |\n|---|---|\n| 1 | 2 |\n\n```bash\nexit=0\n```\n",
+            encoding="utf-8",
+        )
+        rc = gen_pdf.main([str(md)])
+>       assert rc == 0
+E       assert 65 == 0
+
+harness/tests/test_gen_pdf.py:11: AssertionError
+----------------------------- Captured stderr call -----------------------------
+ERROR: faltan dependencias para PDF.
+Detalle: No module named 'markdown'
+
+Este script requiere los dev-dependencies 'markdown' y 'weasyprint'.
+Su instalación está sujeta a la política de dependencias del proyecto:
+1) Genera/usa el Dependency Proposal correspondiente (skill infra-control).
+2) Tras tu autorización: uv add --dev markdown weasyprint
+3) Reintenta este comando.
+_____________________ test_entrada_inexistente_devuelve_66 _____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xuum/pytest-2/test_entrada_inexistente_devue0')
+capsys = <_pytest.capture.CaptureFixture object at 0x7189a2e2b200>
+
+    def test_entrada_inexistente_devuelve_66(tmp_path, capsys):
+        rc = gen_pdf.main([str(tmp_path / "no.md")])
+>       assert rc == 66
+E       assert 65 == 66
+
+harness/tests/test_gen_pdf.py:18: AssertionError
+----------------------------- Captured stderr call -----------------------------
+ERROR: faltan dependencias para PDF.
+Detalle: No module named 'markdown'
+
+Este script requiere los dev-dependencies 'markdown' y 'weasyprint'.
+Su instalación está sujeta a la política de dependencias del proyecto:
+1) Genera/usa el Dependency Proposal correspondiente (skill infra-control).
+2) Tras tu autorización: uv add --dev markdown weasyprint
+3) Reintenta este comando.
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Coverage JSON written to file docs/phases/23/evidence/coverage.json
+FAIL Required test coverage of 80% not reached. Total coverage: 33.29%
+=========================== short test summary info ============================
+FAILED harness/tests/test_gen_pdf.py::test_dependencias_presentes_genera_pdf
+FAILED harness/tests/test_gen_pdf.py::test_entrada_inexistente_devuelve_66 - ...
+exit=1

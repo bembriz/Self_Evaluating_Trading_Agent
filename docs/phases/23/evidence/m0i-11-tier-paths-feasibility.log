@@ -1,0 +1,28 @@
+# evidencia: m0i-11-tier-paths-feasibility
+fecha: 2026-09-27T18:23:17-06:00
+fase: 23
+comando: ssh -o BatchMode=yes -o ConnectTimeout=10 administrador@192.168.100.24 echo "=== /srv (listado) ==="; ls -la /srv 2>&1; echo; echo "=== existencia de rutas objetivo (sin crear) ==="; for p in /srv/data /srv/fast /srv/fast/medallion /srv/fast/medallion/cache /srv/fast/medallion/replay-work /srv/fast/medallion/tmp /srv/fast/medallion/indexes /srv/data/medallion; do if [ -e "$p" ]; then echo "EXISTS: $p"; else echo "ABSENT: $p"; fi; done; echo; echo "=== /srv en filesystem NVMe? ==="; findmnt -n -o TARGET,SOURCE,FSTYPE /; stat -c "%n device=%d" /srv /srv/docker 2>&1; echo; echo "=== marker LENOVO_DATA ==="; ls -la /srv/data/.lenovosrv-data-volume 2>&1
+=== /srv (listado) ===
+total 12
+drwxr-xr-x  3 root root 4096 ago 26 04:51 .
+drwxr-xr-x 23 root root 4096 ago 26 03:46 ..
+drwx--x--- 14 root root 4096 sep  3 03:40 docker
+
+=== existencia de rutas objetivo (sin crear) ===
+ABSENT: /srv/data
+ABSENT: /srv/fast
+ABSENT: /srv/fast/medallion
+ABSENT: /srv/fast/medallion/cache
+ABSENT: /srv/fast/medallion/replay-work
+ABSENT: /srv/fast/medallion/tmp
+ABSENT: /srv/fast/medallion/indexes
+ABSENT: /srv/data/medallion
+
+=== /srv en filesystem NVMe? ===
+/      /dev/mapper/ubuntu--vg-ubuntu--lv ext4
+/srv device=64512
+/srv/docker device=64512
+
+=== marker LENOVO_DATA ===
+ls: cannot access '/srv/data/.lenovosrv-data-volume': No such file or directory
+exit=2

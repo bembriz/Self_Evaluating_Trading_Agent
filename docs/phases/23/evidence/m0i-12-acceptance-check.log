@@ -1,0 +1,24 @@
+# evidencia: m0i-12-acceptance-check
+fecha: 2026-09-27T18:26:50-06:00
+fase: 23
+comando: bash -c 
+set -e
+R=docs/phases/23/m0-i-infrastructure-revalidation.md
+test -f "$R"
+for f in m0i-01-host-identity m0i-02-storage-inventory m0i-03-nvme-fast-tier m0i-04-hdd-warehouse m0i-05-docker-inventory m0i-06-postgres-topology m0i-07b-proxy-monitoring-fix m0i-08-gastosia m0i-09-paper-certification m0i-10-global-governance; do
+  test -f "docs/phases/23/evidence/$f.log"
+  grep -q "exit=0" "docs/phases/23/evidence/$f.log"
+done
+grep -q "exit=1" docs/phases/23/evidence/m0i-07-proxy-monitoring.log
+grep -q "ata-ST1000LM035-1RK172_WDEV3QGR" docs/phases/23/evidence/m0i-02-storage-inventory.log
+grep -q "DockerRootDir=/srv/docker" docs/phases/23/evidence/m0i-03-nvme-fast-tier.log
+grep -q "gastos_ia" docs/phases/23/evidence/m0i-06-postgres-topology.log
+grep -q "NO formatear ni borrar jamás" docs/phases/23/evidence/m0i-10-global-governance.log
+for campo in HOST KERNEL PRIMARY_DISK SECONDARY_DISK NVME_FREE_GB HDD_FREE_GB DOCKER_ROOT SSD_MIN_FREE_POLICY POSTGRES_ON_NVME GASTOSIA_DB_COUPLED_TO_SETA GASTOSIA_BACKUP_FITS_NVME SHARED_PLATFORM_FEASIBLE GLOBAL_STORAGE_GOVERNANCE_CONFLICT_PENDING WALK_FORWARD_READS HOLDOUT_STATE MEDALLION_M0I; do
+  grep -q "$campo" "$R" || { echo "FALTA CAMPO: $campo"; exit 1; }
+done
+git rev-parse HEAD | grep -q 12e988eb903585d06a99391e0614a980fd2c1e9c
+echo "ACEPTACION_M0I=14/14_PASS; campos requeridos presentes; baseline HEAD verificado"
+
+FALTA CAMPO: PRIMARY_DISK
+exit=1

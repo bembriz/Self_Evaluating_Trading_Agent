@@ -1,0 +1,54 @@
+# evidencia: m0i-13-harness-tests
+fecha: 2026-09-27T18:28:52-06:00
+fase: 23
+comando: uv run pytest harness/tests -q
+...............FF....................................................    [100%]
+=================================== FAILURES ===================================
+____________________ test_dependencias_presentes_genera_pdf ____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xuum/pytest-0/test_dependencias_presentes_ge0')
+
+    def test_dependencias_presentes_genera_pdf(tmp_path):
+        md = tmp_path / "mini.md"
+        md.write_text(
+            "# Título\n\n| A | B |\n|---|---|\n| 1 | 2 |\n\n```bash\nexit=0\n```\n",
+            encoding="utf-8",
+        )
+        rc = gen_pdf.main([str(md)])
+>       assert rc == 0
+E       assert 65 == 0
+
+harness/tests/test_gen_pdf.py:11: AssertionError
+----------------------------- Captured stderr call -----------------------------
+ERROR: faltan dependencias para PDF.
+Detalle: No module named 'markdown'
+
+Este script requiere los dev-dependencies 'markdown' y 'weasyprint'.
+Su instalación está sujeta a la política de dependencias del proyecto:
+1) Genera/usa el Dependency Proposal correspondiente (skill infra-control).
+2) Tras tu autorización: uv add --dev markdown weasyprint
+3) Reintenta este comando.
+_____________________ test_entrada_inexistente_devuelve_66 _____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xuum/pytest-0/test_entrada_inexistente_devue0')
+capsys = <_pytest.capture.CaptureFixture object at 0x7ab988ec3a70>
+
+    def test_entrada_inexistente_devuelve_66(tmp_path, capsys):
+        rc = gen_pdf.main([str(tmp_path / "no.md")])
+>       assert rc == 66
+E       assert 65 == 66
+
+harness/tests/test_gen_pdf.py:18: AssertionError
+----------------------------- Captured stderr call -----------------------------
+ERROR: faltan dependencias para PDF.
+Detalle: No module named 'markdown'
+
+Este script requiere los dev-dependencies 'markdown' y 'weasyprint'.
+Su instalación está sujeta a la política de dependencias del proyecto:
+1) Genera/usa el Dependency Proposal correspondiente (skill infra-control).
+2) Tras tu autorización: uv add --dev markdown weasyprint
+3) Reintenta este comando.
+=========================== short test summary info ============================
+FAILED harness/tests/test_gen_pdf.py::test_dependencias_presentes_genera_pdf
+FAILED harness/tests/test_gen_pdf.py::test_entrada_inexistente_devuelve_66 - ...
+exit=1

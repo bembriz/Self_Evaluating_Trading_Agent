@@ -1,0 +1,41 @@
+# evidencia: m0i-04-hdd-warehouse
+fecha: 2026-09-27T18:18:58-06:00
+fase: 23
+comando: ssh -o BatchMode=yes -o ConnectTimeout=10 administrador@192.168.100.24 echo "=== fstab ==="; cat /etc/fstab; echo; echo "=== findmnt warehouse ==="; findmnt /mnt/warehouse; echo; echo "=== df warehouse BG ==="; df -BG /mnt/warehouse; echo; echo "=== df warehouse bytes ==="; df -B1 --output=size,used,avail,pcent,target /mnt/warehouse; echo; echo "=== procs usando warehouse ==="; fuser -vm /mnt/warehouse 2>&1 || true; echo; echo "=== referencias a warehouse en configs sistema ==="; grep -rn "warehouse" /etc/fstab /etc/systemd/system /etc/samba/smb.conf 2>/dev/null || echo "(sin referencias adicionales)"
+=== fstab ===
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+# / was on /dev/ubuntu-vg/ubuntu-lv during curtin installation
+/dev/disk/by-id/dm-uuid-LVM-wUmA2uxeSdeEPP4popnFCxTzQsMe6ZmO9M5kL68h1r8gPUBhdreXLQvDpA41p4VM / ext4 defaults 0 1
+# /boot was on /dev/nvme0n1p2 during curtin installation
+/dev/disk/by-uuid/b0a2ebb3-6189-4893-8964-a1fd861d80a6 /boot ext4 defaults 0 1
+# /boot/efi was on /dev/nvme0n1p1 during curtin installation
+/dev/disk/by-uuid/C069-BE53 /boot/efi vfat defaults 0 1
+/swap.img	none	swap	sw	0	0
+UUID=0ADC29B7DC299DC7 /mnt/warehouse ntfs3 defaults,nofail,uid=1000,gid=1000 0 0
+
+=== findmnt warehouse ===
+TARGET         SOURCE    FSTYPE OPTIONS
+/mnt/warehouse /dev/sda1 ntfs3  rw,relatime,uid=1000,gid=1000,iocharset=utf8
+
+=== df warehouse BG ===
+Filesystem     1G-blocks  Used Available Use% Mounted on
+/dev/sda1           932G  489G      443G  53% /mnt/warehouse
+
+=== df warehouse bytes ===
+    1B-blocks         Used        Avail Use% Mounted on
+1000203087872 524616253440 475586834432  53% /mnt/warehouse
+
+=== procs usando warehouse ===
+                     USER        PID ACCESS COMMAND
+/mnt/warehouse:      root     kernel mount /mnt/warehouse
+
+=== referencias a warehouse en configs sistema ===
+/etc/fstab:15:UUID=0ADC29B7DC299DC7 /mnt/warehouse ntfs3 defaults,nofail,uid=1000,gid=1000 0 0
+(sin referencias adicionales)
+exit=0
