@@ -1,0 +1,7 @@
+# evidencia: dbg-sudo-path
+fecha: 2026-09-27T20:49:46-06:00
+fase: 23
+comando: bash -c echo "LOCAL_LEN=${#SUDO_PASS}"; ( printf "%s\n" "$SUDO_PASS"; printf "echo REMOTE_DBG_OK\n" ) | ssh -o BatchMode=yes administrador@192.168.100.24 "sudo -S -p \"\" -v && sudo -n bash -s"
+LOCAL_LEN=11
+sudo: a password is required
+exit=1

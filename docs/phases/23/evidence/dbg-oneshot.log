@@ -1,0 +1,6 @@
+# evidencia: dbg-oneshot
+fecha: 2026-09-27T20:50:42-06:00
+fase: 23
+comando: bash -c ( printf "%s\n" "$SUDO_PASS"; printf "echo ONESHOT_EV_OK\n" ) | ssh -o BatchMode=yes administrador@192.168.100.24 "sudo -S -p \"\" bash -s"
+ONESHOT_EV_OK
+exit=0

@@ -1,0 +1,21 @@
+# evidencia: m1c-01-template-update
+fecha: 2026-09-27T22:11:02-06:00
+fase: 23
+comando: bash -c ( printf "%s\n" "$SUDO_PASS"; cat docs/phases/23/evidence/m1c-01-template-update.sh ) | ssh -o BatchMode=yes administrador@192.168.100.24 "sudo -S -p \"\" bash -s"
+== antes: refs activas ==
+14:      - /mnt/warehouse/GastosIA:/data/gastos
+48:      - /mnt/warehouse/GastosIA:/shares/gastos
+== backup ==
+OWN_BEFORE=1000:1000
+== sed ==
+/srv/docker/gastos-ia/repo/deployment/docker/compose.yaml administrador:administrador 664
+/srv/docker/gastos-ia/repo/deployment/docker/compose.yaml.bak-m1c administrador:administrador 664
+== nuevas refs ==
+14:      - /srv/data/gastosia:/data/gastos
+48:      - /srv/data/gastosia:/shares/gastos
+== refs activas restantes en repo (excluye .git/.bak) ==
+ZERO_ACTIVE_REFS
+== estado git del repo (solo lectura) ==
+NOT_GIT_REPO
+TEMPLATE_UPDATED_OK
+exit=0

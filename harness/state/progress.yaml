@@ -1047,8 +1047,9 @@ phases:
       - docs/phases/23/m0-ii-gastosia-rescue.md
     - id: m1-storage
       descripcion: Secondary HDD reformat and /srv/data mount
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/23/evidence/m1b-09-validate.log
     - id: m2-platform
       descripcion: Shared platform directory and network foundation
       estado: pending
@@ -1932,4 +1933,8 @@ time_log:
   fase: '23'
   evento: done
   detalle: m0ii-gastosia-rescue
+- fecha: '2026-09-27'
+  fase: '23'
+  evento: done
+  detalle: m1-storage
 blockers: []

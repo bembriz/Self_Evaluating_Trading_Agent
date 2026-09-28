@@ -1,0 +1,14 @@
+# evidencia: m1b-06-structure
+fecha: 2026-09-27T20:52:06-06:00
+fase: 23
+comando: bash -c ( printf "%s\n" "$SUDO_PASS"; cat docs/phases/23/evidence/m1b-06-structure.sh ) | ssh -o BatchMode=yes administrador@192.168.100.24 "sudo -S -p \"\" bash -s"
+total 40
+drwxr-xr-x 6 root          root           4096 sep 28 02:52 .
+drwxr-xr-x 5 root          root           4096 sep 28 02:52 ..
+drwxr-xr-x 2 administrador administrador  4096 sep 28 02:52 backups
+drwxr-xr-x 2 administrador administrador  4096 sep 28 02:52 gastosia
+-rw-r--r-- 1 root          root            109 sep 28 02:52 .lenovosrv-data-volume
+drwx------ 2 root          root          16384 sep 28 02:51 lost+found
+drwxr-xr-x 2 administrador administrador  4096 sep 28 02:52 medallion
+STRUCTURE_OK
+exit=0

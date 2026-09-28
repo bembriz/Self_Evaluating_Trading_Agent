@@ -1,0 +1,25 @@
+# evidencia: m1b-10-final-check
+fecha: 2026-09-27T20:54:08-06:00
+fase: 23
+comando: bash -c ssh -o BatchMode=yes administrador@192.168.100.24 bash -s < docs/phases/23/evidence/m1b-10-final-check.sh
+== containers ==
+gastos-ia-app | Up 58 seconds
+gastos-ia-samba | Up 58 seconds (healthy)
+gastos-ia-caddy | Up 3 weeks
+/gastos-ia-app restarts=0
+/gastos-ia-samba restarts=0
+/gastos-ia-app health=none
+/gastos-ia-samba health=healthy
+== lsblk fresco ==
+sda                       
+└─sda1 ext4   LENOVO_DATA /srv/data
+== fstab ==
+15:#UUID=0ADC29B7DC299DC7 /mnt/warehouse ntfs3 defaults,nofail,uid=1000,gid=1000 0 0
+16:UUID=10fff707-60e4-4321-afa0-a3c4704d9e8d /srv/data ext4 defaults,nofail 0 2
+== df ==
+Filesystem                         Size  Used Avail Use% Mounted on
+/dev/sda1                          916G  688K  870G   1% /srv/data
+/dev/mapper/ubuntu--vg-ubuntu--lv  455G   40G  396G  10% /
+== integridad rápida restaurado ==
+FINAL_CHECK_OK
+exit=0

@@ -1,0 +1,21 @@
+# evidencia: m1b-05-mount-fstab
+fecha: 2026-09-27T20:52:04-06:00
+fase: 23
+comando: bash -c ( printf "%s\n" "$SUDO_PASS"; cat docs/phases/23/evidence/m1b-05-mount-fstab.sh ) | ssh -o BatchMode=yes administrador@192.168.100.24 "sudo -S -p \"\" bash -s"
+NEW_UUID=10fff707-60e4-4321-afa0-a3c4704d9e8d
+== mount ==
+== fstab: comentar línea antigua del warehouse ==
+15:UUID=0ADC29B7DC299DC7 /mnt/warehouse ntfs3 defaults,nofail,uid=1000,gid=1000 0 0
+== fstab: añadir /srv/data por UUID ==
+== marker ==
+== validación ==
+/dev/sda1 /srv/data ext4   10fff707-60e4-4321-afa0-a3c4704d9e8d
+LENOVO_DATA
+uuid=10fff707-60e4-4321-afa0-a3c4704d9e8d
+mounted_at=/srv/data
+created=2026-09-28T02:52:06+00:00
+-- fstab relevante --
+#UUID=0ADC29B7DC299DC7 /mnt/warehouse ntfs3 defaults,nofail,uid=1000,gid=1000 0 0
+UUID=10fff707-60e4-4321-afa0-a3c4704d9e8d /srv/data ext4 defaults,nofail 0 2
+MOUNT_FSTAB_MARKER_OK
+exit=0

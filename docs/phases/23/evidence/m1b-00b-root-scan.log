@@ -1,0 +1,36 @@
+# evidencia: m1b-00b-root-scan
+fecha: 2026-09-27T20:51:03-06:00
+fase: 23
+comando: bash -c ( printf "%s\n" "$SUDO_PASS"; cat docs/phases/23/evidence/m1b-00b-root-scan.sh ) | ssh -o BatchMode=yes administrador@192.168.100.24 "sudo -S -p \"\" bash -s"
+== ls project dir ==
+total 28
+drwxr-xr-x  4 root          root          4096 sep  3 03:40 .
+drwx--x--- 14 root          root          4096 sep  3 03:40 ..
+-rw-r--r--  1 root          root            55 sep  3 03:40 Caddyfile
+-rw-r--r--  1 root          root          1298 sep  3 03:40 compose.yaml
+drwxr-xr-x  2 root          root          4096 sep  3 03:40 cred
+-rw-------  1 root          root           955 sep  3 03:40 .env
+drwxrwxr-x 13 administrador administrador 4096 ago 19 15:16 repo
+== compose files (refs relevantes) ==
+FILE=/srv/docker/gastos-ia/compose.yaml
+8:    image: gastos-ia-app:latest
+9:    container_name: gastos-ia-app
+11:    env_file:
+13:    volumes:
+14:      - /mnt/warehouse/GastosIA:/data/gastos
+21:    image: caddy:2-alpine
+22:    container_name: gastos-ia-caddy
+24:    ports:
+27:    volumes:
+37:    image: servercontainers/samba:smbd-only-latest
+38:    container_name: gastos-ia-samba
+40:    ports:
+46:      SAMBA_VOLUME_CONFIG_gastos: "[GastosIA]; path=/shares/gastos; valid users = ruben esme; guest ok = no; read only = no; browseable = yes"
+47:    volumes:
+48:      - /mnt/warehouse/GastosIA:/shares/gastos
+56:volumes:
+== caddy config refs ==
+/srv/docker/gastos-ia/Caddyfile:3:	reverse_proxy app:8000
+/srv/docker/gastos-ia/repo/deployment/docker/Caddyfile:3:	reverse_proxy app:8000
+== ROOT_SCAN_OK ==
+exit=0

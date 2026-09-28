@@ -1,0 +1,29 @@
+# evidencia: m1c-03-prod-unchanged
+fecha: 2026-09-27T22:12:08-06:00
+fase: 23
+comando: bash -c ssh -o BatchMode=yes administrador@192.168.100.24 bash -s < docs/phases/23/evidence/m1c-03-prod-unchanged.sh
+== gastos-ia (debe conservar StartedAt de M1-B y restarts=0) ==
+/gastos-ia-app id=f0866dba0802afe323af07bab1d2eb3510330e3e7e8d3f9f3c6313f9cc9904fc started=2026-09-28T02:53:15.850515764Z restarts=0 status=running
+/gastos-ia-samba id=f9542a5b0b22ec00350e29b78f8f17ebdad37307b3985a1ba3c463ee17f3e69e started=2026-09-28T02:53:15.848610612Z restarts=0 status=running
+/gastos-ia-caddy id=612427ee20334e3443d90881b307f9df80977341260a711daae978073aa786bf started=2026-09-03T03:43:05.671661606Z restarts=0 status=running
+== binds activos GastosIA (solo /srv/data) ==
+/gastos-ia-app => /srv/data/gastosia->/data/gastos /srv/docker/gastos-ia/cred->/app/cred 
+/gastos-ia-samba => /srv/data/gastosia->/shares/gastos /srv/docker/volumes/1d34dbebc186166377fc89cd0407d44c8e1065ed78dc09994557a5f0511ee514/_data->/shares 
+== paper-runner intacto ==
+/self-evaluating-trading-agent-paper-runner-1 id=b061332c35724a2147df3c76acdd8ba4cace12157b958766e2d66cb3f34e22bb image=self-evaluating-trading-agent-paper-runner:0.2.0 imageid=sha256:e41718c572e15fbc7ff8d927c820e091aee0acc565ba79dcf97ab1aad8a9d0a0 started=2026-09-19T04:00:04.763010163Z status=running
+== SETA core ==
+/self-evaluating-trading-agent-postgres-1 id=0c79b6b5d1cdf9f2cf5a503b0557e0fc0ba3b463e5a0007632399b431b97926d started=2026-09-02T01:24:46.267698675Z status=running
+/self-evaluating-trading-agent-grafana-1 id=b796f67478d7f38394767dc80057809fff5a75df4235bb76dfbbba71cf13630b started=2026-09-10T16:35:47.19847038Z status=running
+/self-evaluating-trading-agent-prometheus-1 id=1431d8e01dd62c59bd630c74f018a53d8c82087e6903a1d2f924b48c01a5a843 started=2026-09-10T16:35:46.985901731Z status=running
+== comprobación app ==
+HTTP_STATUS=200
+== estado ==
+gastos-ia-app | Up About an hour
+gastos-ia-samba | Up About an hour (healthy)
+self-evaluating-trading-agent-paper-runner-1 | Up 9 days
+self-evaluating-trading-agent-grafana-1 | Up 2 weeks
+self-evaluating-trading-agent-prometheus-1 | Up 2 weeks
+gastos-ia-caddy | Up 3 weeks
+self-evaluating-trading-agent-postgres-1 | Up 3 weeks (healthy)
+PROD_UNCHANGED_OK
+exit=0

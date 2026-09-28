@@ -1,0 +1,32 @@
+# evidencia: m1b-04-format
+fecha: 2026-09-27T20:51:45-06:00
+fase: 23
+comando: bash -c ( printf "%s\n" "$SUDO_PASS"; cat docs/phases/23/evidence/m1b-04-format.sh ) | ssh -o BatchMode=yes administrador@192.168.100.24 "sudo -S -p \"\" bash -s"
+== re-identificación final antes de destruir ==
+lrwxrwxrwx 1 root root 9 ago 26 03:52 /dev/disk/by-id/ata-ST1000LM035-1RK172_WDEV3QGR -> ../../sda
+FINAL_IDENTITY_OK (by-id, no solo /dev/sda)
+== mklabel gpt ==
+== mkpart ext4 1MiB-100% ==
+== mkfs.ext4 -L LENOVO_DATA ==
+Creating filesystem with 244190208 4k blocks and 61054976 inodes
+Filesystem UUID: 10fff707-60e4-4321-afa0-a3c4704d9e8d
+Superblock backups stored on blocks: 
+	32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208, 
+	4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968, 
+	102400000, 214990848
+
+Allocating group tables:    0/7453mke2fs 1.47.0 (5-Feb-2023)
+         done                            
+Writing inode tables:    0/7453         done                            
+Creating journal (262144 blocks): done
+Writing superblocks and filesystem accounting information:    0/7453         done
+
+== post-format ==
+sda    disk                  931,5G
+└─sda1 part ntfs   Warehouse 931,5G
+/dev/disk/by-id/ata-ST1000LM035-1RK172_WDEV3QGR-part1: LABEL="LENOVO_DATA" UUID="10fff707-60e4-4321-afa0-a3c4704d9e8d" BLOCK_SIZE="4096" TYPE="ext4" PARTLABEL="primary" PARTUUID="ae4268ce-0d51-4918-8cb8-5d11f73db345"
+Filesystem volume name:   LENOVO_DATA
+Filesystem UUID:          10fff707-60e4-4321-afa0-a3c4704d9e8d
+Block count:              244190208
+FORMAT_OK
+exit=0

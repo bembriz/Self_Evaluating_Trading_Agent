@@ -1,0 +1,12 @@
+# evidencia: m1b-03-umount
+fecha: 2026-09-27T20:51:39-06:00
+fase: 23
+comando: bash -c ( printf "%s\n" "$SUDO_PASS"; cat docs/phases/23/evidence/m1b-03-umount.sh ) | ssh -o BatchMode=yes administrador@192.168.100.24 "sudo -S -p \"\" bash -s"
+== holds previos (debe estar vacío) ==
+kernel                     USER        PID ACCESS COMMAND
+/mnt/warehouse:      root      mount /mnt/warehouse
+== umount ==
+UMOUNT_RC=0
+WAREHOUSE_UNMOUNTED_OK
+drwxr-xr-x 2 root root 4096 ago 26 03:46 /mnt/warehouse
+exit=0

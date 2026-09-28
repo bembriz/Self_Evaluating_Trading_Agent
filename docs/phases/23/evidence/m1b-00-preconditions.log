@@ -1,0 +1,34 @@
+# evidencia: m1b-00-preconditions
+fecha: 2026-09-27T20:37:00-06:00
+fase: 23
+comando: bash -c ssh -o BatchMode=yes administrador@192.168.100.24 bash -s < docs/phases/23/evidence/m1b-00-preconditions.sh
+== docker compose ==
+Docker Compose version v5.5.0
+== compose working dirs ==
+gastos-ia-app: /srv/docker/gastos-ia
+gastos-ia-samba: /srv/docker/gastos-ia
+gastos-ia-caddy: /srv/docker/gastos-ia
+== compose file names ==
+-- /srv/docker/gastos-ia
+-- /srv/docker/gastos-ia
+-- /srv/docker/gastos-ia
+ls: cannot access '/srv/docker/gastos-ia': Permission denied
+ls: cannot access '/srv/docker/gastos-ia': Permission denied
+== ownership ==
+== warehouse refs ==
+-- /srv/docker/gastos-ia
+no-warehouse-ref
+-- /srv/docker/gastos-ia
+no-warehouse-ref
+-- /srv/docker/gastos-ia
+no-warehouse-ref
+== caddy upstream ==
+no-upstream-ref
+== gastos-ia-app env ==
+ls: cannot access '/srv/docker/gastos-ia': Permission denied
+ls: cannot access '/srv/docker/gastos-ia': Permission denied
+ls: cannot access '/srv/docker/gastos-ia': Permission denied
+ls: cannot access '/srv/docker/gastos-ia': Permission denied
+27
+== PRECONDITIONS_OK ==
+exit=0

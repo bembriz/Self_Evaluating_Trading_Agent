@@ -1,0 +1,6 @@
+# evidencia: m1c-05b-harness-tests-without-pdf
+fecha: 2026-09-27T22:14:47-06:00
+fase: 23
+comando: uv run pytest harness/tests -q --ignore=harness/tests/test_gen_pdf.py
+...................................................................      [100%]
+exit=0

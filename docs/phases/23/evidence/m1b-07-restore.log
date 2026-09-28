@@ -1,0 +1,39 @@
+# evidencia: m1b-07-restore
+fecha: 2026-09-27T20:52:28-06:00
+fase: 23
+comando: bash -c ssh -o BatchMode=yes administrador@192.168.100.24 bash -s < docs/phases/23/evidence/m1b-07-restore.sh
+== origen (backup) ==
+total 20
+drwxr-xr-x 4 administrador administrador 4096 sep  3 15:23 .
+drwxr-xr-x 5 administrador administrador 4096 sep 28 01:30 ..
+drwxr-xr-x 4 administrador administrador 4096 jul 29 21:51 Esme
+-rw-r--r-- 1 administrador administrador  631 sep  3 15:23 gastos-local-root.crt
+drwxr-xr-x 4 administrador administrador 4096 jul 29 21:51 Ruben
+== rsync ==
+== conteo restaurado ==
+FILES=20
+BYTES=597764
+== hash verify contra SHA256SUMS del backup ==
+./Ruben/pendientes/Thumbs.db: OK
+./Ruben/procesados/Imagen 1.jpeg: OK
+./Ruben/procesados/Imagen 2.jpeg: OK
+./Ruben/procesados/Imagen 3.jpeg: OK
+./Ruben/procesados/OP-2609 - 2.jpeg: OK
+./Ruben/procesados/OP-2609 - 3.jpeg: OK
+./Ruben/procesados/OP-2609 - 4.jpeg: OK
+./Ruben/procesados/OP-2609 -1.jpeg: OK
+./Ruben/procesados/VAL-260902-1.jpeg: OK
+./Ruben/procesados/VAL-260902-2 .jpeg: OK
+./Ruben/procesados/VAL-260902-3.jpeg: OK
+./Ruben/procesados/VAL-260902-4.jpeg: OK
+./Ruben/procesados/VAL-260902-5.jpeg: OK
+./Ruben/procesados/VAL-260902-6.jpeg: OK
+./Ruben/procesados/WhatsApp Image 2026-07-30 at 10.42.48.jpeg: OK
+./Ruben/procesados/WhatsApp Image 2026-07-30 at 10.42.59.jpeg: OK
+./Ruben/procesados/WhatsApp Image 2026-07-30 at 10.59.50.jpeg: OK
+./Ruben/procesados/WhatsApp Image 2026-08-03 at 15.35.23.jpeg: OK
+./Ruben/procesados/WhatsApp Image 2026-08-03 at 15.36.49.jpeg: OK
+./gastos-local-root.crt: OK
+RESTORE_HASH_OK
+RESTORE_OK
+exit=0

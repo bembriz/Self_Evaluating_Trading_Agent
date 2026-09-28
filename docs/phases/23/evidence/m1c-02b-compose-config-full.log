@@ -1,0 +1,26 @@
+# evidencia: m1c-02b-compose-config-full
+fecha: 2026-09-27T22:11:57-06:00
+fase: 23
+comando: bash -c ( printf "%s\n" "$SUDO_PASS"; cat docs/phases/23/evidence/m1c-02b-compose-config-full.sh ) | ssh -o BatchMode=yes administrador@192.168.100.24 "sudo -S -p \"\" bash -s"
+== docker compose config -q ==
+COMPOSE_CONFIG=PASS
+== binds resueltos (solo source/target) ==
+        source: /srv/data/gastosia
+        target: /data/gastos
+        source: /srv/docker/gastos-ia/repo/deployment/docker/cred
+        target: /app/cred
+        target: 80
+        target: 443
+        source: /srv/docker/gastos-ia/repo/deployment/docker/Caddyfile
+        target: /etc/caddy/Caddyfile
+        source: caddy_data
+        target: /data
+        source: caddy_config
+        target: /config
+== servicios ==
+app
+caddy
+samba
+COMPOSE_CONFIG_FULL_OK
+SYMLINK_CLEANED
+exit=0

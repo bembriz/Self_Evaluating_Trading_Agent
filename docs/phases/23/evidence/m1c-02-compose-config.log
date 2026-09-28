@@ -1,0 +1,22 @@
+# evidencia: m1c-02-compose-config
+fecha: 2026-09-27T22:11:11-06:00
+fase: 23
+comando: bash -c ( printf "%s\n" "$SUDO_PASS"; cat docs/phases/23/evidence/m1c-02-compose-config.sh ) | ssh -o BatchMode=yes administrador@192.168.100.24 "sudo -S -p \"\" bash -s"
+== docker compose config -q ==
+time="2026-09-28T04:11:12Z" level=warning msg="The \"SAMBA_RUBEN_PASSWORD\" variable is not set. Defaulting to a blank string."
+time="2026-09-28T04:11:12Z" level=warning msg="The \"SAMBA_ESME_PASSWORD\" variable is not set. Defaulting to a blank string."
+env file /srv/docker/gastos-ia/repo/deployment/docker/.env not found: stat /srv/docker/gastos-ia/repo/deployment/docker/.env: no such file or directory
+COMPOSE_CONFIG_FALLBACK_NO_INTERPOLATE
+COMPOSE_CONFIG=PASS(no-interpolate)
+== servicios resueltos ==
+app
+caddy
+samba
+== binds resueltos ==
+time="2026-09-28T04:11:12Z" level=warning msg="The \"SAMBA_RUBEN_PASSWORD\" variable is not set. Defaulting to a blank string."
+time="2026-09-28T04:11:12Z" level=warning msg="The \"SAMBA_ESME_PASSWORD\" variable is not set. Defaulting to a blank string."
+time="2026-09-28T04:11:12Z" level=warning msg="The \"SAMBA_RUBEN_PASSWORD\" variable is not set. Defaulting to a blank string."
+time="2026-09-28T04:11:12Z" level=warning msg="The \"SAMBA_ESME_PASSWORD\" variable is not set. Defaulting to a blank string."
+env file /srv/docker/gastos-ia/repo/deployment/docker/.env not found: stat /srv/docker/gastos-ia/repo/deployment/docker/.env: no such file or directory
+COMPOSE_CONFIG_OK
+exit=0
