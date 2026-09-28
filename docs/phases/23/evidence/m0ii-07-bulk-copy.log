@@ -1,0 +1,23 @@
+# evidencia: m0ii-07-bulk-copy
+fecha: 2026-09-27T19:25:17-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 set -e; D=/srv/backup-before-medallion/gastosia.partial; echo "---CP_HYPERV---"; time cp -a /mnt/warehouse/Hyper-V/VirtualMachines/GastosIA "$D/host/warehouse-HyperV-GastosIA"; echo "---CP_PG_WH---"; cp -a /mnt/warehouse/PostgreSQL "$D/host/warehouse-PostgreSQL"; echo "---CP_REPO_TAR---"; cp -a /home/administrador/gastos-ia-repo-backup-20260903.tar.gz "$D/host/"; echo "---SIZES_ORIG---"; du -sb /mnt/warehouse/Hyper-V/VirtualMachines/GastosIA /mnt/warehouse/PostgreSQL /home/administrador/gastos-ia-repo-backup-20260903.tar.gz; echo "---SIZES_DEST---"; du -sb "$D/host/warehouse-HyperV-GastosIA" "$D/host/warehouse-PostgreSQL" "$D/host/gastos-ia-repo-backup-20260903.tar.gz"; echo "---DF---"; df -B1 --output=avail /srv
+---CP_HYPERV---
+---CP_PG_WH---
+
+real	3m14,046s
+user	0m0,692s
+sys	0m48,063s
+---CP_REPO_TAR---
+---SIZES_ORIG---
+21885878272	/mnt/warehouse/Hyper-V/VirtualMachines/GastosIA
+237550396	/mnt/warehouse/PostgreSQL
+437809	/home/administrador/gastos-ia-repo-backup-20260903.tar.gz
+---SIZES_DEST---
+21885878272	/srv/backup-before-medallion/gastosia.partial/host/warehouse-HyperV-GastosIA
+237550396	/srv/backup-before-medallion/gastosia.partial/host/warehouse-PostgreSQL
+437809	/srv/backup-before-medallion/gastosia.partial/host/gastos-ia-repo-backup-20260903.tar.gz
+---DF---
+       Avail
+425297223680
+exit=0

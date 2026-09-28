@@ -1,0 +1,28 @@
+# evidencia: m0ii-03-db-discovery
+fecha: 2026-09-27T19:20:42-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 echo "---APP_ENV_DB_NO_SECRET---"; docker exec gastos-ia-app printenv GASTOSIA_DATABASE_HOST GASTOSIA_DATABASE_PORT GASTOSIA_DATABASE_NAME GASTOSIA_DATABASE_USER GASTOSIA_APP_ENV; echo "---PG_DBS---"; docker exec self-evaluating-trading-agent-postgres-1 psql -U postgres -Atc "select datname from pg_database where not datistemplate order by 1"; echo "---IMAGES---"; docker images --format "{{.Repository}}:{{.Tag}} {{.ID}} {{.Size}}" | grep -E "caddy|alpine|gastos-ia-app|pgvector"; echo "---WRITETEST---"; test -w /srv && echo SRV_WRITABLE=YES || echo SRV_WRITABLE=NO; echo "---HEALTHCHECK---"; docker inspect --format "{{.Name}} health={{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}" gastos-ia-app gastos-ia-caddy gastos-ia-samba; echo "---APP_STATUS---"; docker inspect --format "{{.Name}} running={{.State.Running}} restarts={{.RestartCount}}" gastos-ia-app gastos-ia-caddy gastos-ia-samba self-evaluating-trading-agent-postgres-1
+---APP_ENV_DB_NO_SECRET---
+postgres
+5432
+gastos_ia
+gastos_app
+production
+---PG_DBS---
+psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  role "postgres" does not exist
+---IMAGES---
+gastos-ia-app:latest b624dd56cd96 944MB
+pgvector/pgvector:pg16 ccc6e83d6e35 621MB
+caddy:2-alpine 5f5c8640aae0 88.7MB
+---WRITETEST---
+SRV_WRITABLE=NO
+---HEALTHCHECK---
+/gastos-ia-app health=none
+/gastos-ia-caddy health=none
+/gastos-ia-samba health=healthy
+---APP_STATUS---
+/gastos-ia-app running=true restarts=0
+/gastos-ia-caddy running=true restarts=0
+/gastos-ia-samba running=true restarts=0
+/self-evaluating-trading-agent-postgres-1 running=true restarts=0
+exit=0

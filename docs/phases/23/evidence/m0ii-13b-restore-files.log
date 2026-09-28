@@ -1,0 +1,43 @@
+# evidencia: m0ii-13b-restore-files
+fecha: 2026-09-27T19:38:02-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 set -e; set -o pipefail; B=/srv/backup-before-medallion/gastosia; T=/home/administrador/m0ii-restore-tmp; echo "---EXTRACT---"; mkdir -p "$T/restored"; tar -C "$B" -cf - host/warehouse-GastosIA pg/gastos_ia.dump | tar -C "$T/restored" -xf -; echo "files=$(find "$T/restored" -type f | wc -l)"; echo "---SHA_RESTORED---"; cd "$T/restored"; grep -F -e " ./host/warehouse-GastosIA/" -e " ./pg/gastos_ia.dump" "$B/SHA256SUMS" | sha256sum -c; echo "SHA_RC=$?"; echo "---ORIGIN_REHASH---"; (cd /mnt/warehouse/GastosIA && find . -type f -print0 | LC_ALL=C sort -z | xargs -0 -r sha256sum) > "$T/origin-now.txt"; (cd "$T/restored/host/warehouse-GastosIA" && find . -type f -print0 | LC_ALL=C sort -z | xargs -0 -r sha256sum) > "$T/restored-hash.txt"; if cmp -s "$T/origin-now.txt" "$T/restored-hash.txt"; then echo "RESTORED_EQ_ORIGIN=YES"; else echo "RESTORED_EQ_ORIGIN=NO"; fi; echo "---IMAGEMAGIC---"; IMG=$(find "$T/restored/host/warehouse-GastosIA" -type f | head -1); EXT="${IMG##*.}"; cp "$IMG" "$T/chosen.$EXT"; MAGIC=$(head -c 4 "$T/chosen.$EXT" | od -An -tx1 | tr -d " \n"); echo "EXT=$EXT"; echo "MAGIC=$MAGIC"; case "$MAGIC" in 89504e47|ffd8ff*|25504446) echo "RECEIPT_IMAGE_LEGIBLE=YES";; *) echo "RECEIPT_IMAGE_LEGIBLE=NO"; head -c 16 "$T/chosen.$EXT" | od -c | head -2;; esac; if command -v file >/dev/null; then file "$T/chosen.$EXT"; else echo "file_cmd=not_available"; fi; echo "---DB_IMAGE_SCHEMA---"; docker exec m0ii-restore-pg psql -U gastos_app -d gastos_ia -Atc "select column_name||char(61)||data_type from information_schema.columns where table_name='image_files' order by ordinal_position"; echo "FILE_RESTORE=PASS"
+---EXTRACT---
+files=21
+---SHA_RESTORED---
+./host/warehouse-GastosIA/Ruben/pendientes/Thumbs.db: OK
+./host/warehouse-GastosIA/Ruben/procesados/Imagen 1.jpeg: OK
+./host/warehouse-GastosIA/Ruben/procesados/Imagen 2.jpeg: OK
+./host/warehouse-GastosIA/Ruben/procesados/Imagen 3.jpeg: OK
+./host/warehouse-GastosIA/Ruben/procesados/OP-2609 - 2.jpeg: OK
+./host/warehouse-GastosIA/Ruben/procesados/OP-2609 - 3.jpeg: OK
+./host/warehouse-GastosIA/Ruben/procesados/OP-2609 - 4.jpeg: OK
+./host/warehouse-GastosIA/Ruben/procesados/OP-2609 -1.jpeg: OK
+./host/warehouse-GastosIA/Ruben/procesados/VAL-260902-1.jpeg: OK
+./host/warehouse-GastosIA/Ruben/procesados/VAL-260902-2 .jpeg: OK
+./host/warehouse-GastosIA/Ruben/procesados/VAL-260902-3.jpeg: OK
+./host/warehouse-GastosIA/Ruben/procesados/VAL-260902-4.jpeg: OK
+./host/warehouse-GastosIA/Ruben/procesados/VAL-260902-5.jpeg: OK
+./host/warehouse-GastosIA/Ruben/procesados/VAL-260902-6.jpeg: OK
+./host/warehouse-GastosIA/Ruben/procesados/WhatsApp Image 2026-07-30 at 10.42.48.jpeg: OK
+./host/warehouse-GastosIA/Ruben/procesados/WhatsApp Image 2026-07-30 at 10.42.59.jpeg: OK
+./host/warehouse-GastosIA/Ruben/procesados/WhatsApp Image 2026-07-30 at 10.59.50.jpeg: OK
+./host/warehouse-GastosIA/Ruben/procesados/WhatsApp Image 2026-08-03 at 15.35.23.jpeg: OK
+./host/warehouse-GastosIA/Ruben/procesados/WhatsApp Image 2026-08-03 at 15.36.49.jpeg: OK
+./host/warehouse-GastosIA/gastos-local-root.crt: OK
+./pg/gastos_ia.dump: OK
+SHA_RC=0
+---ORIGIN_REHASH---
+RESTORED_EQ_ORIGIN=YES
+---IMAGEMAGIC---
+EXT=crt
+MAGIC=2d2d2d2d
+RECEIPT_IMAGE_LEGIBLE=NO
+0000000   -   -   -   -   -   B   E   G   I   N       C   E   R   T   I
+0000020
+/home/administrador/m0ii-restore-tmp/chosen.crt: PEM certificate
+---DB_IMAGE_SCHEMA---
+ERROR:  syntax error at or near "||"
+LINE 1: select column_name||char(61)||data_type from information_sch...
+                                    ^
+exit=1

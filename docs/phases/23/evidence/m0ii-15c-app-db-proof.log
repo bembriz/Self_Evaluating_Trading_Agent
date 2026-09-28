@@ -1,0 +1,14 @@
+# evidencia: m0ii-15c-app-db-proof
+fecha: 2026-09-27T19:42:47-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 set -e; echo "---PG_LOG_CONNECTIONS---"; C=$(docker logs m0ii-restore-pg 2>&1 | grep -c "host=172.21" || true); echo "CONNECTIONS_FROM_APP_SUBNET=$C"; docker logs m0ii-restore-pg 2>&1 | grep "host=172.21" | tail -3; echo "---HTTP_PROBE---"; docker exec m0ii-restore-app python -c "import urllib.request; r=urllib.request.urlopen(\"http://127.0.0.1:8000/\", timeout=10); print(\"HTTP_STATUS=\"+str(r.status))"; echo "---SESSIONS_NOW---"; APP_IP=$(docker inspect -f "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" m0ii-restore-app); docker exec m0ii-restore-pg psql -U gastos_app -d gastos_ia -Atc "select count(*) from pg_stat_activity where client_addr::text = '$APP_IP'"; echo "---FINAL_STATE---"; docker inspect --format "running={{.State.Running}} restarts={{.RestartCount}}" m0ii-restore-app; if [ "$C" -gt 0 ]; then echo "APPLICATION_RESTORE_TEST=PASS"; else echo "APPLICATION_RESTORE_TEST=LIMITED_PASS"; fi
+---PG_LOG_CONNECTIONS---
+CONNECTIONS_FROM_APP_SUBNET=0
+---HTTP_PROBE---
+HTTP_STATUS=200
+---SESSIONS_NOW---
+0
+---FINAL_STATE---
+running=true restarts=0
+APPLICATION_RESTORE_TEST=LIMITED_PASS
+exit=0

@@ -1,0 +1,9 @@
+# evidencia: m0ii-01-precheck-local
+fecha: 2026-09-27T19:17:32-06:00
+fase: 23
+comando: bash -c git branch --show-current && git rev-parse HEAD && git rev-parse origin/medalion && echo "DIRTY=$(git status --porcelain | wc -l)"
+medalion
+df907c5d12fce6c0aee90adac5ae88e164633b5a
+df907c5d12fce6c0aee90adac5ae88e164633b5a
+DIRTY=1
+exit=0

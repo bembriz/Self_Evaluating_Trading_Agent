@@ -1,0 +1,35 @@
+# evidencia: m0ii-02-precheck-remote
+fecha: 2026-09-27T19:17:36-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 hostname; echo "---"; test -b /dev/disk/by-id/ata-ST1000LM035-1RK172_WDEV3QGR && echo HDD_BY_ID=OK || echo HDD_BY_ID=MISSING; findmnt -no SOURCE,FSTYPE /mnt/warehouse; test -d /mnt/warehouse/GastosIA && echo WAREHOUSE_GASTOSIA=OK || echo WAREHOUSE_GASTOSIA=MISSING; echo "---NVME_AVAIL---"; df -B1 --output=avail /srv / /mnt/warehouse; echo "---DEST---"; test -e /srv/backup-before-medallion && echo DEST_EXISTS=ABORT || echo DEST_FREE=OK; echo "---CONTAINERS---"; docker ps --format "{{.Names}}|{{.ID}}|{{.Image}}|{{.Status}}"; echo "---BASELINE---"; docker inspect --format "{{.Name}} id={{.Id}} image={{.Image}} started={{.StartedAt}}" self-evaluating-trading-agent-paper-runner-1 gastos-ia-app gastos-ia-caddy gastos-ia-samba self-evaluating-trading-agent-postgres-1; echo "---COMPOSE_WD---"; docker inspect --format "{{.Name}} {{index .Config.Labels \"com.docker.compose.project.working_dir\"}}" gastos-ia-app gastos-ia-caddy
+lenovosrv
+---
+HDD_BY_ID=OK
+/dev/sda1 ntfs3
+WAREHOUSE_GASTOSIA=OK
+---NVME_AVAIL---
+       Avail
+447422476288
+447422476288
+475586834432
+---DEST---
+DEST_FREE=OK
+---CONTAINERS---
+self-evaluating-trading-agent-paper-runner-1|b061332c3572|self-evaluating-trading-agent-paper-runner:0.2.0|Up 8 days
+self-evaluating-trading-agent-grafana-1|b796f67478d7|grafana/grafana:11.1.0|Up 2 weeks
+self-evaluating-trading-agent-prometheus-1|1431d8e01dd6|prom/prometheus:v2.53.0|Up 2 weeks
+gastos-ia-app|b5cb239223e0|gastos-ia-app:latest|Up 3 weeks
+gastos-ia-caddy|612427ee2033|caddy:2-alpine|Up 3 weeks
+gastos-ia-samba|c1b12f084831|servercontainers/samba:smbd-only-latest|Up 3 weeks (healthy)
+self-evaluating-trading-agent-postgres-1|0c79b6b5d1cd|pgvector/pgvector:pg16|Up 3 weeks (healthy)
+---BASELINE---
+
+---COMPOSE_WD---
+/gastos-ia-app /srv/docker/gastos-ia
+/gastos-ia-caddy /srv/docker/gastos-ia
+template parsing error: template: :1:48: executing "" at <.StartedAt>: map has no entry for key "StartedAt"
+template parsing error: template: :1:48: executing "" at <.StartedAt>: map has no entry for key "StartedAt"
+template parsing error: template: :1:48: executing "" at <.StartedAt>: map has no entry for key "StartedAt"
+template parsing error: template: :1:48: executing "" at <.StartedAt>: map has no entry for key "StartedAt"
+template parsing error: template: :1:48: executing "" at <.StartedAt>: map has no entry for key "StartedAt"
+exit=0

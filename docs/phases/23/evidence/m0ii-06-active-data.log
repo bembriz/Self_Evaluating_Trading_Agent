@@ -1,0 +1,12 @@
+# evidencia: m0ii-06-active-data
+fecha: 2026-09-27T19:23:52-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 S=/mnt/warehouse/GastosIA; D=/srv/backup-before-medallion/gastosia.partial; H=$D/meta; attempt=1; ok=NO; while [ $attempt -le 3 ]; do (cd "$S" && find . -type f -print0 | LC_ALL=C sort -z | xargs -0 -r sha256sum) > "$H/pre-$attempt.txt"; (cd "$S" && find . -print0 | LC_ALL=C sort -z) > "$H/tree-pre-$attempt.txt"; rm -rf "$D/host/warehouse-GastosIA"; cp -a "$S" "$D/host/warehouse-GastosIA"; (cd "$S" && find . -type f -print0 | LC_ALL=C sort -z | xargs -0 -r sha256sum) > "$H/post-$attempt.txt"; (cd "$S" && find . -print0 | LC_ALL=C sort -z) > "$H/tree-post-$attempt.txt"; (cd "$D/host/warehouse-GastosIA" && find . -type f -print0 | LC_ALL=C sort -z | xargs -0 -r sha256sum) > "$H/dest-$attempt.txt"; if cmp -s "$H/pre-$attempt.txt" "$H/post-$attempt.txt" && cmp -s "$H/tree-pre-$attempt.txt" "$H/tree-post-$attempt.txt" && cmp -s "$H/pre-$attempt.txt" "$H/dest-$attempt.txt"; then ok=YES; echo "ATTEMPT_${attempt}=CONSISTENT"; break; else echo "ATTEMPT_${attempt}=CHANGED"; attempt=$((attempt+1)); fi; done; echo "ACTIVE_DATA_ATTEMPTS=$( [ $attempt -le 3 ] && echo $attempt || echo 3 )"; echo "ACTIVE_DATA_CONSISTENT=$ok"; if [ "$ok" != "YES" ]; then echo "ACTIVE_DATA_QUIESCE_REQUIRED=YES"; exit 2; fi; echo "ACTIVE_DATA_QUIESCE_REQUIRED=NO"; echo "SRC_FILES=$(wc -l < "$H/pre-1.txt")"; echo "DEST_FILES=$(wc -l < "$H/dest-1.txt")"; du -sb "$D/host/warehouse-GastosIA"
+ATTEMPT_1=CONSISTENT
+ACTIVE_DATA_ATTEMPTS=1
+ACTIVE_DATA_CONSISTENT=YES
+ACTIVE_DATA_QUIESCE_REQUIRED=NO
+SRC_FILES=20
+DEST_FILES=20
+597764	/srv/backup-before-medallion/gastosia.partial/host/warehouse-GastosIA
+exit=0

@@ -1,0 +1,24 @@
+# evidencia: m0ii-16-cleanup
+fecha: 2026-09-27T19:50:11-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 set -e; echo "---REMOVE---"; docker rm -f m0ii-restore-app m0ii-restore-pg; docker volume rm m0ii-restore-vol; docker network rm m0ii-restore-net; rm -rf /home/administrador/m0ii-restore-tmp; echo "---VERIFY_GONE---"; echo "containers=$(docker ps -a --filter name=m0ii-restore --format "{{.Names}}" | wc -l)"; echo "volumes=$(docker volume ls --filter name=m0ii-restore-vol --format "{{.Name}}" | wc -l)"; echo "networks=$(docker network ls --filter name=m0ii-restore-net --format "{{.Name}}" | wc -l)"; test ! -e /home/administrador/m0ii-restore-tmp && echo "TMP_DIR_REMOVED=YES"; echo "---TEMP_RESOURCES_CLEANED=YES---"; echo "---PROD_STILL_UP---"; docker ps --format "{{.Names}}|{{.Status}}" | sort
+---REMOVE---
+m0ii-restore-app
+m0ii-restore-pg
+m0ii-restore-vol
+m0ii-restore-net
+---VERIFY_GONE---
+containers=0
+volumes=0
+networks=0
+TMP_DIR_REMOVED=YES
+---TEMP_RESOURCES_CLEANED=YES---
+---PROD_STILL_UP---
+gastos-ia-app|Up 3 weeks
+gastos-ia-caddy|Up 3 weeks
+gastos-ia-samba|Up 3 weeks (healthy)
+self-evaluating-trading-agent-grafana-1|Up 2 weeks
+self-evaluating-trading-agent-paper-runner-1|Up 8 days
+self-evaluating-trading-agent-postgres-1|Up 3 weeks (healthy)
+self-evaluating-trading-agent-prometheus-1|Up 2 weeks
+exit=0

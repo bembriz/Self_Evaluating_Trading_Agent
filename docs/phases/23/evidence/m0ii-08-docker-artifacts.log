@@ -1,0 +1,17 @@
+# evidencia: m0ii-08-docker-artifacts
+fecha: 2026-09-27T19:30:06-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 set -e; D=/srv/backup-before-medallion/gastosia.partial; echo "---TAR_TREE---"; docker run --rm -v /srv/docker/gastos-ia:/src:ro -v "$D/host":/dst caddy:2-alpine sh -c "cd /src && tar -cf /dst/docker-gastos-ia.tar ."; ls -l "$D/host/docker-gastos-ia.tar"; echo "---ENV_FILE_600---"; docker inspect --format "{{range .Config.Env}}{{println .}}{{end}}" gastos-ia-app > "$D/docker/gastos-ia-app.env"; chmod 600 "$D/docker/gastos-ia-app.env"; echo "env_bytes=$(stat -c %s "$D/docker/gastos-ia-app.env") (NO IMPRIMIDO)"; echo "---REDACED_METADATA---"; { docker inspect --format "{{.Name}}|image={{.Config.Image}}|restart={{.HostConfig.RestartPolicy.Name}}|ports={{json .HostConfig.PortBindings}}|mounts={{json .Mounts}}|networks={{json .NetworkSettings.Networks}}" gastos-ia-app gastos-ia-caddy gastos-ia-samba self-evaluating-trading-agent-postgres-1 self-evaluating-trading-agent-paper-runner-1; echo "---ENV_KEYS---"; docker inspect --format "{{range .Config.Env}}{{println .}}{{end}}" gastos-ia-app | cut -d= -f1; echo "---NETWORKS---"; docker network inspect gastos-ia_default gastos-ia_gastos self-evaluating-trading-agent_default --format "{{.Name}}|driver={{.Driver}}|subnet={{range .IPAM.Config}}{{.Subnet}}{{end}}|containers={{json .Containers}}"; echo "---IMAGES---"; docker images --format "{{.Repository}}:{{.Tag}} {{.ID}} {{.Size}}"; } > "$D/meta/docker-metadata.txt"; wc -l "$D/meta/docker-metadata.txt"; echo "---DOCKER_SAVE---"; time docker save gastos-ia-app:latest -o "$D/docker/gastos-ia-app-image.tar"; ls -l "$D/docker/gastos-ia-app-image.tar"
+---TAR_TREE---
+-rw-r--r-- 1 root root 1686528 sep 28 01:30 /srv/backup-before-medallion/gastosia.partial/host/docker-gastos-ia.tar
+---ENV_FILE_600---
+env_bytes=1264 (NO IMPRIMIDO)
+---REDACED_METADATA---
+50 /srv/backup-before-medallion/gastosia.partial/meta/docker-metadata.txt
+---DOCKER_SAVE---
+-rw------- 1 administrador administrador 229633024 sep 28 01:30 /srv/backup-before-medallion/gastosia.partial/docker/gastos-ia-app-image.tar
+
+real	0m4,328s
+user	0m0,174s
+sys	0m0,496s
+exit=0

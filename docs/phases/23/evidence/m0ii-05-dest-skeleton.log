@@ -1,0 +1,9 @@
+# evidencia: m0ii-05-dest-skeleton
+fecha: 2026-09-27T19:22:26-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 set -e; if [ -e /srv/backup-before-medallion ]; then echo DEST_EXISTS=ABORT; exit 1; fi; UID_A=$(id -u); GID_A=$(id -g); echo "admin_uid=$UID_A"; docker run --rm -v /srv:/srv caddy:2-alpine sh -c "mkdir -p /srv/backup-before-medallion/gastosia.partial/pg /srv/backup-before-medallion/gastosia.partial/docker /srv/backup-before-medallion/gastosia.partial/host /srv/backup-before-medallion/gastosia.partial/meta && chown -R $UID_A:$GID_A /srv/backup-before-medallion"; test -w /srv/backup-before-medallion/gastosia.partial && echo DEST_WRITABLE=YES; ls -ld /srv/backup-before-medallion /srv/backup-before-medallion/gastosia.partial
+admin_uid=1000
+DEST_WRITABLE=YES
+drwxr-xr-x 3 administrador administrador 4096 sep 28 01:22 /srv/backup-before-medallion
+drwxr-xr-x 6 administrador administrador 4096 sep 28 01:22 /srv/backup-before-medallion/gastosia.partial
+exit=0

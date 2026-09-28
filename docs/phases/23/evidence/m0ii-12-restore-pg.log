@@ -1,0 +1,38 @@
+# evidencia: m0ii-12-restore-pg
+fecha: 2026-09-27T19:36:47-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 set -e; set -o pipefail; B=/srv/backup-before-medallion/gastosia; T=/home/administrador/m0ii-restore-tmp; mkdir -p "$T"; echo "---NETWORK---"; docker network create --internal m0ii-restore-net; echo "---TMP_PG---"; PW=$(docker exec gastos-ia-app printenv GASTOSIA_DATABASE_PASSWORD); docker run -d --name m0ii-restore-pg --network m0ii-restore-net --network-alias postgres -e POSTGRES_USER=gastos_app -e POSTGRES_PASSWORD="$PW" -e POSTGRES_DB=gastos_ia -v m0ii-restore-vol:/var/lib/postgresql/data pgvector/pgvector:pg16; ok=0; for i in $(seq 1 40); do if docker exec m0ii-restore-pg pg_isready -U gastos_app -d gastos_ia >/dev/null 2>&1; then ok=1; break; fi; sleep 1; done; echo "PG_READY=$ok"; test "$ok" = 1; echo "---PG_RESTORE---"; docker cp "$B/pg/gastos_ia.dump" m0ii-restore-pg:/tmp/gastos_ia.dump; docker exec m0ii-restore-pg pg_restore -U gastos_app -d gastos_ia --exit-on-error /tmp/gastos_ia.dump; echo "RESTORE_RC=$?"; echo "---POST_COUNTS---"; P() { docker exec m0ii-restore-pg psql -U gastos_app -d gastos_ia -Atc "$1"; }; P "select table_name from information_schema.tables where table_schema='public' order by 1" > "$T/post-tables.txt"; : > "$T/post-rowcounts.txt"; while read -r t; do c=$(P "select count(*) from \"$t\""); echo "$t=$c" >> "$T/post-rowcounts.txt"; done < "$T/post-tables.txt"; cat "$T/post-tables.txt"; echo "---DIFF---"; cat "$T/post-rowcounts.txt"; echo "---COMPARE---"; if diff "$B/pg/pre-tables.txt" "$T/post-tables.txt" >/dev/null && [ "$(wc -l < "$B/pg/pre-tables.txt")" = "$(wc -l < "$T/post-tables.txt")" ]; then echo "TABLE_COUNTS_MATCH=YES"; else echo "TABLE_COUNTS_MATCH=NO"; fi; if diff "$B/pg/pre-rowcounts.txt" "$T/post-rowcounts.txt" >/dev/null; then echo "ROW_COUNTS_MATCH=YES"; else echo "ROW_COUNTS_MATCH=NO"; diff "$B/pg/pre-rowcounts.txt" "$T/post-rowcounts.txt" || true; fi; echo "DATABASE_RESTORE=PASS"
+---NETWORK---
+d5dd3c4cb3eeced1cbbc4dfa964a8233a6d8007b5a61efad7be796ddd0c298be
+---TMP_PG---
+a45a6c17cfbe2c887b70b044fe0bf5387ab096b7f26d7b1f291abfb5e19443ab
+PG_READY=1
+---PG_RESTORE---
+RESTORE_RC=0
+---POST_COUNTS---
+alembic_version
+audit_events
+catalog_cache
+expense_records
+extraction_runs
+image_files
+processing_queue
+sheet_sync
+system_settings
+users
+---DIFF---
+alembic_version=1
+audit_events=0
+catalog_cache=64
+expense_records=636
+extraction_runs=10
+image_files=15
+processing_queue=10
+sheet_sync=0
+system_settings=0
+users=2
+---COMPARE---
+TABLE_COUNTS_MATCH=YES
+ROW_COUNTS_MATCH=YES
+DATABASE_RESTORE=PASS
+exit=0

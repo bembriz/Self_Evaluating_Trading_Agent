@@ -1,0 +1,12 @@
+# evidencia: m0ii-15e-app-verdict
+fecha: 2026-09-27T19:49:58-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 set -e; A=$(docker logs m0ii-restore-app 2>&1 | grep -c "Context impl PostgresqlImpl" || true); U=$(docker logs m0ii-restore-app 2>&1 | grep -c "Application startup complete" || true); M=$(docker logs m0ii-restore-app 2>&1 | grep -c "Aplicando migraciones alembic" || true); echo "ALEMBIC_CONTEXT_LINES=$A"; echo "STARTUP_COMPLETE_LINES=$U"; echo "MIGRATION_ENTRY_LINES=$M"; RUN=$(docker inspect -f "{{.State.Running}}" m0ii-restore-app); RS=$(docker inspect -f "{{.RestartCount}}" m0ii-restore-app); echo "RUNNING=$RUN RESTARTS=$RS"; docker exec m0ii-restore-app python -c "import os,socket; s=socket.create_connection((os.environ[\"GASTOSIA_DATABASE_HOST\"],5432),timeout=5); s.close(); print(\"TCP_5432_OK\")"; H=$(docker exec m0ii-restore-app python -c "import urllib.request; print(urllib.request.urlopen(\"http://127.0.0.1:8000/\", timeout=10).status)"); echo "HTTP_STATUS=$H"; if [ "$A" -gt 0 ] && [ "$U" -gt 0 ] && [ "$RUN" = true ] && [ "$H" = 200 ]; then echo "APPLICATION_RESTORE_TEST=PASS"; else echo "APPLICATION_RESTORE_TEST=LIMITED_PASS"; fi
+ALEMBIC_CONTEXT_LINES=1
+STARTUP_COMPLETE_LINES=1
+MIGRATION_ENTRY_LINES=1
+RUNNING=true RESTARTS=0
+TCP_5432_OK
+HTTP_STATUS=200
+APPLICATION_RESTORE_TEST=PASS
+exit=0

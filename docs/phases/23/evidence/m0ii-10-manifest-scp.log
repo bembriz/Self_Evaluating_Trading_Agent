@@ -1,0 +1,5 @@
+# evidencia: m0ii-10-manifest-scp
+fecha: 2026-09-27T19:32:42-06:00
+fase: 23
+comando: scp -o BatchMode=yes /tmp/opencode/m0ii-manifest.json administrador@192.168.100.24:/srv/backup-before-medallion/gastosia.partial/manifest.json
+exit=0

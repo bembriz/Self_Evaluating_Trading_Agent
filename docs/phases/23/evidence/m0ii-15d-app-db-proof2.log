@@ -1,0 +1,14 @@
+# evidencia: m0ii-15d-app-db-proof2
+fecha: 2026-09-27T19:43:50-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 set -e; echo "---CONN_AUTHORIZED_ALL---"; docker logs m0ii-restore-pg 2>&1 | grep -c "connection authorized" || true; echo "---CONN_AUTHORIZED_BOOT_WINDOW_01414x---"; W=$(docker logs m0ii-restore-pg 2>&1 | grep "connection authorized" | grep -c "2026-09-28 01:41:4" || true); echo "BOOT_WINDOW_CONNS=$W"; docker logs m0ii-restore-pg 2>&1 | grep "connection authorized" | grep "2026-09-28 01:41:4" | head -5; echo "---APP_CONTAINER_TCP_CONNECT---"; docker exec m0ii-restore-app python -c "import os,socket; s=socket.create_connection((os.environ[\"GASTOSIA_DATABASE_HOST\"],5432),timeout=5); s.close(); print(\"TCP_5432_OK\")"; echo "---FINAL---"; docker inspect --format "running={{.State.Running}} restarts={{.RestartCount}}" m0ii-restore-app; if [ "$W" -gt 0 ]; then echo "APPLICATION_RESTORE_TEST=PASS"; else echo "APPLICATION_RESTORE_TEST=LIMITED_PASS"; fi
+---CONN_AUTHORIZED_ALL---
+0
+---CONN_AUTHORIZED_BOOT_WINDOW_01414x---
+BOOT_WINDOW_CONNS=0
+---APP_CONTAINER_TCP_CONNECT---
+TCP_5432_OK
+---FINAL---
+running=true restarts=0
+APPLICATION_RESTORE_TEST=LIMITED_PASS
+exit=0

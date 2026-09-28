@@ -1,0 +1,28 @@
+# evidencia: m0ii-17-postcheck
+fecha: 2026-09-27T19:50:32-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 set -e; B=/srv/backup-before-medallion/gastosia; echo "---BASELINE_COMPARE---"; docker inspect --format "{{.Name}} id={{.Id}} image={{.Image}} started={{.State.StartedAt}}" self-evaluating-trading-agent-paper-runner-1 gastos-ia-app gastos-ia-caddy gastos-ia-samba self-evaluating-trading-agent-postgres-1; echo "---RUNNING---"; docker inspect --format "{{.Name}} running={{.State.Running}} restarts={{.RestartCount}}" gastos-ia-app gastos-ia-caddy gastos-ia-samba self-evaluating-trading-agent-postgres-1 self-evaluating-trading-agent-paper-runner-1; echo "---BACKUP_REVERIFY---"; test -d "$B" && test ! -e /srv/backup-before-medallion/gastosia.partial && echo "BACKUP_FINAL_PATH=OK"; cd "$B"; sha256sum -c SHA256SUMS > /tmp/m0ii-reverify.out 2>&1; RC=$?; echo "REVERIFY_RC=$RC"; echo "REVERIFY_OK_COUNT=$(grep -c ": OK" /tmp/m0ii-reverify.out || true)"; echo "REVERIFY_FAIL_COUNT=$(grep -c "FAILED" /tmp/m0ii-reverify.out || true)"; rm -f /tmp/m0ii-reverify.out; echo "---SIZE_FREE---"; du -sb "$B"; df -B1 --output=avail /srv; echo "---LEFTOVERS---"; echo "temp_leftovers=$(docker ps -a --filter name=m0ii-restore --format "{{.Names}}" | wc -l)"
+---BASELINE_COMPARE---
+/self-evaluating-trading-agent-paper-runner-1 id=b061332c35724a2147df3c76acdd8ba4cace12157b958766e2d66cb3f34e22bb image=sha256:e41718c572e15fbc7ff8d927c820e091aee0acc565ba79dcf97ab1aad8a9d0a0 started=2026-09-19T04:00:04.763010163Z
+/gastos-ia-app id=b5cb239223e0904f14e6d97786490e8552a011a2172a8b323816fddd0207464f image=sha256:b624dd56cd96cb033a8653b949bd157491ab511977566d0c3ac1da80ccd6f2b9 started=2026-09-04T03:53:44.446203349Z
+/gastos-ia-caddy id=612427ee20334e3443d90881b307f9df80977341260a711daae978073aa786bf image=sha256:5f5c8640aae01df9654968d946d8f1a56c497f1dd5c5cda4cf95ab7c14d58648 started=2026-09-03T03:43:05.671661606Z
+/gastos-ia-samba id=c1b12f0848316fffdfee2ddfcc70e474c1348c31b64a8fe23ed493ceaceb606b image=sha256:60300f74c48754a1945de56b05e6cbad6a4ea836d6173b47b6d1050b8b412cfe started=2026-09-03T03:43:05.369361514Z
+/self-evaluating-trading-agent-postgres-1 id=0c79b6b5d1cdf9f2cf5a503b0557e0fc0ba3b463e5a0007632399b431b97926d image=sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b started=2026-09-02T01:24:46.267698675Z
+---RUNNING---
+/gastos-ia-app running=true restarts=0
+/gastos-ia-caddy running=true restarts=0
+/gastos-ia-samba running=true restarts=0
+/self-evaluating-trading-agent-postgres-1 running=true restarts=0
+/self-evaluating-trading-agent-paper-runner-1 running=true restarts=3
+---BACKUP_REVERIFY---
+BACKUP_FINAL_PATH=OK
+REVERIFY_RC=0
+REVERIFY_OK_COUNT=5234
+REVERIFY_FAIL_COUNT=0
+---SIZE_FREE---
+22356469017	/srv/backup-before-medallion/gastosia
+       Avail
+425064939520
+---LEFTOVERS---
+temp_leftovers=0
+exit=0

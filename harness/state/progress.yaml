@@ -1041,8 +1041,10 @@ phases:
       - docs/phases/23/m0-i-infrastructure-revalidation.md
     - id: m0ii-gastosia-rescue
       descripcion: GastosIA backup and isolated restore validation
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/23/evidence/log.md
+      - docs/phases/23/m0-ii-gastosia-rescue.md
     - id: m1-storage
       descripcion: Secondary HDD reformat and /srv/data mount
       estado: pending
@@ -1926,4 +1928,8 @@ time_log:
   fase: '23'
   evento: done
   detalle: m0i-infra-discovery
+- fecha: '2026-09-27'
+  fase: '23'
+  evento: done
+  detalle: m0ii-gastosia-rescue
 blockers: []

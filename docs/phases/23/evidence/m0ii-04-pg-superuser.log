@@ -1,0 +1,21 @@
+# evidencia: m0ii-04-pg-superuser
+fecha: 2026-09-27T19:21:33-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 PGU=$(docker exec self-evaluating-trading-agent-postgres-1 printenv POSTGRES_USER); echo "POSTGRES_USER=$PGU"; echo "---DBS---"; docker exec self-evaluating-trading-agent-postgres-1 psql -U "$PGU" -Atc "select datname from pg_database where not datistemplate order by 1"; echo "---GASTOS_APP_CONN---"; docker exec self-evaluating-trading-agent-postgres-1 psql -U gastos_app -d gastos_ia -Atc "select current_user, count(*) from information_schema.tables where table_schema='public'"; echo "---GASTOSIA_TABLES---"; docker exec self-evaluating-trading-agent-postgres-1 psql -U gastos_app -d gastos_ia -Atc "select table_name from information_schema.tables where table_schema='public' order by 1"
+POSTGRES_USER=trading
+---DBS---
+---GASTOS_APP_CONN---
+psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  database "trading" does not exist
+gastos_app|10
+---GASTOSIA_TABLES---
+alembic_version
+audit_events
+catalog_cache
+expense_records
+extraction_runs
+image_files
+processing_queue
+sheet_sync
+system_settings
+users
+exit=0

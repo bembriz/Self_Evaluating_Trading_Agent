@@ -1,0 +1,36 @@
+# evidencia: m0ii-09-pg-dump
+fecha: 2026-09-27T19:30:55-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 set -e; D=/srv/backup-before-medallion/gastosia.partial; P() { docker exec self-evaluating-trading-agent-postgres-1 psql -U gastos_app -d gastos_ia -Atc "$1"; }; echo "---TABLES---"; P "select table_name from information_schema.tables where table_schema='public' order by 1" | tee "$D/pg/pre-tables.txt"; echo "---ROWCOUNTS---"; : > "$D/pg/pre-rowcounts.txt"; while read -r t; do c=$(P "select count(*) from \"$t\""); echo "$t=$c" | tee -a "$D/pg/pre-rowcounts.txt"; done < "$D/pg/pre-tables.txt"; echo "---PG_DUMP---"; time docker exec self-evaluating-trading-agent-postgres-1 pg_dump -Fc -U gastos_app -d gastos_ia > "$D/pg/gastos_ia.dump"; ls -l "$D/pg/gastos_ia.dump"; file "$D/pg/gastos_ia.dump" 2>/dev/null || head -c 5 "$D/pg/gastos_ia.dump" | od -c | head -2; echo "---PG_VERSION---"; docker exec self-evaluating-trading-agent-postgres-1 psql -U gastos_app -d gastos_ia -Atc "select version()"
+---TABLES---
+alembic_version
+audit_events
+catalog_cache
+expense_records
+extraction_runs
+image_files
+processing_queue
+sheet_sync
+system_settings
+users
+---ROWCOUNTS---
+alembic_version=1
+audit_events=0
+catalog_cache=64
+expense_records=636
+extraction_runs=10
+image_files=15
+processing_queue=10
+sheet_sync=0
+system_settings=0
+users=2
+---PG_DUMP---
+-rw-rw-r-- 1 administrador administrador 73316 sep 28 01:30 /srv/backup-before-medallion/gastosia.partial/pg/gastos_ia.dump
+/srv/backup-before-medallion/gastosia.partial/pg/gastos_ia.dump: PostgreSQL custom database dump - v1.15-0
+---PG_VERSION---
+
+real	0m0,180s
+user	0m0,008s
+sys	0m0,011s
+PostgreSQL 16.15 (Debian 16.15-1.pgdg12+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+exit=0

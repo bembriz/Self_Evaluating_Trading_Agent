@@ -1,0 +1,39 @@
+# evidencia: m0ii-15a-app-prep
+fecha: 2026-09-27T19:40:53-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 set -e; B=/srv/backup-before-medallion/gastosia; T=/home/administrador/m0ii-restore-tmp; echo "---MOUNTS_APP---"; docker inspect --format "{{range .Mounts}}{{.Source}}|{{.Destination}}|RW={{.RW}}|{{.Type}}{{println}}{{end}}" gastos-ia-app; echo "---EXTRACT_TREE---"; mkdir -p "$T/docker-tree"; tar -C "$B/host" -xf docker-gastos-ia.tar -C "$T/docker-tree" 2>/dev/null || tar -xf "$B/host/docker-gastos-ia.tar" -C "$T/docker-tree"; find "$T/docker-tree" -maxdepth 2 | head -30; echo "---COMPOSE_FILES---"; find "$T/docker-tree" -maxdepth 2 -name "*.yaml" -o -maxdepth 2 -name "*.yml" -o -maxdepth 2 -name ".env" | head; echo "---INTERNAL_NET---"; docker network inspect m0ii-restore-net --format "Internal={{.Internal}} Name={{.Name}}"
+---MOUNTS_APP---
+/mnt/warehouse/GastosIA|/data/gastos|RW=true|bind
+/srv/docker/gastos-ia/cred|/app/cred|RW=false|bind
+
+---EXTRACT_TREE---
+/home/administrador/m0ii-restore-tmp/docker-tree
+/home/administrador/m0ii-restore-tmp/docker-tree/cred
+/home/administrador/m0ii-restore-tmp/docker-tree/cred/gastos-ia-503821-65a3dfc51879.json
+/home/administrador/m0ii-restore-tmp/docker-tree/Caddyfile
+/home/administrador/m0ii-restore-tmp/docker-tree/.env
+/home/administrador/m0ii-restore-tmp/docker-tree/repo
+/home/administrador/m0ii-restore-tmp/docker-tree/repo/cred
+/home/administrador/m0ii-restore-tmp/docker-tree/repo/templates
+/home/administrador/m0ii-restore-tmp/docker-tree/repo/AGENTS.md
+/home/administrador/m0ii-restore-tmp/docker-tree/repo/alembic.ini
+/home/administrador/m0ii-restore-tmp/docker-tree/repo/scripts
+/home/administrador/m0ii-restore-tmp/docker-tree/repo/uv.lock
+/home/administrador/m0ii-restore-tmp/docker-tree/repo/pyproject.toml
+/home/administrador/m0ii-restore-tmp/docker-tree/repo/static
+/home/administrador/m0ii-restore-tmp/docker-tree/repo/.env.example
+/home/administrador/m0ii-restore-tmp/docker-tree/repo/tests
+/home/administrador/m0ii-restore-tmp/docker-tree/repo/migrations
+/home/administrador/m0ii-restore-tmp/docker-tree/repo/prompts
+/home/administrador/m0ii-restore-tmp/docker-tree/repo/.gitignore
+/home/administrador/m0ii-restore-tmp/docker-tree/repo/deployment
+/home/administrador/m0ii-restore-tmp/docker-tree/repo/harness
+/home/administrador/m0ii-restore-tmp/docker-tree/repo/app
+/home/administrador/m0ii-restore-tmp/docker-tree/repo/docs
+/home/administrador/m0ii-restore-tmp/docker-tree/compose.yaml
+---COMPOSE_FILES---
+/home/administrador/m0ii-restore-tmp/docker-tree/.env
+/home/administrador/m0ii-restore-tmp/docker-tree/compose.yaml
+---INTERNAL_NET---
+Internal=true Name=m0ii-restore-net
+exit=0

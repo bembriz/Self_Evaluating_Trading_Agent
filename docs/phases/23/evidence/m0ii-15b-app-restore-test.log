@@ -1,0 +1,30 @@
+# evidencia: m0ii-15b-app-restore-test
+fecha: 2026-09-27T19:41:37-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 set -e; B=/srv/backup-before-medallion/gastosia; T=/home/administrador/m0ii-restore-tmp; echo "---IMAGE_LOAD---"; docker load -i "$B/docker/gastos-ia-app-image.tar"; echo "---RUN---"; docker run -d --name m0ii-restore-app --network m0ii-restore-net --env-file "$B/docker/gastos-ia-app.env" -v "$T/restored/host/warehouse-GastosIA:/data/gastos" -v "$T/docker-tree/cred:/app/cred:ro" gastos-ia-app:latest; sleep 20; echo "---STATE---"; docker inspect --format "running={{.State.Running}} restarts={{.RestartCount}} exitcode={{.State.ExitCode}} started={{.State.StartedAt}}" m0ii-restore-app; APP_IP=$(docker inspect -f "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" m0ii-restore-app); echo "APP_IP=$APP_IP"; echo "---DB_CONN---"; docker exec m0ii-restore-pg psql -U gastos_app -d gastos_ia -Atc "select count(*) from pg_stat_activity where client_addr::text = '$APP_IP'"; docker exec m0ii-restore-pg psql -U gastos_app -d gastos_ia -Atc "select distinct application_name from pg_stat_activity where client_addr::text = '$APP_IP' and application_name <> ''"; echo "---PROD_ISOLATION---"; docker network inspect m0ii-restore-net --format "internal={{.Internal}} containers={{len .Containers}}"; echo "---APP_LOGS_REDACTED---"; docker logs --tail 30 m0ii-restore-app 2>&1 | sed -E "s/AIza[0-9A-Za-z_-]{10,}/<REDACTED_API_KEY>/g; s/sk-[A-Za-z0-9]{16,}/<REDACTED_KEY>/g; s/(PASSWORD|SECRET|TOKEN)=[^ ]*/\1=<REDACTED>/gI" | tail -30; echo "---VERDICT---"; RUN=$(docker inspect -f "{{.State.Running}}" m0ii-restore-app); CONN=$(docker exec m0ii-restore-pg psql -U gastos_app -d gastos_ia -Atc "select count(*) from pg_stat_activity where client_addr::text = '$APP_IP'"); if [ "$RUN" = true ] && [ "$CONN" -gt 0 ]; then echo "APPLICATION_RESTORE_TEST=PASS"; elif [ "$RUN" = true ]; then echo "APPLICATION_RESTORE_TEST=LIMITED_PASS"; else echo "APPLICATION_RESTORE_TEST=FAIL"; fi
+---IMAGE_LOAD---
+Loaded image: gastos-ia-app:latest
+---RUN---
+aad94d062164e4f687c6eb4a407bc46656e4bbb6787dd75dd55777a19a8184aa
+---STATE---
+running=true restarts=0 exitcode=0 started=2026-09-28T01:41:42.015432317Z
+APP_IP=172.21.0.3
+---DB_CONN---
+0
+---PROD_ISOLATION---
+internal=true containers=2
+---APP_LOGS_REDACTED---
+[entrypoint] Aplicando migraciones alembic...
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+[entrypoint] Iniciando uvicorn...
+INFO:     Started server process [16]
+INFO:     Waiting for application startup.
+[App] Monitor y worker FIFO iniciados
+[Monitor] Iniciando deteccion de imagenes...
+[Worker] Iniciando worker FIFO a8fe4197...
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+---VERDICT---
+APPLICATION_RESTORE_TEST=LIMITED_PASS
+exit=0

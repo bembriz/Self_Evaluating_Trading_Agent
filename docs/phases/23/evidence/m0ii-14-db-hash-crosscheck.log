@@ -1,0 +1,10 @@
+# evidencia: m0ii-14-db-hash-crosscheck
+fecha: 2026-09-27T19:40:02-06:00
+fase: 23
+comando: ssh -o BatchMode=yes administrador@192.168.100.24 set -e; T=/home/administrador/m0ii-restore-tmp; docker exec m0ii-restore-pg psql -U gastos_app -d gastos_ia -Atc "select original_path, optimized_path, sha256_hash from image_files where sha256_hash is not null order by original_path" > "$T/db-img-hashes.txt"; echo "rows=$(wc -l < "$T/db-img-hashes.txt")"; m=0; x=0; nf=0; while IFS="|" read -r op tp sh; do b1=$(basename "$op"); b2=$(basename "${tp:-$op}"); f=$(find "$T/restored/host/warehouse-GastosIA" -type f -name "$b1" | head -1); if [ -z "$f" ] && [ -n "$tp" ]; then f=$(find "$T/restored/host/warehouse-GastosIA" -type f -name "$b2" | head -1); fi; if [ -z "$f" ]; then nf=$((nf+1)); echo "FILE_NOT_FOUND=$b1"; continue; fi; ah=$(sha256sum "$f" | cut -d" " -f1); if [ "$ah" = "$sh" ]; then m=$((m+1)); else x=$((x+1)); echo "MISMATCH=$b1"; fi; done < "$T/db-img-hashes.txt"; echo "DB_HASH_MATCH=$m"; echo "DB_HASH_MISMATCH=$x"; echo "DB_HASH_FILE_NOT_FOUND=$nf"; if [ "$x" = 0 ] && [ "$nf" = 0 ] && [ "$m" -gt 0 ]; then echo "DB_VS_FILES_HASHES=PASS"; else echo "DB_VS_FILES_HASHES=PARTIAL"; fi
+rows=15
+DB_HASH_MATCH=15
+DB_HASH_MISMATCH=0
+DB_HASH_FILE_NOT_FOUND=0
+DB_VS_FILES_HASHES=PASS
+exit=0
