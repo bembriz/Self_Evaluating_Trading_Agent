@@ -3,7 +3,7 @@ meta:
   prd: docs/PRD — Self-Evaluating Trading Agent.md
   diseno_arnes: docs/design/harness-design.md
   creado: '2026-08-22'
-  actualizado: '2026-09-28'
+  actualizado: '2026-09-29'
   reglas:
     peso_fase_igual: true
     peso_entregable_igual: true
@@ -1087,8 +1087,11 @@ phases:
       - docs/phases/23/evidence/m8-08-postcheck.log
     - id: m9-strategy-validation
       descripcion: Rerun existing strategies on validated replay
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - docs/phases/23/evidence/m9b-review-consistency.log
+      - docs/phases/23/m9b-full-development.md
+      - docs/phases/23/m9b-review.md
     - id: m10-uat-integration
       descripcion: UAT, audit and main integration candidate
       estado: pending
@@ -1972,4 +1975,8 @@ time_log:
   fase: '23'
   evento: done
   detalle: m8-deploy
+- fecha: '2026-09-29'
+  fase: '23'
+  evento: done
+  detalle: m9-strategy-validation
 blockers: []
