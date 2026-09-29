@@ -1,0 +1,175 @@
+# evidencia: m9a-cc012-diff-check
+fecha: 2026-09-28T22:36:36-06:00
+fase: 23
+comando: bash -c echo "CMD: git diff --cached --check"; git diff --cached --check; echo "RC=$?"; echo "CMD: git diff --cached --stat (ultimas lineas)"; git diff --cached --stat | tail -5; echo "CMD: git diff --cached --numstat | total"; git diff --cached --numstat | awk "{a+=\$1; d+=\$2} END {print \"added=\"a, \"deleted=\"d, \"files=\"NR}"
+CMD: git diff --cached --check
+docs/phases/23/evidence/m9a-01b-preflight.log:54: trailing whitespace.
++NAMEFILTER=postgres IDS=0c79b6b5d1cd 
+docs/phases/23/evidence/m9a-01b-preflight.log:56: trailing whitespace.
++NAMEFILTER=prometheus IDS=1431d8e01dd6 
+docs/phases/23/evidence/m9a-01b-preflight.log:59: trailing whitespace.
++NAMEFILTER=grafana IDS=b796f67478d7 
+docs/phases/23/evidence/m9a-01b-preflight.log:68: trailing whitespace.
++self-evaluating-trading-agent-paper-runner-1 => 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:6: trailing whitespace.
++  [t+0s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:8: trailing whitespace.
++  [t+30s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:10: trailing whitespace.
++  [t+60s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:12: trailing whitespace.
++  [t+90s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:14: trailing whitespace.
++  [t+120s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:16: trailing whitespace.
++  [t+150s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:18: trailing whitespace.
++  [t+180s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:20: trailing whitespace.
++  [t+210s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:22: trailing whitespace.
++  [t+240s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:24: trailing whitespace.
++  [t+270s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:26: trailing whitespace.
++  [t+300s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:28: trailing whitespace.
++  [t+330s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:30: trailing whitespace.
++  [t+360s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:32: trailing whitespace.
++  [t+390s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:34: trailing whitespace.
++  [t+420s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:36: trailing whitespace.
++  [t+450s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:38: trailing whitespace.
++  [t+480s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:40: trailing whitespace.
++  [t+510s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:42: trailing whitespace.
++  [t+540s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:44: trailing whitespace.
++  [t+570s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log:46: trailing whitespace.
++  [t+600s] == M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) == fecha_inicio=2026-09-29T02:20:34+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 SILVER_PARTITIONS_BEFORE=555 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:6: trailing whitespace.
++  [t+0s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:8: trailing whitespace.
++  [t+30s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:10: trailing whitespace.
++  [t+60s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:12: trailing whitespace.
++  [t+90s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:14: trailing whitespace.
++  [t+120s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:16: trailing whitespace.
++  [t+150s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:18: trailing whitespace.
++  [t+180s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:20: trailing whitespace.
++  [t+210s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:22: trailing whitespace.
++  [t+240s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:24: trailing whitespace.
++  [t+270s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:26: trailing whitespace.
++  [t+300s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:28: trailing whitespace.
++  [t+330s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:30: trailing whitespace.
++  [t+360s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:32: trailing whitespace.
++  [t+390s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:34: trailing whitespace.
++  [t+420s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:36: trailing whitespace.
++  [t+450s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:38: trailing whitespace.
++  [t+480s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:40: trailing whitespace.
++  [t+510s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:42: trailing whitespace.
++  [t+540s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:44: trailing whitespace.
++  [t+570s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:46: trailing whitespace.
++  [t+600s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:48: trailing whitespace.
++  [t+630s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:50: trailing whitespace.
++  [t+660s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:52: trailing whitespace.
++  [t+690s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log:54: trailing whitespace.
++  [t+720s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:6: trailing whitespace.
++  [t+0s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:8: trailing whitespace.
++  [t+30s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:10: trailing whitespace.
++  [t+60s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:12: trailing whitespace.
++  [t+90s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:14: trailing whitespace.
++  [t+120s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:16: trailing whitespace.
++  [t+150s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:18: trailing whitespace.
++  [t+180s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:20: trailing whitespace.
++  [t+210s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:22: trailing whitespace.
++  [t+240s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:24: trailing whitespace.
++  [t+270s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:26: trailing whitespace.
++  [t+300s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:28: trailing whitespace.
++  [t+330s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:30: trailing whitespace.
++  [t+360s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:32: trailing whitespace.
++  [t+390s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:34: trailing whitespace.
++  [t+420s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:36: trailing whitespace.
++  [t+450s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:38: trailing whitespace.
++  [t+480s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:40: trailing whitespace.
++  [t+510s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:42: trailing whitespace.
++  [t+540s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:44: trailing whitespace.
++  [t+570s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:46: trailing whitespace.
++  [t+600s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:48: trailing whitespace.
++  [t+630s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:50: trailing whitespace.
++  [t+660s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:52: trailing whitespace.
++  [t+690s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log:54: trailing whitespace.
++  [t+720s] == M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) == fecha_inicio=2026-09-29T02:33:23+00:00 DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16 CANDLE_OUTPUTS_BEFORE=21 
+docs/phases/23/evidence/m9a-fulldev-05b-rerun1-poll.log:6: trailing whitespace.
++  [t+0s] == RERUN 1: BRONZE (647 fechas) == RERUN_BRONZE_EXIT=0 ELAPSED_S=9 SKIPPED ETHUSDT_2025-06-16.csv.gz sha256=b20f1ee0a2817ec520ecf847efcd5457974adf9ad31798385e0fdbaf547f9d49 bytes=4311344 SUMMARY downloaded=0 skipped=647 total=647 SUMMARY downloaded=0 skipped=647 total=647 
+docs/phases/23/evidence/m9a-fulldev-05b-rerun1-poll.log:7: trailing whitespace.
++  [t+30s] N_BRONZE_CHANGED=0 == RERUN 2: SILVER TRADES (647 fechas) == RERUN_SILVER_EXIT=0 ELAPSED_S=23 SKIPPED ETHUSDT_2025-06-16.csv.gz sha256=0ef52122a045d72a9ca72487e28951ab6baad1fec7a092864eae999866fdbd83 rows=548485 SUMMARY transformed=0 skipped=647 total=647 SUMMARY transformed=0 skipped=647 total=647 
+docs/phases/23/evidence/m9a-fulldev-06b-rerun2-poll.log:6: trailing whitespace.
++  [t+0s] == RERUN 3: SILVER CANDLES (4529 outputs) == /srv/fast/medallion/m9a-logs/fulldev-rerun2-run.sh: line 13: /srv/data/medallion/silver/candles/ETHUSDT/ops-transforms.jsonl: No such file or directory 
+docs/phases/23/evidence/m9a-fulldev-06b-rerun2-poll.log:8: trailing whitespace.
++  [t+30s] gs/fulldev-rerun2-run.sh: line 31: /srv/data/medallion/silver/candles/ETHUSDT/ops-transforms.jsonl: No such file or directory RERUN_CANDLES_DATA_CHANGED=0 MANIFEST_CHANGED=0 OPS_LINES before= after= (append-only, esperado +4529) RERUN_CANDLES_CHANGED=0 == RERUN 4: GOLD (idempotencia del dataset) == 
+docs/phases/23/evidence/m9a-recovery-01-preflight.log:44: trailing whitespace.
++sda                                                                                                              
+RC=2
+CMD: git diff --cached --stat (ultimas lineas)
+ .../23/evidence/m9a-recovery-05-silver-resume.log  |   11 +
+ .../23/evidence/m9a-recovery-06-schema-diag.log    |   64 +
+ .../23/evidence/m9a-recovery-07-final-state.log    |   91 +
+ docs/phases/23/m9a-full-development-dataset.md     |  126 +
+ 53 files changed, 8926 insertions(+)
+CMD: git diff --cached --numstat | total
+added=8926 deleted=0 files=53
+exit=0

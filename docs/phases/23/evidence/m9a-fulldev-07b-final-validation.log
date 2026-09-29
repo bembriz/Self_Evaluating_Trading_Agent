@@ -1,0 +1,110 @@
+# evidencia: m9a-fulldev-07b-final-validation
+fecha: 2026-09-28T22:20:19-06:00
+fase: 23
+comando: bash -c ssh -o BatchMode=yes administrador@192.168.100.24 bash -s < /tmp/opencode/m9a-fulldev-final-remote.sh
+== M9A FULLDEV: VALIDACION FINAL ==
+fecha_inicio=2026-09-29T04:20:20+00:00
+DATE_CONTINUITY_BRONZE=PASS manifest_dates=647 files=647
+BRONZE_OUT_OF_RANGE=PASS
+DATE_CONTINUITY_SILVER=PASS manifest_dates=647 files=647
+SILVER_ROWS=PASS rows_total=424135109 rows_min=16302 rows_max=3664511
+ORDERING_FIDELITY_PARTIAL=PASS values=['PARTIAL']
+SILVER_OUT_OF_RANGE=PASS
+SOURCE_SCHEMA_V1_COUNT=551
+SOURCE_SCHEMA_V2_COUNT=96
+SOURCE_SCHEMA_LINEAGE={"bybit-spot-trades-csv-gz-v1": 551, "bybit-spot-trades-csv-gz-v2": 96}
+DATE_CONTINUITY_CANDLES=PASS unique_dates=647 files=4529
+CANDLE_OUTPUTS=PASS manifest=4529 fs=4529
+CANDLES_7_TF_EXACTOS=PASS per_tf={'1m': 647, '5m': 647, '15m': 647, '30m': 647, '1h': 647, '4h': 647, '1d': 647}
+CANDLES_OUT_OF_RANGE=PASS
+CANDLES_1m=647
+CANDLES_5m=647
+CANDLES_15m=647
+CANDLES_30m=647
+CANDLES_1h=647
+CANDLES_4h=647
+CANDLES_1d=647
+CANDLES_TOTAL=4529
+GOLD_DIRS=PASS dirs=['gold-replay-5ca68f44c37d2321f56a10ecbc08bc0584d70c17826f07604dbba77a8b71134a', 'gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3']
+DATE_CONTINUITY_GOLD=PASS start=2023-09-09 end=2025-06-16 n=647
+GOLD_ALLOWED_SPLIT_DEVELOPMENT=PASS
+GOLD_INTEGRITY=PASS trades_partitions=647 candles_outputs=4529 fidelity=PARTIAL
+FULL_DEV_DATASET_ID=gold-replay-5ca68f44c37d2321f56a10ecbc08bc0584d70c17826f07604dbba77a8b71134a
+FULL_DEV_MANIFEST_SHA256=c095d5740d9ca0c414ac0b11049008aa716262870edbeadc344dbb16188eb62e
+WALK_FORWARD_READS=PASS dates_before_development=0
+FINAL_HOLDOUT_READS=PASS dates_after_development=0
+NO_FECHAS_FUERA_DE_RANGO=PASS outside=0
+DATE_FIRST=2023-09-09
+DATE_LAST=2025-06-16
+UNIQUE_DAYS=647
+MISSING_DAYS=0
+BRONZE_PARTITIONS=647
+SILVER_TRADE_PARTITIONS=647
+SILVER_ROWS_TOTAL=424135109
+PY_VALIDATION_EXIT=0
+-- .part en todas las capas --
+PART_FILES_FINAL=0
+-- gold de 3 dias intacto --
+/srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3/manifest.json: OK
+/srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3/replay-config.json: OK
+THREE_DAY_GOLD_UNTOUCHED=YES
+-- hashes raw de bronze vs baseline (inicio de fulldev) --
+BRONZE_RAW_HASHES_CHANGED=0
+BRONZE_MANIFEST_UNCHANGED=YES
+SILVER_MANIFEST_UNCHANGED=YES
+CANDLES_MANIFEST_UNCHANGED=YES
+-- rerun de idempotencia (resumen de evidencias previas) --
+RERUN_BRONZE_CHANGED=0
+RERUN_SILVER_CHANGED=0
+RERUN_CANDLES_CHANGED=0
+RERUN_GOLD_CHANGED=0
+SUMMARY downloaded=0 skipped=647 total=647
+SUMMARY downloaded=0 skipped=647 total=647
+SUMMARY transformed=0 skipped=647 total=647
+SUMMARY transformed=0 skipped=647 total=647
+SUMMARY transformed=0 skipped=4529 total=4529
+SUMMARY transformed=0 skipped=4529 total=4529
+SUMMARY created=0 skipped=1
+RERUN_BRONZE_CHANGED=0
+RERUN_SILVER_CHANGED=0
+RERUN_CANDLES_CHANGED=0
+RERUN_GOLD_CHANGED=0
+-- silver: transformed de la ejecucion completa --
+SILVER_SUMMARY transformed=92 skipped=555 total=647
+CANDLES_SUMMARY transformed=4508 skipped=21 total=4529
+ORDERING_FIDELITY=['PARTIAL']
+TOTAL_ROWS=424135109
+-- cert/safeguard (alcance M9A) --
+CERT_FILES_CHANGED_VS_BASELINE=5 changed=PAPER_CERTIFICATION_REPORT.md,certification-state-INVALIDATED-2026-09-02-2026-09-06.json,certification-state-INVALIDATED-pre-0.1.1.json,certification-state-INVALIDATED-pre-0.2.0.json,certification-state.json,
+CERT_STATIC_FILES_UNCHANGED=YES
+CERT_STATE_LIVE_FILE_ONLY=NO
+CERT_IDENTITY_FROZEN_EQ_CURRENT=PASS
+CERT_GIT_COMMIT=216ac045422dad84c828786f21833d63e0ef2099
+CERT_SESSION_ID=paper-certification-15m-ethusdt-20260910T165122Z
+CERT_INVALIDATED_REASON=None
+CERT_STATUS=None
+CERT_REPORTS=73 HEARTBEATS=20
+CERT_VALIDITY=PASS
+SAFEGUARD_TOUCHED=NO
+PAPER id=b061332c35724a2147df3c76acdd8ba4cace12157b958766e2d66cb3f34e22bb image=sha256:e41718c572e15fbc7ff8d927c820e091aee0acc565ba79dcf97ab1aad8a9d0a0 started=2026-09-19T04:00:04.763010163Z status=running
+-- ¿algún script M9A escribe fuera de su alcance? --
+M9A_WRITES_OUTSIDE_SCOPE=NO
+CERTIFICATION_TOUCHED_BY_M9A=NO
+CONTAINERS_SET_CHANGED=NO
+PAPER_CONTAINER_CHANGED=NO
+-- conteos en disco --
+BRONZE_PARTITIONS=647
+SILVER_TRADE_PARTITIONS=647
+CANDLE_OUTPUTS=4529
+GOLD_DATASET_DIRS=2
+-- tamano de capas --
+3,1G	/srv/data/medallion/bronze
+4,7G	/srv/data/medallion/silver/trades
+63M	/srv/data/medallion/silver/candles
+1,4M	/srv/data/medallion/gold
+Filesystem                         Size  Used Avail Use% Mounted on
+/dev/sda1                          916G  7,9G  862G   1% /srv/data
+/dev/mapper/ubuntu--vg-ubuntu--lv  455G   40G  396G  10% /
+fecha_fin=2026-09-29T04:20:29+00:00
+M9A_FULLDEV_FINAL_VALIDATION=FAIL
+exit=1

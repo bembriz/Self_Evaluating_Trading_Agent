@@ -1,0 +1,27 @@
+# evidencia: m9a-recovery-01b-cert-baseline
+fecha: 2026-09-28T18:43:52-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-recovery-01b-cert-baseline.sh
+== M9A RECOVERY: baseline de certificacion (via docker exec) ==
+-- ls /app/certification (dentro del contenedor) --
+total 36
+drwxr-xr-x 2 1000  988 4096 Sep 28 22:01 .
+drwxr-xr-x 1 root root 4096 Sep 10 16:53 ..
+-rw-r--r-- 1 root root  182 Sep  6 17:22 PAPER_CERTIFICATION_REPORT.md
+-rw-r--r-- 1 root root 2926 Sep  6 08:22 certification-state-INVALIDATED-2026-09-02-2026-09-06.json
+-rw-r--r-- 1 root root  865 Sep  6 17:22 certification-state-INVALIDATED-pre-0.1.1.json
+-rw-r--r-- 1 root root 2178 Sep 10 13:17 certification-state-INVALIDATED-pre-0.2.0.json
+-rw-r--r-- 1 root root 6218 Sep 28 22:01 certification-state.json
+-- hashes --
+7b8849b1f1bd76a982f25d1e2ea93995b5a63b4850e8d279b029e3fd2b98e242  PAPER_CERTIFICATION_REPORT.md
+5b3df2842ae6345e14b2c7126c6f07bde207fc178134be7c3a85241f4c7ceef4  certification-state-INVALIDATED-2026-09-02-2026-09-06.json
+e18d60500441613efa6fae9ac68dd88b7e4ee62a4b7db8d185080ba23f810655  certification-state-INVALIDATED-pre-0.1.1.json
+49c1e3284934e2d4c20495fe5914a751bf926d5d274a67481a694890236ab10a  certification-state-INVALIDATED-pre-0.2.0.json
+cb86dff83fd2f3b5d3f62d7c54d076308f7cf6408b36f8872ac8ac0db2fecf5b  certification-state.json
+-- safeguard --
+eff877d8fd3ffe25cfa0b4ea23d22ba842480a7d34ed6fe170458a75529fb1c2  safeguard-evidence.json
+CERT_BASELINE_FILES=5
+CERT_BASELINE=OK
+CERT_BASELINE_EXIT=0
+M9A_RECOVERY_CERT_BASELINE=PASS
+exit=0

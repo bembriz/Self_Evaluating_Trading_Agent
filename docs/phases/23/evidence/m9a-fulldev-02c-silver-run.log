@@ -1,0 +1,12 @@
+# evidencia: m9a-fulldev-02c-silver-run
+fecha: 2026-09-28T20:20:45-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-fulldev-poll.sh silver 780
+== POLL silver (max 780s) ==
+DONE tras 0s
+== M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) ==
+fecha_inicio=2026-09-29T02:20:34+00:00
+DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16
+SILVER_PARTITIONS_BEFORE=555
+MARKER_AUSENTE
+exit=1

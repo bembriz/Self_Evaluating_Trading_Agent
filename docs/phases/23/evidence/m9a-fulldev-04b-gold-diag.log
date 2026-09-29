@@ -1,0 +1,7 @@
+# evidencia: m9a-fulldev-04b-gold-diag
+fecha: 2026-09-28T22:05:16-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-fulldev-launch.sh gold-diag
+== LAUNCH gold-diag ==
+/tmp/opencode/m9a-fulldev-launch.sh: línea 7: /tmp/opencode/m9a-fulldev-gold-diag-remote.sh: No existe el archivo o el directorio
+exit=1

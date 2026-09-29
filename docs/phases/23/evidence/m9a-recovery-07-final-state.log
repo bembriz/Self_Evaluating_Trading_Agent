@@ -1,0 +1,91 @@
+# evidencia: m9a-recovery-07-final-state
+fecha: 2026-09-28T18:54:18-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-recovery-07-final-state.sh
+== M9A RECOVERY ESTADO FINAL (driver remoto) ==
+-- local: git sin commits/push (HEAD debe seguir en la base) --
+BRANCH=medalion HEAD=dc5c0a2d791686e25a54661a81902a17564ef4b0
+COMMITS_SIN_BASE=0
+CHANGED_FILES=23
+ M docs/phases/23/evidence/log.md
+?? docs/phases/23/evidence/m9a-00-deploy-copy.log
+?? docs/phases/23/evidence/m9a-01-preflight.log
+?? docs/phases/23/evidence/m9a-01b-preflight.log
+?? docs/phases/23/evidence/m9a-01c-preflight-fix.log
+?? docs/phases/23/evidence/m9a-02-source-availability.log
+?? docs/phases/23/evidence/m9a-03a-bronze-1.log
+?? docs/phases/23/evidence/m9a-03b-bronze-2.log
+?? docs/phases/23/evidence/m9a-03c-bronze-3.log
+?? docs/phases/23/evidence/m9a-03d-bronze-4.log
+?? docs/phases/23/evidence/m9a-03e-bronze-5.log
+?? docs/phases/23/evidence/m9a-04-bronze-verify.log
+?? docs/phases/23/evidence/m9a-05a-silver-1.log
+?? docs/phases/23/evidence/m9a-05b-silver-2.log
+?? docs/phases/23/evidence/m9a-05c-silver-3-incomplete.log
+?? docs/phases/23/evidence/m9a-recovery-01-preflight.log
+?? docs/phases/23/evidence/m9a-recovery-01b-cert-baseline.log
+?? docs/phases/23/evidence/m9a-recovery-02-partials.log
+?? docs/phases/23/evidence/m9a-recovery-03-inventory.log
+?? docs/phases/23/evidence/m9a-recovery-04-bronze-rerun.log
+?? docs/phases/23/evidence/m9a-recovery-05-silver-resume.log
+?? docs/phases/23/evidence/m9a-recovery-06-schema-diag.log
+?? docs/phases/23/evidence/m9a-recovery-07-final-state.log
+== M9A RECOVERY: ESTADO FINAL (read-only) ==
+-- conteos por capa --
+BRONZE_PARTITIONS=647
+SILVER_TRADE_PARTITIONS=551
+CANDLE_OUTPUTS=21
+GOLD_DIRS=1
+gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3
+ops-gold.jsonl
+-- .part en todas las capas --
+PART_FILES=0
+-- bronze sin cambios tras el rerun completo --
+BRONZE_MANIFEST_BEFORE=38480abd5c02bfb1d8d9902463c8a9863d714c3feb346bb633da3bc0c60b3734
+BRONZE_MANIFEST_AFTER =38480abd5c02bfb1d8d9902463c8a9863d714c3feb346bb633da3bc0c60b3734
+BRONZE_MANIFEST_UNCHANGED=YES
+BRONZE_DATA_CHANGED_LINES=0
+-- silver: progreso previo intacto (551) --
+SILVER_MANIFEST_ENTRIES=551
+SILVER_OPS_LINES=1108
+-- gold de 3 dias intacto (sha256sum -c) --
+/srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3/manifest.json: OK
+/srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3/replay-config.json: OK
+GOLD3D_UNTOUCHED=YES
+-- Full DEVELOPMENT --
+FULL_DEV_DATASET_ID=NOT_CREATED
+-- no-lectura de splits: fechas fuera de DEVELOPMENT --
+WALK_FORWARD_READS=0
+FINAL_HOLDOUT_READS=0
+OUT_OF_DEVELOPMENT_DATES=0
+SPLIT_CHECK_EXIT=0
+-- containers vs baseline --
+CONTAINERS_SET_CHANGED=NO
+PAPER_CONTAINER_CHANGED=NO
+paper id=b061332c35724a2147df3c76acdd8ba4cace12157b958766e2d66cb3f34e22bb imageid=sha256:e41718c572e15fbc7ff8d927c820e091aee0acc565ba79dcf97ab1aad8a9d0a0 started=2026-09-19T04:00:04.763010163Z status=running restarts=3
+-- certificacion/safeguard vs baseline --
+CERTIFICATION_TOUCHED=NO
+SAFEGUARD_TOUCHED=NO
+total 36
+drwxr-xr-x 2 1000  988 4096 Sep 28 22:01 .
+drwxr-xr-x 1 root root 4096 Sep 10 16:53 ..
+-rw-r--r-- 1 root root  182 Sep  6 17:22 PAPER_CERTIFICATION_REPORT.md
+-rw-r--r-- 1 root root 2926 Sep  6 08:22 certification-state-INVALIDATED-2026-09-02-2026-09-06.json
+-rw-r--r-- 1 root root  865 Sep  6 17:22 certification-state-INVALIDATED-pre-0.1.1.json
+-rw-r--r-- 1 root root 2178 Sep 10 13:17 certification-state-INVALIDATED-pre-0.2.0.json
+-rw-r--r-- 1 root root 6218 Sep 28 22:01 certification-state.json
+-- servicios --
+gastos-ia-app|f0866dba0802|Up 22 hours
+gastos-ia-caddy|612427ee2033|Up 3 weeks
+gastos-ia-samba|f9542a5b0b22|Up 22 hours (healthy)
+self-evaluating-trading-agent-grafana-1|b796f67478d7|Up 2 weeks
+self-evaluating-trading-agent-paper-runner-1|b061332c3572|Up 9 days
+self-evaluating-trading-agent-postgres-1|0c79b6b5d1cd|Up 3 weeks (healthy)
+self-evaluating-trading-agent-prometheus-1|1431d8e01dd6|Up 2 weeks
+Filesystem                         Size  Used Avail Use% Mounted on
+/dev/sda1                          916G  7,2G  863G   1% /srv/data
+/dev/mapper/ubuntu--vg-ubuntu--lv  455G   40G  396G  10% /
+M9A_RECOVERY_FINAL_STATE=PASS
+FINAL_STATE_EXIT=0
+M9A_RECOVERY_FINAL_STATE_DRIVER=PASS
+exit=0

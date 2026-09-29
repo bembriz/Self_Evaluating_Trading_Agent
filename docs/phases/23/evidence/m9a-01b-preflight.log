@@ -1,0 +1,103 @@
+# evidencia: m9a-01b-preflight
+fecha: 2026-09-28T14:22:20-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-01b-preflight.sh
+== M9A PREFLIGHT v2 (local + remoto, read-only) ==
+-- local: rama/HEAD --
+BRANCH=medalion HEAD=dc5c0a2d791686e25a54661a81902a17564ef4b0
+LOCAL_HEAD_OK=YES WORKTREE_CLEAN_SOLO_EVIDENCIA_M9A=YES
+-- local: split v1 congelado --
+split_v1 dataset=BYBIT_ETHBTC_V001
+DEVELOPMENT first=2023-09-08T17:45:00+00:00 last=2025-06-17T17:30:00+00:00 rows=62208
+LOCAL_RANGE_FIRST=2023-09-09 LOCAL_RANGE_LAST=2025-06-16 LOCAL_COUNT=647
+SPLIT_AND_RANGE_OK=YES
+-- local: rango 647 == split_guard --
+GUARD_FIRST=2023-09-09 GUARD_LAST=2025-06-16 GUARD_COUNT=647
+SPLIT_GUARD_RANGE_OK=YES
+-- remoto --
+== M9A PREFLIGHT remoto (read-only) ==
+-- host --
+lenovosrv
+6.8.0-138-generic
+2026-09-28T20:22:21+00:00
+-- marker /srv/data --
+LENOVO_DATA
+uuid=10fff707-60e4-4321-afa0-a3c4704d9e8d
+mounted_at=/srv/data
+created=2026-09-28T02:52:06+00:00
+MARKER_FIRST_LINE=LENOVO_DATA
+MARKER_OK=YES
+-- fstab /srv/data --
+/dev/sda1 /srv/data ext4   10fff707-60e4-4321-afa0-a3c4704d9e8d rw,relatime
+-- identidad de disco (by-id / label) --
+SRC=/dev/sda1
+sda1 LENOVO_DATA 10fff707-60e4-4321-afa0-a3c4704d9e8d ext4   931,5G part
+LABEL=LENOVO_DATA
+UUID=10fff707-60e4-4321-afa0-a3c4704d9e8d
+LENOVO_DATA_OK=YES
+-- /srv/fast en NVMe (ROTA=0) --
+FAST_SRC=
+lsblk: : not a block device
+-- espacio HDD /srv/data --
+Filesystem     Mounted on 1G-blocks Avail Use%
+/dev/sda1      /srv/data       916G  870G   1%
+HDD_AVAIL_GB=869
+-- espacio NVMe /srv/fast (SSD_MIN_FREE_GB=50) --
+Filesystem                        Mounted on 1G-blocks Avail Use%
+/dev/mapper/ubuntu--vg-ubuntu--lv /               455G  396G  10%
+SSD_AVAIL_GB=395
+SSD_MIN_FREE_OK=YES
+HDD_SPACE_OK=YES (>=15GB)
+-- baseline paper-runner (no tocar) --
+PAPER id=b061332c35724a2147df3c76acdd8ba4cace12157b958766e2d66cb3f34e22bb image=sha256:e41718c572e15fbc7ff8d927c820e091aee0acc565ba79dcf97ab1aad8a9d0a0 imageid=self-evaluating-trading-agent-paper-runner:0.2.0 started=2026-09-19T04:00:04.763010163Z status=running
+-- baseline otros servicios --
+NAMEFILTER=postgres IDS=0c79b6b5d1cd 
+  /self-evaluating-trading-agent-postgres-1 id=0c79b6b5d1cdf9f2cf5a503b0557e0fc0ba3b463e5a0007632399b431b97926d started=2026-09-02T01:24:46.267698675Z status=running health=healthy
+NAMEFILTER=prometheus IDS=1431d8e01dd6 
+
+template parsing error: template: :1:92: executing "" at <.State.Health.Status>: map has no entry for key "Health"
+NAMEFILTER=grafana IDS=b796f67478d7 
+
+template parsing error: template: :1:92: executing "" at <.State.Health.Status>: map has no entry for key "Health"
+NAMEFILTER=gastosia IDS=
+-- puertos publicados baseline --
+gastos-ia-app => 8000/tcp
+gastos-ia-caddy => 0.0.0.0:80->80/tcp, [::]:80->80/tcp, 0.0.0.0:443->443/tcp, [::]:443->443/tcp, 443/udp, 2019/tcp
+gastos-ia-samba => 0.0.0.0:139->139/tcp, [::]:139->139/tcp, 137/udp, 0.0.0.0:445->445/tcp, [::]:445->445/tcp
+self-evaluating-trading-agent-grafana-1 => 127.0.0.1:3000->3000/tcp
+self-evaluating-trading-agent-paper-runner-1 => 
+self-evaluating-trading-agent-postgres-1 => 127.0.0.1:5433->5432/tcp
+self-evaluating-trading-agent-prometheus-1 => 127.0.0.1:9090->9090/tcp
+-- estado Medallion previo al bulk --
+bronze_partitions=3
+silver_partitions=3
+candle_outputs=21
+-- gold de 3 días (baseline, intocado) --
+total 20
+drwxrwxr-x 2 administrador administrador 4096 sep 28 16:34 .
+drwxrwxr-x 3 administrador administrador 4096 sep 28 16:34 ..
+-rw-rw-r-- 1 administrador administrador 7530 sep 28 16:34 manifest.json
+-rw-rw-r-- 1 administrador administrador  704 sep 28 16:34 replay-config.json
+9411a4e01a5adccbb448df062f0eca857213e8259441535b5812ee4688af99df  /srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3/manifest.json
+be8aae2df45670e1f987ab11e68f1471d0cb89104c0e53483d2d0de90fa18314  /srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3/replay-config.json
+-- tamano canonico actual --
+35M	/srv/data/medallion
+36
+-- snapshot baseline paper/cert (guardado para comparacion final) --
+mkdir: cannot create directory ‘/srv/fast/m9a-logs’: Permission denied
+bash: line 55: /srv/fast/m9a-logs/containers.baseline.txt: No such file or directory
+-- rango de fechas generado (647 DEVELOPMENT) --
+cat: /srv/fast/m9a-logs/containers.baseline.txt: No such file or directory
+FIRST=2023-09-09 LAST=2025-06-16 COUNT=647 UNIQUE=647
+Traceback (most recent call last):
+  File "<stdin>", line 10, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/fast/m9a-logs/dates.txt'
+-- sin huecos (continuidad) --
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/fast/m9a-logs/dates.txt'
+-- variables split en entorno --
+WALK_FORWARD_READS=0 FINAL_HOLDOUT_READS=0 (sin vars)
+PREFLIGHT_M9A_REMOTE=OK
+M9A_PREFLIGHT=PASS
+exit=0

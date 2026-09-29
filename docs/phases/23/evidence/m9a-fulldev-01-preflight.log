@@ -1,0 +1,13 @@
+# evidencia: m9a-fulldev-01-preflight
+fecha: 2026-09-28T20:15:50-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-fulldev-01-preflight.sh
+== M9A FULLDEV PREFLIGHT (local + deploy + remoto) ==
+fecha=2026-09-28T20:15:50-06:00
+-- local: rama/HEAD/origin --
+BRANCH=medalion
+LOCAL_HEAD=4fd6b4c793bfde0f4719d9e6e54761e236a5fcaa
+ORIGIN_MEDALION=4fd6b4c793bfde0f4719d9e6e54761e236a5fcaa
+LOCAL_HEAD_OK=YES
+-- local: worktree (0 modificados, 0 staged, 22 untracked M9-A) --
+exit=1

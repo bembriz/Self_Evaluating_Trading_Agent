@@ -1,0 +1,12 @@
+# evidencia: m9a-fulldev-06-rerun2-launch
+fecha: 2026-09-28T22:12:37-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-fulldev-launch.sh rerun2
+== LAUNCH rerun2 ==
+72 /srv/fast/medallion/m9a-logs/fulldev-rerun2-run.sh
+LAUNCHED_PID=3433006
+== RERUN 3: SILVER CANDLES (4529 outputs) ==
+/srv/fast/medallion/m9a-logs/fulldev-rerun2-run.sh: line 13: /srv/data/medallion/silver/candles/ETHUSDT/ops-transforms.jsonl: No such file or directory
+PROBE_OK
+LAUNCH_rerun2=OK
+exit=0

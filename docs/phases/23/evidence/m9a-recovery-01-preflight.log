@@ -1,0 +1,110 @@
+# evidencia: m9a-recovery-01-preflight
+fecha: 2026-09-28T18:43:06-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-recovery-01-preflight.sh
+== M9A RECOVERY PREFLIGHT (local + remoto, read-only) ==
+-- local: rama/HEAD --
+BRANCH=medalion HEAD=dc5c0a2d791686e25a54661a81902a17564ef4b0
+HEAD_OK=YES
+-- local: cambios existentes (NO descartar) --
+ M docs/phases/23/evidence/log.md
+?? docs/phases/23/evidence/m9a-00-deploy-copy.log
+?? docs/phases/23/evidence/m9a-01-preflight.log
+?? docs/phases/23/evidence/m9a-01b-preflight.log
+?? docs/phases/23/evidence/m9a-01c-preflight-fix.log
+?? docs/phases/23/evidence/m9a-02-source-availability.log
+?? docs/phases/23/evidence/m9a-03a-bronze-1.log
+?? docs/phases/23/evidence/m9a-03b-bronze-2.log
+?? docs/phases/23/evidence/m9a-03c-bronze-3.log
+?? docs/phases/23/evidence/m9a-03d-bronze-4.log
+?? docs/phases/23/evidence/m9a-03e-bronze-5.log
+?? docs/phases/23/evidence/m9a-04-bronze-verify.log
+?? docs/phases/23/evidence/m9a-05a-silver-1.log
+?? docs/phases/23/evidence/m9a-05b-silver-2.log
+?? docs/phases/23/evidence/m9a-05c-silver-3-incomplete.log
+?? docs/phases/23/evidence/m9a-recovery-01-preflight.log
+CHANGED_FILES=16
+-- remoto --
+== M9A RECOVERY PREFLIGHT remoto (read-only) ==
+-- host --
+lenovosrv
+6.8.0-138-generic
+2026-09-29T00:43:07+00:00
+ 00:43:07 up 33 days, 20:50,  1 user,  load average: 0,10, 0,07, 0,01
+-- boots (sin reinicio esperado) --
+IDX BOOT ID                          FIRST ENTRY                 LAST ENTRY
+ -1 6a4e3179843d4cd69c181f4675df3699 Wed 2026-08-26 03:43:18 UTC Wed 2026-08-26 03:52:36 UTC
+  0 0a8d479316ca415ab6eeffd72c7975f5 Wed 2026-08-26 03:52:56 UTC Tue 2026-09-29 00:43:07 UTC
+-- findmnt --
+/srv/data /dev/sda1 ext4   rw,relatime
+-- identidad de disco (by-id/label, nunca /dev/sda a secas) --
+lrwxrwxrwx 1 root root  9 ago 26 03:52 /dev/disk/by-id/ata-ST1000LM035-1RK172_WDEV3QGR -> ../../sda
+lrwxrwxrwx 1 root root 10 sep 28 02:51 /dev/disk/by-id/ata-ST1000LM035-1RK172_WDEV3QGR-part1 -> ../../sda1
+NAME                      FSTYPE      FSVER    LABEL       UUID                                   FSAVAIL FSUSE% MOUNTPOINTS
+sda                                                                                                              
+└─sda1                    ext4        1.0      LENOVO_DATA 10fff707-60e4-4321-afa0-a3c4704d9e8d    862,1G     1% /srv/data
+└─sda1                    ext4        1.0      LENOVO_DATA 10fff707-60e4-4321-afa0-a3c4704d9e8d    862,1G     1% /srv/data
+-- blkid /dev/sda1 --
+/dev/sda1: LABEL="LENOVO_DATA" UUID="10fff707-60e4-4321-afa0-a3c4704d9e8d" BLOCK_SIZE="4096" TYPE="ext4" PARTLABEL="primary" PARTUUID="ae4268ce-0d51-4918-8cb8-5d11f73db345"
+-- marker --
+LENOVO_DATA
+uuid=10fff707-60e4-4321-afa0-a3c4704d9e8d
+mounted_at=/srv/data
+created=2026-09-28T02:52:06+00:00
+MARKER_FIRST_LINE=PASS LENOVO_DATA
+MARKER_UUID_EQ_BLKID=PASS 10fff707-60e4-4321-afa0-a3c4704d9e8d==10fff707-60e4-4321-afa0-a3c4704d9e8d
+MARKER_LABEL_EQ_BLKID=PASS LENOVO_DATA
+MARKER_MOUNTED_AT=PASS /srv/data
+FSTYPE_EXT4=PASS ['/dev/sda1', 'ext4']
+SOURCE_SDA1_BY_ID_OK=PASS identity via label+UUID+by-id
+MARKER_VALID=YES
+MARKER_CHECK_EXIT=0
+-- espacio --
+Filesystem                         Size  Used Avail Use% Mounted on
+/dev/sda1                          916G  7,2G  863G   1% /srv/data
+/dev/mapper/ubuntu--vg-ubuntu--lv  455G   40G  396G  10% /
+SSD_AVAIL_GB=425 SSD_MIN_FREE_GB=50 SSD_MIN_FREE_OK=YES
+-- errores de filesystem en journal (boot actual) --
+(sin coincidencias ext4/I/O)
+-- msg del kernel sda/ext4 en todo el journal --
+ago 26 03:52:56 lenovosrv kernel:  sda: sda1
+ago 26 03:52:56 lenovosrv kernel: EXT4-fs (dm-0): mounted filesystem 611446da-869e-4f19-a07d-b345b4cca71a ro with ordered data mode. Quota mode: none.
+ago 26 03:52:56 lenovosrv kernel: EXT4-fs (dm-0): re-mounted 611446da-869e-4f19-a07d-b345b4cca71a r/w.
+ago 26 03:52:56 lenovosrv kernel: EXT4-fs (nvme0n1p2): mounted filesystem b0a2ebb3-6189-4893-8964-a1fd861d80a6 r/w with ordered data mode. Quota mode: none.
+sep 28 02:51:47 lenovosrv kernel:  sda: sda1
+sep 28 02:52:05 lenovosrv kernel: EXT4-fs (sda1): mounted filesystem 10fff707-60e4-4321-afa0-a3c4704d9e8d r/w with ordered data mode. Quota mode: none.
+-- servicios post-reboot --
+gastos-ia-app|f0866dba0802|gastos-ia-app:latest|Up 22 hours
+gastos-ia-caddy|612427ee2033|caddy:2-alpine|Up 3 weeks
+gastos-ia-samba|f9542a5b0b22|servercontainers/samba:smbd-only-latest|Up 22 hours (healthy)
+self-evaluating-trading-agent-grafana-1|b796f67478d7|grafana/grafana:11.1.0|Up 2 weeks
+self-evaluating-trading-agent-paper-runner-1|b061332c3572|self-evaluating-trading-agent-paper-runner:0.2.0|Up 9 days
+self-evaluating-trading-agent-postgres-1|0c79b6b5d1cd|pgvector/pgvector:pg16|Up 3 weeks (healthy)
+self-evaluating-trading-agent-prometheus-1|1431d8e01dd6|prom/prometheus:v2.53.0|Up 2 weeks
+-- paper-runner (sin modificar) --
+id=b061332c35724a2147df3c76acdd8ba4cace12157b958766e2d66cb3f34e22bb image=self-evaluating-trading-agent-paper-runner:0.2.0 imageid=sha256:e41718c572e15fbc7ff8d927c820e091aee0acc565ba79dcf97ab1aad8a9d0a0 started=2026-09-19T04:00:04.763010163Z status=running restarts=3 policy=unless-stopped
+-- postgres --
+id=0c79b6b5d1cdf9f2cf5a503b0557e0fc0ba3b463e5a0007632399b431b97926d status=running health=healthy started=2026-09-02T01:24:46.267698675Z
+-- gastosia --
+gastos-ia-app|f0866dba0802|Up 22 hours
+gastos-ia-caddy|612427ee2033|Up 3 weeks
+gastos-ia-samba|f9542a5b0b22|Up 22 hours (healthy)
+-- certificacion (snapshot baseline, no tocar) --
+-- procesos medallion activos (esperado: ninguno) --
+MEDALLION_PROCESSES=0
+-- scratch m9a-logs --
+bronze.after.sha256
+bronze.before.sha256
+bronze.manifest.after.sha256
+candles.before.sha256
+cert.baseline.sha256
+containers.baseline.txt
+dates.oneline.txt
+dates.txt
+gold3d.baseline.sha256
+silver.before.sha256
+RECOVERY_PREFLIGHT_REMOTE=OK
+ls: cannot access '/srv/docker/self-evaluating-trading-agent/certification': Permission denied
+RECOVERY_PREFLIGHT_REMOTE_EXIT=0
+M9A_RECOVERY_PREFLIGHT=PASS
+exit=0

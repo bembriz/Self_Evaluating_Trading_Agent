@@ -1,0 +1,11 @@
+# evidencia: m9a-fulldev-05-rerun1-launch
+fecha: 2026-09-28T22:11:11-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-fulldev-launch.sh rerun1
+== LAUNCH rerun1 ==
+66 /srv/fast/medallion/m9a-logs/fulldev-rerun1-run.sh
+LAUNCHED_PID=3431930
+== RERUN 1: BRONZE (647 fechas) ==
+PROBE_OK
+LAUNCH_rerun1=OK
+exit=0

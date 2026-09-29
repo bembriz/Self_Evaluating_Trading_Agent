@@ -1,0 +1,13 @@
+# evidencia: m9a-fulldev-02b-silver-launch
+fecha: 2026-09-28T20:20:32-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-fulldev-launch.sh silver
+== LAUNCH silver ==
+78 /srv/fast/medallion/m9a-logs/fulldev-silver-run.sh
+LAUNCHED_PID=3372770
+== M9A FULLDEV: SILVER TRADES (rango completo 647 fechas) ==
+fecha_inicio=2026-09-29T02:20:34+00:00
+DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16
+PROBE_OK
+LAUNCH_silver=OK
+exit=0

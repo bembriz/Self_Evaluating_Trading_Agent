@@ -1,0 +1,82 @@
+# evidencia: m9a-fulldev-01d-preflight
+fecha: 2026-09-28T20:18:09-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-fulldev-01-preflight.sh
+== M9A FULLDEV PREFLIGHT (local + deploy + remoto) ==
+fecha=2026-09-28T20:18:09-06:00
+-- local: rama/HEAD/origin --
+BRANCH=medalion
+LOCAL_HEAD=4fd6b4c793bfde0f4719d9e6e54761e236a5fcaa
+ORIGIN_MEDALION=4fd6b4c793bfde0f4719d9e6e54761e236a5fcaa
+LOCAL_HEAD_OK=YES
+-- local: worktree (0 modificados salvo log.md de evidencia, 0 staged, 22 untracked M9-A) --
+TRACKED_MODIFIED_SIN_LOGMD=0 LOG_MD_MODIFICADO_POR_EVIDENCIA=1
+STAGED=0 UNTRACKED=26 UNTRACKED_FUERA_M9A=0 LEGACY_M9A_UNTRACKED=22
+WORKTREE_OK=YES (22 untracked M9-A conservados, sin borrar)
+-- local: split v1 + split_guard --
+split_v1 DEVELOPMENT 2023-09-08T17:45:00+00:00..2025-06-17T17:30:00+00:00 rows=62208
+LOCAL_RANGE_FIRST=2023-09-09 LOCAL_RANGE_LAST=2025-06-16 LOCAL_COUNT=647
+GUARD_FIRST=2023-09-09 GUARD_LAST=2025-06-16 GUARD_COUNT=647
+SPLIT_GUARD_RANGE_OK=YES
+SPLIT_AND_RANGE_OK=YES
+-- deploy: git archive 4fd6b4c793bfde0f4719d9e6e54761e236a5fcaa -> lenovosrv:/tmp/m9a/src --
+REMOTE_SKELETON=OK
+cat: /tmp/m9a/src/GIT_SHA: No such file or directory
+GIT_SHA_ESCRITO=
+DEPLOY_VIA_GIT_ARCHIVE=YES (contenido exacto del commit)
+-- preflight remoto --
+== M9A FULLDEV PREFLIGHT remoto ==
+fecha=2026-09-29T02:18:13+00:00 host=lenovosrv
+-- marker / LENOVO_DATA / UUID --
+MARKER_FIRST_LINE=LENOVO_DATA
+MARKER_OK=YES
+/dev/sda1 /srv/data ext4   10fff707-60e4-4321-afa0-a3c4704d9e8d
+LABEL=LENOVO_DATA
+UUID=10fff707-60e4-4321-afa0-a3c4704d9e8d
+LENOVO_DATA_OK=YES
+lsblk: : not a block device
+FAST_SRC=
+-- capacidad --
+Filesystem                        Mounted on 1G-blocks Avail Use%
+/dev/sda1                         /srv/data       916G  863G   1%
+/dev/mapper/ubuntu--vg-ubuntu--lv /               455G  396G  10%
+HDD_AVAIL_GB=862 SSD_AVAIL_GB=395
+SSD_MIN_FREE_OK=YES
+HDD_SPACE_OK=YES
+-- 0 .part en todas las capas --
+PART_FILES_BEFORE=0
+-- conteos de entrada --
+BRONZE_PARTITIONS=647
+SILVER_TRADE_PARTITIONS=555
+CANDLE_OUTPUTS=21
+GOLD_DATASET_DIRS=1
+GOLD_DIR=gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3
+-- codigo desplegado = commit --
+DEPLOYED_GIT_SHA=4fd6b4c793bfde0f4719d9e6e54761e236a5fcaa
+DEPLOYED_SHA_OK=YES
+-- hashes de ficheros clave (verificados contra git local) --
+4ac558d6a12ef8e33ea074b492dc097d154da4ce87e633cd8ff83bf36b384fd0  /tmp/m9a/src/infrastructure/medallion/silver.py
+a0caf8c68dd68b1e9d135d5802a5f5165f062b1240e83d61d002582865b6e19f  /tmp/m9a/src/infrastructure/medallion/bronze.py
+7eb8cb8b1be0249422c4a8db2d3fdace7f1108628f9f91d8998682ebbe2452d1  /tmp/m9a/src/infrastructure/medallion/schema_backfill_cli.py
+-- imports + rango 647 --
+IMPORTS_OK SOURCE_SCHEMA_V1=bybit-spot-trades-csv-gz-v1 SOURCE_SCHEMA_V2=bybit-spot-trades-csv-gz-v2
+FIRST=2023-09-09 LAST=2025-06-16 COUNT=647 UNIQUE=647
+RANGE_647_DEVELOPMENT=PASS
+-- paper/cert baseline (comparacion con baselines existentes) --
+CERTIFICATION_TOUCHED=NO
+SAFEGUARD_TOUCHED=NO
+PAPER id=b061332c35724a2147df3c76acdd8ba4cace12157b958766e2d66cb3f34e22bb image=sha256:e41718c572e15fbc7ff8d927c820e091aee0acc565ba79dcf97ab1aad8a9d0a0 started=2026-09-19T04:00:04.763010163Z status=running
+-- baselines de esta ejecucion --
+7 /srv/fast/medallion/m9a-logs/fulldev-containers.baseline.txt
+647 /srv/fast/medallion/m9a-logs/fulldev-bronze.before.sha256
+9411a4e01a5adccbb448df062f0eca857213e8259441535b5812ee4688af99df  /srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3/manifest.json
+be8aae2df45670e1f987ab11e68f1471d0cb89104c0e53483d2d0de90fa18314  /srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3/replay-config.json
+21 /srv/fast/medallion/m9a-logs/fulldev-candles.before.sha256
+555 /srv/fast/medallion/m9a-logs/fulldev-silver.before.sha256
+7,2G	/srv/data/medallion
+M9A_FULLDEV_PREFLIGHT_REMOTE=PASS
+-- comparacion de hashes de ficheros clave (git vs lenovosrv) --
+FILE_MATCH=silver.py YES
+FILE_MATCH=bronze.py YES
+FILE_MATCH=schema_backfill_cli.py YES
+exit=1

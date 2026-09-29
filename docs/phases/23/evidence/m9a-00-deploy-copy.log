@@ -1,0 +1,21 @@
+# evidencia: m9a-00-deploy-copy
+fecha: 2026-09-28T14:21:17-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-00-deploy.sh
+== M9A DEPLOY COPY (repo src -> lenovosrv:/tmp/m9a/src) ==
+LOCAL_BRANCH=medalion
+LOCAL_HEAD=dc5c0a2d791686e25a54661a81902a17564ef4b0
+HEAD_OK=YES
+-- estado worktree --
+?? docs/phases/23/evidence/m9a-00-deploy-copy.log
+-- deploy via tar --
+REMOTE_SKELETON=OK
+-- verificación remota --
+files_py=165
+1,1M	/tmp/m9a/src
+IMPORTS_OK
+DEV_FIRST=2023-09-09 DEV_LAST=2025-06-16 DEV_DAYS=647
+RANGE_OK=YES COUNT=647 UNIQUE=647
+DEPLOY_VERIFY=OK
+M9A_DEPLOY=PASS
+exit=0

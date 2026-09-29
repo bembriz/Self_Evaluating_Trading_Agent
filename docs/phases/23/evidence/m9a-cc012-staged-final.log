@@ -1,0 +1,54 @@
+# evidencia: m9a-cc012-staged-final
+fecha: 2026-09-28T22:42:37-06:00
+fase: 23
+comando: bash -c 
+echo "CMD: git status -sb"; git status -sb | sed -n "1,3p"
+echo "CMD: staged total"; git diff --cached --name-only | wc -l
+echo "CMD: staged fuera docs/phases/23"; git diff --cached --name-only | grep -vc "^docs/phases/23/" || true
+echo "CMD: staged codigo/ledger"; git diff --cached --name-only | grep -E "^(src/|tests/|deployment/)|progress\.yaml" || echo "NONE"
+echo "CMD: evidence staged"; git diff --cached --name-only | grep -c "^docs/phases/23/evidence/"
+echo "CMD: logs m9a staged"; git diff --cached --name-only | grep -cE "evidence/m9a.*\.log$"
+echo "CMD: preservados(22)+fulldev(28)+cc012"; git diff --cached --name-only | grep -E "evidence/m9a-(0|1|2|3|4|5)|evidence/m9a-recovery" | wc -l; git diff --cached --name-only | grep -c "evidence/m9a-fulldev"; git diff --cached --name-only | grep -c "evidence/m9a-cc012"
+echo "CMD: docs de fase staged"; git diff --cached --name-only | grep -v "/evidence/"
+echo "CMD: numstat"; git diff --cached --numstat | awk "{a+=\$1} END {print \"files=\"NR\" added=\"a}"
+echo "CMD: diff --check humanos"; git diff --cached --check -- docs/phases/23/m9a-full-development-dataset.md docs/phases/23/commit-candidate-012.md docs/phases/23/evidence/log.md; echo "RC=$?"
+echo "CMD: diff --check total (avisos trailing ws)"; git diff --cached --check 2>&1 | grep -c "trailing whitespace"
+echo "CMD: untracked"; git status --porcelain | grep -c "^??" || echo 0
+echo "CMD: HEAD==origin"; test "$(git rev-parse HEAD)" = "$(git rev-parse origin/medalion)" && echo "HEAD_EQ_ORIGIN=YES"
+
+CMD: git status -sb
+## medalion...origin/medalion
+A  docs/phases/23/commit-candidate-012.md
+M  docs/phases/23/evidence/log.md
+CMD: staged total
+57
+CMD: staged fuera docs/phases/23
+0
+CMD: staged codigo/ledger
+NONE
+CMD: evidence staged
+55
+CMD: logs m9a staged
+54
+CMD: preservados(22)+fulldev(28)+cc012
+22
+28
+4
+CMD: docs de fase staged
+docs/phases/23/commit-candidate-012.md
+docs/phases/23/m9a-full-development-dataset.md
+CMD: numstat
+files=57 added=9432
+CMD: diff --check humanos
+docs/phases/23/evidence/log.md:402: trailing whitespace.
++- `2026-09-28T22:38:00-06:00` **m9a-cc012-secret-scan** → `bash -c 
+docs/phases/23/evidence/log.md:421: trailing whitespace.
++- `2026-09-28T22:41:30-06:00` **m9a-cc012-final-staging** → `bash -c 
+RC=2
+CMD: diff --check total (avisos trailing ws)
+164
+CMD: untracked
+1
+CMD: HEAD==origin
+HEAD_EQ_ORIGIN=YES
+exit=0

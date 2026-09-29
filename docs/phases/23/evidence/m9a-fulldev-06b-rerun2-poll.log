@@ -1,0 +1,35 @@
+# evidencia: m9a-fulldev-06b-rerun2-poll
+fecha: 2026-09-28T22:12:42-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-fulldev-poll.sh rerun2 1500
+== POLL rerun2 (max 1500s) marker=FULLDEV_RERUN2_DONE=YES ==
+  [t+0s] == RERUN 3: SILVER CANDLES (4529 outputs) == /srv/fast/medallion/m9a-logs/fulldev-rerun2-run.sh: line 13: /srv/data/medallion/silver/candles/ETHUSDT/ops-transforms.jsonl: No such file or directory 
+  [t+0s]       00:04
+  [t+30s] gs/fulldev-rerun2-run.sh: line 31: /srv/data/medallion/silver/candles/ETHUSDT/ops-transforms.jsonl: No such file or directory RERUN_CANDLES_DATA_CHANGED=0 MANIFEST_CHANGED=0 OPS_LINES before= after= (append-only, esperado +4529) RERUN_CANDLES_CHANGED=0 == RERUN 4: GOLD (idempotencia del dataset) == 
+  [t+30s]       00:06
+DONE tras 60s
+== RERUN 3: SILVER CANDLES (4529 outputs) ==
+/srv/fast/medallion/m9a-logs/fulldev-rerun2-run.sh: line 13: /srv/data/medallion/silver/candles/ETHUSDT/ops-transforms.jsonl: No such file or directory
+RERUN_CANDLES_EXIT=0 ELAPSED_S=28
+SKIPPED ETHUSDT_2025-06-16_1d.csv.gz tf=1d sha256=8653b1db46d7e80e933ae401b7a90ee2f9d566ff4e39b7979a229ba8b841b463 candles=1
+SUMMARY transformed=0 skipped=4529 total=4529
+SUMMARY transformed=0 skipped=4529 total=4529
+/srv/fast/medallion/m9a-logs/fulldev-rerun2-run.sh: line 31: /srv/data/medallion/silver/candles/ETHUSDT/ops-transforms.jsonl: No such file or directory
+RERUN_CANDLES_DATA_CHANGED=0 MANIFEST_CHANGED=0
+OPS_LINES before= after= (append-only, esperado +4529)
+RERUN_CANDLES_CHANGED=0
+== RERUN 4: GOLD (idempotencia del dataset) ==
+RERUN_GOLD_EXIT=0 ELAPSED_S=12
+SKIPPED dataset_id=gold-replay-5ca68f44c37d2321f56a10ecbc08bc0584d70c17826f07604dbba77a8b71134a manifest_sha256=c095d5740d9ca0c414ac0b11049008aa716262870edbeadc344dbb16188eb62e trades=647 candles=4529
+SUMMARY created=0 skipped=1
+GOLD_ID_RUN1=gold-replay-5ca68f44c37d2321f56a10ecbc08bc0584d70c17826f07604dbba77a8b71134a GOLD_ID_RUN2=gold-replay-5ca68f44c37d2321f56a10ecbc08bc0584d70c17826f07604dbba77a8b71134a
+GOLD_MANIFEST_SHA_RUN1=c095d5740d9ca0c414ac0b11049008aa716262870edbeadc344dbb16188eb62e GOLD_MANIFEST_SHA_RUN2=c095d5740d9ca0c414ac0b11049008aa716262870edbeadc344dbb16188eb62e
+GOLD_DATASET_DIRS=2 GOLD_CHANGED=0
+OPS_LINES before=3 after=4 (append-only, esperado +1)
+RERUN_GOLD_CHANGED=0
+M9A_RERUN_CANDLES_GOLD=PASS
+fecha_fin=2026-09-29T04:13:20+00:00
+M9A_FULLDEV_RERUN2=PASS
+FULLDEV_RERUN2_DONE=YES RC=0
+POLL_rerun2=DONE
+exit=0

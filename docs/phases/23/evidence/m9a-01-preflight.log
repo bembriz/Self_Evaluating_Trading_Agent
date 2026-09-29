@@ -1,0 +1,8 @@
+# evidencia: m9a-01-preflight
+fecha: 2026-09-28T14:21:27-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-01-preflight.sh
+== M9A PREFLIGHT (local + remoto, read-only) ==
+-- local: rama/HEAD --
+BRANCH=medalion HEAD=dc5c0a2d791686e25a54661a81902a17564ef4b0
+exit=1

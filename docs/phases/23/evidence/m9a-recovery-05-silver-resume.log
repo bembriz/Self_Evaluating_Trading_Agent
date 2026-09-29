@@ -1,0 +1,11 @@
+# evidencia: m9a-recovery-05-silver-resume
+fecha: 2026-09-28T18:48:41-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-05-silver.sh 0 647
+== M9A SILVER driver offset=0 count=647 ==
+== SILVER TRADES BATCH offset=0 count=647 first=2023-09-09 last=2025-06-16 n=647 ==
+BATCH_EXIT=1 ELAPSED_S=21
+SILVER_PARTITIONS_NOW=551
+M9A_SILVER_BATCH=FAIL
+ERROR: date=2025-03-13/ETHUSDT_2025-03-13.csv.gz: header ('id', 'timestamp', 'price', 'volume', 'side', 'rpi') != ('id', 'timestamp', 'price', 'volume', 'side')
+exit=1

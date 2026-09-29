@@ -1,0 +1,36 @@
+# evidencia: m9a-recovery-02-partials
+fecha: 2026-09-28T18:45:01-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-recovery-02-partials.sh
+== M9A RECOVERY PARTIALS (driver) ==
+== M9A RECOVERY: inventario y limpieza de PARTIALS ==
+-- 1) confirmar que NO hay proceso Medallion activo --
+MEDALLION_PROCESSES=0
+NO_ACTIVE_MEDALLION_PROCESS=YES
+-- 2) listar *.part (path + tipo + tamano + mtime) --
+STALE_PART_FILES_FOUND=0
+-- 3) clasificacion por capa --
+PART_IN_BRONZE=0
+PART_IN_SILVER=0
+PART_IN_GOLD=0
+PART_IN_SCRATCH_M9ALOGS=0
+PATRONES_RECONOCIDOS=*.csv.gz.part | manifest.json.part | <dataset_id>.part (dir)
+-- 4) eliminar SOLO *.part reconocidos dentro de los dos arboles --
+STALE_PART_FILES_REMOVED=0
+-- 5) verificacion post-limpieza --
+PART_FILES_AFTER=0
+-- 6) nada mas tocado: conteos por capa (sin borrar nada) --
+BRONZE_DATE_DIRS=647
+BRONZE_FILES=647
+SILVER_DATE_DIRS=551
+SILVER_FILES=551
+CANDLE_FILES=21
+GOLD_DIRS=1
+gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3
+ops-gold.jsonl
+MANIFESTS=4
+7,2G	/srv/data/medallion
+PARTIALS_CLEANUP=PASS
+RECOVERY_PARTIALS_EXIT=0
+M9A_RECOVERY_PARTIALS=PASS
+exit=0

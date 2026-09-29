@@ -1,0 +1,13 @@
+# evidencia: m9a-fulldev-03-candles-launch
+fecha: 2026-09-28T20:33:22-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-fulldev-launch.sh candles
+== LAUNCH candles ==
+82 /srv/fast/medallion/m9a-logs/fulldev-candles-run.sh
+LAUNCHED_PID=3379865
+== M9A FULLDEV: SILVER CANDLES (647 fechas x 7 timeframes) ==
+fecha_inicio=2026-09-29T02:33:23+00:00
+DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16
+PROBE_OK
+LAUNCH_candles=OK
+exit=0

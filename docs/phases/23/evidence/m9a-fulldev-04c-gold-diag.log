@@ -1,0 +1,13 @@
+# evidencia: m9a-fulldev-04c-gold-diag
+fecha: 2026-09-28T22:05:26-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-fulldev-launch.sh gold-diag
+== LAUNCH gold-diag ==
+21 /srv/fast/medallion/m9a-logs/fulldev-gold-diag-run.sh
+LAUNCHED_PID=3429205
+== DIAG: ¿errexit activo? ==
+SHELLOPTS=braceexpand:hashall:interactive-comments:nounset:pipefail BASH_ENV=unset
+DIAG_PYTHON_RUN
+PROBE_OK
+LAUNCH_gold-diag=OK
+exit=0

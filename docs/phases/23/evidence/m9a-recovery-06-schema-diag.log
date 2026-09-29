@@ -1,0 +1,64 @@
+# evidencia: m9a-recovery-06-schema-diag
+fecha: 2026-09-28T18:52:43-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-recovery-06-schema-diag.sh
+== M9A RECOVERY SCHEMA DIAG (driver, solo lectura) ==
+-- regla del skill bybit-integration (deteccion de esquema) --
+41:- **Detección de esquema del archivo:** leer cabecera real de cada archivo antes de parsear; cualquier cambio de columnas/orden ⇒ nueva `schema_version` + transformador adaptado con test, jamás asumir columnas fijas.
+42-- **Versionado de archivo:** el manifiesto Bronze referencia hashes; renombrar/reemplazar un archivo exige nuevo `dataset_id` en Gold.
+== M9A RECOVERY: DIAGNOSTICO FAIL CLOSED (schema Bronze vs transformador Silver) ==
+-- 1) histograma de cabeceras en los 647 Bronze (solo lectura) --
+N=551 FIRST=2023-09-09 LAST=2025-03-12 NCOLS=5 HEADER=id,timestamp,price,volume,side
+N=96 FIRST=2025-03-13 LAST=2025-06-16 NCOLS=6 HEADER=id,timestamp,price,volume,side,rpi
+-- 2) muestra de filas en la frontera --
+DATE=2025-03-12
+id,timestamp,price,volume,side
+1,1741737600227,1923.56,0.023,buy
+DATE=2025-03-13
+id,timestamp,price,volume,side,rpi
+1,1741824000062,1908.28,0.042,buy,0
+DATE=2025-06-16
+id,timestamp,price,volume,side,rpi
+1,1750032000793,2547.52,0.00182,buy,0
+-- 3) validacion estricta del transformador M4 --
+    "transform_days",
+]
+
+SILVER_SCHEMA_VERSION = "bybit-spot-trades-silver-v1"
+ORDERING_FIDELITY = "PARTIAL"
+BRONZE_HEADER = ("id", "timestamp", "price", "volume", "side")
+SILVER_HEADER = (
+    "event_timestamp",
+    "symbol",
+    "price",
+    "quantity",
+    max_ts = -1
+    prev_ts = -1
+    source_order_preserved = True
+    with gzip.open(bronze_path, "rt", encoding="utf-8", newline="") as fh:
+        reader = csv.reader(fh)
+        try:
+            header = tuple(next(reader))
+        except StopIteration as exc:
+            raise InvalidRowError(f"{source_file}: archivo vacío") from exc
+        if header != BRONZE_HEADER:
+            raise InvalidRowError(f"{source_file}: header {header} != {BRONZE_HEADER}")
+        for row_number, row in enumerate(reader, start=1):
+            if len(row) != 5:
+                raise InvalidRowError(f"{source_file}:{row_number}: {len(row)} columnas != 5")
+            native_id, timestamp, price, quantity, taker_side = row
+            if not _RX_UINT.match(native_id):
+-- 4) el producto NO contempla 'rpi' --
+RPI_EN_PRODUCTO=0
+-- 6) estado de silver tras el intento fallido (sin cambios) --
+SILVER_PARTITIONS=551
+SILVER_MANIFEST_ENTRIES=551
+SILVER_PART_FILES=0
+FIRST_MISSING_DATE=2025-03-13 (indice 551) ULTIMA_FALTANTE=2025-06-16 (indice 646) FALTANTES=96
+-- 7) el rango afectado sigue DENTRO de DEVELOPMENT (sin splits tocados) --
+AFFECTED_DAYS=96 ALL_96_IN_DEVELOPMENT=YES
+WALK_FORWARD_READS_AFFECTED=0 FINAL_HOLDOUT_READS_AFFECTED=0
+M9A_RECOVERY_SCHEMA_DIAGNOSTIC=DONE
+SCHEMA_DIAG_EXIT=0
+M9A_RECOVERY_SCHEMA_DIAG=PASS
+exit=0

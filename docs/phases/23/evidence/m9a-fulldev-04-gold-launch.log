@@ -1,0 +1,13 @@
+# evidencia: m9a-fulldev-04-gold-launch
+fecha: 2026-09-28T21:48:53-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-fulldev-launch.sh gold
+== LAUNCH gold ==
+92 /srv/fast/medallion/m9a-logs/fulldev-gold-run.sh
+LAUNCHED_PID=3420096
+== M9A FULLDEV: GOLD (dataset nuevo con las 647 fechas) ==
+fecha_inicio=2026-09-29T03:48:55+00:00
+DATES_COUNT=647 FIRST=2023-09-09 LAST=2025-06-16
+PROBE_OK
+LAUNCH_gold=OK
+exit=0

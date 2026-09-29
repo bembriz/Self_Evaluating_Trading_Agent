@@ -1,0 +1,30 @@
+# evidencia: m9a-fulldev-05b-rerun1-poll
+fecha: 2026-09-28T22:11:22-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-fulldev-poll.sh rerun1 1500
+== POLL rerun1 (max 1500s) marker=FULLDEV_RERUN1_DONE=YES ==
+  [t+0s] == RERUN 1: BRONZE (647 fechas) == RERUN_BRONZE_EXIT=0 ELAPSED_S=9 SKIPPED ETHUSDT_2025-06-16.csv.gz sha256=b20f1ee0a2817ec520ecf847efcd5457974adf9ad31798385e0fdbaf547f9d49 bytes=4311344 SUMMARY downloaded=0 skipped=647 total=647 SUMMARY downloaded=0 skipped=647 total=647 
+  [t+30s] N_BRONZE_CHANGED=0 == RERUN 2: SILVER TRADES (647 fechas) == RERUN_SILVER_EXIT=0 ELAPSED_S=23 SKIPPED ETHUSDT_2025-06-16.csv.gz sha256=0ef52122a045d72a9ca72487e28951ab6baad1fec7a092864eae999866fdbd83 rows=548485 SUMMARY transformed=0 skipped=647 total=647 SUMMARY transformed=0 skipped=647 total=647 
+DONE tras 60s
+== RERUN 1: BRONZE (647 fechas) ==
+RERUN_BRONZE_EXIT=0 ELAPSED_S=9
+SKIPPED ETHUSDT_2025-06-16.csv.gz sha256=b20f1ee0a2817ec520ecf847efcd5457974adf9ad31798385e0fdbaf547f9d49 bytes=4311344
+SUMMARY downloaded=0 skipped=647 total=647
+SUMMARY downloaded=0 skipped=647 total=647
+RERUN_BRONZE_DATA_CHANGED=0 MANIFEST_CHANGED=0
+OPS_LINES before=1301 after=1948 (log de auditoria append-only, esperado +647)
+RERUN_BRONZE_CHANGED=0
+== RERUN 2: SILVER TRADES (647 fechas) ==
+RERUN_SILVER_EXIT=0 ELAPSED_S=23
+SKIPPED ETHUSDT_2025-06-16.csv.gz sha256=0ef52122a045d72a9ca72487e28951ab6baad1fec7a092864eae999866fdbd83 rows=548485
+SUMMARY transformed=0 skipped=647 total=647
+SUMMARY transformed=0 skipped=647 total=647
+RERUN_SILVER_DATA_CHANGED=0 MANIFEST_CHANGED=0
+OPS_LINES before=1760 after=2407 (append-only, esperado +647)
+RERUN_SILVER_CHANGED=0
+M9A_RERUN_BRONZE_SILVER=PASS
+fecha_fin=2026-09-29T04:12:05+00:00
+M9A_FULLDEV_RERUN1=PASS
+FULLDEV_RERUN1_DONE=YES RC=0
+POLL_rerun1=DONE
+exit=0

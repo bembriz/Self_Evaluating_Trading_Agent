@@ -369,3 +369,83 @@ docker compose ls -a` · exit=`0` · artifact: docs/phases/23/evidence/m5-09-bro
 - `2026-09-28T19:51:03-06:00` **m9a1-12b-precommit-check** → `bash /tmp/opencode/m9a1-12-precommit-check.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9a1-12b-precommit-check.log
 - `2026-09-28T19:52:18-06:00` **m9a1-13-precommit-remote** → `bash /tmp/opencode/m9a1/run.sh /tmp/opencode/m9a1-13-precommit-remote.sh` · exit=`1` · artifact: docs/phases/23/evidence/m9a1-13-precommit-remote.log
 - `2026-09-28T19:53:30-06:00` **m9a1-13b-precommit-remote** → `bash /tmp/opencode/m9a1/run.sh /tmp/opencode/m9a1-13-precommit-remote.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9a1-13b-precommit-remote.log
+- `2026-09-28T20:15:50-06:00` **m9a-fulldev-01-preflight** → `bash /tmp/opencode/m9a-fulldev-01-preflight.sh` · exit=`1` · artifact: docs/phases/23/evidence/m9a-fulldev-01-preflight.log
+- `2026-09-28T20:16:40-06:00` **m9a-fulldev-01b-preflight** → `bash /tmp/opencode/m9a-fulldev-01-preflight.sh` · exit=`1` · artifact: docs/phases/23/evidence/m9a-fulldev-01b-preflight.log
+- `2026-09-28T20:17:36-06:00` **m9a-fulldev-01c-preflight** → `bash /tmp/opencode/m9a-fulldev-01-preflight.sh` · exit=`1` · artifact: docs/phases/23/evidence/m9a-fulldev-01c-preflight.log
+- `2026-09-28T20:18:32-06:00` **m9a-fulldev-01d-preflight** → `bash /tmp/opencode/m9a-fulldev-01-preflight.sh` · exit=`1` · artifact: docs/phases/23/evidence/m9a-fulldev-01d-preflight.log
+- `2026-09-28T20:19:17-06:00` **m9a-fulldev-01e-preflight** → `bash /tmp/opencode/m9a-fulldev-01-preflight.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9a-fulldev-01e-preflight.log
+- `2026-09-28T20:20:20-06:00` **m9a-fulldev-02-silver-launch** → `bash /tmp/opencode/m9a-fulldev-launch.sh silver` · exit=`1` · artifact: docs/phases/23/evidence/m9a-fulldev-02-silver-launch.log
+- `2026-09-28T20:20:38-06:00` **m9a-fulldev-02b-silver-launch** → `bash /tmp/opencode/m9a-fulldev-launch.sh silver` · exit=`0` · artifact: docs/phases/23/evidence/m9a-fulldev-02b-silver-launch.log
+- `2026-09-28T20:20:46-06:00` **m9a-fulldev-02c-silver-run** → `bash /tmp/opencode/m9a-fulldev-poll.sh silver 780` · exit=`1` · artifact: docs/phases/23/evidence/m9a-fulldev-02c-silver-run.log
+- `2026-09-28T20:32:31-06:00` **m9a-fulldev-02d-silver-poll** → `bash /tmp/opencode/m9a-fulldev-poll.sh silver 750` · exit=`0` · artifact: docs/phases/23/evidence/m9a-fulldev-02d-silver-poll.log
+- `2026-09-28T20:33:26-06:00` **m9a-fulldev-03-candles-launch** → `bash /tmp/opencode/m9a-fulldev-launch.sh candles` · exit=`0` · artifact: docs/phases/23/evidence/m9a-fulldev-03-candles-launch.log
+- `2026-09-28T20:46:43-06:00` **m9a-fulldev-03b-candles-poll** → `bash /tmp/opencode/m9a-fulldev-poll.sh candles 750` · exit=`1` · artifact: docs/phases/23/evidence/m9a-fulldev-03b-candles-poll.log
+- `2026-09-28T20:59:47-06:00` **m9a-fulldev-03c-candles-poll** → `bash /tmp/opencode/m9a-fulldev-poll.sh candles 750` · exit=`1` · artifact: docs/phases/23/evidence/m9a-fulldev-03c-candles-poll.log
+- `2026-09-28T21:48:18-06:00` **m9a-fulldev-03d-candles-run** → `bash -c ssh -o BatchMode=yes administrador@192.168.100.24 'cat /srv/fast/medallion/m9a-logs/fulldev-candles-run.log'` · exit=`0` · artifact: docs/phases/23/evidence/m9a-fulldev-03d-candles-run.log
+- `2026-09-28T21:48:59-06:00` **m9a-fulldev-04-gold-launch** → `bash /tmp/opencode/m9a-fulldev-launch.sh gold` · exit=`0` · artifact: docs/phases/23/evidence/m9a-fulldev-04-gold-launch.log
+- `2026-09-28T22:05:16-06:00` **m9a-fulldev-04b-gold-diag** → `bash /tmp/opencode/m9a-fulldev-launch.sh gold-diag` · exit=`1` · artifact: docs/phases/23/evidence/m9a-fulldev-04b-gold-diag.log
+- `2026-09-28T22:05:31-06:00` **m9a-fulldev-04c-gold-diag** → `bash /tmp/opencode/m9a-fulldev-launch.sh gold-diag` · exit=`0` · artifact: docs/phases/23/evidence/m9a-fulldev-04c-gold-diag.log
+- `2026-09-28T22:06:52-06:00` **m9a-fulldev-04d-gold-tail-test** → `bash -c ssh -o BatchMode=yes administrador@192.168.100.24 bash -s < /tmp/opencode/m9a-fulldev-gold-tail-test.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9a-fulldev-04d-gold-tail-test.log
+- `2026-09-28T22:08:06-06:00` **m9a-fulldev-04e-gold-verify** → `bash -c ssh -o BatchMode=yes administrador@192.168.100.24 bash -s < /tmp/opencode/m9a-fulldev-gold-verify-remote.sh` · exit=`1` · artifact: docs/phases/23/evidence/m9a-fulldev-04e-gold-verify.log
+- `2026-09-28T22:08:31-06:00` **m9a-fulldev-04f-gold-verify** → `bash -c ssh -o BatchMode=yes administrador@192.168.100.24 bash -s < /tmp/opencode/m9a-fulldev-gold-verify-remote.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9a-fulldev-04f-gold-verify.log
+- `2026-09-28T22:11:16-06:00` **m9a-fulldev-05-rerun1-launch** → `bash /tmp/opencode/m9a-fulldev-launch.sh rerun1` · exit=`0` · artifact: docs/phases/23/evidence/m9a-fulldev-05-rerun1-launch.log
+- `2026-09-28T22:12:26-06:00` **m9a-fulldev-05b-rerun1-poll** → `bash /tmp/opencode/m9a-fulldev-poll.sh rerun1 1500` · exit=`0` · artifact: docs/phases/23/evidence/m9a-fulldev-05b-rerun1-poll.log
+- `2026-09-28T22:12:42-06:00` **m9a-fulldev-06-rerun2-launch** → `bash /tmp/opencode/m9a-fulldev-launch.sh rerun2` · exit=`0` · artifact: docs/phases/23/evidence/m9a-fulldev-06-rerun2-launch.log
+- `2026-09-28T22:13:46-06:00` **m9a-fulldev-06b-rerun2-poll** → `bash /tmp/opencode/m9a-fulldev-poll.sh rerun2 1500` · exit=`0` · artifact: docs/phases/23/evidence/m9a-fulldev-06b-rerun2-poll.log
+- `2026-09-28T22:15:52-06:00` **m9a-fulldev-07-final-validation** → `bash -c ssh -o BatchMode=yes administrador@192.168.100.24 bash -s < /tmp/opencode/m9a-fulldev-final-remote.sh` · exit=`1` · artifact: docs/phases/23/evidence/m9a-fulldev-07-final-validation.log
+- `2026-09-28T22:20:19-06:00` **m9a-fulldev-08-cert-atribucion** → `bash -c ssh -o BatchMode=yes administrador@192.168.100.24 "C1=\$(docker ps -q --filter name=paper-runner | head -1); echo \"=== cadencia del job 6-horario del paper-runner (reportes) ===\"; docker exec \$C1 sh -c \"ls -la --time-style=full-iso /app/reports/paper | tail -8\"; echo \"=== certification-state.json ===\"; docker exec \$C1 sh -c \"ls -la --time-style=full-iso /app/certification\"; echo \"=== ownership ===\"; id administrador; echo \"=== scripts M9A que escriben en /srv/docker ===\"; grep -lE \"> */srv/docker|tee */srv/docker\" /srv/fast/medallion/m9a-logs/*.sh || echo NONE"` · exit=`0` · artifact: docs/phases/23/evidence/m9a-fulldev-08-cert-atribucion.log
+- `2026-09-28T22:20:29-06:00` **m9a-fulldev-07b-final-validation** → `bash -c ssh -o BatchMode=yes administrador@192.168.100.24 bash -s < /tmp/opencode/m9a-fulldev-final-remote.sh` · exit=`1` · artifact: docs/phases/23/evidence/m9a-fulldev-07b-final-validation.log
+- `2026-09-28T22:21:40-06:00` **m9a-fulldev-07c-final-validation** → `bash -c ssh -o BatchMode=yes administrador@192.168.100.24 bash -s < /tmp/opencode/m9a-fulldev-final-remote.sh` · exit=`2` · artifact: docs/phases/23/evidence/m9a-fulldev-07c-final-validation.log
+- `2026-09-28T22:22:00-06:00` **m9a-fulldev-07d-final-validation** → `bash -c ssh -o BatchMode=yes administrador@192.168.100.24 bash -s < /tmp/opencode/m9a-fulldev-final-remote.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9a-fulldev-07d-final-validation.log
+- `2026-09-28T22:35:40-06:00` **m9a-cc012-state-validate** → `bash -c ssh -o BatchMode=yes administrador@192.168.100.24 bash -s < /tmp/opencode/m9a-cc012-state-validate.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9a-cc012-state-validate.log
+- `2026-09-28T22:36:36-06:00` **m9a-cc012-diff-check** → `bash -c echo "CMD: git diff --cached --check"; git diff --cached --check; echo "RC=$?"; echo "CMD: git diff --cached --stat (ultimas lineas)"; git diff --cached --stat | tail -5; echo "CMD: git diff --cached --numstat | total"; git diff --cached --numstat | awk "{a+=\$1; d+=\$2} END {print \"added=\"a, \"deleted=\"d, \"files=\"NR}"` · exit=`0` · artifact: docs/phases/23/evidence/m9a-cc012-diff-check.log
+- `2026-09-28T22:38:00-06:00` **m9a-cc012-secret-scan** → `bash -c 
+set -uo pipefail
+echo "CMD: git diff --cached | secret scan (bloques de clave privada)"
+git diff --cached | grep -nE "\-\-\-\-\-BEGIN [A-Z ]*PRIVATE KEY" || echo "HITS=0"
+echo "CMD: AWS access key id"
+git diff --cached | grep -nE "\bAKIA[0-9A-Z]{16}\b" || echo "HITS=0"
+echo "CMD: asignaciones credenciales con valor literal largo"
+git diff --cached | grep -inE "(api[_-]?key|api[_-]?secret|passwd|password|secret[_-]?key|access[_-]?token|private[_-]?key)[\"' ]*[:=][\"' ]*[A-Za-z0-9/+_.-]{12,}" || echo "HITS=0"
+echo "CMD: Bearer tokens"
+git diff --cached | grep -nE "\bBearer[[:space:]]+[A-Za-z0-9._~+/-]{20,}" || echo "HITS=0"
+echo "CMD: credenciales embebidas en URL"
+git diff --cached | grep -nE "[a-zA-Z][a-zA-Z0-9+.-]*://[^/@[:space:]]+:[^/@[:space:]]+@" || echo "HITS=0"
+echo "CMD: archivos sensibles staged (.env/.pem/.key/id_rsa)"
+git diff --cached --name-only | grep -E "(^|/)\.env($|\.)|\.pem$|\.key$|id_rsa|id_ed25519|\.p12$|\.pfx$" || echo "HITS=0"
+echo "CMD: valores hex largos NO-documentados (solo fuera de *.log, para evitar hashes verbatim)"
+git diff --cached --name-only | grep -v "\.log$" > /tmp/cc012_nonlog.txt
+if [ -s /tmp/cc012_nonlog.txt ]; then git diff --cached -- $(cat /tmp/cc012_nonlog.txt) | grep -nE "\b[0-9a-fA-F]{64}\b" || echo "HITS=0"; else echo "(sin archivos no-log staged) HITS=0"; fi
+echo "CMD: scanning completado"
+` · exit=`0` · artifact: docs/phases/23/evidence/m9a-cc012-secret-scan.log
+- `2026-09-28T22:41:30-06:00` **m9a-cc012-final-staging** → `bash -c 
+echo "CMD: git status -sb"; git status -sb | head -3
+echo "CMD: HEAD / origin"; git rev-parse HEAD; git rev-parse origin/medalion
+echo "CMD: staged total"; git diff --cached --name-only | wc -l
+echo "CMD: staged fuera de docs/phases/23"; git diff --cached --name-only | grep -vc "^docs/phases/23/" || echo 0
+echo "CMD: staged src/tests/deployment/progress.yaml"; git diff --cached --name-only | grep -E "^(src/|tests/|deployment/)|progress\.yaml" || echo "NONE"
+echo "CMD: staged evidence"; git diff --cached --name-only | grep -c "^docs/phases/23/evidence/"
+echo "CMD: staged evidence logs m9a"; git diff --cached --name-only | grep -cE "evidence/m9a.*\.log$"
+echo "CMD: staged evidence preservados (m9a-0X + m9a-recovery)"; git diff --cached --name-only | grep -E "evidence/m9a-(0|1|2|3|4|5)|evidence/m9a-recovery" | wc -l
+echo "CMD: staged evidence fulldev"; git diff --cached --name-only | grep -c "evidence/m9a-fulldev"
+echo "CMD: staged evidence cc012"; git diff --cached --name-only | grep -c "evidence/m9a-cc012"
+echo "CMD: staged docs de fase"; git diff --cached --name-only | grep -v "/evidence/" | sed "s|^|  |"
+echo "CMD: numstat"; git diff --cached --numstat | awk "{a+=\$1} END {print \"files=\"NR\" added=\"a}"
+echo "CMD: git diff --cached --check (resumen)"; git diff --cached --check 2>&1 | grep -c "trailing whitespace" | sed "s/^/trailing_ws_lines=/"; git diff --cached --check -- docs/phases/23/m9a-full-development-dataset.md docs/phases/23/commit-candidate-012.md docs/phases/23/evidence/log.md; echo "RC_artefactos_humanos=$?"
+echo "CMD: untracked restantes"; git status --porcelain | grep -c "^??" || echo 0
+` · exit=`0` · artifact: docs/phases/23/evidence/m9a-cc012-final-staging.log
+- `2026-09-28T22:42:37-06:00` **m9a-cc012-staged-final** → `bash -c 
+echo "CMD: git status -sb"; git status -sb | sed -n "1,3p"
+echo "CMD: staged total"; git diff --cached --name-only | wc -l
+echo "CMD: staged fuera docs/phases/23"; git diff --cached --name-only | grep -vc "^docs/phases/23/" || true
+echo "CMD: staged codigo/ledger"; git diff --cached --name-only | grep -E "^(src/|tests/|deployment/)|progress\.yaml" || echo "NONE"
+echo "CMD: evidence staged"; git diff --cached --name-only | grep -c "^docs/phases/23/evidence/"
+echo "CMD: logs m9a staged"; git diff --cached --name-only | grep -cE "evidence/m9a.*\.log$"
+echo "CMD: preservados(22)+fulldev(28)+cc012"; git diff --cached --name-only | grep -E "evidence/m9a-(0|1|2|3|4|5)|evidence/m9a-recovery" | wc -l; git diff --cached --name-only | grep -c "evidence/m9a-fulldev"; git diff --cached --name-only | grep -c "evidence/m9a-cc012"
+echo "CMD: docs de fase staged"; git diff --cached --name-only | grep -v "/evidence/"
+echo "CMD: numstat"; git diff --cached --numstat | awk "{a+=\$1} END {print \"files=\"NR\" added=\"a}"
+echo "CMD: diff --check humanos"; git diff --cached --check -- docs/phases/23/m9a-full-development-dataset.md docs/phases/23/commit-candidate-012.md docs/phases/23/evidence/log.md; echo "RC=$?"
+echo "CMD: diff --check total (avisos trailing ws)"; git diff --cached --check 2>&1 | grep -c "trailing whitespace"
+echo "CMD: untracked"; git status --porcelain | grep -c "^??" || echo 0
+echo "CMD: HEAD==origin"; test "$(git rev-parse HEAD)" = "$(git rev-parse origin/medalion)" && echo "HEAD_EQ_ORIGIN=YES"
+` · exit=`0` · artifact: docs/phases/23/evidence/m9a-cc012-staged-final.log

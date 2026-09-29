@@ -1,0 +1,25 @@
+# evidencia: m9a-04-bronze-verify
+fecha: 2026-09-28T14:55:19-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-04-bronze-verify.sh
+== M9A BRONZE VERIFY (driver) ==
+== M9A BRONZE VERIFY (647 particiones, hashes) ==
+PARTITIONS=647 UNIQUE_DATES=647
+PARTITION_SET_EXACT=YES
+MANIFEST_ENTRIES=647 SCHEMA=bybit-spot-trades-csv-gz-v1
+TOTAL_BYTES=3300871557 TOTAL_GB=3.30
+HASH_MISMATCH=0 URL_META_BAD=0
+INPUT_HASH_VALIDATION=PASS (647/647 sha256 == manifest)
+-- gzip CRC completo (gzip -t) --
+GZIP_TEST=PASS
+-- sin .part --
+BRONZE_PART_FILES=0
+-- los 3 dias preexistentes intactos --
+38480abd5c02bfb1d8d9902463c8a9863d714c3feb346bb633da3bc0c60b3734  /srv/data/medallion/bronze/bybit/spot/ETHUSDT/manifest.json
+EXISTING_3_UNCHANGED=YES
+-- snapshot post-bulk --
+647 /srv/fast/medallion/m9a-logs/bronze.after.sha256
+3,1G	/srv/data/medallion/bronze
+M9A_BRONZE_VERIFY=PASS
+M9A_BRONZE_VERIFY_DRIVER=PASS
+exit=0

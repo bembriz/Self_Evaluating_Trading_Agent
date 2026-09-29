@@ -1,0 +1,54 @@
+# evidencia: m9a-cc012-final-staging
+fecha: 2026-09-28T22:41:30-06:00
+fase: 23
+comando: bash -c 
+echo "CMD: git status -sb"; git status -sb | head -3
+echo "CMD: HEAD / origin"; git rev-parse HEAD; git rev-parse origin/medalion
+echo "CMD: staged total"; git diff --cached --name-only | wc -l
+echo "CMD: staged fuera de docs/phases/23"; git diff --cached --name-only | grep -vc "^docs/phases/23/" || echo 0
+echo "CMD: staged src/tests/deployment/progress.yaml"; git diff --cached --name-only | grep -E "^(src/|tests/|deployment/)|progress\.yaml" || echo "NONE"
+echo "CMD: staged evidence"; git diff --cached --name-only | grep -c "^docs/phases/23/evidence/"
+echo "CMD: staged evidence logs m9a"; git diff --cached --name-only | grep -cE "evidence/m9a.*\.log$"
+echo "CMD: staged evidence preservados (m9a-0X + m9a-recovery)"; git diff --cached --name-only | grep -E "evidence/m9a-(0|1|2|3|4|5)|evidence/m9a-recovery" | wc -l
+echo "CMD: staged evidence fulldev"; git diff --cached --name-only | grep -c "evidence/m9a-fulldev"
+echo "CMD: staged evidence cc012"; git diff --cached --name-only | grep -c "evidence/m9a-cc012"
+echo "CMD: staged docs de fase"; git diff --cached --name-only | grep -v "/evidence/" | sed "s|^|  |"
+echo "CMD: numstat"; git diff --cached --numstat | awk "{a+=\$1} END {print \"files=\"NR\" added=\"a}"
+echo "CMD: git diff --cached --check (resumen)"; git diff --cached --check 2>&1 | grep -c "trailing whitespace" | sed "s/^/trailing_ws_lines=/"; git diff --cached --check -- docs/phases/23/m9a-full-development-dataset.md docs/phases/23/commit-candidate-012.md docs/phases/23/evidence/log.md; echo "RC_artefactos_humanos=$?"
+echo "CMD: untracked restantes"; git status --porcelain | grep -c "^??" || echo 0
+
+CMD: git status -sb
+## medalion...origin/medalion
+A  docs/phases/23/commit-candidate-012.md
+MM docs/phases/23/evidence/log.md
+CMD: HEAD / origin
+4fd6b4c793bfde0f4719d9e6e54761e236a5fcaa
+4fd6b4c793bfde0f4719d9e6e54761e236a5fcaa
+CMD: staged total
+56
+CMD: staged fuera de docs/phases/23
+0
+0
+CMD: staged src/tests/deployment/progress.yaml
+NONE
+CMD: staged evidence
+54
+CMD: staged evidence logs m9a
+53
+CMD: staged evidence preservados (m9a-0X + m9a-recovery)
+22
+CMD: staged evidence fulldev
+28
+CMD: staged evidence cc012
+3
+CMD: staged docs de fase
+  docs/phases/23/commit-candidate-012.md
+  docs/phases/23/m9a-full-development-dataset.md
+CMD: numstat
+files=56 added=9342
+CMD: git diff --cached --check (resumen)
+trailing_ws_lines=161
+RC_artefactos_humanos=0
+CMD: untracked restantes
+1
+exit=0

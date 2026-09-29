@@ -1,0 +1,32 @@
+# evidencia: m9a-01c-preflight-fix
+fecha: 2026-09-28T14:23:15-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-01c-preflight.sh
+== M9A PREFLIGHT c (driver) ==
+== M9A PREFLIGHT c (fix scratch dir + baselines) ==
+SCRATCH_DIR=/srv/fast/medallion/m9a-logs
+SCRATCH_WRITABLE=YES
+-- rango de fechas 647 DEVELOPMENT (guardado) --
+FIRST=2023-09-09 LAST=2025-06-16 COUNT=647 UNIQUE=647 GAPS=0
+DATE_CONTINUITY_PREFLIGHT=PASS
+7117 /srv/fast/medallion/m9a-logs/dates.txt
+-- baseline de contenedores (comparacion final) --
+gastos-ia-app|f0866dba0802|gastos-ia-app:latest|Up 18 hours|8000/tcp
+gastos-ia-caddy|612427ee2033|caddy:2-alpine|Up 3 weeks|0.0.0.0:80->80/tcp, [::]:80->80/tcp, 0.0.0.0:443->443/tcp, [::]:443->443/tcp, 443/udp, 2019/tcp
+gastos-ia-samba|f9542a5b0b22|servercontainers/samba:smbd-only-latest|Up 18 hours (healthy)|0.0.0.0:139->139/tcp, [::]:139->139/tcp, 137/udp, 0.0.0.0:445->445/tcp, [::]:445->445/tcp
+self-evaluating-trading-agent-grafana-1|b796f67478d7|grafana/grafana:11.1.0|Up 2 weeks|127.0.0.1:3000->3000/tcp
+self-evaluating-trading-agent-paper-runner-1|b061332c3572|self-evaluating-trading-agent-paper-runner:0.2.0|Up 9 days|
+self-evaluating-trading-agent-postgres-1|0c79b6b5d1cd|pgvector/pgvector:pg16|Up 3 weeks (healthy)|127.0.0.1:5433->5432/tcp
+self-evaluating-trading-agent-prometheus-1|1431d8e01dd6|prom/prometheus:v2.53.0|Up 2 weeks|127.0.0.1:9090->9090/tcp
+-- baseline gold 3 dias (intocado) --
+9411a4e01a5adccbb448df062f0eca857213e8259441535b5812ee4688af99df  /srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3/manifest.json
+be8aae2df45670e1f987ab11e68f1471d0cb89104c0e53483d2d0de90fa18314  /srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3/replay-config.json
+-- snapshot hashes de particiones existentes (3 dias, baseline) --
+   5 /srv/fast/medallion/m9a-logs/bronze.before.sha256
+  23 /srv/fast/medallion/m9a-logs/candles.before.sha256
+   2 /srv/fast/medallion/m9a-logs/gold3d.baseline.sha256
+   5 /srv/fast/medallion/m9a-logs/silver.before.sha256
+  35 total
+PREFLIGHT_C=OK
+M9A_PREFLIGHT_C=PASS
+exit=0

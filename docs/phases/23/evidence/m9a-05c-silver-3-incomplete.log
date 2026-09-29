@@ -1,0 +1,6 @@
+# evidencia: m9a-05c-silver-3
+fecha: 2026-09-28T15:31:10-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-05-silver.sh 340 307
+== M9A SILVER driver offset=340 count=307 ==
+== SILVER TRADES BATCH offset=340 count=307 first=2024-08-14 last=2025-06-16 n=307 ==

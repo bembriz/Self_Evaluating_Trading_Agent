@@ -1,0 +1,27 @@
+# evidencia: m9a-02-source-availability
+fecha: 2026-09-28T14:24:02-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a-02-availability.sh
+== M9A AVAILABILITY (driver) ==
+== M9A SOURCE AVAILABILITY (647 fuentes Bybit, pre-bulk) ==
+probed=50/647 elapsed=26s
+probed=100/647 elapsed=53s
+probed=150/647 elapsed=79s
+probed=200/647 elapsed=105s
+probed=250/647 elapsed=131s
+probed=300/647 elapsed=157s
+probed=350/647 elapsed=184s
+probed=400/647 elapsed=209s
+probed=450/647 elapsed=235s
+probed=500/647 elapsed=260s
+probed=550/647 elapsed=287s
+probed=600/647 elapsed=312s
+PROBED=647 ELAPSED_S=337
+METHODS_HEAD=647 METHODS_GET=0
+TOTAL_BYTES_HEAD=3300871557 TOTAL_GB=3.30
+MISSING=0 ERRORS=0
+SOURCE_AVAILABILITY=PASS
+AVAILABILITY_EXIT=0
+M9A_AVAILABILITY=PASS
+M9A_AVAILABILITY_DRIVER=PASS
+exit=0

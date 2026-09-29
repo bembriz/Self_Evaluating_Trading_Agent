@@ -1,0 +1,50 @@
+# evidencia: m9a-fulldev-04e-gold-verify
+fecha: 2026-09-28T22:08:05-06:00
+fase: 23
+comando: bash -c ssh -o BatchMode=yes administrador@192.168.100.24 bash -s < /tmp/opencode/m9a-fulldev-gold-verify-remote.sh
+== M9A FULLDEV: GOLD VERIFICATION (foreground) ==
+fecha=2026-09-29T04:08:06+00:00
+-- salida del gold_cli (creacion) --
+CREATED dataset_id=gold-replay-5ca68f44c37d2321f56a10ecbc08bc0584d70c17826f07604dbba77a8b71134a manifest_sha256=c095d5740d9ca0c414ac0b11049008aa716262870edbeadc344dbb16188eb62e trades=647 candles=4529
+SUMMARY created=1 skipped=0
+GOLD_CREATED_647_4529=YES
+FULL_DEV_DATASET_ID=gold-replay-5ca68f44c37d2321f56a10ecbc08bc0584d70c17826f07604dbba77a8b71134a
+FULL_DEV_MANIFEST_SHA256=c095d5740d9ca0c414ac0b11049008aa716262870edbeadc344dbb16188eb62e
+-- gold de 3 dias intacto --
+/srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3/manifest.json: OK
+/srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3/replay-config.json: OK
+THREE_DAY_GOLD_UNTOUCHED=YES
+-- datasets Gold --
+GOLD_DIR=gold-replay-5ca68f44c37d2321f56a10ecbc08bc0584d70c17826f07604dbba77a8b71134a
+GOLD_DIR=gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3
+GOLD_DIRS=2
+GOLD_PART_FILES=0
+-- hashes del dataset nuevo --
+c095d5740d9ca0c414ac0b11049008aa716262870edbeadc344dbb16188eb62e  /srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-5ca68f44c37d2321f56a10ecbc08bc0584d70c17826f07604dbba77a8b71134a/manifest.json
+be8aae2df45670e1f987ab11e68f1471d0cb89104c0e53483d2d0de90fa18314  /srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-5ca68f44c37d2321f56a10ecbc08bc0584d70c17826f07604dbba77a8b71134a/replay-config.json
+MANIFEST_SHA_MATCHES_CREATION=YES
+-- validacion del manifest --
+GOLD_CHECK_manifest_version=PASS
+GOLD_CHECK_allowed_split=PASS
+GOLD_CHECK_start=PASS
+GOLD_CHECK_end=PASS
+GOLD_CHECK_dates_647=PASS
+GOLD_CHECK_first_date=PASS
+GOLD_CHECK_last_date=PASS
+GOLD_CHECK_timeframes=PASS
+GOLD_CHECK_trades_partitions_647=PASS
+GOLD_CHECK_candles_outputs_4529=PASS
+GOLD_CHECK_candles_per_tf=FAIL
+GOLD_CHECK_fidelity=PASS
+GOLD_CHECK_source_order_preserved=PASS
+GOLD_CHECK_lineage_verified=PASS
+GOLD_CHECK_lineage_trades=PASS
+GOLD_CHECK_lineage_candles=PASS
+GOLD_CHECK_symbol=PASS
+SOURCE_SCHEMA_LINEAGE={"bybit-spot-trades-csv-gz-v1": 551, "bybit-spot-trades-csv-gz-v2": 96}
+GOLD_DATASET_ID=gold-replay-5ca68f44c37d2321f56a10ecbc08bc0584d70c17826f07604dbba77a8b71134a
+CANDLE_COUNT_BY_TIMEFRAME={"15m": 62112, "1d": 647, "1h": 15528, "1m": 931675, "30m": 31056, "4h": 3882, "5m": 186336}
+GOLD_MANIFEST_VALIDATE=FAIL
+fecha=2026-09-29T04:08:06+00:00
+M9A_FULLDEV_GOLD=FAIL
+exit=1
