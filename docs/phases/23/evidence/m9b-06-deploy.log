@@ -1,0 +1,8 @@
+# evidencia: m9b-06-deploy
+fecha: 2026-09-29T01:29:05-06:00
+fase: 23
+comando: bash /tmp/opencode/m9b-06-deploy.sh
+== M9-B DEPLOY COPY (src -> lenovosrv:/tmp/m9b/src) ==
+LOCAL_BRANCH=medalion
+LOCAL_HEAD=5dbc1c3c871a743cd0a54274fcc4fdce18e54d1f
+exit=1

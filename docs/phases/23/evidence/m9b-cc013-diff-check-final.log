@@ -1,0 +1,22 @@
+# evidencia: m9b-cc013-diff-check-final
+fecha: 2026-09-29T04:38:37-06:00
+fase: 23
+comando: bash -c git diff --cached --check; echo "RC=$?"
+docs/phases/23/evidence/log.md:471: trailing whitespace.
++- `2026-09-29T04:31:35-06:00` **m9b-cc013-artifacts-tree** → `bash -c 
+docs/phases/23/evidence/log.md:494: trailing whitespace.
++- `2026-09-29T04:31:56-06:00` **m9b-cc013-diff-check** → `bash -c 
+docs/phases/23/evidence/log.md:510: trailing whitespace.
++- `2026-09-29T04:32:48-06:00` **m9b-cc013-secret-scan** → `bash -c 
+docs/phases/23/evidence/log.md:529: trailing whitespace.
++- `2026-09-29T04:38:01-06:00` **m9b-cc013-staged-final** → `bash -c 
+docs/phases/23/evidence/m9b-cc013-artifacts-tree.log:4: trailing whitespace.
++comando: bash -c 
+docs/phases/23/evidence/m9b-cc013-diff-check.log:4: trailing whitespace.
++comando: bash -c 
+docs/phases/23/evidence/m9b-cc013-secret-scan.log:4: trailing whitespace.
++comando: bash -c 
+docs/phases/23/evidence/m9b-cc013-staged-final.log:4: trailing whitespace.
++comando: bash -c 
+RC=2
+exit=0

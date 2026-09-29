@@ -1,0 +1,53 @@
+# evidencia: m9b-06b-deploy
+fecha: 2026-09-29T01:30:33-06:00
+fase: 23
+comando: bash /tmp/opencode/m9b-06-deploy.sh
+== M9-B DEPLOY COPY (src -> lenovosrv:/tmp/m9b/src) ==
+LOCAL_BRANCH=medalion
+LOCAL_HEAD=5dbc1c3c871a743cd0a54274fcc4fdce18e54d1f
+HEAD_OK=YES
+UNTRACKED_OR_MODIFIED  M docs/phases/23/evidence/log.md
+UNTRACKED_OR_MODIFIED  M src/infrastructure/medallion/replay.py
+UNTRACKED_OR_MODIFIED  M src/infrastructure/medallion/replay_cli.py
+UNTRACKED_OR_MODIFIED  M tests/test_trade_replay.py
+UNTRACKED_OR_MODIFIED ?? docs/phases/23/evidence/m9b-01-repo-quality.log
+UNTRACKED_OR_MODIFIED ?? docs/phases/23/evidence/m9b-02-unit-tests-full.log
+UNTRACKED_OR_MODIFIED ?? docs/phases/23/evidence/m9b-03-medallion-scoped.log
+UNTRACKED_OR_MODIFIED ?? docs/phases/23/evidence/m9b-03b-medallion-scoped.log
+UNTRACKED_OR_MODIFIED ?? docs/phases/23/evidence/m9b-04-unit-tests-count.log
+UNTRACKED_OR_MODIFIED ?? docs/phases/23/evidence/m9b-05-preflight.log
+UNTRACKED_OR_MODIFIED ?? docs/phases/23/evidence/m9b-05b-preflight.log
+UNTRACKED_OR_MODIFIED ?? docs/phases/23/evidence/m9b-05c-preflight.log
+UNTRACKED_OR_MODIFIED ?? docs/phases/23/evidence/m9b-06-deploy.log
+UNTRACKED_OR_MODIFIED ?? docs/phases/23/evidence/m9b-06b-deploy.log
+UNTRACKED_OR_MODIFIED ?? docs/phases/23/m9b-strategy-replay-plan.md
+UNTRACKED_OR_MODIFIED ?? src/infrastructure/medallion/strategy_provider.py
+UNTRACKED_OR_MODIFIED ?? tests/test_strategy_provider.py
+UNTRACKED_OR_MODIFIED ?? tests/test_strategy_replay_no_lookahead.py
+IMPORT_OK sizing_modes=['fixed', 'risk_engine']
+LEGACY_SCENARIO scripted-default-v1 fixed
+M9B_SCENARIO m9b-22b-parity-v1 risk-v2-atr-exit fee=0.001 slip_bps=2.0
+STRATEGIES baseline-v1 eth-donchian-breakout-v1 eth-bollinger-mean-reversion-v1
+usage: replay_cli.py [-h] --dataset-dir DATASET_DIR --trades-dir TRADES_DIR
+                     --candles-dir CANDLES_DIR --ledger-path LEDGER_PATH
+                     [--require-marker REQUIRE_MARKER]
+                     [--strategy {scripted,ema-rsi,donchian,bollinger}]
+                     [--sizing-mode {fixed,risk_engine}]
+
+Trade-level replay (dos relojes, idempotente)
+
+options:
+  -h, --help            show this help message and exit
+  --dataset-dir DATASET_DIR
+  --trades-dir TRADES_DIR
+  --candles-dir CANDLES_DIR
+  --ledger-path LEDGER_PATH
+  --require-marker REQUIRE_MARKER
+  --strategy {scripted,ema-rsi,donchian,bollinger}
+                        estrategia: scripted (legacy M7) o congeladas M9-B
+  --sizing-mode {fixed,risk_engine}
+                        fixed (legacy) o risk_engine (M9-B); por defecto:
+                        fixed para scripted, risk_engine para las estrategias
+                        congeladas
+M9B_DEPLOY=PASS
+exit=0

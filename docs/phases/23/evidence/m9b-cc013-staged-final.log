@@ -1,0 +1,71 @@
+# evidencia: m9b-cc013-staged-final
+fecha: 2026-09-29T04:38:01-06:00
+fase: 23
+comando: bash -c 
+set -uo pipefail
+echo "== staged snapshot (previo a este log) =="
+git diff --cached --name-only
+echo "== resumen =="
+git diff --cached --numstat | awk "{a+=\$1; d+=\$2; n++} END {print \"files=\"n\" added=\"a\" deleted=\"d}"
+echo "== fuera de alcance =="
+git diff --cached --name-only | grep -vE "^(src/infrastructure/medallion/(replay|replay_cli|strategy_provider)\.py|tests/test_(trade_replay|strategy_provider|strategy_replay_no_lookahead)\.py|docs/phases/23/)" || echo "OUT_OF_SCOPE=0"
+echo "== prohibidos =="
+git diff --cached --name-only | grep -E "progress\.yaml|^src/domain/risk/|paper|deployment/|certification|safeguard" || echo "FORBIDDEN_STAGED=0"
+echo "== codigo/tests staged =="
+git diff --cached --numstat | grep -E "^[0-9]+\s+[0-9]+\s+(src|tests)/"
+echo "== calidad post-staging (re-rapida) =="
+uv run ruff check . | tail -1
+uv run ruff format --check . | tail -1
+echo "STAGED_FINAL=PASS"
+
+== staged snapshot (previo a este log) ==
+docs/phases/23/commit-candidate-013.md
+docs/phases/23/evidence/log.md
+docs/phases/23/evidence/m9b-01-repo-quality.log
+docs/phases/23/evidence/m9b-02-unit-tests-full.log
+docs/phases/23/evidence/m9b-03-medallion-scoped.log
+docs/phases/23/evidence/m9b-03b-medallion-scoped.log
+docs/phases/23/evidence/m9b-04-unit-tests-count.log
+docs/phases/23/evidence/m9b-05-preflight.log
+docs/phases/23/evidence/m9b-05b-preflight.log
+docs/phases/23/evidence/m9b-05c-preflight.log
+docs/phases/23/evidence/m9b-06-deploy.log
+docs/phases/23/evidence/m9b-06b-deploy.log
+docs/phases/23/evidence/m9b-07-uat-run1.log
+docs/phases/23/evidence/m9b-08-uat-run2-determinism.log
+docs/phases/23/evidence/m9b-09-uat-verify.log
+docs/phases/23/evidence/m9b-09b-uat-verify.log
+docs/phases/23/evidence/m9b-09c-uat-verify.log
+docs/phases/23/evidence/m9b-10-repo-safety.log
+docs/phases/23/evidence/m9b-cc013-artifacts-tree.log
+docs/phases/23/evidence/m9b-cc013-diff-check.log
+docs/phases/23/evidence/m9b-cc013-quality.log
+docs/phases/23/evidence/m9b-cc013-secret-scan.log
+docs/phases/23/evidence/m9b-cc013-tests-global.log
+docs/phases/23/evidence/m9b-cc013-tests-medallion.log
+docs/phases/23/m9b-strategy-replay-plan.md
+docs/phases/23/m9b-strategy-replay.md
+src/infrastructure/medallion/replay.py
+src/infrastructure/medallion/replay_cli.py
+src/infrastructure/medallion/strategy_provider.py
+tests/test_strategy_provider.py
+tests/test_strategy_replay_no_lookahead.py
+tests/test_trade_replay.py
+== resumen ==
+files=32 added=2748 deleted=11
+== fuera de alcance ==
+OUT_OF_SCOPE=0
+== prohibidos ==
+FORBIDDEN_STAGED=0
+== codigo/tests staged ==
+123	8	src/infrastructure/medallion/replay.py
+95	3	src/infrastructure/medallion/replay_cli.py
+125	0	src/infrastructure/medallion/strategy_provider.py
+333	0	tests/test_strategy_provider.py
+143	0	tests/test_strategy_replay_no_lookahead.py
+266	0	tests/test_trade_replay.py
+== calidad post-staging (re-rapida) ==
+All checks passed!
+331 files already formatted
+STAGED_FINAL=PASS
+exit=0

@@ -1,0 +1,28 @@
+# evidencia: m9b-08-uat-run2-determinism
+fecha: 2026-09-29T01:31:56-06:00
+fase: 23
+comando: bash /tmp/opencode/m9b-08-run2.sh
+== M9-B UAT RUN2 (determinismo + legacy byte-idéntico) ==
+-- run2: ema-rsi --
+STATUS=created dataset_id=gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3 dataset_sha256=9411a4e01a5adccbb448df062f0eca857213e8259441535b5812ee4688af99df ledger_sha256=52823a0dbcffa80430d7b26d537f8f8cce1537f575b19413220ebdf23b85d908
+SUMMARY created=1 skipped=0 decisions_total=3 decisions_filled=1 decisions_dropped=2 decisions_unfilled=0 closed_trades=1 trades=1880793
+SIZING=dynamic mode=risk_engine intensity=medium decisions_rejected=0 rejected_reasons={}
+SMOKE_DETERMINISTIC_ema-rsi=PASS sha=52823a0dbcffa80430d7b26d537f8f8cce1537f575b19413220ebdf23b85d908
+-- run2: donchian --
+STATUS=created dataset_id=gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3 dataset_sha256=9411a4e01a5adccbb448df062f0eca857213e8259441535b5812ee4688af99df ledger_sha256=36bbccd47d0a997fff63cafb20e024921cd79c9cbe7292183c95ee5a9d25492b
+SUMMARY created=1 skipped=0 decisions_total=22 decisions_filled=3 decisions_dropped=19 decisions_unfilled=0 closed_trades=3 trades=1880793
+SIZING=dynamic mode=risk_engine intensity=medium decisions_rejected=0 rejected_reasons={}
+SMOKE_DETERMINISTIC_donchian=PASS sha=36bbccd47d0a997fff63cafb20e024921cd79c9cbe7292183c95ee5a9d25492b
+-- run2: bollinger --
+STATUS=created dataset_id=gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3 dataset_sha256=9411a4e01a5adccbb448df062f0eca857213e8259441535b5812ee4688af99df ledger_sha256=05fc6f12d11b124842405865db4068ba10e4b682225aa5b27834cba842aae795
+SUMMARY created=1 skipped=0 decisions_total=149 decisions_filled=6 decisions_dropped=142 decisions_unfilled=1 closed_trades=4 trades=1880793
+SIZING=dynamic mode=risk_engine intensity=medium decisions_rejected=0 rejected_reasons={}
+SMOKE_DETERMINISTIC_bollinger=PASS sha=05fc6f12d11b124842405865db4068ba10e4b682225aa5b27834cba842aae795
+-- legacy M7 regenerado (sin flags) a path nuevo --
+STATUS=created dataset_id=gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3 dataset_sha256=9411a4e01a5adccbb448df062f0eca857213e8259441535b5812ee4688af99df ledger_sha256=6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625
+SUMMARY created=1 skipped=0 decisions_total=45 decisions_filled=23 decisions_dropped=22 decisions_unfilled=0 closed_trades=23 trades=1880793
+LEGACY_M7_LEDGER_IDENTICAL=PASS sha=6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625
+LEGACY_ORIGINAL_UNTOUCHED=PASS sha=6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625
+M9B_RUN2=PASS
+M9B_UAT_RUN2=PASS
+exit=0

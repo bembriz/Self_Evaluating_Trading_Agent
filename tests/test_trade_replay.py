@@ -20,6 +20,8 @@ from typing import Any
 
 import pytest
 
+from domain.risk.config import RiskConfig
+from domain.risk.engine import PortfolioRiskState, RiskEngine, RiskVerdict, TradeProposal
 from infrastructure.medallion import replay, replay_cli
 from infrastructure.medallion.bronze import bronze_filename
 from infrastructure.medallion.candles import CANDLE_HEADER, CANDLE_SCHEMA_VERSION, DURATION_MS
@@ -1529,3 +1531,267 @@ def test_validate_empty_dates(tmp_path: Path) -> None:
     _mutate_json(dataset_dir / MANIFEST_FILENAME, mutate)
     with pytest.raises(DatasetValidationError):
         validate_dataset(dataset_dir, trades_dir, candles_dir)
+
+
+# ------------------------------------------- M9-B: RiskEngine + escenario 22B
+
+
+def _m9b_scenario(**overrides: object) -> ReplayScenario:
+    params: dict[str, object] = {
+        "scenario_id": "m9b-22b-parity-v1",
+        "risk": RiskConfig(stop_loss_required=True, version="risk-v2-atr-exit"),
+        "quantity": 0.01,
+        "fee_rate": 0.001,
+        "slippage_bps": 2.0,
+        "strategy_version": "baseline-v1",
+        "atr_period": 14,
+        "sizing_mode": "risk_engine",
+        "intensity": "medium",
+    }
+    params.update(overrides)
+    return ReplayScenario(**params)  # type: ignore[arg-type]
+
+
+def _payload_scen(result: ReplayResult, scenario: ReplayScenario) -> bytes:
+    return ledger_payload(
+        result,
+        dataset_id=DATASET_ID_PREFIX + "a" * 64,
+        dataset_sha="b" * 64,
+        symbol="ETHUSDT",
+        dates=(DAY,),
+        ordering_fidelity="PARTIAL",
+        scenario=scenario,
+    )
+
+
+def _rt_trades() -> list[ReplayTrade]:
+    return _trades(
+        [
+            (15 * DUR, 101.0),
+            (16 * DUR, 108.0),
+            (17 * DUR, 101.5),
+            (18 * DUR, 101.0),
+        ]
+    )
+
+
+class _SpyRiskEngine:
+    """Spy que delega en el RiskEngine real y registra llamadas."""
+
+    instances: list[_SpyRiskEngine] = []
+    calls: list[tuple[TradeProposal, PortfolioRiskState]] = []
+
+    def __init__(self, config: RiskConfig) -> None:
+        self._real = RiskEngine(config)
+        type(self).instances.append(self)
+
+    def evaluate(self, proposal: TradeProposal, state: PortfolioRiskState) -> RiskVerdict:
+        type(self).calls.append((proposal, state))
+        return self._real.evaluate(proposal, state)
+
+
+@pytest.fixture
+def spy_risk_engine(monkeypatch: pytest.MonkeyPatch) -> type[_SpyRiskEngine]:
+    _SpyRiskEngine.instances = []
+    _SpyRiskEngine.calls = []
+    monkeypatch.setattr(replay, "RiskEngine", _SpyRiskEngine)
+    return _SpyRiskEngine
+
+
+def test_dynamic_sizing_reference_stop_target_and_costs(
+    spy_risk_engine: type[_SpyRiskEngine],
+) -> None:
+    scenario = _m9b_scenario()
+    provider = StaticProvider({14: "buy"})
+    result = _engine(make_candles(40), _rt_trades(), provider, scenario=scenario)
+
+    calls = spy_risk_engine.calls
+    assert len(calls) == 1, "RiskEngine debe evaluarse una vez por intento de compra"
+    proposal, state = calls[0]
+    assert proposal.price == 101.0, "price = reference_price (close confirmado)"
+    assert proposal.atr == 2.0, "atr = ATR disponible en decision_ts"
+    assert proposal.timestamp_ms == 15 * DUR, "timestamp = signal_ts (close de la vela)"
+    assert state.open_positions == 0
+
+    rec = _one_round_trip(result)
+    assert _as_float(rec["initial_stop"]) == pytest.approx(101.0 - 2.0 * 2.0)
+    assert _as_float(rec["initial_target"]) == pytest.approx(
+        101.0 + 2.0 * (101.0 - (101.0 - 2.0 * 2.0))
+    )
+    from domain.risk.sizing import compute_position_size
+
+    cfg = RiskConfig(stop_loss_required=True, version="risk-v2-atr-exit")
+    expected = compute_position_size(
+        intensity="medium", atr=2.0, price=101.0, current_drawdown=0.0, config=cfg
+    )
+    assert _as_float(rec["quantity"]) == pytest.approx(expected.quantity)
+    assert _as_float(rec["quantity"]) != 0.01, "sizing dinámico, no el fijo legacy"
+    assert rec["exit_reason"] == "trailing_stop"
+    assert _as_float(rec["trailing_updates"]) >= 1
+
+    entry_exec = 101.0 * (1.0 + 2.0 / 10_000.0)
+    exit_exec = 101.0 * (1.0 - 2.0 / 10_000.0)
+    qty = expected.quantity
+    assert _as_float(rec["fees"]) == pytest.approx(0.001 * (entry_exec + exit_exec) * qty)
+    assert _as_float(rec["slippage"]) == pytest.approx((2.0 / 10_000.0) * (101.0 + 101.0) * qty)
+    assert _as_int(rec["exit_fill_timestamp"]) >= _as_int(rec["exit_trigger_timestamp"])
+
+
+def test_risk_engine_state_updates_between_round_trips(
+    spy_risk_engine: type[_SpyRiskEngine],
+) -> None:
+    scenario = _m9b_scenario()
+    trades = _trades([(15 * DUR, 101.0), (23 * DUR, 100.0), (31 * DUR, 101.0)])
+    provider = StaticProvider({14: "buy", 22: "sell", 30: "buy"})
+    result = _engine(make_candles(40), trades, provider, scenario=scenario)
+
+    calls = spy_risk_engine.calls
+    assert len(calls) == 2, "solo BUY cuando flat evalúa RiskEngine (no por cierre de vela)"
+    first_proposal, first_state = calls[0]
+    assert first_state.equity == pytest.approx(1000.0), "estado inicial: capital"
+    second_proposal, second_state = calls[1]
+    assert len(result.records) >= 1
+    net0 = _as_float(result.records[0]["net_pnl"])
+    assert second_state.equity == pytest.approx(1000.0 + net0), "equity = capital + realizado"
+    assert second_state.realized_pnl_today == pytest.approx(net0)
+    assert second_state.open_positions == 0
+    assert second_proposal.price == 101.0
+
+
+def test_risk_rejection_opens_no_position_and_counts(
+    spy_risk_engine: type[_SpyRiskEngine],
+) -> None:
+    cfg = RiskConfig(stop_loss_required=True, max_drawdown=0.0, version="risk-v2-reject-test")
+    scenario = _m9b_scenario(risk=cfg)
+    provider = StaticProvider({14: "buy"})
+    result = _engine(make_candles(40), _rt_trades(), provider, scenario=scenario)
+
+    assert result.records == []
+    assert result.stats["decisions_total"] == 1
+    assert result.stats["decisions_filled"] == 0
+    assert result.stats["decisions_rejected"] == 1
+    assert result.rejected_reasons == {"max_drawdown": 1}
+    assert len(spy_risk_engine.calls) == 1
+
+    payload = _payload_scen(result, scenario)
+    meta = json.loads(payload.split(b"\n")[0])
+    assert meta["sizing_mode"] == "risk_engine"
+    assert meta["decisions_rejected"] == 1
+    assert meta["rejected_reasons"] == {"max_drawdown": 1}
+    assert meta["intensity"] == "medium"
+    assert meta["risk_version"] == "risk-v2-reject-test"
+
+
+def test_legacy_fixed_mode_bypasses_risk_engine(
+    spy_risk_engine: type[_SpyRiskEngine],
+) -> None:
+    provider = StaticProvider({14: "buy"})
+    result = _engine(make_candles(40), _rt_trades(), provider)
+    assert spy_risk_engine.instances == []
+    assert spy_risk_engine.calls == []
+    rec = _one_round_trip(result)
+    assert _as_float(rec["quantity"]) == 0.01
+    entry_exec = 101.0 * (1.0 + 5.0 / 10_000.0)
+    assert _as_float(rec["initial_stop"]) == pytest.approx(entry_exec - 2.0 * 2.0)
+    assert result.stats["decisions_rejected"] == 0
+
+
+def test_fixed_mode_ledger_meta_has_no_sizing_keys() -> None:
+    provider = StaticProvider({14: "buy", 20: "sell"})
+    trades = _trades([(15 * DUR, 101.0), (21 * DUR, 100.0)])
+    result = _engine(make_candles(40), trades, provider)
+    meta = json.loads(_payload(result).split(b"\n")[0])
+    assert "sizing_mode" not in meta
+    assert "decisions_rejected" not in meta
+    assert "rejected_reasons" not in meta
+
+
+def test_replay_scenario_rejects_unknown_sizing_mode() -> None:
+    with pytest.raises(ValueError):
+        ReplayScenario(sizing_mode="bogus")
+    with pytest.raises(ValueError):
+        ReplayScenario(sizing_mode="RISK_ENGINE")
+
+
+def test_replay_scenario_rejects_unknown_intensity() -> None:
+    with pytest.raises(ValueError):
+        ReplayScenario(intensity="yolo")
+
+
+# ------------------------------------------------------------------ CLI M9-B
+
+
+def test_cli_strategy_dynamic_sizing(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    trades_dir, candles_dir, dataset_dir = make_gold_fixture(tmp_path)
+    ledger = tmp_path / "work" / "ledger.jsonl"
+    args = _cli_args(trades_dir, candles_dir, dataset_dir, ledger)
+    args += ["--strategy", "bollinger", "--sizing-mode", "risk_engine"]
+    rc = replay_cli.main(args)
+    out = capsys.readouterr()
+    assert rc == 0, out.err
+    assert "STATUS=created" in out.out
+    lines = ledger.read_bytes().split(b"\n")
+    meta = json.loads(lines[0])
+    assert meta["scenario"] == "m9b-22b-parity-v1"
+    assert meta["strategy_version"] == "eth-bollinger-mean-reversion-v1"
+    assert meta["risk_version"] == "risk-v2-atr-exit"
+    assert meta["sizing_mode"] == "risk_engine"
+    assert meta["decisions_rejected"] == 0
+    assert meta["decisions_total"] >= 1, "bollinger SELL en vela plana desde índice 19"
+    for line in lines[1:]:
+        if not line.strip():
+            continue
+        record = json.loads(line)
+        assert record["strategy_version"] == "eth-bollinger-mean-reversion-v1"
+        assert record["risk_version"] == "risk-v2-atr-exit"
+        assert record["execution_model_version"] == EXECUTION_MODEL_VERSION
+
+
+def test_cli_strategy_defaults_to_dynamic_sizing(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    trades_dir, candles_dir, dataset_dir = make_gold_fixture(tmp_path)
+    ledger = tmp_path / "work" / "ledger.jsonl"
+    args = _cli_args(trades_dir, candles_dir, dataset_dir, ledger)
+    args += ["--strategy", "ema-rsi"]
+    rc = replay_cli.main(args)
+    out = capsys.readouterr()
+    assert rc == 0, out.err
+    meta = json.loads(ledger.read_bytes().split(b"\n")[0])
+    assert meta["sizing_mode"] == "risk_engine"
+    assert meta["strategy_version"] == "baseline-v1"
+
+
+def test_cli_scripted_without_flags_keeps_legacy_scenario(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    trades_dir, candles_dir, dataset_dir = make_gold_fixture(tmp_path)
+    ledger = tmp_path / "work" / "ledger.jsonl"
+    rc = replay_cli.main(_cli_args(trades_dir, candles_dir, dataset_dir, ledger))
+    out = capsys.readouterr()
+    assert rc == 0, out.err
+    meta = json.loads(ledger.read_bytes().split(b"\n")[0])
+    assert meta["scenario"] == "scripted-default-v1"
+    assert meta["strategy_version"] == "scripted-schedule-v1"
+    assert meta["risk_version"] == "replay-risk-v1"
+    assert "sizing_mode" not in meta
+
+
+def test_cli_unknown_strategy_exits_2(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    trades_dir, candles_dir, dataset_dir = make_gold_fixture(tmp_path)
+    args = _cli_args(trades_dir, candles_dir, dataset_dir, tmp_path / "l.jsonl")
+    args += ["--strategy", "nope"]
+    with pytest.raises(SystemExit) as excinfo:
+        replay_cli.main(args)
+    assert excinfo.value.code == 2
+
+
+def test_cli_unknown_sizing_mode_exits_2(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    trades_dir, candles_dir, dataset_dir = make_gold_fixture(tmp_path)
+    args = _cli_args(trades_dir, candles_dir, dataset_dir, tmp_path / "l.jsonl")
+    args += ["--sizing-mode", "nope"]
+    with pytest.raises(SystemExit) as excinfo:
+        replay_cli.main(args)
+    assert excinfo.value.code == 2

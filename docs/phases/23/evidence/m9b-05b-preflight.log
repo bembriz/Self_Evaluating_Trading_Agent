@@ -1,0 +1,17 @@
+# evidencia: m9b-05b-preflight
+fecha: 2026-09-29T01:27:14-06:00
+fase: 23
+comando: bash /tmp/opencode/m9b-05-preflight.sh
+== M9-B PREFLIGHT (lenovosrv) ==
+== M9-B PREFLIGHT ==
+MARKER_OK
+DATASET_OK gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3
+-- dataset (solo fechas DEVELOPMENT) --
+DATES ['2024-06-01', '2024-06-02', '2024-06-03']
+PART_FILES=0
+-- silver sin .part y conteos (Full DEVELOPMENT) --
+SILVER_COUNTS trades=647 candles=4529 PART_FILES=0
+-- legacy ledger intacto (baseline M7) --
+LEGACY_LEDGER_SHA=6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625
+-- gold replay datasets (solo el de 3 días) --
+exit=1

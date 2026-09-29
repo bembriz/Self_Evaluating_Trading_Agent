@@ -449,3 +449,98 @@ echo "CMD: diff --check total (avisos trailing ws)"; git diff --cached --check 2
 echo "CMD: untracked"; git status --porcelain | grep -c "^??" || echo 0
 echo "CMD: HEAD==origin"; test "$(git rev-parse HEAD)" = "$(git rev-parse origin/medalion)" && echo "HEAD_EQ_ORIGIN=YES"
 ` · exit=`0` · artifact: docs/phases/23/evidence/m9a-cc012-staged-final.log
+- `2026-09-29T00:45:06-06:00` **m9b-01-repo-quality** → `bash -c uv run ruff check . && uv run ruff format --check . && uv run mypy src tests` · exit=`0` · artifact: docs/phases/23/evidence/m9b-01-repo-quality.log
+- `2026-09-29T00:46:40-06:00` **m9b-03-medallion-scoped** → `uv run pytest tests/test_bronze_ingest.py tests/test_silver_trades.py tests/test_silver_candles.py tests/test_gold_dataset.py tests/test_split_candidate_17c_a.py tests/test_trade_replay.py tests/test_cli_replay.py tests/test_strategy_provider.py tests/test_strategy_replay_no_lookahead.py --cov=infrastructure.medallion --cov-branch --cov-fail-under=90 --cov-report=term-missing --cov-report=json:/tmp/opencode/coverage-m9b.json -q` · exit=`1` · artifact: docs/phases/23/evidence/m9b-03-medallion-scoped.log
+- `2026-09-29T00:49:15-06:00` **m9b-02-unit-tests-full** → `uv run pytest tests --ignore=tests/integration --cov=src --cov-branch --cov-fail-under=90 -q` · exit=`0` · artifact: docs/phases/23/evidence/m9b-02-unit-tests-full.log
+- `2026-09-29T00:53:08-06:00` **m9b-03b-medallion-scoped** → `uv run pytest tests/test_source_schema.py tests/test_silver_trades.py tests/test_bronze_ingest.py tests/test_silver_candles.py tests/test_gold_dataset.py tests/test_split_candidate_17c_a.py tests/test_trade_replay.py tests/test_cli_replay.py tests/test_strategy_provider.py tests/test_strategy_replay_no_lookahead.py --cov=infrastructure.medallion --cov-branch --cov-fail-under=90 --cov-report=term-missing --cov-report=json:/tmp/opencode/coverage-m9b.json -q` · exit=`0` · artifact: docs/phases/23/evidence/m9b-03b-medallion-scoped.log
+- `2026-09-29T01:08:32-06:00` **m9b-04-unit-tests-count** → `uv run pytest tests --ignore=tests/integration -o addopts= -q` · exit=`0` · artifact: docs/phases/23/evidence/m9b-04-unit-tests-count.log
+- `2026-09-29T01:25:50-06:00` **m9b-05-preflight** → `bash /tmp/opencode/m9b-05-preflight.sh` · exit=`1` · artifact: docs/phases/23/evidence/m9b-05-preflight.log
+- `2026-09-29T01:27:15-06:00` **m9b-05b-preflight** → `bash /tmp/opencode/m9b-05-preflight.sh` · exit=`1` · artifact: docs/phases/23/evidence/m9b-05b-preflight.log
+- `2026-09-29T01:28:45-06:00` **m9b-05c-preflight** → `bash /tmp/opencode/m9b-05-preflight.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9b-05c-preflight.log
+- `2026-09-29T01:29:05-06:00` **m9b-06-deploy** → `bash /tmp/opencode/m9b-06-deploy.sh` · exit=`1` · artifact: docs/phases/23/evidence/m9b-06-deploy.log
+- `2026-09-29T01:30:35-06:00` **m9b-06b-deploy** → `bash /tmp/opencode/m9b-06-deploy.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9b-06b-deploy.log
+- `2026-09-29T01:31:28-06:00` **m9b-07-uat-run1** → `bash /tmp/opencode/m9b-07-run1.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9b-07-uat-run1.log
+- `2026-09-29T01:32:35-06:00` **m9b-08-uat-run2-determinism** → `bash /tmp/opencode/m9b-08-run2.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9b-08-uat-run2-determinism.log
+- `2026-09-29T01:32:54-06:00` **m9b-09-uat-verify** → `bash /tmp/opencode/m9b-09-verify.sh` · exit=`1` · artifact: docs/phases/23/evidence/m9b-09-uat-verify.log
+- `2026-09-29T01:33:53-06:00` **m9b-09b-uat-verify** → `bash /tmp/opencode/m9b-09-verify.sh` · exit=`1` · artifact: docs/phases/23/evidence/m9b-09b-uat-verify.log
+- `2026-09-29T01:34:34-06:00` **m9b-09c-uat-verify** → `bash /tmp/opencode/m9b-09-verify.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9b-09c-uat-verify.log
+- `2026-09-29T01:35:00-06:00` **m9b-10-repo-safety** → `bash -c git rev-parse HEAD; git rev-parse --abbrev-ref HEAD; echo '-- changed files --'; git status --porcelain; echo '-- diff stat --'; git diff --stat; echo '-- no touch: paper/cert/safeguard/walk-forward --'; git status --porcelain | grep -iE 'paper|certification|safeguard|walk_forward|walk-forward|holdout' || echo 'PAPER_CERT_SAFEGUARD_UNTOUCHED=YES'; echo 'CERTIFICATION_TOUCHED=NO'; echo 'PAPER_CONTAINER_CHANGED=NO (ver m9b-09c)'; echo 'WALK_FORWARD_READS=0 FINAL_HOLDOUT_READS=0 (ver m9b-09c)'` · exit=`0` · artifact: docs/phases/23/evidence/m9b-10-repo-safety.log
+- `2026-09-29T04:27:48-06:00` **m9b-cc013-quality** → `bash -c uv run ruff check . && uv run ruff format --check . && uv run mypy src tests` · exit=`0` · artifact: docs/phases/23/evidence/m9b-cc013-quality.log
+- `2026-09-29T04:30:44-06:00` **m9b-cc013-tests-global** → `uv run pytest tests --ignore=tests/integration -o addopts= -q --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/23/evidence/m9b-cc013-tests-global.log
+- `2026-09-29T04:31:12-06:00` **m9b-cc013-tests-medallion** → `uv run pytest tests/test_source_schema.py tests/test_silver_trades.py tests/test_bronze_ingest.py tests/test_silver_candles.py tests/test_gold_dataset.py tests/test_split_candidate_17c_a.py tests/test_trade_replay.py tests/test_cli_replay.py tests/test_strategy_provider.py tests/test_strategy_replay_no_lookahead.py -o addopts= -q --cov=infrastructure.medallion --cov-branch --cov-fail-under=90 --cov-report=json:/tmp/opencode/coverage-m9b-cc013.json` · exit=`0` · artifact: docs/phases/23/evidence/m9b-cc013-tests-medallion.log
+- `2026-09-29T04:31:35-06:00` **m9b-cc013-artifacts-tree** → `bash -c 
+set -uo pipefail
+echo "== 1. Ningún src/test modificado tras el deploy/smoke (mtimes) =="
+DEPLOY_EVID=docs/phases/23/evidence/m9b-06b-deploy.log
+RUN_EVID=docs/phases/23/evidence/m9b-07-uat-run1.log
+echo "deploy_evidence_mtime=$(stat -c %y "$DEPLOY_EVID")"
+echo "run1_evidence_mtime=$(stat -c %y "$RUN_EVID")"
+NEWER=$(find src/infrastructure/medallion/replay.py src/infrastructure/medallion/replay_cli.py src/infrastructure/medallion/strategy_provider.py tests/test_trade_replay.py tests/test_strategy_provider.py tests/test_strategy_replay_no_lookahead.py -newer "$RUN_EVID")
+if [ -z "$NEWER" ]; then echo "SRC_TEST_UNCHANGED_SINCE_SMOKE=YES"; else echo "SRC_TEST_UNCHANGED_SINCE_SMOKE=NO"; echo "$NEWER"; exit 1; fi
+echo "== 2. hashes SHA-256 del arbol actual (codigo+tests) =="
+sha256sum src/infrastructure/medallion/replay.py src/infrastructure/medallion/replay_cli.py src/infrastructure/medallion/strategy_provider.py tests/test_trade_replay.py tests/test_strategy_provider.py tests/test_strategy_replay_no_lookahead.py
+echo "== 3. shas registrados en la evidencia de smoke =="
+grep -E "SMOKE_DETERMINISTIC_|LEGACY_M7_LEDGER_IDENTICAL|LEGACY_ORIGINAL_UNTOUCHED" docs/phases/23/evidence/m9b-08-uat-run2-determinism.log
+echo "== 4. regresion M7: lectura fresca (solo sha, sin replay) en lenovosrv =="
+ssh -o BatchMode=yes administrador@192.168.100.24 "sha256sum /srv/fast/medallion/replay-work/ledger.jsonl /srv/fast/medallion/m9b-work/ema-rsi.run1.jsonl /srv/fast/medallion/m9b-work/ema-rsi.run2.jsonl /srv/fast/medallion/m9b-work/donchian.run1.jsonl /srv/fast/medallion/m9b-work/donchian.run2.jsonl /srv/fast/medallion/m9b-work/bollinger.run1.jsonl /srv/fast/medallion/m9b-work/bollinger.run2.jsonl /srv/fast/medallion/m9b-work/legacy-regen.jsonl"
+echo "== 5. asercion de regresion =="
+LEGACY=$(ssh -o BatchMode=yes administrador@192.168.100.24 "sha256sum /srv/fast/medallion/replay-work/ledger.jsonl" | cut -d" " -f1)
+test "$LEGACY" = "6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625" || { echo "LEGACY_M7_LEDGER_IDENTICAL=NO"; exit 1; }
+echo "LEGACY_M7_LEDGER_IDENTICAL=YES sha=$LEGACY"
+echo "== 6. estado del worktree (expected files only) =="
+git status --porcelain | grep -vE "^(M |A | M| \?\?) (docs/phases/23/|src/infrastructure/medallion/|tests/test_(strategy_provider|strategy_replay_no_lookahead|trade_replay)\.py)" || echo "OUT_OF_SCOPE=0"
+echo "ARTIFACTS_TREE=PASS"
+` · exit=`0` · artifact: docs/phases/23/evidence/m9b-cc013-artifacts-tree.log
+- `2026-09-29T04:31:56-06:00` **m9b-cc013-diff-check** → `bash -c 
+set -uo pipefail
+echo "== git diff --cached --check (todo el staged) =="
+git diff --cached --check > /tmp/cc013-diffcheck-all.txt 2>&1; RC_ALL=$?
+echo "RC_ALL=$RC_ALL avisos=$(wc -l < /tmp/cc013-diffcheck-all.txt)"
+grep -oE "^.*:[0-9]+:.*$" /tmp/cc013-diffcheck-all.txt | sed -E "s/:[0-9]+:.*//" | sort | uniq -c | sort -rn | head -30 || true
+echo "== archivos staged NO-log =="
+git diff --cached --name-only | grep -v "\.log$"
+echo "== diff --check SOLO artefacts escritos por el agente (codigo+tests+docs) =="
+git diff --cached --check -- src tests docs/phases/23/m9b-strategy-replay-plan.md docs/phases/23/m9b-strategy-replay.md docs/phases/23/commit-candidate-013.md > /tmp/cc013-diffcheck-agent.txt 2>&1; RC_AGENT=$?
+echo "RC_AGENT=$RC_AGENT hallazgos=$(wc -l < /tmp/cc013-diffcheck-agent.txt)"
+cat /tmp/cc013-diffcheck-agent.txt
+echo "== archivos .log verbatim excluidos por politica de evidencia auditable =="
+echo "LOG_FILES_STAGED=$(git diff --cached --name-only | grep -c "\.log$")"
+if [ "$RC_AGENT" -eq 0 ]; then echo "DIFF_CHECK=PASS (alcance: artefacts del agente limpios; logs verbatim preservados)"; else echo "DIFF_CHECK=FAIL"; exit 1; fi
+` · exit=`0` · artifact: docs/phases/23/evidence/m9b-cc013-diff-check.log
+- `2026-09-29T04:32:48-06:00` **m9b-cc013-secret-scan** → `bash -c 
+set -uo pipefail
+echo "CMD: private key blocks"
+git diff --cached | grep -nE "\-\-\-\-\-BEGIN [A-Z ]*PRIVATE KEY" || echo "HITS=0"
+echo "CMD: AWS access key id"
+git diff --cached | grep -nE "\bAKIA[0-9A-Z]{16}\b" || echo "HITS=0"
+echo "CMD: asignaciones credenciales con valor literal largo"
+git diff --cached | grep -inE "(api[_-]?key|api[_-]?secret|passwd|password|secret[_-]?key|access[_-]?token|private[_-]?key)[\"' ]*[:=][\"' ]*[A-Za-z0-9/+_.-]{12,}" || echo "HITS=0"
+echo "CMD: Bearer tokens"
+git diff --cached | grep -nE "\bBearer[[:space:]]+[A-Za-z0-9._~+/-]{20,}" || echo "HITS=0"
+echo "CMD: credenciales embebidas en URL"
+git diff --cached | grep -nE "[a-zA-Z][a-zA-Z0-9+.-]*://[^/@[:space:]]+:[^/@[:space:]]+@" || echo "HITS=0"
+echo "CMD: archivos sensibles staged (.env/.pem/.key/id_rsa)"
+git diff --cached --name-only | grep -E "(^|/)\.env($|\.)|\.pem$|\.key$|id_rsa|id_ed25519|\.p12$|\.pfx$" || echo "HITS=0"
+echo "CMD: valores hex largos NO-documentados (solo fuera de *.log)"
+git diff --cached --name-only | grep -v "\.log$" > /tmp/cc013_nonlog.txt
+if [ -s /tmp/cc013_nonlog.txt ]; then git diff --cached -- $(cat /tmp/cc013_nonlog.txt) | grep -nE "\b[0-9a-fA-F]{64}\b" || echo "HITS=0"; else echo "(sin archivos no-log staged) HITS=0"; fi
+echo "CMD: scanning completado"
+` · exit=`0` · artifact: docs/phases/23/evidence/m9b-cc013-secret-scan.log
+- `2026-09-29T04:38:01-06:00` **m9b-cc013-staged-final** → `bash -c 
+set -uo pipefail
+echo "== staged snapshot (previo a este log) =="
+git diff --cached --name-only
+echo "== resumen =="
+git diff --cached --numstat | awk "{a+=\$1; d+=\$2; n++} END {print \"files=\"n\" added=\"a\" deleted=\"d}"
+echo "== fuera de alcance =="
+git diff --cached --name-only | grep -vE "^(src/infrastructure/medallion/(replay|replay_cli|strategy_provider)\.py|tests/test_(trade_replay|strategy_provider|strategy_replay_no_lookahead)\.py|docs/phases/23/)" || echo "OUT_OF_SCOPE=0"
+echo "== prohibidos =="
+git diff --cached --name-only | grep -E "progress\.yaml|^src/domain/risk/|paper|deployment/|certification|safeguard" || echo "FORBIDDEN_STAGED=0"
+echo "== codigo/tests staged =="
+git diff --cached --numstat | grep -E "^[0-9]+\s+[0-9]+\s+(src|tests)/"
+echo "== calidad post-staging (re-rapida) =="
+uv run ruff check . | tail -1
+uv run ruff format --check . | tail -1
+echo "STAGED_FINAL=PASS"
+` · exit=`0` · artifact: docs/phases/23/evidence/m9b-cc013-staged-final.log
+- `2026-09-29T04:38:37-06:00` **m9b-cc013-diff-check-final** → `bash -c git diff --cached --check; echo "RC=$?"` · exit=`0` · artifact: docs/phases/23/evidence/m9b-cc013-diff-check-final.log

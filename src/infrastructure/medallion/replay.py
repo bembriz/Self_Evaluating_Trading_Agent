@@ -32,7 +32,7 @@ import os
 import re
 from collections import deque
 from collections.abc import Iterable, Iterator, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Protocol
@@ -40,7 +40,10 @@ from typing import Protocol
 from domain.market.candle import Candle
 from domain.market.indicators import atr
 from domain.risk.config import RiskConfig
+from domain.risk.engine import PortfolioRiskState, RiskEngine, RiskVerdict, TradeProposal
+from domain.risk.guards import KillSwitchState
 from domain.risk.stops import initial_stop, take_profit, update_trailing
+from domain.trading.signal import Action
 from infrastructure.medallion.bronze import BronzeError, sha256_file
 from infrastructure.medallion.candles import (
     CANDLE_HEADER,
@@ -144,6 +147,8 @@ _RX_UINT = re.compile(r"^[0-9]+$")
 _RX_DEC = re.compile(r"^[0-9]+(\.[0-9]+)?$")
 _RX_SHA64 = re.compile(r"^[0-9a-f]{64}$")
 _VALID_FIDELITY = frozenset({"FULL", "PARTIAL"})
+SIZING_MODES = frozenset({"fixed", "risk_engine"})
+VALID_INTENSITIES = frozenset({"low", "medium", "high"})
 
 
 class ReplayError(BronzeError):
@@ -263,7 +268,15 @@ REPLAY_RISK = RiskConfig(
 
 @dataclass(frozen=True, slots=True)
 class ReplayScenario:
-    """Escenario determinista de replay (riesgo, costes, estrategia)."""
+    """Escenario determinista de replay (riesgo, costes, estrategia).
+
+    ``sizing_mode``:
+      - ``"fixed"`` (legacy M7): quantity fija ``quantity``; stops/target desde
+        el precio de ejecución. Output byte-idéntico al UAT M7.
+      - ``"risk_engine"`` (M9-B): sizing dinámico vía ``RiskEngine.evaluate``
+        en el primer trade elegible, con ``price = reference_price`` y
+        ``atr`` de la decisión; stops/target desde el veredicto.
+    """
 
     scenario_id: str = "scripted-default-v1"
     risk: RiskConfig = REPLAY_RISK
@@ -272,6 +285,20 @@ class ReplayScenario:
     slippage_bps: float = 5.0
     strategy_version: str = "scripted-schedule-v1"
     atr_period: int = 14
+    sizing_mode: str = "fixed"
+    intensity: str = "medium"
+
+    def __post_init__(self) -> None:
+        if self.sizing_mode not in SIZING_MODES:
+            raise ValueError(
+                f"sizing_mode inválido {self.sizing_mode!r}; "
+                f"esperado {sorted(SIZING_MODES)} (FAIL CLOSED)"
+            )
+        if self.intensity not in VALID_INTENSITIES:
+            raise ValueError(
+                f"intensity inválida {self.intensity!r}; "
+                f"esperado {sorted(VALID_INTENSITIES)} (FAIL CLOSED)"
+            )
 
 
 DEFAULT_SCENARIO = ReplayScenario()
@@ -283,6 +310,7 @@ class ReplayResult:
 
     records: list[dict[str, object]]
     stats: dict[str, int]
+    rejected_reasons: dict[str, int] = field(default_factory=dict)
 
 
 class ScriptedScheduleProvider:
@@ -833,12 +861,25 @@ class _Engine:
             "decisions_filled": 0,
             "decisions_dropped": 0,
             "decisions_unfilled": 0,
+            "decisions_rejected": 0,
             "closed_trades": 0,
         }
+        self._rejected_reasons: dict[str, int] = {}
         self._queue: deque[Decision] = deque()
         self._candle_i = 0
         self._position: _Position | None = None
         self._pending: _PendingExit | None = None
+        self._dynamic = scenario.sizing_mode == "risk_engine"
+        if self._dynamic:
+            # Estado de portfolio para RiskEngine (solo modo dinámico; el modo
+            # legacy fixed jamás instancia RiskEngine — byte-idéntico a M7).
+            self._risk_engine = RiskEngine(scenario.risk)
+            self._risk_kill = KillSwitchState()
+            self._capital = scenario.risk.capital
+            self._realized_total = 0.0
+            self._realized_today = 0.0
+            self._day: int | None = None
+            self._peak_equity = scenario.risk.capital
 
     def run(self) -> ReplayResult:
         domain_candles = [
@@ -886,7 +927,11 @@ class _Engine:
                 fill_trade_index=last_index,
                 fill_trade_price=last.price,
             )
-        return ReplayResult(records=self._records, stats=dict(self._stats))
+        return ReplayResult(
+            records=self._records,
+            stats=dict(self._stats),
+            rejected_reasons=dict(self._rejected_reasons),
+        )
 
     def _advance(self, cutoff: int) -> None:
         while self._candle_i < len(self._candles):
@@ -959,7 +1004,19 @@ class _Engine:
                 if self._position is not None or atr_value is None:
                     self._stats["decisions_dropped"] += 1
                     continue
-                self._open_position(decision, atr_value, trade, index)
+                verdict: RiskVerdict | None = None
+                if self._dynamic:
+                    # Orden M9-B: RiskEngine se evalúa en el PRIMER TRADE
+                    # elegible, inmediatamente antes de abrir (nunca en el
+                    # cierre de la vela) con el estado real del portfolio.
+                    verdict = self._evaluate_risk(decision, trade)
+                    if not verdict.approved:
+                        self._stats["decisions_rejected"] += 1
+                        self._rejected_reasons[verdict.reason] = (
+                            self._rejected_reasons.get(verdict.reason, 0) + 1
+                        )
+                        continue
+                self._open_position(decision, atr_value, trade, index, verdict)
                 self._stats["decisions_filled"] += 1
             elif decision.action == "sell":
                 position = self._position
@@ -984,15 +1041,59 @@ class _Engine:
             else:
                 raise ReplayError(f"acción desconocida: {decision.action!r}")
 
+    def _roll_day(self, ts_ms: int) -> None:
+        """Rueda el día UTC del pnl diario (determinista, sin wall-clock)."""
+        day = ts_ms // DAY_MS
+        if self._day is None:
+            self._day = day
+        elif day != self._day:
+            self._day = day
+            self._realized_today = 0.0
+
+    def _evaluate_risk(self, decision: Decision, trade: ReplayTrade) -> RiskVerdict:
+        """Evalúa RiskEngine al fill attempt con price=reference_price y atr=decisión."""
+        self._roll_day(trade.ts)
+        proposal = TradeProposal(
+            action=Action.BUY,
+            intensity=self._scenario.intensity,
+            price=decision.reference_price,
+            atr=decision.atr,
+            timestamp_ms=decision.signal_ts,
+        )
+        state = PortfolioRiskState(
+            open_positions=0,
+            realized_pnl_today=self._realized_today,
+            peak_equity=self._peak_equity,
+            equity=self._capital + self._realized_total,
+            kill_switch=self._risk_kill,
+        )
+        return self._risk_engine.evaluate(proposal, state)
+
     def _open_position(
-        self, decision: Decision, atr_value: float, trade: ReplayTrade, index: int
+        self,
+        decision: Decision,
+        atr_value: float,
+        trade: ReplayTrade,
+        index: int,
+        verdict: RiskVerdict | None = None,
     ) -> None:
         scenario = self._scenario
         entry_execution = trade.price * (1.0 + scenario.slippage_bps / 10_000.0)
-        stop = initial_stop(entry_price=entry_execution, atr=atr_value, config=scenario.risk)
-        target = take_profit(entry_price=entry_execution, stop_loss=stop, config=scenario.risk)
+        if verdict is not None:
+            # M9-B: stop/target y quantity provienen del veredicto RiskEngine,
+            # calculados sobre reference_price (close confirmado), no sobre
+            # entry_execution_price.
+            if verdict.size is None or verdict.stop_loss is None or verdict.take_profit is None:
+                raise ReplayError("RiskEngine aprobado sin size/stop/target (FAIL CLOSED)")
+            quantity = verdict.size.quantity
+            stop = verdict.stop_loss
+            target = verdict.take_profit
+        else:
+            quantity = scenario.quantity
+            stop = initial_stop(entry_price=entry_execution, atr=atr_value, config=scenario.risk)
+            target = take_profit(entry_price=entry_execution, stop_loss=stop, config=scenario.risk)
         self._position = _Position(
-            quantity=scenario.quantity,
+            quantity=quantity,
             entry_signal_ts=decision.signal_ts,
             entry_trigger_ts=decision.signal_ts,
             entry_fill_ts=trade.ts,
@@ -1108,6 +1209,13 @@ class _Engine:
         }
         self._records.append(record)
         self._stats["closed_trades"] += 1
+        if self._dynamic:
+            self._roll_day(fill_ts)
+            self._realized_total += net
+            self._realized_today += net
+            equity = self._capital + self._realized_total
+            if equity > self._peak_equity:
+                self._peak_equity = equity
         self._position = None
         self._pending = None
 
@@ -1177,6 +1285,13 @@ def ledger_payload(
         "decisions_unfilled": result.stats["decisions_unfilled"],
         "closed_trades": result.stats["closed_trades"],
     }
+    if scenario.sizing_mode != "fixed":
+        # Auditoría M9-B solo en modo dinámico: el ledger legacy (fixed) debe
+        # permanecer byte-idéntico al UAT M7.
+        meta["sizing_mode"] = scenario.sizing_mode
+        meta["intensity"] = scenario.intensity
+        meta["decisions_rejected"] = result.stats.get("decisions_rejected", 0)
+        meta["rejected_reasons"] = dict(sorted(result.rejected_reasons.items()))
     lines = [_json_line(meta)]
     lines.extend(_json_line(record) for record in result.records)
     return ("\n".join(lines) + "\n").encode("utf-8")

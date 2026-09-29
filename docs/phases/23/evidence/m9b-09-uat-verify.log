@@ -1,0 +1,10 @@
+# evidencia: m9b-09-uat-verify
+fecha: 2026-09-29T01:32:53-06:00
+fase: 23
+comando: bash /tmp/opencode/m9b-09-verify.sh
+== M9-B UAT VERIFY (contrato + safety) ==
+== 1. CONTRATO DE LEDGER DINÁMICO (3 estrategias) ==
+Traceback (most recent call last):
+  File "<stdin>", line 31, in <module>
+AssertionError: [PosixPath('/srv/data/medallion/silver/candles/ETHUSDT/timeframe=15m/date=2024-06-01/ETHUSDT_2024-06-01_15m.csv.gz'), PosixPath('/srv/data/medallion/silver/candles/ETHUSDT/timeframe=15m/date=2024-06-02/ETHUSDT_2024-06-02_15m.csv.gz'), PosixPath('/srv/data/medallion/silver/candles/ETHUSDT/timeframe=15m/date=2024-06-03/ETHUSDT_2024-06-03_15m.csv.gz'), PosixPath('/srv/data/medallion/silver/candles/ETHUSDT/timeframe=15m/date=2024-06-04/ETHUSDT_2024-06-04_15m.csv.gz'), PosixPath('/srv/data/medallion/silver/candles/ETHUSDT/timeframe=15m/date=2024-06-05/ETHUSDT_2024-06-05_15m.csv.gz'), PosixPath('/srv/data/medallion/silver/candles/ETHUSDT/timeframe=15m/date=2024-06-06/ETHUSDT_2024-06-06_15m.csv.gz'), PosixPath('/srv/data/medallion/silver/candles/ETHUSDT/timeframe=15m/date=2024-06-07/ETHUSDT_2024-06-07_15m.csv.gz'), PosixPath('/srv/data/medallion/silver/candles/ETHUSDT/timeframe=15m/date=2024-06-08/ETHUSDT_2024-06-08_15m.csv.gz'), PosixPath('/srv/data/medallion/silver/candles/ETHUSDT/timeframe=15m/date=2024-06-09/ETHUSDT_2024-06-09_15m.csv.gz')]
+exit=1

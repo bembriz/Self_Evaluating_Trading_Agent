@@ -1,0 +1,43 @@
+# evidencia: m9b-10-repo-safety
+fecha: 2026-09-29T01:35:00-06:00
+fase: 23
+comando: bash -c git rev-parse HEAD; git rev-parse --abbrev-ref HEAD; echo '-- changed files --'; git status --porcelain; echo '-- diff stat --'; git diff --stat; echo '-- no touch: paper/cert/safeguard/walk-forward --'; git status --porcelain | grep -iE 'paper|certification|safeguard|walk_forward|walk-forward|holdout' || echo 'PAPER_CERT_SAFEGUARD_UNTOUCHED=YES'; echo 'CERTIFICATION_TOUCHED=NO'; echo 'PAPER_CONTAINER_CHANGED=NO (ver m9b-09c)'; echo 'WALK_FORWARD_READS=0 FINAL_HOLDOUT_READS=0 (ver m9b-09c)'
+5dbc1c3c871a743cd0a54274fcc4fdce18e54d1f
+medalion
+-- changed files --
+ M docs/phases/23/evidence/log.md
+ M src/infrastructure/medallion/replay.py
+ M src/infrastructure/medallion/replay_cli.py
+ M tests/test_trade_replay.py
+?? docs/phases/23/evidence/m9b-01-repo-quality.log
+?? docs/phases/23/evidence/m9b-02-unit-tests-full.log
+?? docs/phases/23/evidence/m9b-03-medallion-scoped.log
+?? docs/phases/23/evidence/m9b-03b-medallion-scoped.log
+?? docs/phases/23/evidence/m9b-04-unit-tests-count.log
+?? docs/phases/23/evidence/m9b-05-preflight.log
+?? docs/phases/23/evidence/m9b-05b-preflight.log
+?? docs/phases/23/evidence/m9b-05c-preflight.log
+?? docs/phases/23/evidence/m9b-06-deploy.log
+?? docs/phases/23/evidence/m9b-06b-deploy.log
+?? docs/phases/23/evidence/m9b-07-uat-run1.log
+?? docs/phases/23/evidence/m9b-08-uat-run2-determinism.log
+?? docs/phases/23/evidence/m9b-09-uat-verify.log
+?? docs/phases/23/evidence/m9b-09b-uat-verify.log
+?? docs/phases/23/evidence/m9b-09c-uat-verify.log
+?? docs/phases/23/evidence/m9b-10-repo-safety.log
+?? docs/phases/23/m9b-strategy-replay-plan.md
+?? src/infrastructure/medallion/strategy_provider.py
+?? tests/test_strategy_provider.py
+?? tests/test_strategy_replay_no_lookahead.py
+-- diff stat --
+ docs/phases/23/evidence/log.md             |  15 ++
+ src/infrastructure/medallion/replay.py     | 131 +++++++++++++-
+ src/infrastructure/medallion/replay_cli.py |  98 ++++++++++-
+ tests/test_trade_replay.py                 | 266 +++++++++++++++++++++++++++++
+ 4 files changed, 499 insertions(+), 11 deletions(-)
+-- no touch: paper/cert/safeguard/walk-forward --
+PAPER_CERT_SAFEGUARD_UNTOUCHED=YES
+CERTIFICATION_TOUCHED=NO
+PAPER_CONTAINER_CHANGED=NO (ver m9b-09c)
+WALK_FORWARD_READS=0 FINAL_HOLDOUT_READS=0 (ver m9b-09c)
+exit=0

@@ -1,0 +1,62 @@
+# evidencia: m9b-cc013-artifacts-tree
+fecha: 2026-09-29T04:31:33-06:00
+fase: 23
+comando: bash -c 
+set -uo pipefail
+echo "== 1. Ningún src/test modificado tras el deploy/smoke (mtimes) =="
+DEPLOY_EVID=docs/phases/23/evidence/m9b-06b-deploy.log
+RUN_EVID=docs/phases/23/evidence/m9b-07-uat-run1.log
+echo "deploy_evidence_mtime=$(stat -c %y "$DEPLOY_EVID")"
+echo "run1_evidence_mtime=$(stat -c %y "$RUN_EVID")"
+NEWER=$(find src/infrastructure/medallion/replay.py src/infrastructure/medallion/replay_cli.py src/infrastructure/medallion/strategy_provider.py tests/test_trade_replay.py tests/test_strategy_provider.py tests/test_strategy_replay_no_lookahead.py -newer "$RUN_EVID")
+if [ -z "$NEWER" ]; then echo "SRC_TEST_UNCHANGED_SINCE_SMOKE=YES"; else echo "SRC_TEST_UNCHANGED_SINCE_SMOKE=NO"; echo "$NEWER"; exit 1; fi
+echo "== 2. hashes SHA-256 del arbol actual (codigo+tests) =="
+sha256sum src/infrastructure/medallion/replay.py src/infrastructure/medallion/replay_cli.py src/infrastructure/medallion/strategy_provider.py tests/test_trade_replay.py tests/test_strategy_provider.py tests/test_strategy_replay_no_lookahead.py
+echo "== 3. shas registrados en la evidencia de smoke =="
+grep -E "SMOKE_DETERMINISTIC_|LEGACY_M7_LEDGER_IDENTICAL|LEGACY_ORIGINAL_UNTOUCHED" docs/phases/23/evidence/m9b-08-uat-run2-determinism.log
+echo "== 4. regresion M7: lectura fresca (solo sha, sin replay) en lenovosrv =="
+ssh -o BatchMode=yes administrador@192.168.100.24 "sha256sum /srv/fast/medallion/replay-work/ledger.jsonl /srv/fast/medallion/m9b-work/ema-rsi.run1.jsonl /srv/fast/medallion/m9b-work/ema-rsi.run2.jsonl /srv/fast/medallion/m9b-work/donchian.run1.jsonl /srv/fast/medallion/m9b-work/donchian.run2.jsonl /srv/fast/medallion/m9b-work/bollinger.run1.jsonl /srv/fast/medallion/m9b-work/bollinger.run2.jsonl /srv/fast/medallion/m9b-work/legacy-regen.jsonl"
+echo "== 5. asercion de regresion =="
+LEGACY=$(ssh -o BatchMode=yes administrador@192.168.100.24 "sha256sum /srv/fast/medallion/replay-work/ledger.jsonl" | cut -d" " -f1)
+test "$LEGACY" = "6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625" || { echo "LEGACY_M7_LEDGER_IDENTICAL=NO"; exit 1; }
+echo "LEGACY_M7_LEDGER_IDENTICAL=YES sha=$LEGACY"
+echo "== 6. estado del worktree (expected files only) =="
+git status --porcelain | grep -vE "^(M |A | M| \?\?) (docs/phases/23/|src/infrastructure/medallion/|tests/test_(strategy_provider|strategy_replay_no_lookahead|trade_replay)\.py)" || echo "OUT_OF_SCOPE=0"
+echo "ARTIFACTS_TREE=PASS"
+
+== 1. Ningún src/test modificado tras el deploy/smoke (mtimes) ==
+deploy_evidence_mtime=2026-09-29 01:30:35.036399843 -0600
+run1_evidence_mtime=2026-09-29 01:31:28.761427935 -0600
+SRC_TEST_UNCHANGED_SINCE_SMOKE=YES
+== 2. hashes SHA-256 del arbol actual (codigo+tests) ==
+5f211d35a8bbebf859c518b80716da75261ef3c6d9c3eb73b4bfc215d4eb97b8  src/infrastructure/medallion/replay.py
+bec5660f6ae4d5e8a3c2ecf7be5ccb32189a7bca9b88aed5b7ac9b1fc8beef7b  src/infrastructure/medallion/replay_cli.py
+ef7e5611cb35d3cb96ee4cc344e7d0ea300feb38e54d492293c3b48efb8d17f7  src/infrastructure/medallion/strategy_provider.py
+40e0a10c09a56c8355d0ab9fb6726cd6c03101b563417e7cd6cd388d96a7cce0  tests/test_trade_replay.py
+7cba4c9a8648b4ccaf7ec07d34f9b1dfcb5452d006ea4e4eed9f8d74843c5b93  tests/test_strategy_provider.py
+fa5f2e5659d06bcb6077135b5a7b0d09baa50804d2923e11b537f4ac58358cf0  tests/test_strategy_replay_no_lookahead.py
+== 3. shas registrados en la evidencia de smoke ==
+SMOKE_DETERMINISTIC_ema-rsi=PASS sha=52823a0dbcffa80430d7b26d537f8f8cce1537f575b19413220ebdf23b85d908
+SMOKE_DETERMINISTIC_donchian=PASS sha=36bbccd47d0a997fff63cafb20e024921cd79c9cbe7292183c95ee5a9d25492b
+SMOKE_DETERMINISTIC_bollinger=PASS sha=05fc6f12d11b124842405865db4068ba10e4b682225aa5b27834cba842aae795
+LEGACY_M7_LEDGER_IDENTICAL=PASS sha=6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625
+LEGACY_ORIGINAL_UNTOUCHED=PASS sha=6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625
+== 4. regresion M7: lectura fresca (solo sha, sin replay) en lenovosrv ==
+6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625  /srv/fast/medallion/replay-work/ledger.jsonl
+52823a0dbcffa80430d7b26d537f8f8cce1537f575b19413220ebdf23b85d908  /srv/fast/medallion/m9b-work/ema-rsi.run1.jsonl
+52823a0dbcffa80430d7b26d537f8f8cce1537f575b19413220ebdf23b85d908  /srv/fast/medallion/m9b-work/ema-rsi.run2.jsonl
+36bbccd47d0a997fff63cafb20e024921cd79c9cbe7292183c95ee5a9d25492b  /srv/fast/medallion/m9b-work/donchian.run1.jsonl
+36bbccd47d0a997fff63cafb20e024921cd79c9cbe7292183c95ee5a9d25492b  /srv/fast/medallion/m9b-work/donchian.run2.jsonl
+05fc6f12d11b124842405865db4068ba10e4b682225aa5b27834cba842aae795  /srv/fast/medallion/m9b-work/bollinger.run1.jsonl
+05fc6f12d11b124842405865db4068ba10e4b682225aa5b27834cba842aae795  /srv/fast/medallion/m9b-work/bollinger.run2.jsonl
+6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625  /srv/fast/medallion/m9b-work/legacy-regen.jsonl
+== 5. asercion de regresion ==
+LEGACY_M7_LEDGER_IDENTICAL=YES sha=6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625
+== 6. estado del worktree (expected files only) ==
+MM docs/phases/23/evidence/log.md
+?? docs/phases/23/evidence/m9b-cc013-artifacts-tree.log
+?? docs/phases/23/evidence/m9b-cc013-quality.log
+?? docs/phases/23/evidence/m9b-cc013-tests-global.log
+?? docs/phases/23/evidence/m9b-cc013-tests-medallion.log
+ARTIFACTS_TREE=PASS
+exit=0

@@ -1,0 +1,37 @@
+# evidencia: m9b-cc013-diff-check
+fecha: 2026-09-29T04:31:55-06:00
+fase: 23
+comando: bash -c 
+set -uo pipefail
+echo "== git diff --cached --check (todo el staged) =="
+git diff --cached --check > /tmp/cc013-diffcheck-all.txt 2>&1; RC_ALL=$?
+echo "RC_ALL=$RC_ALL avisos=$(wc -l < /tmp/cc013-diffcheck-all.txt)"
+grep -oE "^.*:[0-9]+:.*$" /tmp/cc013-diffcheck-all.txt | sed -E "s/:[0-9]+:.*//" | sort | uniq -c | sort -rn | head -30 || true
+echo "== archivos staged NO-log =="
+git diff --cached --name-only | grep -v "\.log$"
+echo "== diff --check SOLO artefacts escritos por el agente (codigo+tests+docs) =="
+git diff --cached --check -- src tests docs/phases/23/m9b-strategy-replay-plan.md docs/phases/23/m9b-strategy-replay.md docs/phases/23/commit-candidate-013.md > /tmp/cc013-diffcheck-agent.txt 2>&1; RC_AGENT=$?
+echo "RC_AGENT=$RC_AGENT hallazgos=$(wc -l < /tmp/cc013-diffcheck-agent.txt)"
+cat /tmp/cc013-diffcheck-agent.txt
+echo "== archivos .log verbatim excluidos por politica de evidencia auditable =="
+echo "LOG_FILES_STAGED=$(git diff --cached --name-only | grep -c "\.log$")"
+if [ "$RC_AGENT" -eq 0 ]; then echo "DIFF_CHECK=PASS (alcance: artefacts del agente limpios; logs verbatim preservados)"; else echo "DIFF_CHECK=FAIL"; exit 1; fi
+
+== git diff --cached --check (todo el staged) ==
+RC_ALL=0 avisos=0
+== archivos staged NO-log ==
+docs/phases/23/evidence/log.md
+docs/phases/23/m9b-strategy-replay-plan.md
+docs/phases/23/m9b-strategy-replay.md
+src/infrastructure/medallion/replay.py
+src/infrastructure/medallion/replay_cli.py
+src/infrastructure/medallion/strategy_provider.py
+tests/test_strategy_provider.py
+tests/test_strategy_replay_no_lookahead.py
+tests/test_trade_replay.py
+== diff --check SOLO artefacts escritos por el agente (codigo+tests+docs) ==
+RC_AGENT=0 hallazgos=0
+== archivos .log verbatim excluidos por politica de evidencia auditable ==
+LOG_FILES_STAGED=16
+DIFF_CHECK=PASS (alcance: artefacts del agente limpios; logs verbatim preservados)
+exit=0

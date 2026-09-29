@@ -1,0 +1,16 @@
+# evidencia: m9b-09b-uat-verify
+fecha: 2026-09-29T01:33:52-06:00
+fase: 23
+comando: bash /tmp/opencode/m9b-09-verify.sh
+== M9-B UAT VERIFY (contrato + safety) ==
+== 1. CONTRATO DE LEDGER DINÁMICO (3 estrategias) ==
+LEDGER ema-rsi lines=2 records=1 total=3 filled=1 dropped=2 unfilled=0 rejected=0 reasons={} exit={"stop_loss": 1}
+LEDGER donchian lines=4 records=3 total=22 filled=3 dropped=19 unfilled=0 rejected=0 reasons={} exit={"stop_loss": 3}
+LEDGER bollinger lines=5 records=4 total=149 filled=6 dropped=142 unfilled=1 rejected=0 reasons={} exit={"stop_loss": 2, "strategy_exit": 2}
+EXIT_TRIGGER_FILL_DIFF=2 (fill >= trigger en todos)
+LEGACY_META_KEYS_EXACT=PASS keys=21
+DYNAMIC_LEDGER_CONTRACT=PASS
+== 2. SILVER INTACTO (re-hash vs Gold) ==
+SILVER_UNTOUCHED=YES trades=3 candles=21
+== 3. PAPER RUNNER SIN CAMBIOS ==
+exit=1
