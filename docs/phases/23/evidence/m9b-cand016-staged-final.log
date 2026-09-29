@@ -1,0 +1,31 @@
+# evidencia: m9b-cand016-staged-final
+fecha: 2026-09-29T13:15:46-06:00
+fase: 23
+comando: bash /tmp/opencode/m9b-cand016-staged-final.sh
+== staged snapshot ==
+docs/phases/23/commit-candidate-016.md
+docs/phases/23/evidence/log.md
+docs/phases/23/evidence/m9b-cand016-quality.log
+docs/phases/23/evidence/m9b-cand016-secret-scan.log
+docs/phases/23/evidence/m9b-full-01-run.log
+docs/phases/23/evidence/m9b-full-02-metrics.log
+docs/phases/23/evidence/m9b-full-03-verify.log
+docs/phases/23/evidence/m9b-full-baseline-old_close_only.log
+docs/phases/23/evidence/m9b-full-baseline-trade_sequence.log
+docs/phases/23/evidence/m9b-full-bollinger-old_close_only.log
+docs/phases/23/evidence/m9b-full-bollinger-trade_sequence.log
+docs/phases/23/evidence/m9b-full-donchian-old_close_only.log
+docs/phases/23/evidence/m9b-full-donchian-trade_sequence.log
+docs/phases/23/evidence/m9b-review-consistency.log
+docs/phases/23/m9b-full-development.md
+docs/phases/23/m9b-review.md
+== resumen ==
+files=16 added=759 deleted=0
+== code files (esperado 0) ==
+CODE_DIFF=0
+== fuera de alcance (esperado solo docs/phases/23) ==
+OUT_OF_SCOPE=0
+== prohibidos (debe ser 0) ==
+FORBIDDEN_STAGED=0
+STAGED_FINAL=PASS
+exit=0

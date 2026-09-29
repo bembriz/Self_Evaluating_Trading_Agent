@@ -1,0 +1,16 @@
+# evidencia: m9b-review-consistency
+fecha: 2026-09-29T13:13:09-06:00
+fase: 23
+comando: bash /tmp/opencode/m9b-review-consistency.sh
+baseline/old_close_only closed=631 net=-22.812989 tp=155 sl=322 trail=62 strat=92 rows=631 -> OK
+baseline/trade_sequence closed=631 net=-24.864136 tp=131 sl=362 trail=78 strat=60 rows=631 -> OK
+donchian/old_close_only closed=839 net=-27.741589 tp=199 sl=325 trail=36 strat=279 rows=839 -> OK
+donchian/trade_sequence closed=987 net=-38.777176 tp=215 sl=556 trail=95 strat=121 rows=987 -> OK
+bollinger/old_close_only closed=391 net=-16.936591 tp=2 sl=115 trail=0 strat=274 rows=391 -> OK
+bollinger/trade_sequence closed=405 net=-18.183960 tp=4 sl=155 trail=0 strat=246 rows=405 -> OK
+PARITY
+  baseline signal_eq=True candle_eq=True
+  donchian signal_eq=True candle_eq=True
+  bollinger signal_eq=True candle_eq=True
+ARTIFACTS_INTERNALLY_CONSISTENT=True
+exit=0

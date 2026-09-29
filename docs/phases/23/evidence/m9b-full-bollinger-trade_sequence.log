@@ -1,0 +1,8 @@
+WINDOW start_ms=1694217600000 end_exclusive_ms=1750118400000 days=647 expected_15m_candles=62112
+DATASET id=gold-replay-5ca68f44c37d2321f56a10ecbc08bc0584d70c17826f07604dbba77a8b71134a sha=c095d5740d9ca0c414ac0b11049008aa716262870edbeadc344dbb16188eb62e dates=2023-09-09..2025-06-16 fidelity=PARTIAL
+MODEL trade_sequence strategy=bollinger candles=62112 candle_hash=fa896474125955a63cb8bef198fd8f1c295e6d2ef488275ece5b6f9ca2c0733c
+PARITY PASS signal_hash=72c8f90bcc0d30c31c172f601684febf9f6774414b08d19f611ca80a2bf74c80 expected=72c8f90bcc0d30c31c172f601684febf9f6774414b08d19f611ca80a2bf74c80
+SUMMARY decisions={"BUY": 457, "HOLD": 29521, "SELL": 32134} fills=651 exit_raw={"stop_loss": 155, "strategy_exit": 246, "take_profit": 4} exit_presentation={"stop_loss": 155, "strategy_exit": 246, "take_profit": 4} equity_final=981.8160404154439
+EXTRA {"decisions_rejected": 0, "execution_model": "TRADE_SEQUENCE_TAKER_PROXY", "rejected_reasons": {}}
+REPORT_SHA256 a0f59a88d4847f2465fd173d6361efcc60560a0bfefa829cbbc98eaa2c636996
+ARTIFACT {"closed_trades": 405, "max_drawdown_basis": "REALIZED_CLOSED_TRADES", "model": "trade_sequence", "strategy": "bollinger", "summary_path": "/srv/fast/medallion/m9b-full/bollinger-trade_sequence-summary.json", "summary_sha256": "20120eac5e910b6ea43c47de0eda80c2d5556ce4b72333804ea47b5dba44e9b5", "summary_status": "created", "trade_ledger_sha256": "406f5209d36fc1d20da2a5c3352607914bf7abd71eea45310f37dc8c6d16faba", "trades_path": "/srv/fast/medallion/m9b-full/bollinger-trade_sequence-trades.jsonl", "trades_status": "created"}

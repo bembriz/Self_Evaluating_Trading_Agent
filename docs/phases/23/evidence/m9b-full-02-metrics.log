@@ -1,0 +1,35 @@
+# evidencia: m9b-full-02-metrics
+fecha: 2026-09-29T12:59:56-06:00
+fase: 23
+comando: bash /tmp/opencode/m9b-full-02-metrics.sh
+ARTIFACTS summary=6 ledger=6 part=0
+COMBO baseline/old_close_only closed=631 net=-22.812989 fees=25.247482 slip=5.049497 gross_ref=7.483990 gross_exec=2.434493 expectancy=-0.036154 profit_factor=0.7230035086219919 win_rate=0.3043 dd_abs=26.447965 dd_pct=0.026432 hold_ms=16995879.6 final_equity=977.187011 ledger_sha_ok=True
+    exit_raw={"llm_sell": 92, "stop_loss": 322, "take_profit": 155, "trailing_stop": 62}
+    signal_hash=62bd216853b50893d2ffcb7a2eacccf18594b3b2354f4e20b0b1ba959dabcaed candle_hash=fa896474125955a63cb8bef198fd8f1c295e6d2ef488275ece5b6f9ca2c0733c summary_sha=24ce973e5c9bc9d71aa890a0dd366ef7d7373a5290dac2f23c1d750ed8df373a ledger_sha=f2bed06de1c710d5c07cec44a61e8694933383718b6fc84812db188108f4aa4d
+    window=2023-09-09T00:00:00Z..2025-06-17T00:00:00Z exec_model=PAPER_ENGINE_CLOSE_ONLY dd_basis=REALIZED_CLOSED_TRADES
+COMBO baseline/trade_sequence closed=631 net=-24.864136 fees=25.245456 slip=5.049091 gross_ref=5.546201 gross_exec=0.381319 expectancy=-0.039404 profit_factor=0.6242117549124642 win_rate=0.2821 dd_abs=25.389464 dd_pct=0.025389 hold_ms=11277030.1 final_equity=975.135864 ledger_sha_ok=True
+    exit_raw={"stop_loss": 362, "strategy_exit": 60, "take_profit": 131, "trailing_stop": 78}
+    signal_hash=62bd216853b50893d2ffcb7a2eacccf18594b3b2354f4e20b0b1ba959dabcaed candle_hash=fa896474125955a63cb8bef198fd8f1c295e6d2ef488275ece5b6f9ca2c0733c summary_sha=5ed56f1ac8a7aa6aacd5eead84e4e7e417ed3334b184a074cecf89a60d72b2f5 ledger_sha=ef1f85a49ff5f6acfc19d0e525c9d5a8c21825cf38af0c11e244c1631c8dd95c
+    window=2023-09-09T00:00:00Z..2025-06-17T00:00:00Z exec_model=TRADE_SEQUENCE_TAKER_PROXY dd_basis=REALIZED_CLOSED_TRADES
+COMBO donchian/old_close_only closed=839 net=-27.741589 fees=33.572543 slip=6.714509 gross_ref=12.545463 gross_exec=5.830954 expectancy=-0.033065 profit_factor=0.7477530331154482 win_rate=0.3027 dd_abs=29.919263 dd_pct=0.029900 hold_ms=15175566.2 final_equity=972.258411 ledger_sha_ok=True
+    exit_raw={"llm_sell": 279, "stop_loss": 325, "take_profit": 199, "trailing_stop": 36}
+    signal_hash=56252806aa91fd5dc09b546c20eba4db958bf08cacc8f33e34acadb4ab707aa7 candle_hash=fa896474125955a63cb8bef198fd8f1c295e6d2ef488275ece5b6f9ca2c0733c summary_sha=e4f5155bdfc57e0515ce4496c1334ffc19202624cdade9a2252dbcb6e430a5af ledger_sha=78439057ce73e0c506ccf65ebb17f07f8a3dbf0c0f500a1070812f7039d32e85
+    window=2023-09-09T00:00:00Z..2025-06-17T00:00:00Z exec_model=PAPER_ENGINE_CLOSE_ONLY dd_basis=REALIZED_CLOSED_TRADES
+COMBO donchian/trade_sequence closed=987 net=-38.777176 fees=39.488758 slip=7.897752 gross_ref=8.909108 gross_exec=0.711582 expectancy=-0.039288 profit_factor=0.6572974739234618 win_rate=0.2796 dd_abs=41.969591 dd_pct=0.041965 hold_ms=10586978.5 final_equity=961.222824 ledger_sha_ok=True
+    exit_raw={"stop_loss": 556, "strategy_exit": 121, "take_profit": 215, "trailing_stop": 95}
+    signal_hash=56252806aa91fd5dc09b546c20eba4db958bf08cacc8f33e34acadb4ab707aa7 candle_hash=fa896474125955a63cb8bef198fd8f1c295e6d2ef488275ece5b6f9ca2c0733c summary_sha=e35ef3faa1eaa4ac7da169778fef840ccb8bb2d3937c56ab7d0dd8b48578e673 ledger_sha=4325b9895765875e8b934896b5de9ca29c5d836c040d121236a37b5ba880c65e
+    window=2023-09-09T00:00:00Z..2025-06-17T00:00:00Z exec_model=TRADE_SEQUENCE_TAKER_PROXY dd_basis=REALIZED_CLOSED_TRADES
+COMBO bollinger/old_close_only closed=391 net=-16.936591 fees=15.641833 slip=3.128367 gross_ref=1.833609 gross_exec=-1.294758 expectancy=-0.043316 profit_factor=0.4307369814760539 win_rate=0.4629 dd_abs=16.936591 dd_pct=0.016937 hold_ms=6267774.9 final_equity=983.063409 ledger_sha_ok=True
+    exit_raw={"llm_sell": 274, "stop_loss": 115, "take_profit": 2}
+    signal_hash=72c8f90bcc0d30c31c172f601684febf9f6774414b08d19f611ca80a2bf74c80 candle_hash=fa896474125955a63cb8bef198fd8f1c295e6d2ef488275ece5b6f9ca2c0733c summary_sha=8776aa1902d044b41aeba21a2c6b9ff90514f5241aca2f74300204499992883a ledger_sha=70126f8eb22ea7f9eb867fa36e32ddbe67c368b1441cbf2dddcdcd1dee8a75aa
+    window=2023-09-09T00:00:00Z..2025-06-17T00:00:00Z exec_model=PAPER_ENGINE_CLOSE_ONLY dd_basis=REALIZED_CLOSED_TRADES
+COMBO bollinger/trade_sequence closed=405 net=-18.183960 fees=16.201230 slip=3.240246 gross_ref=1.263319 gross_exec=-1.982729 expectancy=-0.044899 profit_factor=0.41843129021234315 win_rate=0.4469 dd_abs=18.183960 dd_pct=0.018184 hold_ms=5171540.5 final_equity=981.816040 ledger_sha_ok=True
+    exit_raw={"stop_loss": 155, "strategy_exit": 246, "take_profit": 4}
+    signal_hash=72c8f90bcc0d30c31c172f601684febf9f6774414b08d19f611ca80a2bf74c80 candle_hash=fa896474125955a63cb8bef198fd8f1c295e6d2ef488275ece5b6f9ca2c0733c summary_sha=20120eac5e910b6ea43c47de0eda80c2d5556ce4b72333804ea47b5dba44e9b5 ledger_sha=406f5209d36fc1d20da2a5c3352607914bf7abd71eea45310f37dc8c6d16faba
+    window=2023-09-09T00:00:00Z..2025-06-17T00:00:00Z exec_model=TRADE_SEQUENCE_TAKER_PROXY dd_basis=REALIZED_CLOSED_TRADES
+PARITY_CHECK
+  baseline OLDNEW_SIGNAL=True OLDNEW_CANDLE=True signal=62bd216853b50893 candle=fa896474125955a6
+  donchian OLDNEW_SIGNAL=True OLDNEW_CANDLE=True signal=56252806aa91fd5d candle=fa896474125955a6
+  bollinger OLDNEW_SIGNAL=True OLDNEW_CANDLE=True signal=72c8f90bcc0d30c3 candle=fa896474125955a6
+PARITY_ALL=True
+exit=0

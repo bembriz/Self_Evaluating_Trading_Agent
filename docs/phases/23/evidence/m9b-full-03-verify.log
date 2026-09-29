@@ -1,0 +1,60 @@
+# evidencia: m9b-full-03-verify
+fecha: 2026-09-29T12:59:56-06:00
+fase: 23
+comando: bash /tmp/opencode/m9b-full-03-verify.sh
+== 1. Dataset / ventana ==
+c095d5740d9ca0c414ac0b11049008aa716262870edbeadc344dbb16188eb62e  /srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-5ca68f44c37d2321f56a10ecbc08bc0584d70c17826f07604dbba77a8b71134a/manifest.json
+dates {'end': '2025-06-16', 'start': '2023-09-09'} n 647 candles_15m 62112
+WINDOW_DAYS=647
+CANDLES_15M=62112
+
+== 2. Codigo desplegado == HEAD ==
+HEAD=fcba380e423ee717fe6ffd1244f14ffb072c40b2
+deployed_runner=fab410a925a10eadc1601dc2e982b6f3d31b41ad61ec5ca298350bc4c4ac30bf
+local_runner=fab410a925a10eadc1601dc2e982b6f3d31b41ad61ec5ca298350bc4c4ac30bf
+
+== 3. Artefactos (6 + 6) y ausencia de .part ==
+1778 /srv/fast/medallion/m9b-full/baseline-old_close_only-summary.json
+463258 /srv/fast/medallion/m9b-full/baseline-old_close_only-trades.jsonl
+1783 /srv/fast/medallion/m9b-full/baseline-trade_sequence-summary.json
+571953 /srv/fast/medallion/m9b-full/baseline-trade_sequence-trades.jsonl
+1754 /srv/fast/medallion/m9b-full/bollinger-old_close_only-summary.json
+294588 /srv/fast/medallion/m9b-full/bollinger-old_close_only-trades.jsonl
+1769 /srv/fast/medallion/m9b-full/bollinger-trade_sequence-summary.json
+373594 /srv/fast/medallion/m9b-full/bollinger-trade_sequence-trades.jsonl
+1791 /srv/fast/medallion/m9b-full/donchian-old_close_only-summary.json
+626841 /srv/fast/medallion/m9b-full/donchian-old_close_only-trades.jsonl
+1798 /srv/fast/medallion/m9b-full/donchian-trade_sequence-summary.json
+907192 /srv/fast/medallion/m9b-full/donchian-trade_sequence-trades.jsonl
+part_files=0
+summary_count=6
+ledger_count=6
+
+== 4. Legacy M7 ledger (debe seguir identico) ==
+LEGACY_M7_LEDGER_SHA=6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625
+LEGACY_M7_LEDGER_IDENTICAL=YES
+
+== 5. Paper / certification / splits ==
+PAPER_BASELINE=2026-09-19T04:00:04.763010163Z|running
+PAPER_NOW=2026-09-19T04:00:04.763010163Z|running
+PAPER_CONTAINER_CHANGED=NO
+CERTIFICATION_TOUCHED=NO
+HOLDOUT_DATASETS_PRESENT=0
+WALK_FORWARD_READS=0
+FINAL_HOLDOUT_READS=0
+
+== 6. Repo local (sin cambios de codigo) ==
+git_status_lines=10
+ M docs/phases/23/evidence/log.md
+?? docs/phases/23/evidence/m9b-full-01-run.log
+?? docs/phases/23/evidence/m9b-full-02-metrics.log
+?? docs/phases/23/evidence/m9b-full-03-verify.log
+?? docs/phases/23/evidence/m9b-full-baseline-old_close_only.log
+?? docs/phases/23/evidence/m9b-full-baseline-trade_sequence.log
+?? docs/phases/23/evidence/m9b-full-bollinger-old_close_only.log
+?? docs/phases/23/evidence/m9b-full-bollinger-trade_sequence.log
+?? docs/phases/23/evidence/m9b-full-donchian-old_close_only.log
+?? docs/phases/23/evidence/m9b-full-donchian-trade_sequence.log
+
+M9B_FULL_VERIFY=PASS
+exit=0

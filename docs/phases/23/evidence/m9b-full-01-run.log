@@ -1,0 +1,33 @@
+# evidencia: m9b-full-01-run
+fecha: 2026-09-29T12:59:54-06:00
+fase: 23
+comando: bash /tmp/opencode/m9b-full-01-run.sh
+== driver.out ==
+START baseline/old_close_only 2026-09-29T17:13:04+00:00
+END baseline/old_close_only rc=0 dur=14s 2026-09-29T17:13:18+00:00
+START baseline/trade_sequence 2026-09-29T17:13:18+00:00
+END baseline/trade_sequence rc=0 dur=2093s 2026-09-29T17:48:11+00:00
+START donchian/old_close_only 2026-09-29T17:48:11+00:00
+END donchian/old_close_only rc=0 dur=14s 2026-09-29T17:48:25+00:00
+START donchian/trade_sequence 2026-09-29T17:48:25+00:00
+END donchian/trade_sequence rc=0 dur=2122s 2026-09-29T18:23:47+00:00
+START bollinger/old_close_only 2026-09-29T18:23:47+00:00
+END bollinger/old_close_only rc=0 dur=21s 2026-09-29T18:24:08+00:00
+START bollinger/trade_sequence 2026-09-29T18:24:08+00:00
+END bollinger/trade_sequence rc=0 dur=2104s 2026-09-29T18:59:12+00:00
+
+== status.tsv (strategy model rc dur parity) ==
+baseline	old_close_only	rc=0	dur=14s	PARITY PASS	-
+baseline	trade_sequence	rc=0	dur=2093s	PARITY PASS	-
+donchian	old_close_only	rc=0	dur=14s	PARITY PASS	-
+donchian	trade_sequence	rc=0	dur=2122s	PARITY PASS	-
+bollinger	old_close_only	rc=0	dur=21s	PARITY PASS	-
+bollinger	trade_sequence	rc=0	dur=2104s	PARITY PASS	-
+
+== DRIVER_DONE ==
+FAIL=0
+2026-09-29T18:59:12+00:00
+
+== running processes (esperado 0) ==
+0
+exit=0

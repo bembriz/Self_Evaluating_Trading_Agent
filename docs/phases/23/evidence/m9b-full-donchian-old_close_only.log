@@ -1,0 +1,8 @@
+WINDOW start_ms=1694217600000 end_exclusive_ms=1750118400000 days=647 expected_15m_candles=62112
+DATASET id=gold-replay-5ca68f44c37d2321f56a10ecbc08bc0584d70c17826f07604dbba77a8b71134a sha=c095d5740d9ca0c414ac0b11049008aa716262870edbeadc344dbb16188eb62e dates=2023-09-09..2025-06-16 fidelity=PARTIAL
+MODEL old_close_only strategy=donchian candles=62112 candle_hash=fa896474125955a63cb8bef198fd8f1c295e6d2ef488275ece5b6f9ca2c0733c
+PARITY PASS signal_hash=56252806aa91fd5dc09b546c20eba4db958bf08cacc8f33e34acadb4ab707aa7 expected=56252806aa91fd5dc09b546c20eba4db958bf08cacc8f33e34acadb4ab707aa7
+SUMMARY decisions={"BUY": 1893, "HOLD": 55847, "SELL": 4372} fills=1678 exit_raw={"llm_sell": 279, "stop_loss": 325, "take_profit": 199, "trailing_stop": 36} exit_presentation={"stop_loss": 325, "strategy_exit": 279, "take_profit": 199, "trailing_stop": 36} equity_final=972.2584106436722
+EXTRA {"accounting": "paper-engine-close-only", "execution_model": "PAPER_ENGINE_CLOSE_ONLY", "fee_bps": 10.0}
+REPORT_SHA256 d01978861e619bbb580db1e10edbcd4df425c032019acbd7336f8240b6835ce5
+ARTIFACT {"closed_trades": 839, "max_drawdown_basis": "REALIZED_CLOSED_TRADES", "model": "old_close_only", "strategy": "donchian", "summary_path": "/srv/fast/medallion/m9b-full/donchian-old_close_only-summary.json", "summary_sha256": "e4f5155bdfc57e0515ce4496c1334ffc19202624cdade9a2252dbcb6e430a5af", "summary_status": "created", "trade_ledger_sha256": "78439057ce73e0c506ccf65ebb17f07f8a3dbf0c0f500a1070812f7039d32e85", "trades_path": "/srv/fast/medallion/m9b-full/donchian-old_close_only-trades.jsonl", "trades_status": "created"}
