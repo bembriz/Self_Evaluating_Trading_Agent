@@ -1,0 +1,27 @@
+# gitleaks config — Self-Evaluating Trading Agent
+#
+# Extiende la configuración por defecto (no la reemplaza) y añade una allowlist
+# MÍNIMA para dos falsos positivos concretos: el `GPG_KEY` de la imagen oficial
+# `python:3.12-slim`, capturado en evidencia histórica de la Fase 23 (M8).
+#
+# Reglas de esta allowlist:
+#   - NO desactiva gitleaks ni la regla `generic-api-key` globalmente.
+#   - Solo aplica a los DOS ficheros de evidencia indicados (paths).
+#   - Y solo cuando la línea contiene EXACTAMENTE el valor oficial del GPG_KEY
+#     de python:3.12-slim (regex). Cualquier otro patrón en esos ficheros sigue detectándose.
+#   - NO se borra ni reescribe evidencia histórica.
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "python:3.12-slim official GPG_KEY in Phase 23 M8 evidence (documented false positive)"
+condition = "and"
+paths = [
+  '''docs/phases/23/evidence/m8-05-build\.log''',
+  '''docs/phases/23/evidence/m8-06-uat-clis\.log''',
+]
+regexTarget = "line"
+regexes = [
+  '''GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305''',
+]
