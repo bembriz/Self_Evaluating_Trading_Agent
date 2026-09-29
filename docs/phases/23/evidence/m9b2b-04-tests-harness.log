@@ -1,0 +1,17 @@
+# evidencia: m9b2b-04-tests-harness
+fecha: 2026-09-29T10:19:46-06:00
+fase: 23
+comando: bash -c uv run pytest harness/tests --no-cov --ignore=harness/tests/test_gen_pdf.py -q -p no:cacheprovider && uv run pytest harness/tests/test_m9b_common_window.py -o addopts= -q --cov=m9b_common_window --cov-branch --cov-report=term-missing --cov-fail-under=0 -p no:cacheprovider
+........................................................................ [ 78%]
+....................                                                     [100%]
+.........................                                                [100%]
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                                   Stmts   Miss Branch BrPart  Cover   Missing
+----------------------------------------------------------------------------------
+harness/scripts/m9b_common_window.py     376     83     86     10    75%   57, 345, 351, 357, 495->507, 497, 639, 692->685, 800-801, 847-862, 866-878, 882-894, 898-982, 986-993, 997
+----------------------------------------------------------------------------------
+TOTAL                                    376     83     86     10    75%
+25 passed in 0.75s
+exit=0

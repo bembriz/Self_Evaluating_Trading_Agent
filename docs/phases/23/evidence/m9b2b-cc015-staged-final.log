@@ -1,0 +1,34 @@
+# evidencia: m9b2b-cc015-staged-final
+fecha: 2026-09-29T10:49:15-06:00
+fase: 23
+comando: bash /tmp/opencode/m9b2b-cc015-staged-final.sh
+== staged snapshot ==
+docs/phases/23/commit-candidate-015.md
+docs/phases/23/evidence/log.md
+docs/phases/23/evidence/m9b2b-01-quality.log
+docs/phases/23/evidence/m9b2b-02-tests-global.log
+docs/phases/23/evidence/m9b2b-03-tests-medallion.log
+docs/phases/23/evidence/m9b2b-04-tests-harness.log
+docs/phases/23/evidence/m9b2b-05-deploy.log
+docs/phases/23/evidence/m9b2b-06-smoke.log
+docs/phases/23/evidence/m9b2b-07-verify.log
+docs/phases/23/evidence/m9b2b-08-secret-scan.log
+docs/phases/23/evidence/m9b2b-cc015-diff-check.log
+docs/phases/23/evidence/m9b2b-cc015-secret-scan.log
+docs/phases/23/evidence/m9b2b-cc015-staged-final.log
+docs/phases/23/m9b2b-full-run-scalability.md
+harness/scripts/m9b_common_window.py
+harness/tests/test_m9b_common_window.py
+== resumen ==
+files=16 added=1808 deleted=121
+== code files ==
+535	43	harness/scripts/m9b_common_window.py
+394	78	harness/tests/test_m9b_common_window.py
+== fuera de alcance (esperado solo doc/evidence/harness) ==
+OUT_OF_SCOPE=0
+== prohibidos (debe ser 0) ==
+FORBIDDEN_STAGED=0
+== ningun .part staged ==
+0
+STAGED_FINAL=PASS
+exit=0

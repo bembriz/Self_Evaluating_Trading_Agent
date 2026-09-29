@@ -1,0 +1,59 @@
+# evidencia: m9b2b-07-verify
+fecha: 2026-09-29T10:25:01-06:00
+fase: 23
+comando: bash /tmp/opencode/m9b2b-07-verify.sh
+== 1. Integridad de artefactos (summary self-hash + ledger hash + identidades) ==
+ARTIFACT_OK baseline-old_close_only-summary.json closed= 1 net= -0.057226 dd_basis= REALIZED_CLOSED_TRADES
+ARTIFACT_OK baseline-trade_sequence-summary.json closed= 1 net= -0.026717 dd_basis= REALIZED_CLOSED_TRADES
+ARTIFACT_OK bollinger-old_close_only-summary.json closed= 4 net= -0.176312 dd_basis= REALIZED_CLOSED_TRADES
+ARTIFACT_OK bollinger-trade_sequence-summary.json closed= 4 net= -0.264924 dd_basis= REALIZED_CLOSED_TRADES
+ARTIFACT_OK donchian-old_close_only-summary.json closed= 2 net= 0.024255 dd_basis= REALIZED_CLOSED_TRADES
+ARTIFACT_OK donchian-trade_sequence-summary.json closed= 3 net= -0.325321 dd_basis= REALIZED_CLOSED_TRADES
+SUMMARY_INTEGRITY=PASS
+
+== 2. Regresion legacy M7 (canonico + regenerado con el codigo desplegado) ==
+LEGACY_CANONICAL_SHA=6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625
+STATUS=created dataset_id=gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3 dataset_sha256=9411a4e01a5adccbb448df062f0eca857213e8259441535b5812ee4688af99df ledger_sha256=6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625
+SUMMARY created=1 skipped=0 decisions_total=45 decisions_filled=23 decisions_dropped=22 decisions_unfilled=0 closed_trades=23 trades=1880793
+LEGACY_REGEN_SHA=6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625
+LEGACY_M7_LEDGER_IDENTICAL=YES
+REPLAY_PY_SHA=bd3a16bb54af3dfe6be5b589c43742080d9965d3b74e44e81bed7f9e16bd9302 (sin cambios vs smoke M9-B2A: bd3a16bb...)
+
+== 3. Paridad de senales registrada (smoke) ==
+SIGNAL_HASH_PARITY baseline old=signal_hash=059f2d641110378b69d1cc2af56f18462baa6428923294494caca4ee1968b847 new=signal_hash=059f2d641110378b69d1cc2af56f18462baa6428923294494caca4ee1968b847
+SIGNAL_HASH_PARITY=baseline PASS
+SIGNAL_HASH_PARITY donchian old=signal_hash=9135697498d97863f51ae77f3c4f3e599513d29acf6fedc96934f4bdfa7c2d43 new=signal_hash=9135697498d97863f51ae77f3c4f3e599513d29acf6fedc96934f4bdfa7c2d43
+SIGNAL_HASH_PARITY=donchian PASS
+SIGNAL_HASH_PARITY bollinger old=signal_hash=3141b4a5607817bd8ef668ec89664a2d11a571ea7d522f07a33dcfde918ed1fa new=signal_hash=3141b4a5607817bd8ef668ec89664a2d11a571ea7d522f07a33dcfde918ed1fa
+SIGNAL_HASH_PARITY=bollinger PASS
+
+== 4. Safety (worktree / forbidden) ==
+PROGRESS_YAML_UNTOUCHED=YES
+DOMAIN_RISK_UNCHANGED=YES
+CHANGED_FILES=10
+ M docs/phases/23/evidence/log.md
+ M harness/scripts/m9b_common_window.py
+ M harness/tests/test_m9b_common_window.py
+?? docs/phases/23/evidence/m9b2b-01-quality.log
+?? docs/phases/23/evidence/m9b2b-02-tests-global.log
+?? docs/phases/23/evidence/m9b2b-03-tests-medallion.log
+?? docs/phases/23/evidence/m9b2b-04-tests-harness.log
+?? docs/phases/23/evidence/m9b2b-05-deploy.log
+?? docs/phases/23/evidence/m9b2b-06-smoke.log
+?? docs/phases/23/evidence/m9b2b-07-verify.log
+
+== 5. Paper / certification ==
+PAPER_BASELINE=2026-09-19T04:00:04.763010163Z|running
+PAPER_NOW=2026-09-19T04:00:04.763010163Z|running
+PAPER_CONTAINER_CHANGED=NO
+CERTIFICATION_TOUCHED=NO
+
+== 6. Splits / holdout / walk-forward / .part ==
+HOLDOUT_DATASETS_PRESENT=0
+WALK_FORWARD_READS=0
+FINAL_HOLDOUT_READS=0
+MEDALLION_PART_FILES=0
+SMOKE_HOLDOUT_REFERENCES=0
+
+M9B2B_VERIFY=PASS
+exit=0

@@ -1,0 +1,9 @@
+# evidencia: m9b2b-cc015-diff-check
+fecha: 2026-09-29T10:48:23-06:00
+fase: 23
+comando: bash -c echo '== full --check =='; git diff --cached --check; echo RC=$?; echo '== scoped (src/harness/tests/doc) =='; git diff --cached --check -- harness/scripts/m9b_common_window.py harness/tests/test_m9b_common_window.py docs/phases/23/m9b2b-full-run-scalability.md; echo RC_SCOPED=$?
+== full --check ==
+RC=0
+== scoped (src/harness/tests/doc) ==
+RC_SCOPED=0
+exit=0

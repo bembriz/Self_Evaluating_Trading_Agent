@@ -1,0 +1,24 @@
+# evidencia: m9b2b-05-deploy
+fecha: 2026-09-29T10:23:26-06:00
+fase: 23
+comando: bash /tmp/opencode/m9b2b-05-deploy.sh
+== 1. Deploy limpio a /tmp/m9b2b (src + harness/scripts) ==
+== 2. Hashes locales (autoridad) ==
+fab410a925a10eadc1601dc2e982b6f3d31b41ad61ec5ca298350bc4c4ac30bf  /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/harness/scripts/m9b_common_window.py
+bd3a16bb54af3dfe6be5b589c43742080d9965d3b74e44e81bed7f9e16bd9302  /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/src/infrastructure/medallion/replay.py
+ef7e5611cb35d3cb96ee4cc344e7d0ea300feb38e54d492293c3b48efb8d17f7  /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/src/infrastructure/medallion/strategy_provider.py
+== 3. Hashes en el host (mismo codigo) ==
+fab410a925a10eadc1601dc2e982b6f3d31b41ad61ec5ca298350bc4c4ac30bf  /tmp/m9b2b/harness/scripts/m9b_common_window.py
+bd3a16bb54af3dfe6be5b589c43742080d9965d3b74e44e81bed7f9e16bd9302  /tmp/m9b2b/src/infrastructure/medallion/replay.py
+ef7e5611cb35d3cb96ee4cc344e7d0ea300feb38e54d492293c3b48efb8d17f7  /tmp/m9b2b/src/infrastructure/medallion/strategy_provider.py
+== 4. Import del runner en el host + contrato ==
+STRATEGIES ('baseline', 'donchian', 'bollinger')
+MODELS ('old_close_only', 'trade_sequence')
+MAX_DRAWDOWN_BASIS REALIZED_CLOSED_TRADES
+ledger_required 15
+ledger_extended 10
+summary_identity_fields 15
+IMPORT_RC=0
+== 5. Comparacion byte a byte local vs host ==
+RUNNER_DEPLOY_IDENTICAL=YES sha=fab410a925a10eadc1601dc2e982b6f3d31b41ad61ec5ca298350bc4c4ac30bf
+exit=0
