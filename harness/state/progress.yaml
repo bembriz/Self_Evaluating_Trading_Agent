@@ -1106,6 +1106,38 @@ phases:
       resuelto: '2026-09-29'
       comentario: 'Phase 23 UAT aprobado por el usuario: 9/9 pasos PASS, 0 fallos
         de producto.'
+  '24':
+    titulo: Automated Medallion Refresh
+    estado: in_progress
+    iniciada: '2026-09-29'
+    cerrada: null
+    entregables:
+    - id: p24-design
+      descripcion: Approved design and ADR for automated Medallion refresh
+      estado: done
+      evidencia:
+      - docs/adr/ADR-0008-medallion-refresh-automation.md
+      - docs/design/phase-24-medallion-refresh-automation.md
+    - id: p24-refresh-orchestrator
+      descripcion: Stdlib refresh orchestrator, planner and access guards
+      estado: pending
+      evidencia: []
+    - id: p24-systemd-units
+      descripcion: systemd service and timer plus install/rollback wrapper
+      estado: pending
+      evidencia: []
+    - id: p24-capacity-guards
+      descripcion: SSD free-space/cache quota guards and retention policy
+      estado: pending
+      evidencia: []
+    - id: p24-tests-uat
+      descripcion: Unit/integration/UAT evidence for refresh automation
+      estado: pending
+      evidencia: []
+    gate_fase:
+      estado: pending
+      solicitado: null
+      resuelto: null
 time_log:
 - fecha: '2026-08-22'
   fase: '00'
@@ -1997,4 +2029,16 @@ time_log:
   fase: '23'
   evento: gate_approved
   detalle: 'Phase 23 UAT aprobado por el usuario: 9/9 pasos PASS, 0 fallos de producto.'
+- fecha: '2026-09-29'
+  fase: '24'
+  evento: phase_added
+  detalle: Automated Medallion Refresh
+- fecha: '2026-09-29'
+  fase: '24'
+  evento: phase_status
+  detalle: pending→in_progress
+- fecha: '2026-09-29'
+  fase: '24'
+  evento: done
+  detalle: p24-design
 blockers: []
