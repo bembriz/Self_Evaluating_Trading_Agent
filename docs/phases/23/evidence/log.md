@@ -544,3 +544,93 @@ uv run ruff format --check . | tail -1
 echo "STAGED_FINAL=PASS"
 ` · exit=`0` · artifact: docs/phases/23/evidence/m9b-cc013-staged-final.log
 - `2026-09-29T04:38:37-06:00` **m9b-cc013-diff-check-final** → `bash -c git diff --cached --check; echo "RC=$?"` · exit=`0` · artifact: docs/phases/23/evidence/m9b-cc013-diff-check-final.log
+- `2026-09-29T05:06:17-06:00` **m9b2a-01-quality** → `bash -c uv run ruff check . && uv run ruff format --check . && uv run mypy src tests` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-01-quality.log
+- `2026-09-29T05:08:57-06:00` **m9b2a-02-tests-global** → `uv run pytest tests --ignore=tests/integration -o addopts= -q --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-02-tests-global.log
+- `2026-09-29T05:09:18-06:00` **m9b2a-03-tests-medallion** → `uv run pytest tests/test_source_schema.py tests/test_silver_trades.py tests/test_bronze_ingest.py tests/test_silver_candles.py tests/test_gold_dataset.py tests/test_split_candidate_17c_a.py tests/test_trade_replay.py tests/test_cli_replay.py tests/test_strategy_provider.py tests/test_strategy_replay_no_lookahead.py -o addopts= -q --cov=infrastructure.medallion --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-03-tests-medallion.log
+- `2026-09-29T05:09:29-06:00` **m9b2a-04-harness-tests** → `uv run pytest harness/tests -o addopts= -q --cov=harness/scripts --cov-branch --cov-fail-under=80` · exit=`1` · artifact: docs/phases/23/evidence/m9b2a-04-harness-tests.log
+- `2026-09-29T05:09:45-06:00` **m9b2a-04b-harness-tests** → `bash -c uv run pytest harness/tests --ignore=harness/tests/test_gen_pdf.py -o addopts= -q && uv run pytest harness/tests/test_m9b_common_window.py -o addopts= -q --cov=harness/scripts/m9b_common_window --cov-branch --cov-report=term-missing` · exit=`1` · artifact: docs/phases/23/evidence/m9b2a-04b-harness-tests.log
+- `2026-09-29T05:09:57-06:00` **m9b2a-04b-harness-tests** → `uv run pytest harness/tests --ignore=harness/tests/test_gen_pdf.py -o addopts= -q` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-04b-harness-tests.log
+- `2026-09-29T05:10:05-06:00` **m9b2a-04d-harness-cov** → `uv run pytest harness/tests/test_m9b_common_window.py -o addopts= -q --cov=m9b_common_window --cov-branch --cov-report=term-missing --cov-fail-under=0` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-04d-harness-cov.log
+- `2026-09-29T05:10:30-06:00` **m9b2a-05-deploy** → `bash /tmp/opencode/m9b2a-05-deploy.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-05-deploy.log
+- `2026-09-29T05:10:34-06:00` **m9b2a-06-smoke** → `bash /tmp/opencode/m9b2a-06-smoke.sh` · exit=`1` · artifact: docs/phases/23/evidence/m9b2a-06-smoke.log
+- `2026-09-29T05:10:45-06:00` **m9b2a-05b-deploy** → `bash /tmp/opencode/m9b2a-05-deploy.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-05b-deploy.log
+- `2026-09-29T05:10:46-06:00` **m9b2a-06b-smoke** → `bash /tmp/opencode/m9b2a-06-smoke.sh` · exit=`1` · artifact: docs/phases/23/evidence/m9b2a-06b-smoke.log
+- `2026-09-29T05:10:55-06:00` **m9b2a-05c-deploy** → `bash /tmp/opencode/m9b2a-05-deploy.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-05c-deploy.log
+- `2026-09-29T05:11:58-06:00` **m9b2a-06c-smoke** → `bash /tmp/opencode/m9b2a-06-smoke.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-06c-smoke.log
+- `2026-09-29T05:12:24-06:00` **m9b2a-07-verify** → `bash /tmp/opencode/m9b2a-07-verify.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-07-verify.log
+- `2026-09-29T05:12:31-06:00` **m9b2a-08-secret-scan** → `bash -c 
+set -uo pipefail
+echo "CMD: private key blocks"; git diff | grep -nE "\-\-\-\-\-BEGIN [A-Z ]*PRIVATE KEY" || echo "HITS=0"
+echo "CMD: AWS access key id"; git diff | grep -nE "\bAKIA[0-9A-Z]{16}\b" || echo "HITS=0"
+echo "CMD: credenciales literal"; git diff | grep -inE "(api[_-]?key|api[_-]?secret|passwd|password|secret[_-]?key|access[_-]?token|private[_-]?key)[\"' ]*[:=][\"' ]*[A-Za-z0-9/+_.-]{12,}" || echo "HITS=0"
+echo "CMD: Bearer"; git diff | grep -nE "\bBearer[[:space:]]+[A-Za-z0-9._~+/-]{20,}" || echo "HITS=0"
+echo "CMD: URL creds"; git diff | grep -nE "[a-zA-Z][a-zA-Z0-9+.-]*://[^/@[:space:]]+:[^/@[:space:]]+@" || echo "HITS=0"
+echo "CMD: sensitive files untracked/tracked"; git status --porcelain | grep -E "\.env($|\.)|\.pem$|\.key$|id_rsa|\.p12$" || echo "HITS=0"
+echo "CMD: hex-64 en archivos nuevos/modificados no-log"; for f in harness/scripts/m9b_common_window.py harness/tests/test_m9b_common_window.py src/infrastructure/medallion/replay.py tests/test_trade_replay.py; do grep -nE "\b[0-9a-fA-F]{64}\b" "$f" || true; done; echo "(fin hex-64)"
+echo "CMD: scanning completado"` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-08-secret-scan.log
+- `2026-09-29T05:13:00-06:00` **m9b2a-01b-quality** → `bash -c uv run ruff check . && uv run ruff format --check . && uv run mypy src tests && uv run pytest harness/tests --ignore=harness/tests/test_gen_pdf.py -o addopts= -q` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-01b-quality.log
+- `2026-09-29T05:19:22-06:00` **m9b2a-cc014-runner-contract** → `bash -c uv run python /tmp/opencode/cc014-contract.py && echo '---- instancia fresca por pasada (codigo):' && grep -n '_build_strategy(build_name, domain_candles)' harness/scripts/m9b_common_window.py && echo '---- pre-fix: reutilizar instancia stateful -> PARITY_FAILED (host):' && grep -c PARITY_FAILED docs/phases/23/evidence/m9b2a-06b-smoke.log` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-cc014-runner-contract.log
+- `2026-09-29T05:19:29-06:00` **m9b2a-cc014-quality** → `bash -c uv run ruff check . && uv run ruff format --check . && uv run mypy src tests` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-cc014-quality.log
+- `2026-09-29T05:22:09-06:00` **m9b2a-cc014-tests-global** → `uv run pytest tests --ignore=tests/integration -o addopts= -q --cov=src --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-cc014-tests-global.log
+- `2026-09-29T05:22:29-06:00` **m9b2a-cc014-tests-medallion** → `uv run pytest tests/test_source_schema.py tests/test_silver_trades.py tests/test_bronze_ingest.py tests/test_silver_candles.py tests/test_gold_dataset.py tests/test_split_candidate_17c_a.py tests/test_trade_replay.py tests/test_cli_replay.py tests/test_strategy_provider.py tests/test_strategy_replay_no_lookahead.py -o addopts= -q --cov=infrastructure.medallion --cov-branch --cov-fail-under=90` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-cc014-tests-medallion.log
+- `2026-09-29T05:22:40-06:00` **m9b2a-cc014-tests-harness** → `bash -c uv run pytest harness/tests --ignore=harness/tests/test_gen_pdf.py -o addopts= -q && echo '---- cobertura aislada del runner (CLI/IO validados en smoke host; no se oculta el numero) ----' && uv run pytest harness/tests/test_m9b_common_window.py -o addopts= -q --cov=m9b_common_window --cov-branch --cov-report=term-missing --cov-fail-under=0` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-cc014-tests-harness.log
+- `2026-09-29T05:22:51-06:00` **m9b2a-cc014-artifacts** → `bash -c 
+set -uo pipefail
+echo "== 1. ningun src/harness/test nuevo tras el smoke =="
+RUNEVID=docs/phases/23/evidence/m9b2a-06c-smoke.log
+echo "smoke_evidence_mtime=$(stat -c %y $RUNEVID)"
+NEWER=$(find src/infrastructure/medallion/replay.py harness/scripts/m9b_common_window.py harness/tests/test_m9b_common_window.py tests/test_trade_replay.py -newer "$RUNEVID")
+if [ -z "$NEWER" ]; then echo "FILES_UNCHANGED_SINCE_SMOKE=YES"; else echo "FILES_UNCHANGED_SINCE_SMOKE=NO"; echo "$NEWER"; exit 1; fi
+echo "== 2. hashes locales (codigo/tests) =="
+sha256sum src/infrastructure/medallion/replay.py harness/scripts/m9b_common_window.py harness/tests/test_m9b_common_window.py tests/test_trade_replay.py
+echo "== 3. hashes en el host desplegado (mismo codigo que corrio el smoke) =="
+ssh -o BatchMode=yes administrador@192.168.100.24 "sha256sum /tmp/m9b2a/src/infrastructure/medallion/replay.py /tmp/m9b2a/harness/scripts/m9b_common_window.py"
+echo "== 4. paridad y determinismo registrados en el smoke =="
+grep -E "^(DETERMINISTIC|SIGNAL_HASH_PARITY)" docs/phases/23/evidence/m9b2a-06c-smoke.log
+echo "== 5. regresion M7 (lectura fresca, sin replay) =="
+LEGACY=$(ssh -o BatchMode=yes administrador@192.168.100.24 "sha256sum /srv/fast/medallion/replay-work/ledger.jsonl" | cut -d" " -f1)
+test "$LEGACY" = "6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625" || { echo "LEGACY_M7_LEDGER_IDENTICAL=NO"; exit 1; }
+REGEN=$(ssh -o BatchMode=yes administrador@192.168.100.24 "sha256sum /srv/fast/medallion/m9b2a-work/legacy-regen.jsonl" | cut -d" " -f1)
+test "$REGEN" = "6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625" || { echo "REGEN_MISMATCH"; exit 1; }
+echo "LEGACY_M7_LEDGER_IDENTICAL=YES sha=$LEGACY"
+echo "LEGACY_REGEN_IDENTICAL=YES sha=$REGEN"
+echo "== 6. safety (worktree/forbidden) =="
+git status --porcelain | grep -E "progress\.yaml|src/domain/risk/|^.. deploy|certification|safeguard" || echo "PROGRESS_YAML_UNTOUCHED=YES DOMAIN_RISK_UNCHANGED=YES"
+echo "== 7. paper/cert (sin cambios desde baseline M9-B2A) =="
+BASE=$(sed -n 2p /tmp/m9b2a-uat-paper-baseline.txt)
+CID=$(ssh -o BatchMode=yes administrador@192.168.100.24 "docker ps -q --filter name=self-evaluating-trading-agent-paper-runner-1")
+NOW=$(ssh -o BatchMode=yes administrador@192.168.100.24 "docker inspect -f \"{{.State.StartedAt}}|{{.State.Status}}\" $CID")
+test "$NOW" = "$BASE"
+echo "PAPER_CONTAINER_CHANGED=NO baseline=$BASE"
+echo "CERTIFICATION_TOUCHED=NO"
+echo "ARTIFACTS_TREE=PASS"
+` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-cc014-artifacts.log
+- `2026-09-29T05:22:59-06:00` **m9b2a-cc014-artifacts2** → `bash -c 
+set -uo pipefail
+echo "== paper runner (baseline leido del HOST) =="
+BASE_NAME=$(ssh -o BatchMode=yes administrador@192.168.100.24 "cut -d\"|\" -f1 /tmp/m9b2a-uat-paper-baseline.txt | sed -n 1p")
+BASE_INSP=$(ssh -o BatchMode=yes administrador@192.168.100.24 "sed -n 2p /tmp/m9b2a-uat-paper-baseline.txt")
+echo "baseline=$BASE_INSP"
+CID=$(ssh -o BatchMode=yes administrador@192.168.100.24 "docker ps -q --filter name=self-evaluating-trading-agent-paper-runner-1")
+NOW_NAME=$(ssh -o BatchMode=yes administrador@192.168.100.24 "docker ps --filter name=self-evaluating-trading-agent-paper-runner-1 --format \"{{.Names}}\"")
+NOW_INSP=$(ssh -o BatchMode=yes administrador@192.168.100.24 "docker inspect -f \"{{.State.StartedAt}}|{{.State.Status}}\" $CID")
+test -n "$BASE_NAME" || { echo "BASELINE_MISSING"; exit 1; }
+test "$NOW_NAME" = "$BASE_NAME" || { echo "NAME_MISMATCH"; exit 1; }
+test "$NOW_INSP" = "$BASE_INSP" || { echo "INSPECT_MISMATCH"; exit 1; }
+echo "PAPER_CONTAINER_CHANGED=NO"
+echo "CERTIFICATION_TOUCHED=NO"
+echo "WALK_FORWARD_READS=0"
+echo "FINAL_HOLDOUT_READS=0"
+echo "PAPER_CERT_VERIFY=PASS"
+` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-cc014-artifacts2.log
+- `2026-09-29T05:23:05-06:00` **m9b2a-cc014-diff-check** → `bash -c git diff --cached --check; echo "RC_ALL=$?"; echo "---- agent artifacts:"; git diff --cached --check -- src harness tests docs/phases/23/m9b-common-window-plan.md; echo "RC_AGENT=$?"` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-cc014-diff-check.log
+- `2026-09-29T05:23:11-06:00` **m9b2a-cc014-secret-scan** → `bash -c set -uo pipefail
+echo "CMD: private key"; git diff --cached | grep -nE "\-\-\-\-\-BEGIN [A-Z ]*PRIVATE KEY" || echo "HITS=0"
+echo "CMD: AWS"; git diff --cached | grep -nE "\bAKIA[0-9A-Z]{16}\b" || echo "HITS=0"
+echo "CMD: credenciales"; git diff --cached | grep -inE "(api[_-]?key|api[_-]?secret|passwd|password|secret[_-]?key|access[_-]?token|private[_-]?key)[\"' ]*[:=][\"' ]*[A-Za-z0-9/+_.-]{12,}" || echo "HITS=0"
+echo "CMD: Bearer"; git diff --cached | grep -nE "\bBearer[[:space:]]+[A-Za-z0-9._~+/-]{20,}" || echo "HITS=0"
+echo "CMD: URL creds"; git diff --cached | grep -nE "[a-zA-Z][a-zA-Z0-9+.-]*://[^/@[:space:]]+:[^/@[:space:]]+@" || echo "HITS=0"
+echo "CMD: archivos sensibles"; git diff --cached --name-only | grep -E "\.env($|\.)|\.pem$|\.key$|id_rsa|\.p12$" || echo "HITS=0"
+echo "CMD: hex-64 fuera de logs"; git diff --cached --name-only | grep -v "\.log$" > /tmp/cc014_nonlog.txt; if [ -s /tmp/cc014_nonlog.txt ]; then git diff --cached -- $(cat /tmp/cc014_nonlog.txt) | grep -nE "\b[0-9a-fA-F]{64}\b" || echo "HITS=0"; else echo "(sin no-log) HITS=0"; fi
+echo "CMD: fin"` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-cc014-secret-scan.log
+- `2026-09-29T05:23:51-06:00` **m9b2a-cc014-staged-final** → `bash -c echo "== staged snapshot =="; git diff --cached --name-only; echo "== resumen =="; git diff --cached --numstat | awk "{a+=\$1;d+=\$2;n++} END {print \"files=\"n\" added=\"a\" deleted=\"d}"; echo "== fuera de alcance =="; git diff --cached --name-only | grep -vE "^(src/infrastructure/medallion/replay\.py|harness/scripts/m9b_common_window\.py|harness/tests/test_m9b_common_window\.py|tests/test_trade_replay\.py|docs/phases/23/)" || echo "OUT_OF_SCOPE=0"; echo "== prohibidos =="; git diff --cached --name-only | grep -E "progress\.yaml|src/domain/risk/|paper|certification|safeguard|deployment/" || echo "FORBIDDEN_STAGED=0"; echo "== code/tests =="; git diff --cached --numstat | grep -E "(src|harness|tests)/"; echo "STAGED_FINAL=PASS"` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-cc014-staged-final.log

@@ -1,0 +1,205 @@
+# evidencia: m9b2a-02-tests-global
+fecha: 2026-09-29T05:06:17-06:00
+fase: 23
+comando: uv run pytest tests --ignore=tests/integration -o addopts= -q --cov=src --cov-branch --cov-fail-under=90
+........................................................................ [  5%]
+........................................................................ [ 11%]
+........................................................................ [ 17%]
+........................................................................ [ 22%]
+........................................................................ [ 28%]
+........................................................................ [ 34%]
+........................................................................ [ 39%]
+........................................................................ [ 45%]
+........................................................................ [ 51%]
+...............................s........................................ [ 56%]
+........................................................................ [ 62%]
+........................................................................ [ 68%]
+........................................................................ [ 74%]
+........................................................................ [ 79%]
+........................................................................ [ 85%]
+........................................................................ [ 91%]
+........................................................................ [ 96%]
+........................................                                 [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                                                    Stmts   Miss Branch BrPart  Cover   Missing
+---------------------------------------------------------------------------------------------------
+src/application/__init__.py                                 0      0      0      0   100%
+src/application/commands/__init__.py                        0      0      0      0   100%
+src/application/ports/__init__.py                           0      0      0      0   100%
+src/application/ports/dataset_store.py                     11      0      0      0   100%
+src/application/ports/embeddings.py                         5      0      0      0   100%
+src/application/ports/llm.py                               18      0      0      0   100%
+src/application/ports/market_data.py                        5      0      0      0   100%
+src/application/ports/market_repositories.py               11      0      0      0   100%
+src/application/ports/market_stream.py                      8      0      0      0   100%
+src/application/ports/memory_repository.py                 16      0      0      0   100%
+src/application/ports/orderbook_features.py                 4      0      0      0   100%
+src/application/ports/paper_trading.py                     25      0      0      0   100%
+src/application/ports/repositories.py                       6      0      0      0   100%
+src/application/queries/__init__.py                         0      0      0      0   100%
+src/application/services/__init__.py                        0      0      0      0   100%
+src/application/services/accounting_reconciliation.py     170      1     42      3    98%   199->180, 605, 627->631
+src/application/services/approval_workflow.py              25      2      6      1    90%   23, 30
+src/application/services/audit_log.py                      24      1      0      0    96%   45
+src/application/services/backfill.py                       32     17      6      0    39%   23, 34-35, 53-67
+src/application/services/backtest_engine.py                58      0     16      0   100%
+src/application/services/certification_snapshot.py        354     24    112      7    93%   444->446, 446->448, 640, 697->699, 836-840, 842-846, 852-861, 945-946, 949-950
+src/application/services/connection_supervisor.py          39      0      6      1    98%   58->60
+src/application/services/cost_monitor.py                   19      1      0      0    95%   42
+src/application/services/decision_agent.py                 30      0      2      0   100%
+src/application/services/decision_context.py               50     23      8      0    47%   47-48, 61-69, 73, 77, 86-107
+src/application/services/historical_data.py                63      0      6      0   100%
+src/application/services/market_data_service.py           113      5     28      5    93%   66, 102, 140-141, 155->exit, 164, 165->exit
+src/application/services/memory_comparison.py              51      0      4      0   100%
+src/application/services/memory_writer.py                  27      0      4      0   100%
+src/application/services/ml_pipeline.py                    80      0     12      0   100%
+src/application/services/paper_engine.py                  164      4     36      2    97%   100, 105, 110, 174->178, 193
+src/application/services/paper_runner.py                  239     59     68     11    66%   44-46, 51, 67-83, 243-260, 266, 275-278, 292->294, 297, 338, 342, 364, 382, 412, 416-418, 425, 494-505
+src/application/services/reconciliation.py                 26      0      6      1    97%   52->49
+src/application/services/recovery.py                       26     11      0      0    58%   37-51, 76-78
+src/application/services/reflection_engine.py              31      1     12      1    95%   87
+src/application/services/regime_confirmation.py            53      1     12      1    97%   29
+src/application/services/validation.py                     27      1     12      0    97%   17
+src/domain/__init__.py                                      0      0      0      0   100%
+src/domain/evaluation/__init__.py                           0      0      0      0   100%
+src/domain/evaluation/bootstrap.py                         72      2     22      2    96%   70, 95
+src/domain/evaluation/buy_hold.py                          19      0      2      0   100%
+src/domain/evaluation/comparison.py                        29      0      0      0   100%
+src/domain/evaluation/metrics.py                           87      0     24      0   100%
+src/domain/evaluation/outcome.py                           31      0      8      1    97%   55->58
+src/domain/evaluation/sensitivity.py                       72      2     14      2    95%   73, 124
+src/domain/experiments/__init__.py                          0      0      0      0   100%
+src/domain/experiments/experiment.py                       26      0      0      0   100%
+src/domain/experiments/features.py                         33      0      4      0   100%
+src/domain/experiments/improvement.py                      20      0      0      0   100%
+src/domain/experiments/logistic_regression.py              46      0     16      0   100%
+src/domain/experiments/walk_forward.py                     24      0      6      0   100%
+src/domain/llm/__init__.py                                  0      0      0      0   100%
+src/domain/llm/budget.py                                   44      0     10      0   100%
+src/domain/llm/call.py                                     19      0      0      0   100%
+src/domain/llm/cost.py                                      6      0      0      0   100%
+src/domain/llm/prompt.py                                   13      0      0      0   100%
+src/domain/market/__init__.py                               0      0      0      0   100%
+src/domain/market/candle.py                                42      0     12      0   100%
+src/domain/market/dataset.py                               32      0      0      0   100%
+src/domain/market/feature_engine.py                        63      0      6      0   100%
+src/domain/market/features.py                              14      0      0      0   100%
+src/domain/market/indicators.py                           237      1     76      0    99%   164
+src/domain/market/orderbook.py                             72      4     16      4    91%   77, 83, 89, 103
+src/domain/market/regime.py                                79      0     26      0   100%
+src/domain/market/state.py                                 36      0      0      0   100%
+src/domain/market/stream.py                                34      0      2      0   100%
+src/domain/memory/__init__.py                               0      0      0      0   100%
+src/domain/memory/guards.py                                10      0      4      0   100%
+src/domain/memory/memory.py                                22      0      0      0   100%
+src/domain/memory/reflection.py                            15      0      0      0   100%
+src/domain/memory/space.py                                  4      0      0      0   100%
+src/domain/portfolio/__init__.py                            0      0      0      0   100%
+src/domain/portfolio/portfolio.py                          73      0     10      0   100%
+src/domain/risk/__init__.py                                 0      0      0      0   100%
+src/domain/risk/config.py                                  25      0      4      0   100%
+src/domain/risk/engine.py                                  74      0     24      0   100%
+src/domain/risk/guards.py                                  41      2      8      0    96%   38, 46
+src/domain/risk/sizing.py                                  34      0      8      0   100%
+src/domain/risk/stops.py                                   11      0      2      0   100%
+src/domain/time/__init__.py                                 0      0      0      0   100%
+src/domain/time/day.py                                      3      0      0      0   100%
+src/domain/trading/__init__.py                              0      0      0      0   100%
+src/domain/trading/decision.py                             26      0      0      0   100%
+src/domain/trading/fees.py                                 12      0      0      0   100%
+src/domain/trading/fill.py                                 37      0      4      0   100%
+src/domain/trading/order.py                                42      3      4      1    91%   57, 63, 68
+src/domain/trading/signal.py                               17      0      0      0   100%
+src/domain/trading/slippage.py                             11      0      0      0   100%
+src/domain/trading/strategy.py                            109      0     18      0   100%
+src/infrastructure/__init__.py                              0      0      0      0   100%
+src/infrastructure/bybit/__init__.py                        0      0      0      0   100%
+src/infrastructure/bybit/auth.py                           22      1      0      0    95%   51
+src/infrastructure/bybit/client.py                         53      3     18      5    89%   54->66, 61->60, 64, 88, 94
+src/infrastructure/bybit/schemas.py                        11      0      0      0   100%
+src/infrastructure/bybit/trade_client.py                   93      2     16      4    94%   54->56, 93, 115, 175->187
+src/infrastructure/bybit/ws.py                             80      9     16      4    86%   39-45, 60, 72, 77, 80-81, 89
+src/infrastructure/bybit/ws_schemas.py                     30      0      0      0   100%
+src/infrastructure/database/__init__.py                     0      0      0      0   100%
+src/infrastructure/database/base.py                         3      0      0      0   100%
+src/infrastructure/database/memory_repository.py           44     44      8      0     0%   8-113
+src/infrastructure/database/models.py                     114      1      0      0    99%   31
+src/infrastructure/database/repositories.py               108     60     10      0    41%   33, 36-41, 48, 60-88, 91-96, 101-112, 117-148, 158-171, 176-183, 187, 202, 205-216, 219-222, 241-255, 260, 263-289, 292-299, 303
+src/infrastructure/database/session.py                      6      0      0      0   100%
+src/infrastructure/embeddings/__init__.py                   0      0      0      0   100%
+src/infrastructure/embeddings/fastembed_provider.py        45      7      8      1    81%   26-33, 68
+src/infrastructure/execution/__init__.py                    0      0      0      0   100%
+src/infrastructure/llm/__init__.py                          0      0      0      0   100%
+src/infrastructure/llm/deepseek.py                         87      3      8      2    95%   102->133, 138-139, 151
+src/infrastructure/llm/prompts.py                          13      0      2      0   100%
+src/infrastructure/llm/schemas.py                          26      0      0      0   100%
+src/infrastructure/medallion/__init__.py                    3      0      0      0   100%
+src/infrastructure/medallion/bronze.py                    223      6     54      3    97%   125, 178-179, 229-230, 232, 369->371
+src/infrastructure/medallion/candles.py                   227      0     80      0   100%
+src/infrastructure/medallion/candles_cli.py                51      2     12      2    94%   46, 77
+src/infrastructure/medallion/cli.py                        50      3     12      3    90%   46, 49, 83
+src/infrastructure/medallion/gold.py                      183      0     46      0   100%
+src/infrastructure/medallion/gold_cli.py                   49      1      8      1    96%   79
+src/infrastructure/medallion/replay.py                    641     43    218     36    91%   360, 366, 372, 379, 422, 426, 461, 463, 472, 474, 477, 486, 499-500, 508, 510, 512, 526, 554, 557, 575, 604, 671, 698, 713, 720, 726, 746-747, 766, 794-795, 916, 963->965, 981, 996, 998, 1051, 1059-1060, 1096, 1228, 1320-1321
+src/infrastructure/medallion/replay_cli.py                 85      5     18      4    91%   104-106, 111, 124, 204
+src/infrastructure/medallion/schema_backfill_cli.py        40      1      8      2    94%   50->56, 69
+src/infrastructure/medallion/silver.py                    209      7     66      7    95%   167, 224, 227, 252, 271, 278, 302
+src/infrastructure/medallion/silver_cli.py                 51      3     12      3    90%   43, 46, 74
+src/infrastructure/medallion/split_guard.py                18      1      4      1    91%   44
+src/infrastructure/medallion/strategy_provider.py          41      3     16      2    91%   70, 76, 94
+src/infrastructure/observability/__init__.py                0      0      0      0   100%
+src/infrastructure/observability/logging.py                53     23      6      0    51%   32-42, 49-50, 53, 56, 59, 62, 67, 77-84, 89
+src/infrastructure/observability/metrics.py                34      4      0      0    88%   67, 70, 73, 76
+src/infrastructure/observability/server.py                 21     16      2      0    22%   18-36
+src/infrastructure/observability/tracing.py                21     14      4      1    32%   21-38
+src/infrastructure/storage/dataset_store.py                34      0      6      0   100%
+src/interfaces/__init__.py                                  0      0      0      0   100%
+src/interfaces/api/__init__.py                              0      0      0      0   100%
+src/interfaces/api/app.py                                  37      0      2      1    97%   25->exit
+src/interfaces/api/deps.py                                 13      4      0      0    69%   19-21, 26
+src/interfaces/api/routers/__init__.py                      0      0      0      0   100%
+src/interfaces/api/routers/dashboard.py                    51      2      6      2    89%   57->71, 65->71, 67-68
+src/interfaces/api/routers/health.py                       15      1      2      0    94%   19
+src/interfaces/api/routers/system.py                       11      0      0      0   100%
+src/interfaces/cli/__init__.py                              0      0      0      0   100%
+src/interfaces/cli/backtest.py                             69      8      4      1    88%   67-68, 143-148
+src/interfaces/cli/download.py                             75     36      4      0    54%   41-93, 97-100, 119-127, 131-134
+src/interfaces/cli/market_worker.py                        63      5      8      3    89%   57, 75, 80, 99, 103
+src/interfaces/cli/paper_runner.py                        295    168     94     16    38%   91-97, 105, 112, 121, 125-127, 136-142, 151-157, 164-168, 196-207, 209, 211, 229-231, 283-313, 318-321, 322->354, 325-326, 328-344, 350-353, 355->278, 377, 396, 405-409, 432-457, 467-609, 626, 636, 650-652
+src/interfaces/cli/paper_session.py                        94     10     12      3    88%   73-74, 112, 116, 190-195
+src/interfaces/cli/replay.py                               58      8      6      1    86%   59-60, 115-120
+src/interfaces/web/__init__.py                              0      0      0      0   100%
+src/lab/__init__.py                                         0      0      0      0   100%
+src/lab/development_evaluation.py                          81      0     26      0   100%
+src/lab/experiment_spec.py                                133      0     56      0   100%
+src/lab/fingerprints.py                                   105      0     52      0   100%
+src/lab/frozen_dataset.py                                 108      0     34      0   100%
+src/lab/kernel_bundle.py                                   31      0      6      0   100%
+src/lab/promote.py                                        143      0     30      0   100%
+src/lab/registry.py                                        95      0     28      0   100%
+src/lab/robustness.py                                      30      0      6      0   100%
+src/lab/session_runner.py                                  73      0     10      0   100%
+src/lab/splits.py                                          18      0      6      0   100%
+src/lab/strategies/__init__.py                              0      0      0      0   100%
+src/lab/strategies/ema_rsi_btc_context.py                  71      2     26      2    96%   101, 113
+src/lab/strategies/ema_rsi_btc_regime.py                   84      2     32      2    97%   116, 128
+src/lab/strategies/eth_bollinger_mean_reversion.py         55      0     16      0   100%
+src/lab/strategies/eth_donchian_breakout.py                65      0     20      0   100%
+src/lab/viability.py                                       36      0      8      0   100%
+src/lab/walk_forward.py                                    86      0     18      0   100%
+src/main.py                                                37      3     14      3    88%   37, 39, 41
+src/settings.py                                            60      0      0      0   100%
+src/version.py                                              1      0      0      0   100%
+---------------------------------------------------------------------------------------------------
+TOTAL                                                    8388    676   1912    158    91%
+Required test coverage of 90% reached. Total coverage: 90.56%
+1263 passed, 1 skipped, 1 warning in 154.92s (0:02:34)
+exit=0

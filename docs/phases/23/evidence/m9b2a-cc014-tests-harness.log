@@ -1,0 +1,19 @@
+# evidencia: m9b2a-cc014-tests-harness
+fecha: 2026-09-29T05:22:34-06:00
+fase: 23
+comando: bash -c uv run pytest harness/tests --ignore=harness/tests/test_gen_pdf.py -o addopts= -q && echo '---- cobertura aislada del runner (CLI/IO validados en smoke host; no se oculta el numero) ----' && uv run pytest harness/tests/test_m9b_common_window.py -o addopts= -q --cov=m9b_common_window --cov-branch --cov-report=term-missing --cov-fail-under=0
+........................................................................ [ 93%]
+.....                                                                    [100%]
+77 passed in 4.05s
+---- cobertura aislada del runner (CLI/IO validados en smoke host; no se oculta el numero) ----
+..........                                                               [100%]
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                                   Stmts   Miss Branch BrPart  Cover   Missing
+----------------------------------------------------------------------------------
+harness/scripts/m9b_common_window.py     220     62     50      3    69%   39, 291, 399-409, 413-425, 429-490, 494-501, 505
+----------------------------------------------------------------------------------
+TOTAL                                    220     62     50      3    69%
+10 passed in 0.39s
+exit=0

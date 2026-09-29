@@ -1795,3 +1795,158 @@ def test_cli_unknown_sizing_mode_exits_2(
     with pytest.raises(SystemExit) as excinfo:
         replay_cli.main(args)
     assert excinfo.value.code == 2
+
+
+# ------------------------------- M9-B2: trailing ATR = última vela confirmada
+
+
+def _atr_profile_candles(n: int, *, switch_at: int) -> list[CandleRow]:
+    """Candles close=101 con TR=6 antes de ``switch_at`` y TR=2 desde ahí.
+
+    El ATR(14) arranca en 6.0 (índice 14) y decae hacia 2.0, de modo que el
+    trailing con ATR "último confirmado" sube aunque el precio no haga nuevos
+    máximos — a diferencia de la semántica legacy con ATR de entrada.
+    """
+    out: list[CandleRow] = []
+    for i in range(n):
+        high, low = (104.0, 98.0) if i < switch_at else (102.0, 100.0)
+        open_ms = i * DUR
+        out.append(
+            CandleRow(
+                open_time=open_ms,
+                close_time=open_ms + DUR,
+                open=101.0,
+                high=high,
+                low=low,
+                close=101.0,
+                volume=1.0,
+                trade_count=1,
+            )
+        )
+    return out
+
+
+def _atr_oracle(candles: Sequence[CandleRow]) -> list[float | None]:
+    from domain.market.candle import Candle
+    from domain.market.indicators import atr as atr_series
+
+    return atr_series(
+        [
+            Candle(
+                timestamp_ms=c.open_time,
+                open=c.open,
+                high=c.high,
+                low=c.low,
+                close=c.close,
+                volume=c.volume,
+                turnover=0.0,
+            )
+            for c in candles
+        ],
+        period=14,
+    )
+
+
+def _atr6_candles() -> list[CandleRow]:
+    return _atr_profile_candles(90, switch_at=21)
+
+
+def _atr6_entry_trades() -> list[ReplayTrade]:
+    """Entrada en 15*DUR, nuevo máximo en 22*DUR, trailing alto en 75*DUR."""
+    return _trades([(15 * DUR, 101.0), (22 * DUR, 108.0), (75 * DUR, 108.0)])
+
+
+def test_trailing_uses_last_confirmed_atr_not_entry_atr() -> None:
+    candles = _atr6_candles()
+    atr_vals = _atr_oracle(candles)
+    scenario = _m9b_scenario()
+    trades = _atr6_entry_trades() + _trades([(80 * DUR, 101.0)])
+    result = _engine(candles, trades, StaticProvider({14: "buy"}), scenario=scenario)
+    rec = _one_round_trip(result)
+
+    entry_atr = _as_float(rec["atr_at_entry"])
+    assert entry_atr == pytest.approx(_as_float(atr_vals[14]))
+    highest = _as_float(rec["highest_price"])
+    assert highest == pytest.approx(108.0)
+    # El trailing vigente al gatillo se elevó con el ATR de la última vela
+    # confirmada (índice 74 = último close_time <= trade en 75*DUR).
+    expected = highest - 3.0 * _as_float(atr_vals[74])
+    assert _as_float(rec["exit_reference_price"]) == pytest.approx(expected)
+    # ... y NO con el ATR de entrada (semántica legacy de M7).
+    legacy_level = highest - 3.0 * entry_atr
+    assert abs(_as_float(rec["exit_reference_price"]) - legacy_level) > 1.0
+    assert rec["exit_reason"] == "trailing_stop"
+    assert _as_int(rec["trailing_updates"]) >= 2
+
+
+def test_initial_stop_and_target_still_use_entry_atr() -> None:
+    candles = _atr6_candles()
+    scenario = _m9b_scenario()
+    trades = _atr6_entry_trades() + _trades([(80 * DUR, 101.0)])
+    result = _engine(candles, trades, StaticProvider({14: "buy"}), scenario=scenario)
+    rec = _one_round_trip(result)
+
+    entry_atr = _as_float(rec["atr_at_entry"])
+    assert entry_atr == pytest.approx(6.0)
+    initial_stop = _as_float(rec["initial_stop"])
+    assert initial_stop == pytest.approx(101.0 - 2.0 * entry_atr)
+    assert _as_float(rec["initial_target"]) == pytest.approx(101.0 + 2.0 * (101.0 - initial_stop))
+
+
+def test_trailing_atr_holds_between_candles() -> None:
+    candles = _atr6_candles()
+    scenario = _m9b_scenario()
+    base_trades = _atr6_entry_trades() + _trades([(80 * DUR, 101.0)])
+    base = _one_round_trip(
+        _engine(candles, base_trades, StaticProvider({14: "buy"}), scenario=scenario)
+    )
+    # Trade extra DENTRO del mismo intervalo de vela (75.5*DUR confirma igual el
+    # índice 74): no debe cambiar el ATR usado ni el nivel de trailing.
+    extra_trades = _atr6_entry_trades() + _trades([(75 * DUR + DUR // 2, 108.0), (80 * DUR, 101.0)])
+    after = _one_round_trip(
+        _engine(candles, extra_trades, StaticProvider({14: "buy"}), scenario=scenario)
+    )
+    assert after["exit_reference_price"] == base["exit_reference_price"]
+    assert after["net_pnl"] == base["net_pnl"]
+
+
+def test_trailing_atr_has_no_lookahead_future_candles() -> None:
+    from dataclasses import replace
+
+    candles = _atr6_candles()
+    scenario = _m9b_scenario()
+    trades = _atr6_entry_trades() + _trades([(80 * DUR, 101.0)])
+    base = _one_round_trip(_engine(candles, trades, StaticProvider({14: "buy"}), scenario=scenario))
+    # El gatillo ocurre en 80*DUR y confirma hasta el índice 79: las velas 80..89
+    # son futuro puro. Corromper su rango no puede alterar el registro.
+    corrupted = list(candles)
+    for i in range(80, 90):
+        corrupted[i] = replace(corrupted[i], high=200.0, low=1.0)
+    after = _one_round_trip(
+        _engine(
+            corrupted,
+            _atr6_entry_trades() + _trades([(80 * DUR, 101.0)]),
+            StaticProvider({14: "buy"}),
+            scenario=scenario,
+        )
+    )
+    assert after["exit_reference_price"] == base["exit_reference_price"]
+    assert after["net_pnl"] == base["net_pnl"]
+    assert after["initial_stop"] == base["initial_stop"]
+    assert after["mfe"] == base["mfe"]
+    assert after["mae"] == base["mae"]
+
+
+def test_fixed_sizing_trailing_uses_entry_atr_legacy() -> None:
+    candles = _atr6_candles()
+    scenario = _m9b_scenario(sizing_mode="fixed", quantity=0.01)
+    trades = _atr6_entry_trades() + _trades([(80 * DUR, 89.5)])
+    result = _engine(candles, trades, StaticProvider({14: "buy"}), scenario=scenario)
+    rec = _one_round_trip(result)
+
+    entry_atr = _as_float(rec["atr_at_entry"])
+    highest = _as_float(rec["highest_price"])
+    # fixed = semántica legacy: el trailing usa SIEMPRE el ATR de entrada.
+    assert _as_float(rec["exit_reference_price"]) == pytest.approx(highest - 3.0 * entry_atr)
+    assert rec["exit_reason"] == "stop_loss"  # protective 90 < entry_execution
+    assert _as_int(rec["trailing_updates"]) == 1

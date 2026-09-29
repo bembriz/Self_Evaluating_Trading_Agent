@@ -1,0 +1,17 @@
+# evidencia: m9b2a-06-smoke
+fecha: 2026-09-29T05:10:33-06:00
+fase: 23
+comando: bash /tmp/opencode/m9b2a-06-smoke.sh
+== M9-B2A SMOKE RUN ==
+== M9-B2A SMOKE (Gold 3 días: OLD x3, NEW x3, 2 corridas c/u) ==
+Traceback (most recent call last):
+  File "/tmp/m9b2a/harness/scripts/m9b_common_window.py", line 496, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/tmp/m9b2a/harness/scripts/m9b_common_window.py", line 434, in main
+    strategy = replay_cli._build_strategy(args.strategy, domain_candles)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/m9b2a/src/infrastructure/medallion/replay_cli.py", line 111, in _build_strategy
+    raise ValueError(f"estrategia desconocida {name!r}")
+ValueError: estrategia desconocida 'baseline'
+exit=1

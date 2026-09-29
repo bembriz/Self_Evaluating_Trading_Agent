@@ -817,6 +817,7 @@ class _Position:
     trailing: float
     highest: float
     lowest: float
+    current_atr: float = 0.0
     trailing_updates: int = 0
 
 
@@ -953,6 +954,14 @@ class _Engine:
             if decision is not None:
                 self._queue.append(decision)
                 self._stats["decisions_total"] += 1
+            if self._dynamic and self._position is not None:
+                # M9-B2: el trailing usa el ÚLTIMO ATR 15m confirmado. Solo se
+                # actualiza al confirmarse una vela nueva (close_time <= cutoff);
+                # entre cierres se conserva el último ATR confirmado y jamás se
+                # usa el ATR de una vela futura/incompleta.
+                candle_atr = self._atr[index]
+                if candle_atr is not None:
+                    self._position.current_atr = candle_atr
             self._candle_i += 1
 
     @staticmethod
@@ -1108,6 +1117,7 @@ class _Engine:
             trailing=stop,
             highest=entry_execution,
             lowest=entry_execution,
+            current_atr=atr_value,
         )
 
     @staticmethod
@@ -1143,7 +1153,7 @@ class _Engine:
         new_stop = update_trailing(
             current_stop=position.trailing,
             highest_price=position.highest,
-            atr=position.atr,
+            atr=position.current_atr if self._dynamic else position.atr,
             config=self._scenario.risk,
         )
         if new_stop > position.trailing:

@@ -1,0 +1,11 @@
+# evidencia: m9b2a-01b-quality
+fecha: 2026-09-29T05:12:55-06:00
+fase: 23
+comando: bash -c uv run ruff check . && uv run ruff format --check . && uv run mypy src tests && uv run pytest harness/tests --ignore=harness/tests/test_gen_pdf.py -o addopts= -q
+All checks passed!
+333 files already formatted
+Success: no issues found in 290 source files
+........................................................................ [ 93%]
+.....                                                                    [100%]
+77 passed in 3.75s
+exit=0

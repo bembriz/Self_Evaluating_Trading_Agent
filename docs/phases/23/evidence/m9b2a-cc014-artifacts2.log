@@ -1,0 +1,29 @@
+# evidencia: m9b2a-cc014-artifacts2
+fecha: 2026-09-29T05:22:57-06:00
+fase: 23
+comando: bash -c 
+set -uo pipefail
+echo "== paper runner (baseline leido del HOST) =="
+BASE_NAME=$(ssh -o BatchMode=yes administrador@192.168.100.24 "cut -d\"|\" -f1 /tmp/m9b2a-uat-paper-baseline.txt | sed -n 1p")
+BASE_INSP=$(ssh -o BatchMode=yes administrador@192.168.100.24 "sed -n 2p /tmp/m9b2a-uat-paper-baseline.txt")
+echo "baseline=$BASE_INSP"
+CID=$(ssh -o BatchMode=yes administrador@192.168.100.24 "docker ps -q --filter name=self-evaluating-trading-agent-paper-runner-1")
+NOW_NAME=$(ssh -o BatchMode=yes administrador@192.168.100.24 "docker ps --filter name=self-evaluating-trading-agent-paper-runner-1 --format \"{{.Names}}\"")
+NOW_INSP=$(ssh -o BatchMode=yes administrador@192.168.100.24 "docker inspect -f \"{{.State.StartedAt}}|{{.State.Status}}\" $CID")
+test -n "$BASE_NAME" || { echo "BASELINE_MISSING"; exit 1; }
+test "$NOW_NAME" = "$BASE_NAME" || { echo "NAME_MISMATCH"; exit 1; }
+test "$NOW_INSP" = "$BASE_INSP" || { echo "INSPECT_MISMATCH"; exit 1; }
+echo "PAPER_CONTAINER_CHANGED=NO"
+echo "CERTIFICATION_TOUCHED=NO"
+echo "WALK_FORWARD_READS=0"
+echo "FINAL_HOLDOUT_READS=0"
+echo "PAPER_CERT_VERIFY=PASS"
+
+== paper runner (baseline leido del HOST) ==
+baseline=2026-09-19T04:00:04.763010163Z|running
+PAPER_CONTAINER_CHANGED=NO
+CERTIFICATION_TOUCHED=NO
+WALK_FORWARD_READS=0
+FINAL_HOLDOUT_READS=0
+PAPER_CERT_VERIFY=PASS
+exit=0

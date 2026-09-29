@@ -1,0 +1,49 @@
+# evidencia: m9b2a-cc014-staged-final
+fecha: 2026-09-29T05:23:51-06:00
+fase: 23
+comando: bash -c echo "== staged snapshot =="; git diff --cached --name-only; echo "== resumen =="; git diff --cached --numstat | awk "{a+=\$1;d+=\$2;n++} END {print \"files=\"n\" added=\"a\" deleted=\"d}"; echo "== fuera de alcance =="; git diff --cached --name-only | grep -vE "^(src/infrastructure/medallion/replay\.py|harness/scripts/m9b_common_window\.py|harness/tests/test_m9b_common_window\.py|tests/test_trade_replay\.py|docs/phases/23/)" || echo "OUT_OF_SCOPE=0"; echo "== prohibidos =="; git diff --cached --name-only | grep -E "progress\.yaml|src/domain/risk/|paper|certification|safeguard|deployment/" || echo "FORBIDDEN_STAGED=0"; echo "== code/tests =="; git diff --cached --numstat | grep -E "(src|harness|tests)/"; echo "STAGED_FINAL=PASS"
+== staged snapshot ==
+docs/phases/23/commit-candidate-014.md
+docs/phases/23/evidence/log.md
+docs/phases/23/evidence/m9b2a-01-quality.log
+docs/phases/23/evidence/m9b2a-01b-quality.log
+docs/phases/23/evidence/m9b2a-02-tests-global.log
+docs/phases/23/evidence/m9b2a-03-tests-medallion.log
+docs/phases/23/evidence/m9b2a-04-harness-tests.log
+docs/phases/23/evidence/m9b2a-04b-harness-tests.log
+docs/phases/23/evidence/m9b2a-04d-harness-cov.log
+docs/phases/23/evidence/m9b2a-05-deploy.log
+docs/phases/23/evidence/m9b2a-05b-deploy.log
+docs/phases/23/evidence/m9b2a-05c-deploy.log
+docs/phases/23/evidence/m9b2a-06-smoke.log
+docs/phases/23/evidence/m9b2a-06b-smoke.log
+docs/phases/23/evidence/m9b2a-06c-smoke.log
+docs/phases/23/evidence/m9b2a-07-verify.log
+docs/phases/23/evidence/m9b2a-08-secret-scan.log
+docs/phases/23/evidence/m9b2a-cc014-artifacts.log
+docs/phases/23/evidence/m9b2a-cc014-artifacts2.log
+docs/phases/23/evidence/m9b2a-cc014-diff-check.log
+docs/phases/23/evidence/m9b2a-cc014-quality.log
+docs/phases/23/evidence/m9b2a-cc014-runner-contract.log
+docs/phases/23/evidence/m9b2a-cc014-secret-scan.log
+docs/phases/23/evidence/m9b2a-cc014-tests-global.log
+docs/phases/23/evidence/m9b2a-cc014-tests-harness.log
+docs/phases/23/evidence/m9b2a-cc014-tests-medallion.log
+docs/phases/23/m9b-common-window-plan.md
+harness/scripts/m9b_common_window.py
+harness/tests/test_m9b_common_window.py
+src/infrastructure/medallion/replay.py
+tests/test_trade_replay.py
+== resumen ==
+files=31 added=2344 deleted=1
+== fuera de alcance ==
+OUT_OF_SCOPE=0
+== prohibidos ==
+FORBIDDEN_STAGED=0
+== code/tests ==
+505	0	harness/scripts/m9b_common_window.py
+226	0	harness/tests/test_m9b_common_window.py
+11	1	src/infrastructure/medallion/replay.py
+155	0	tests/test_trade_replay.py
+STAGED_FINAL=PASS
+exit=0

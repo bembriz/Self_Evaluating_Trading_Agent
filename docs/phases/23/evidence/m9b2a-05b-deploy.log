@@ -1,0 +1,33 @@
+# evidencia: m9b2a-05b-deploy
+fecha: 2026-09-29T05:10:44-06:00
+fase: 23
+comando: bash /tmp/opencode/m9b2a-05-deploy.sh
+== M9-B2A DEPLOY (src + runner) ==
+LOCAL_HEAD=841c6369f771646006097b545c03965be45094c4
+HEAD_OK=YES
+RUNNER_IMPORT_OK days=647 candles=62112
+-- paper baseline (solo lectura) --
+PAPER_CONTAINER=READ_ONLY
+usage: m9b_common_window.py [-h] --dataset-dir DATASET_DIR --trades-dir
+                            TRADES_DIR --candles-dir CANDLES_DIR --strategy
+                            {baseline,donchian,bollinger} --model
+                            {old_close_only,trade_sequence} [--start START]
+                            [--end-exclusive END_EXCLUSIVE]
+                            [--expect-common-window]
+                            [--require-marker REQUIRE_MARKER]
+
+M9-B2A common window runner (OLD vs NEW)
+
+options:
+  -h, --help            show this help message and exit
+  --dataset-dir DATASET_DIR
+  --trades-dir TRADES_DIR
+  --candles-dir CANDLES_DIR
+  --strategy {baseline,donchian,bollinger}
+  --model {old_close_only,trade_sequence}
+  --start START
+  --end-exclusive END_EXCLUSIVE
+  --expect-common-window
+  --require-marker REQUIRE_MARKER
+M9B2A_DEPLOY=PASS
+exit=0

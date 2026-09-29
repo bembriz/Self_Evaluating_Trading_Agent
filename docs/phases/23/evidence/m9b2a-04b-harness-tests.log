@@ -1,0 +1,8 @@
+# evidencia: m9b2a-04b-harness-tests
+fecha: 2026-09-29T05:09:52-06:00
+fase: 23
+comando: uv run pytest harness/tests --ignore=harness/tests/test_gen_pdf.py -o addopts= -q
+........................................................................ [ 93%]
+.....                                                                    [100%]
+77 passed in 3.95s
+exit=0

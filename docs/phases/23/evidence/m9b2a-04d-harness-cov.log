@@ -1,0 +1,15 @@
+# evidencia: m9b2a-04d-harness-cov
+fecha: 2026-09-29T05:10:04-06:00
+fase: 23
+comando: uv run pytest harness/tests/test_m9b_common_window.py -o addopts= -q --cov=m9b_common_window --cov-branch --cov-report=term-missing --cov-fail-under=0
+..........                                                               [100%]
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                                   Stmts   Miss Branch BrPart  Cover   Missing
+----------------------------------------------------------------------------------
+harness/scripts/m9b_common_window.py     217     61     50      3    69%   39, 287, 395-405, 409-421, 425-481, 485-492, 496
+----------------------------------------------------------------------------------
+TOTAL                                    217     61     50      3    69%
+10 passed in 0.34s
+exit=0

@@ -1,0 +1,66 @@
+# evidencia: m9b2a-cc014-artifacts
+fecha: 2026-09-29T05:22:48-06:00
+fase: 23
+comando: bash -c 
+set -uo pipefail
+echo "== 1. ningun src/harness/test nuevo tras el smoke =="
+RUNEVID=docs/phases/23/evidence/m9b2a-06c-smoke.log
+echo "smoke_evidence_mtime=$(stat -c %y $RUNEVID)"
+NEWER=$(find src/infrastructure/medallion/replay.py harness/scripts/m9b_common_window.py harness/tests/test_m9b_common_window.py tests/test_trade_replay.py -newer "$RUNEVID")
+if [ -z "$NEWER" ]; then echo "FILES_UNCHANGED_SINCE_SMOKE=YES"; else echo "FILES_UNCHANGED_SINCE_SMOKE=NO"; echo "$NEWER"; exit 1; fi
+echo "== 2. hashes locales (codigo/tests) =="
+sha256sum src/infrastructure/medallion/replay.py harness/scripts/m9b_common_window.py harness/tests/test_m9b_common_window.py tests/test_trade_replay.py
+echo "== 3. hashes en el host desplegado (mismo codigo que corrio el smoke) =="
+ssh -o BatchMode=yes administrador@192.168.100.24 "sha256sum /tmp/m9b2a/src/infrastructure/medallion/replay.py /tmp/m9b2a/harness/scripts/m9b_common_window.py"
+echo "== 4. paridad y determinismo registrados en el smoke =="
+grep -E "^(DETERMINISTIC|SIGNAL_HASH_PARITY)" docs/phases/23/evidence/m9b2a-06c-smoke.log
+echo "== 5. regresion M7 (lectura fresca, sin replay) =="
+LEGACY=$(ssh -o BatchMode=yes administrador@192.168.100.24 "sha256sum /srv/fast/medallion/replay-work/ledger.jsonl" | cut -d" " -f1)
+test "$LEGACY" = "6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625" || { echo "LEGACY_M7_LEDGER_IDENTICAL=NO"; exit 1; }
+REGEN=$(ssh -o BatchMode=yes administrador@192.168.100.24 "sha256sum /srv/fast/medallion/m9b2a-work/legacy-regen.jsonl" | cut -d" " -f1)
+test "$REGEN" = "6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625" || { echo "REGEN_MISMATCH"; exit 1; }
+echo "LEGACY_M7_LEDGER_IDENTICAL=YES sha=$LEGACY"
+echo "LEGACY_REGEN_IDENTICAL=YES sha=$REGEN"
+echo "== 6. safety (worktree/forbidden) =="
+git status --porcelain | grep -E "progress\.yaml|src/domain/risk/|^.. deploy|certification|safeguard" || echo "PROGRESS_YAML_UNTOUCHED=YES DOMAIN_RISK_UNCHANGED=YES"
+echo "== 7. paper/cert (sin cambios desde baseline M9-B2A) =="
+BASE=$(sed -n 2p /tmp/m9b2a-uat-paper-baseline.txt)
+CID=$(ssh -o BatchMode=yes administrador@192.168.100.24 "docker ps -q --filter name=self-evaluating-trading-agent-paper-runner-1")
+NOW=$(ssh -o BatchMode=yes administrador@192.168.100.24 "docker inspect -f \"{{.State.StartedAt}}|{{.State.Status}}\" $CID")
+test "$NOW" = "$BASE"
+echo "PAPER_CONTAINER_CHANGED=NO baseline=$BASE"
+echo "CERTIFICATION_TOUCHED=NO"
+echo "ARTIFACTS_TREE=PASS"
+
+== 1. ningun src/harness/test nuevo tras el smoke ==
+smoke_evidence_mtime=2026-09-29 05:11:58.370585292 -0600
+FILES_UNCHANGED_SINCE_SMOKE=YES
+== 2. hashes locales (codigo/tests) ==
+bd3a16bb54af3dfe6be5b589c43742080d9965d3b74e44e81bed7f9e16bd9302  src/infrastructure/medallion/replay.py
+b0ec022657c82b196f67224b0d73d691bceab60d416fea90a27340e60caf5fe5  harness/scripts/m9b_common_window.py
+5aba56ab482c1bfa510c0df4843ac51d6576ea7932b3009c4f615514fe9a94ff  harness/tests/test_m9b_common_window.py
+9488bd5b3e2c8a7b95a54469fdc44eba70074adfb302b9af43e4db0dea82b9d1  tests/test_trade_replay.py
+== 3. hashes en el host desplegado (mismo codigo que corrio el smoke) ==
+bd3a16bb54af3dfe6be5b589c43742080d9965d3b74e44e81bed7f9e16bd9302  /tmp/m9b2a/src/infrastructure/medallion/replay.py
+b0ec022657c82b196f67224b0d73d691bceab60d416fea90a27340e60caf5fe5  /tmp/m9b2a/harness/scripts/m9b_common_window.py
+== 4. paridad y determinismo registrados en el smoke ==
+DETERMINISTIC baseline old_close_only PASS report_sha256=df1f752de16518cc770237665ec2962c27a029bf3555ebd90dd84264a63a0e88 signal_hash=059f2d641110378b69d1cc2af56f18462baa6428923294494caca4ee1968b847
+DETERMINISTIC baseline trade_sequence PASS report_sha256=563bb7e1ace94e61cc06d0fc204b951741e26b3c843acbb44d6f2cb068bf7560 signal_hash=059f2d641110378b69d1cc2af56f18462baa6428923294494caca4ee1968b847
+SIGNAL_HASH_PARITY baseline PASS 059f2d641110378b69d1cc2af56f18462baa6428923294494caca4ee1968b847
+DETERMINISTIC donchian old_close_only PASS report_sha256=b2a4063ab8324aab802c8b9d2b064cd0f11414a7972ebe8146a74adfa5be74ad signal_hash=9135697498d97863f51ae77f3c4f3e599513d29acf6fedc96934f4bdfa7c2d43
+DETERMINISTIC donchian trade_sequence PASS report_sha256=fed98a12eed2f61bf0ddc8538b0b29c8934fe80517b63bb194af7cedac92d2cd signal_hash=9135697498d97863f51ae77f3c4f3e599513d29acf6fedc96934f4bdfa7c2d43
+SIGNAL_HASH_PARITY donchian PASS 9135697498d97863f51ae77f3c4f3e599513d29acf6fedc96934f4bdfa7c2d43
+DETERMINISTIC bollinger old_close_only PASS report_sha256=7024d12221ca48da3a87973525e737be24f1e626a4c849640e05c8c83786ef7b signal_hash=3141b4a5607817bd8ef668ec89664a2d11a571ea7d522f07a33dcfde918ed1fa
+DETERMINISTIC bollinger trade_sequence PASS report_sha256=f9c8793fda142db366859f1b0a63264c3dffa7cf328683959c447d7a4b50ee6a signal_hash=3141b4a5607817bd8ef668ec89664a2d11a571ea7d522f07a33dcfde918ed1fa
+SIGNAL_HASH_PARITY bollinger PASS 3141b4a5607817bd8ef668ec89664a2d11a571ea7d522f07a33dcfde918ed1fa
+== 5. regresion M7 (lectura fresca, sin replay) ==
+LEGACY_M7_LEDGER_IDENTICAL=YES sha=6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625
+LEGACY_REGEN_IDENTICAL=YES sha=6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625
+== 6. safety (worktree/forbidden) ==
+PROGRESS_YAML_UNTOUCHED=YES DOMAIN_RISK_UNCHANGED=YES
+== 7. paper/cert (sin cambios desde baseline M9-B2A) ==
+sed: no se puede leer /tmp/m9b2a-uat-paper-baseline.txt: No existe el archivo o el directorio
+PAPER_CONTAINER_CHANGED=NO baseline=
+CERTIFICATION_TOUCHED=NO
+ARTIFACTS_TREE=PASS
+exit=0

@@ -1,0 +1,8 @@
+# evidencia: m9b2a-06b-smoke
+fecha: 2026-09-29T05:10:45-06:00
+fase: 23
+comando: bash /tmp/opencode/m9b2a-06-smoke.sh
+== M9-B2A SMOKE RUN ==
+== M9-B2A SMOKE (Gold 3 días: OLD x3, NEW x3, 2 corridas c/u) ==
+PARITY_FAILED=1
+exit=1

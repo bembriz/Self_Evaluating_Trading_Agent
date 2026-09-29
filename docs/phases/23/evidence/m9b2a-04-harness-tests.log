@@ -1,0 +1,85 @@
+# evidencia: m9b2a-04-harness-tests
+fecha: 2026-09-29T05:09:18-06:00
+fase: 23
+comando: uv run pytest harness/tests -o addopts= -q --cov=harness/scripts --cov-branch --cov-fail-under=80
+...............FF....................................................... [ 91%]
+.......
+ERROR: Coverage failure: total of 37 is less than fail-under=80
+                                                                         [100%]
+=================================== FAILURES ===================================
+____________________ test_dependencias_presentes_genera_pdf ____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xuum/pytest-81/test_dependencias_presentes_ge0')
+
+    def test_dependencias_presentes_genera_pdf(tmp_path):
+        md = tmp_path / "mini.md"
+        md.write_text(
+            "# Título\n\n| A | B |\n|---|---|\n| 1 | 2 |\n\n```bash\nexit=0\n```\n",
+            encoding="utf-8",
+        )
+        rc = gen_pdf.main([str(md)])
+>       assert rc == 0
+E       assert 65 == 0
+
+harness/tests/test_gen_pdf.py:11: AssertionError
+----------------------------- Captured stderr call -----------------------------
+ERROR: faltan dependencias para PDF.
+Detalle: No module named 'markdown'
+
+Este script requiere los dev-dependencies 'markdown' y 'weasyprint'.
+Su instalación está sujeta a la política de dependencias del proyecto:
+1) Genera/usa el Dependency Proposal correspondiente (skill infra-control).
+2) Tras tu autorización: uv add --dev markdown weasyprint
+3) Reintenta este comando.
+_____________________ test_entrada_inexistente_devuelve_66 _____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-xuum/pytest-81/test_entrada_inexistente_devue0')
+capsys = <_pytest.capture.CaptureFixture object at 0x77fa1959eb40>
+
+    def test_entrada_inexistente_devuelve_66(tmp_path, capsys):
+        rc = gen_pdf.main([str(tmp_path / "no.md")])
+>       assert rc == 66
+E       assert 65 == 66
+
+harness/tests/test_gen_pdf.py:18: AssertionError
+----------------------------- Captured stderr call -----------------------------
+ERROR: faltan dependencias para PDF.
+Detalle: No module named 'markdown'
+
+Este script requiere los dev-dependencies 'markdown' y 'weasyprint'.
+Su instalación está sujeta a la política de dependencias del proyecto:
+1) Genera/usa el Dependency Proposal correspondiente (skill infra-control).
+2) Tras tu autorización: uv add --dev markdown weasyprint
+3) Reintenta este comando.
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                                                 Stmts   Miss Branch BrPart  Cover   Missing
+------------------------------------------------------------------------------------------------
+harness/scripts/gate_check.py                          104      3     32      2    96%   198-199, 225
+harness/scripts/gen_pdf.py                              29     13      4      1    52%   39, 53-66, 70
+harness/scripts/gen_report.py                           41      1      8      1    96%   77
+harness/scripts/ledger.py                              276     19    104     14    91%   38, 53, 69, 76, 83-84, 86, 98-99, 105, 110, 172, 238, 239->exit, 396-398, 406-408
+harness/scripts/m9b_common_window.py                   217     61     50      3    69%   39, 287, 395-405, 409-421, 425-481, 485-492, 496
+harness/scripts/new_phase.py                            39      1      8      1    96%   65
+harness/scripts/paper_certification.py                  61      2     16      2    95%   40, 104
+harness/scripts/phase18a_development_smoke.py           44     44      8      0     0%   4-115
+harness/scripts/phase18b_development_evaluation.py     153    153     40      0     0%   12-453
+harness/scripts/phase18c_development_smoke.py           44     44      8      0     0%   4-112
+harness/scripts/phase18d_development_evaluation.py     173    173     40      0     0%   16-555
+harness/scripts/phase19a_development_smoke.py           50     50     18      0     0%   4-99
+harness/scripts/phase19b_development_evaluation.py     184    184     46      0     0%   14-565
+harness/scripts/phase19c_viability_evidence.py          57     57     12      0     0%   4-175
+harness/scripts/phase20a_development_smoke.py           52     52     18      0     0%   4-103
+harness/scripts/phase20b_development_evaluation.py     225    225     62      0     0%   16-672
+harness/scripts/preflight_guards.py                    132    132     60      0     0%   17-329
+harness/scripts/progress.py                             90      1     28      2    97%   108->117, 122
+harness/scripts/release_check.py                       122     93     36      1    22%   21, 25-29, 34-52, 56-76, 80-106, 121-135, 139-147, 156-179, 187-192, 208-248, 252
+------------------------------------------------------------------------------------------------
+TOTAL                                                 2093   1308    598     27    37%
+FAIL Required test coverage of 80% not reached. Total coverage: 36.79%
+=========================== short test summary info ============================
+FAILED harness/tests/test_gen_pdf.py::test_dependencias_presentes_genera_pdf
+FAILED harness/tests/test_gen_pdf.py::test_entrada_inexistente_devuelve_66 - ...
+2 failed, 77 passed in 10.50s
+exit=1

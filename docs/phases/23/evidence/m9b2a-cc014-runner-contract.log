@@ -1,0 +1,19 @@
+# evidencia: m9b2a-cc014-runner-contract
+fecha: 2026-09-29T05:19:21-06:00
+fase: 23
+comando: bash -c uv run python /tmp/opencode/cc014-contract.py && echo '---- instancia fresca por pasada (codigo):' && grep -n '_build_strategy(build_name, domain_candles)' harness/scripts/m9b_common_window.py && echo '---- pre-fix: reutilizar instancia stateful -> PARITY_FAILED (host):' && grep -c PARITY_FAILED docs/phases/23/evidence/m9b2a-06b-smoke.log
+versioned_file=harness/scripts/m9b_common_window.py
+MODELS ('old_close_only', 'trade_sequence')
+STRATEGIES ('baseline', 'donchian', 'bollinger')
+WINDOW_FAIL_CLOSED=YES msg=ventana != COMMON_WINDOW (FAIL CLOSED)
+SUMMARY_FIELDS ['candle_hash', 'candles', 'decisions', 'equity_final', 'exit_reasons_presentation', 'exit_reasons_raw', 'extra', 'fills', 'model', 'parity', 'signal_hash', 'strategy', 'trace_hash']
+EXIT_RAW {'llm_sell': 1}
+EXIT_PRESENTATION {'strategy_exit': 1}
+REPORT_SHA256 3b4da707b9c789fc30b903efbdb5d6700a3ffcd4f7fcdf2bffc3c5a0cbcc9558
+RUNNER_CONTRACT=PASS
+---- instancia fresca por pasada (codigo):
+442:        signal_sequence(replay_cli._build_strategy(build_name, domain_candles), domain_candles)
+444:    strategy = replay_cli._build_strategy(build_name, domain_candles)
+---- pre-fix: reutilizar instancia stateful -> PARITY_FAILED (host):
+1
+exit=0
