@@ -11,7 +11,12 @@ from pathlib import Path
 import pytest
 
 from infrastructure.medallion import silver_cli
-from infrastructure.medallion.bronze import HashConflictError, download_day, sha256_file
+from infrastructure.medallion.bronze import (
+    BRONZE_SCHEMA_VERSION,
+    HashConflictError,
+    download_day,
+    sha256_file,
+)
 from infrastructure.medallion.silver import (
     ORDERING_FIDELITY,
     SILVER_SCHEMA_VERSION,
@@ -43,6 +48,35 @@ def make_bronze(
 ) -> None:
     body = "id,timestamp,price,volume,side\n" + "".join(",".join(row) + "\n" for row in rows)
     download_day(bronze_dir, "ETHUSDT", day, fetcher=Fake(_gz(body)))
+
+
+def install_bronze_body(bronze_dir: Path, body: str, day: date = DEV_DAY) -> None:
+    """Instala un Bronze a mano: bypassa la validación de schema de download_day."""
+    name = f"ETHUSDT_{day.isoformat()}.csv.gz"
+    partition = bronze_dir / f"date={day.isoformat()}"
+    partition.mkdir(parents=True, exist_ok=True)
+    target = partition / name
+    payload = _gz(body)
+    target.write_bytes(payload)
+    manifest = {
+        "files": {
+            name: {
+                "bytes": len(payload),
+                "date": day.isoformat(),
+                "filename": name,
+                "market": "spot",
+                "schema_version": BRONZE_SCHEMA_VERSION,
+                "sha256": sha256_file(target),
+                "source_url": f"https://public.bybit.com/spot/ETHUSDT/{name}",
+                "symbol": "ETHUSDT",
+            }
+        },
+        "schema_version": BRONZE_SCHEMA_VERSION,
+    }
+    (bronze_dir / "manifest.json").write_text(
+        json.dumps(manifest, sort_keys=True, indent=2, ensure_ascii=True) + "\n",
+        encoding="utf-8",
+    )
 
 
 def read_silver(path: Path) -> tuple[list[str], list[list[str]]]:
@@ -215,8 +249,7 @@ def test_invalid_row_missing_columns(tmp_path: Path) -> None:
 def test_wrong_header_fail_closed(tmp_path: Path) -> None:
     bronze = tmp_path / "bronze"
     silver = tmp_path / "silver"
-    body = "a,b,c\n1,2,3\n"
-    download_day(bronze, "ETHUSDT", DEV_DAY, fetcher=Fake(_gz(body)))
+    install_bronze_body(bronze, "a,b,c\n1,2,3\n")
 
     with pytest.raises(InvalidRowError, match="header"):
         transform_day(bronze, silver, "ETHUSDT", DEV_DAY)

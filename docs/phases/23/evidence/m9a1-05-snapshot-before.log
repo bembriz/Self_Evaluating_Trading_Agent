@@ -1,0 +1,20 @@
+# evidencia: m9a1-05-snapshot-before
+fecha: 2026-09-28T19:33:34-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a1/run.sh /tmp/opencode/m9a1/05-snapshot-remote.sh
+== M9A1 SNAPSHOT BEFORE (hashes de origen y salidas existentes) ==
+3,1G	/srv/data/medallion/bronze/bybit/spot/ETHUSDT
+4,1G	/srv/data/medallion/silver/trades/ETHUSDT
+BRONZE_RAW_FILES=647
+SILVER_OUTPUT_FILES=551
+320948e200203efae05d64aa6bf553d16a8e86daab202caefbfec54d7062a70f  /srv/data/medallion/silver/candles/ETHUSDT/manifest.json
+sha256sum: /srv/data/medallion/gold/replay-datasets/ETHUSDT/manifest.json: No such file or directory
+BRONZE_SCHEMA_HISTOGRAM_BEFORE={'bybit-spot-trades-csv-gz-v1': 551, 'bybit-spot-trades-csv-gz-v2': 96}
+BRONZE_MANIFEST_SCHEMA_VERSION=bybit-spot-trades-csv-gz-v1
+SILVER_LINEAGE_HISTOGRAM_BEFORE={'ABSENT': 551}
+SILVER_MANIFEST_SCHEMA_VERSION=bybit-spot-trades-silver-v1
+SILVER_CANONICAL_HEADER_COLS=10
+SILVER_CANONICAL_HEADER=event_timestamp,symbol,price,quantity,taker_side,native_trade_id,native_sequence,source_file,source_file_sha256,source_row_number
+SILVER_OUTPUTS_COUNT=551
+M9A1_SNAPSHOT_BEFORE=PASS
+exit=0

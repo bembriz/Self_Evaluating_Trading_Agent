@@ -1,0 +1,26 @@
+# evidencia: m9a1-11-final-state
+fecha: 2026-09-28T19:37:03-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a1/run.sh /tmp/opencode/m9a1/11-final-remote.sh
+== M9A1 ESTADO FINAL ==
+BRONZE_RAW_FILES=647
+BRONZE_PARTITIONS=647
+SILVER_OUTPUT_FILES=555
+SILVER_PARTITIONS=555
+CANDLE_OUTPUTS=21
+GOLD_OUTPUTS=0
+PART_FILES_TOTAL=0
+CANDLES_GOLD_MANIFESTS_UNCHANGED=YES
+BRONZE_SCHEMA_HISTOGRAM={'bybit-spot-trades-csv-gz-v1': 551, 'bybit-spot-trades-csv-gz-v2': 96}
+SILVER_LINEAGE_HISTOGRAM={'bybit-spot-trades-csv-gz-v1': 551, 'bybit-spot-trades-csv-gz-v2': 4}
+BRONZE_ENTRIES=647 SILVER_ENTRIES=555
+-- contenedores (informativo; no tocados por M9-A1) --
+f0866dba0802 gastos-ia-app Up 23 hours
+f9542a5b0b22 gastos-ia-samba Up 23 hours (healthy)
+b061332c3572 self-evaluating-trading-agent-paper-runner-1 Up 9 days
+b796f67478d7 self-evaluating-trading-agent-grafana-1 Up 2 weeks
+1431d8e01dd6 self-evaluating-trading-agent-prometheus-1 Up 2 weeks
+612427ee2033 gastos-ia-caddy Up 3 weeks
+0c79b6b5d1cd self-evaluating-trading-agent-postgres-1 Up 3 weeks (healthy)
+M9A1_FINAL=PASS
+exit=0

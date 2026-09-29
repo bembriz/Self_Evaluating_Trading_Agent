@@ -1,0 +1,59 @@
+# evidencia: m9a1-13b-precommit-remote
+fecha: 2026-09-28T19:53:10-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a1/run.sh /tmp/opencode/m9a1-13-precommit-remote.sh
+== M9A1 VERIFICACIÓN POST-TRANSFORM (integridad de lo preexistente) ==
+BRONZE_RAW_HASHES_CHANGED=0
+BRONZE_RAW_REMOVED=0
+BRONZE_RAW_ADDED=0
+EXISTING_SILVER_HASHES_CHANGED=0
+EXISTING_SILVER_REMOVED=0
+SILVER_ADDED=4 -> ['date=2025-03-13', 'date=2025-03-14', 'date=2025-03-15', 'date=2025-06-16']
+BRONZE_MANIFEST_SCHEMA_VERSION=bybit-spot-trades-csv-gz-v1
+BRONZE_ENTRIES_SCHEMA_CHANGED=96
+BRONZE_ENTRY_DIFF_KEYS=['schema_version']
+BRONZE_V1_FILES=551 BRONZE_V2_FILES=96
+SILVER_PREEXISTING_ENTRIES_CHECKED=551
+NEW_ENTRY_SOURCE_SCHEMA_VERSION=bybit-spot-trades-csv-gz-v2
+SILVER_ENTRIES_TOTAL=555
+SILVER_ENTRIES_WITH_LINEAGE=555
+DOWNSTREAM_UNCHANGED=ETHUSDT:True
+DOWNSTREAM_UNCHANGED=gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3:True
+DOWNSTREAM_UNCHANGED=gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3:True
+BRONZE_RAW_UNCHANGED=YES EXISTING_551_SILVER_UNCHANGED=YES BRONZE_MANIFEST_DIFF_ONLY_SCHEMA=YES
+VERIFY_EXIT=0
+M9A1_VERIFY=PASS
+== M9A1 ESTADO FINAL ==
+BRONZE_RAW_FILES=647
+BRONZE_PARTITIONS=647
+SILVER_OUTPUT_FILES=555
+SILVER_PARTITIONS=555
+CANDLE_OUTPUTS=21
+GOLD_OUTPUTS=0
+PART_FILES_TOTAL=0
+CANDLES_GOLD_MANIFESTS_UNCHANGED=YES
+BRONZE_SCHEMA_HISTOGRAM={'bybit-spot-trades-csv-gz-v1': 551, 'bybit-spot-trades-csv-gz-v2': 96}
+SILVER_LINEAGE_HISTOGRAM={'bybit-spot-trades-csv-gz-v1': 551, 'bybit-spot-trades-csv-gz-v2': 4}
+BRONZE_ENTRIES=647 SILVER_ENTRIES=555
+-- contenedores (informativo; no tocados por M9-A1) --
+f0866dba0802 gastos-ia-app Up 23 hours
+f9542a5b0b22 gastos-ia-samba Up 23 hours (healthy)
+b061332c3572 self-evaluating-trading-agent-paper-runner-1 Up 9 days
+b796f67478d7 self-evaluating-trading-agent-grafana-1 Up 2 weeks
+1431d8e01dd6 self-evaluating-trading-agent-prometheus-1 Up 2 weeks
+612427ee2033 gastos-ia-caddy Up 3 weeks
+0c79b6b5d1cd self-evaluating-trading-agent-postgres-1 Up 3 weeks (healthy)
+M9A1_FINAL=PASS
+-- precommit remote: rangos de fechas (WF/holdout sin tocar) --
+PARTITIONS_SCANNED=1202
+PARTITIONS_OUTSIDE_DEVELOPMENT=0
+WALK_FORWARD_READS=0 FINAL_HOLDOUT_READS=0
+DATE_RANGE_CHECK=PASS
+-- precommit remote: certificacion/safeguard vs baseline --
+CERTIFICATION_TOUCHED=NO
+SAFEGUARD_TOUCHED=NO
+-- paper runner --
+self-evaluating-trading-agent-paper-runner-1|b061332c3572|Up 9 days
+PAPER_CONTAINER_RUNNING=YES
+M9A1_PRECHECK_REMOTE=PASS
+exit=0

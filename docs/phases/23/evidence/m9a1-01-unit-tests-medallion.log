@@ -1,0 +1,38 @@
+# evidencia: m9a1-01-unit-tests-medallion
+fecha: 2026-09-28T19:22:41-06:00
+fase: 23
+comando: uv run pytest tests/test_source_schema.py tests/test_silver_trades.py tests/test_bronze_ingest.py tests/test_silver_candles.py tests/test_gold_dataset.py tests/test_trade_replay.py --cov=infrastructure.medallion --cov-branch --cov-fail-under=90 --cov-report=term-missing --cov-report=json:/tmp/opencode/coverage-m9a1.json
+........................................................................ [ 27%]
+........................................................................ [ 54%]
+........................................................................ [ 82%]
+..............................................                           [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                                                  Stmts   Miss Branch BrPart  Cover   Missing
+-------------------------------------------------------------------------------------------------
+src/infrastructure/medallion/__init__.py                  3      0      0      0   100%
+src/infrastructure/medallion/bronze.py                  223     10     54      5    95%   125, 178-179, 229-230, 232, 285, 294, 297-298, 369->371
+src/infrastructure/medallion/candles.py                 227      0     80      0   100%
+src/infrastructure/medallion/candles_cli.py              51      2     12      2    94%   46, 77
+src/infrastructure/medallion/cli.py                      50      3     12      3    90%   46, 49, 83
+src/infrastructure/medallion/gold.py                    183      0     46      0   100%
+src/infrastructure/medallion/gold_cli.py                 49      1      8      1    96%   79
+src/infrastructure/medallion/replay.py                  575     39    190     33    91%   332, 338, 344, 351, 394, 398, 433, 435, 444, 446, 449, 458, 471-472, 480, 482, 484, 498, 526, 529, 547, 576, 643, 670, 685, 692, 698, 718-719, 738, 766-767, 874, 927, 942, 944, 985, 1048->exit, 1195-1196
+src/infrastructure/medallion/replay_cli.py               47      1      6      1    96%   112
+src/infrastructure/medallion/schema_backfill_cli.py      40      1      8      2    94%   50->56, 69
+src/infrastructure/medallion/silver.py                  209     16     66     12    90%   146-147, 167, 180, 224, 227, 252, 271, 278, 302, 365, 374, 377-378, 382, 385
+src/infrastructure/medallion/silver_cli.py               51      3     12      3    90%   43, 46, 74
+src/infrastructure/medallion/split_guard.py              18      1      4      1    91%   44
+-------------------------------------------------------------------------------------------------
+TOTAL                                                  1726     77    498     63    94%
+Coverage JSON written to file /tmp/opencode/coverage-m9a1.json
+Required test coverage of 90% reached. Total coverage: 93.71%
+262 passed, 1 warning in 7.74s
+exit=0

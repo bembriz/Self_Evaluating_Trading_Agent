@@ -1,0 +1,20 @@
+# evidencia: m9a1-04-deploy
+fecha: 2026-09-28T19:33:23-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a1/04-deploy.sh
+== M9A1 DEPLOY (repo src -> lenovosrv:/tmp/m9a/src) ==
+LOCAL_BRANCH=medalion
+LOCAL_HEAD=dc5c0a2d791686e25a54661a81902a17564ef4b0
+HEAD_OK=YES COMMITS_SIN_BASE=0
+-- cambios en worktree (M9-A1: src + tests) --
+?? src/infrastructure/medallion/schema_backfill_cli.py
+?? tests/test_source_schema.py
+-- deploy tar --
+REMOTE_DIR=OK
+-- verificación remota: imports + detección sobre archivos REALES --
+IMPORTS_OK
+FILE_2023-09-09_SCHEMA=bybit-spot-trades-csv-gz-v1
+FILE_2025-03-13_SCHEMA=bybit-spot-trades-csv-gz-v2
+DETECT_REAL_FILES=OK
+M9A1_DEPLOY=PASS
+exit=0

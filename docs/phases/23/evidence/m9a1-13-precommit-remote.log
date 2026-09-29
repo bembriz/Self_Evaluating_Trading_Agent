@@ -1,0 +1,17 @@
+# evidencia: m9a1-13-precommit-remote
+fecha: 2026-09-28T19:51:59-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a1/run.sh /tmp/opencode/m9a1-13-precommit-remote.sh
+== M9A1 VERIFICACIÓN POST-TRANSFORM (integridad de lo preexistente) ==
+BRONZE_RAW_HASHES_CHANGED=0
+BRONZE_RAW_REMOVED=0
+BRONZE_RAW_ADDED=0
+EXISTING_SILVER_HASHES_CHANGED=0
+EXISTING_SILVER_REMOVED=0
+SILVER_ADDED=4 -> ['date=2025-03-13', 'date=2025-03-14', 'date=2025-03-15', 'date=2025-06-16']
+Traceback (most recent call last):
+  File "<stdin>", line 43, in <module>
+AssertionError: ['/srv/data/medallion/silver/trades/ETHUSDT/date=2025-03-13/ETHUSDT_2025-03-13.csv.gz', '/srv/data/medallion/silver/trades/ETHUSDT/date=2025-03-14/ETHUSDT_2025-03-14.csv.gz', '/srv/data/medallion/silver/trades/ETHUSDT/date=2025-03-15/ETHUSDT_2025-03-15.csv.gz', '/srv/data/medallion/silver/trades/ETHUSDT/date=2025-06-16/ETHUSDT_2025-06-16.csv.gz']
+VERIFY_EXIT=1
+M9A1_VERIFY=FAIL
+exit=1

@@ -1,0 +1,74 @@
+# evidencia: m9a1-12b-precommit-check
+fecha: 2026-09-28T19:49:42-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a1-12-precommit-check.sh
+== M9-A1 PRECHECK COMMIT 011 (local) ==
+fecha: 2026-09-28T19:49:42-06:00
+-- git base --
+HEAD=dc5c0a2d791686e25a54661a81902a17564ef4b0
+BRANCH=medalion
+PRECHECK_HEAD_BASE=YES
+PRECHECK_BRANCH=medalion
+-- staged == solo M9-A1 --
+STAGED_FILES=23
+STAGED: docs/phases/23/commit-candidate-011.md
+STAGED: docs/phases/23/evidence/log.md
+STAGED: docs/phases/23/evidence/m9a1-01-unit-tests-medallion.log
+STAGED: docs/phases/23/evidence/m9a1-01b-unit-tests-medallion.log
+STAGED: docs/phases/23/evidence/m9a1-02-unit-tests-full.log
+STAGED: docs/phases/23/evidence/m9a1-02b-unit-tests-full-count.log
+STAGED: docs/phases/23/evidence/m9a1-03-lint-typing.log
+STAGED: docs/phases/23/evidence/m9a1-04-deploy.log
+STAGED: docs/phases/23/evidence/m9a1-05-snapshot-before.log
+STAGED: docs/phases/23/evidence/m9a1-05b-downstream-baseline.log
+STAGED: docs/phases/23/evidence/m9a1-06-failclosed-pre-backfill.log
+STAGED: docs/phases/23/evidence/m9a1-07-backfill.log
+STAGED: docs/phases/23/evidence/m9a1-08-transform-2025-03-13.log
+STAGED: docs/phases/23/evidence/m9a1-09-verify-integrity.log
+STAGED: docs/phases/23/evidence/m9a1-10-smoke-v2.log
+STAGED: docs/phases/23/evidence/m9a1-11-final-state.log
+STAGED: docs/phases/23/m9a1-bybit-schema-evolution.md
+STAGED: src/infrastructure/medallion/bronze.py
+STAGED: src/infrastructure/medallion/schema_backfill_cli.py
+STAGED: src/infrastructure/medallion/silver.py
+STAGED: tests/test_bronze_ingest.py
+STAGED: tests/test_silver_trades.py
+STAGED: tests/test_source_schema.py
+STAGED_SCOPE=OK (solo M9-A1)
+STAGED_COUNT=23 (scope-only; evidencias posteriores se agregan antes del commit)
+-- git diff --cached --check --
+
+CACHED_CHECK=PASS
+-- secretos en staged diff --
+SECRET_SCAN=0_HALLAZGOS
+-- calidad --
+All checks passed!
+RUFF_CHECK=PASS
+328 files already formatted
+RUFF_FORMAT=PASS
+Success: no issues found in 287 source files
+MYPY=PASS
+-- suite unitaria completa --
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1227 passed, 1 skipped, 1 warning in 77.78s (0:01:17)
+PYTEST_1227_PASSED_1_SKIPPED=YES
+-- condiciones M9-A1 desde evidencias --
+BRONZE_RAW_HASHES_CHANGED_0=YES
+EXISTING_551_SILVER_CHANGED_0=YES
+SILVER_CANONICAL_SCHEMA_CHANGED_NO=YES
+BRONZE_MANIFEST_DIFF_ONLY_SCHEMA=YES
+CANDLES_GOLD_INTACTOS=YES
+V1_551=YES
+V2_96=YES
+V2_SMOKE_PASS=YES
+V2_SMOKE_4_FECHAS=YES
+UNKNOWN_SCHEMA_FAIL_CLOSED=YES
+SIN_OUTPUT_PARCIAL=YES
+WF_HOLDOVER_READS_0=YES
+CERT_UNTOUCHED=YES
+PAPER_UNTOUCHED=YES
+-- estado worktree pre-commit --
+UNTRACKED_FUERA_M9A1=25
+M9A1_PRECHECK_LOCAL=PASS
+exit=0

@@ -1,0 +1,21 @@
+# evidencia: m9a1-08-transform-2025-03-13
+fecha: 2026-09-28T19:35:23-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a1/run.sh /tmp/opencode/m9a1/08-transform-remote.sh
+== M9A1 UAT: transform SOLO 2025-03-13 (primer día V2) ==
+TRANSFORMED ETHUSDT_2025-03-13.csv.gz sha256=21616f01acd108b10d2975e94e094e17097cf883984fdc6babb733096e8e1c5e rows=691556
+SUMMARY transformed=1 skipped=0 total=1
+TRANSFORM_EXIT=0 (esperado 0)
+SOURCE_SCHEMA_VERSION=bybit-spot-trades-csv-gz-v2
+SCHEMA_VERSION_SILVER=bybit-spot-trades-silver-v1
+ORDERING_FIDELITY=PARTIAL
+ROW_COUNT=691556
+SOURCE_ORDER_PRESERVED=True
+OUTPUT_SHA256=21616f01acd108b10d2975e94e094e17097cf883984fdc6babb733096e8e1c5e
+OUTPUT_HEADER_COLS=10
+OUTPUT_HEADER=event_timestamp,symbol,price,quantity,taker_side,native_trade_id,native_sequence,source_file,source_file_sha256,source_row_number
+BRONZE_HEADER=id,timestamp,price,volume,side,rpi
+BRONZE_ROWS=691556
+V2_ROW_COUNT_MATCH=YES RPI_ABSENT=YES CANONICAL_HEADER=YES ORDER_CANONICAL=YES
+M9A1_TRANSFORM_V2=PASS
+exit=0

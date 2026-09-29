@@ -13,18 +13,24 @@ Invariantes (skill medallion-market-data + ADR-0005/0007):
 - Split guard ANTES de la red: solo días completos de DEVELOPMENT.
 - Salidas deterministas: ``manifest.json`` sin timestamps (claves ordenadas);
   los tiempos operativos van a ``ops-downloads.jsonl`` (separado).
+- El schema de la fuente se detecta del header REAL de cada archivo
+  (V1 = 5 columnas, V2 = 6 columnas con ``rpi`` final): cualquier otro header
+  u orden ⇒ FAIL CLOSED. El campo ``schema_version`` de cada entrada registra
+  esa versión detectada; el ``schema_version`` del manifiesto sigue siendo el
+  de compatibilidad del propio manifiesto.
 
 Solo stdlib: ejecutable en el Python del sistema (lenovosrv) sin venv.
 """
 
 from __future__ import annotations
 
+import csv
 import gzip
 import hashlib
 import json
 import os
 import re
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass
 from datetime import UTC, date, datetime
 from pathlib import Path
@@ -33,6 +39,8 @@ from urllib.request import Request, urlopen
 from infrastructure.medallion.split_guard import SplitGuardError, ensure_development_day
 
 __all__ = [
+    "BRONZE_HEADER_V1",
+    "BRONZE_HEADER_V2",
     "BRONZE_SCHEMA_VERSION",
     "DEFAULT_BASE_URL",
     "BronzeError",
@@ -40,13 +48,21 @@ __all__ = [
     "HashConflictError",
     "InvalidGzipError",
     "MarkerError",
+    "SchemaBackfillResult",
+    "SOURCE_HEADERS",
+    "SOURCE_SCHEMA_V1",
+    "SOURCE_SCHEMA_V2",
     "SplitGuardError",
+    "SourceSchemaError",
     "UnexpectedFilenameError",
+    "backfill_source_schema",
     "bronze_filename",
+    "detect_source_schema",
     "download_day",
     "download_days",
     "ensure_marker",
     "load_manifest",
+    "read_source_schema",
     "sha256_file",
     "source_url",
     "urllib_fetch",
@@ -54,6 +70,14 @@ __all__ = [
 ]
 
 BRONZE_SCHEMA_VERSION = "bybit-spot-trades-csv-gz-v1"
+SOURCE_SCHEMA_V1 = "bybit-spot-trades-csv-gz-v1"
+SOURCE_SCHEMA_V2 = "bybit-spot-trades-csv-gz-v2"
+BRONZE_HEADER_V1 = ("id", "timestamp", "price", "volume", "side")
+BRONZE_HEADER_V2 = ("id", "timestamp", "price", "volume", "side", "rpi")
+SOURCE_HEADERS: dict[str, tuple[str, ...]] = {
+    SOURCE_SCHEMA_V1: BRONZE_HEADER_V1,
+    SOURCE_SCHEMA_V2: BRONZE_HEADER_V2,
+}
 DEFAULT_BASE_URL = "https://public.bybit.com/spot"
 MARKER_EXPECTED_FIRST_LINE = "LENOVO_DATA"
 GZIP_MAGIC = b"\x1f\x8b"
@@ -79,6 +103,10 @@ class HashConflictError(BronzeError):
 
 class MarkerError(BronzeError):
     """Marker de volumen ausente o inválido en /srv/data."""
+
+
+class SourceSchemaError(BronzeError):
+    """Header de la fuente desconocido, reordenado o ilegible (fail closed)."""
 
 
 Fetcher = Callable[[str, Path], int]
@@ -151,6 +179,38 @@ def validate_gzip_file(path: Path) -> None:
         raise InvalidGzipError(f"gzip corrupto en {path.name}: {exc}") from exc
 
 
+def detect_source_schema(header: Sequence[str]) -> str:
+    """Devuelve la versión de schema de la fuente a partir del header real.
+
+    FAIL CLOSED: cualquier header desconocido o con las columnas reordenadas
+    levanta ``SourceSchemaError`` (jamás se asumen columnas fijas).
+    """
+    known = tuple(header)
+    for version, expected in SOURCE_HEADERS.items():
+        if known == expected:
+            return version
+    allowed = [list(columns) for columns in SOURCE_HEADERS.values()]
+    raise SourceSchemaError(
+        f"header de fuente desconocido u orden alterado: {list(known)!r} (esperado {allowed})"
+    )
+
+
+def read_source_schema(path: Path) -> str:
+    """Lee la cabecera del ``.csv.gz`` y devuelve su schema de fuente."""
+    try:
+        with gzip.open(path, "rt", encoding="utf-8", newline="") as fh:
+            reader = csv.reader(fh)
+            try:
+                header = tuple(next(reader))
+            except StopIteration as exc:
+                raise SourceSchemaError(f"archivo vacío: {path.name}") from exc
+    except SourceSchemaError:
+        raise
+    except (OSError, EOFError, UnicodeDecodeError, csv.Error) as exc:
+        raise SourceSchemaError(f"cabecera ilegible en {path.name}: {exc}") from exc
+    return detect_source_schema(header)
+
+
 def ensure_marker(marker_path: Path) -> None:
     """Verifica el marker del volumen canónico antes de escribir en /srv/data."""
     if not marker_path.is_file():
@@ -196,6 +256,73 @@ def _resolve_fetcher(fetcher: Fetcher | None) -> Fetcher:
     return urllib_fetch if fetcher is None else fetcher
 
 
+@dataclass(frozen=True)
+class SchemaBackfillResult:
+    scanned: int
+    changed: int
+    v1: int
+    v2: int
+
+
+def backfill_source_schema(symbol_dir: Path) -> SchemaBackfillResult:
+    """Corrige ``schema_version`` por archivo a partir del header real (M9-A1).
+
+    Solo reescribe ``manifest.json`` (atómico y determinista) cuando alguna
+    entrada quedó con un ``schema_version`` que no coincide con el archivo:
+    NUNCA toca los ``.csv.gz``. Falla cerrado ante cualquier header
+    desconocido, raw ausente o raw cuyo hash no coincida con el manifiesto.
+    """
+    manifest = load_manifest(symbol_dir)
+    files = manifest["files"]
+    assert isinstance(files, dict)
+    scanned = 0
+    changed = 0
+    v1 = 0
+    v2 = 0
+    for name in sorted(files):
+        entry = files[name]
+        if not isinstance(entry, dict):
+            raise BronzeError(f"entrada inválida en manifest Bronze: {name!r}")
+        day_raw = entry.get("date")
+        symbol = entry.get("symbol")
+        recorded_sha = entry.get("sha256")
+        if (
+            not isinstance(day_raw, str)
+            or not isinstance(symbol, str)
+            or not isinstance(recorded_sha, str)
+        ):
+            raise BronzeError(f"entrada Bronze incompleta: {name!r}")
+        try:
+            day = date.fromisoformat(day_raw)
+        except ValueError as exc:
+            raise BronzeError(f"fecha inválida en manifest Bronze: {name!r}") from exc
+        ensure_development_day(day)
+        validate_filename(name, symbol, day)
+        path = symbol_dir / f"date={day_raw}" / name
+        if not path.is_file():
+            raise HashConflictError(f"{name}: archivo Bronze ausente: {path}")
+        local_sha = sha256_file(path)
+        if local_sha != recorded_sha:
+            raise HashConflictError(f"{name}: hash local {local_sha} != manifest {recorded_sha!r}")
+        schema = read_source_schema(path)
+        scanned += 1
+        if schema == SOURCE_SCHEMA_V1:
+            v1 += 1
+        else:
+            v2 += 1
+        if entry.get("schema_version") != schema:
+            entry["schema_version"] = schema
+            changed += 1
+    if changed:
+        manifest["files"] = dict(sorted(files.items()))
+        _write_manifest(symbol_dir, manifest)
+        _append_ops(
+            symbol_dir,
+            {"event": "schema_backfill", "changed": changed, "v1": v1, "v2": v2},
+        )
+    return SchemaBackfillResult(scanned=scanned, changed=changed, v1=v1, v2=v2)
+
+
 def download_day(
     symbol_dir: Path,
     symbol: str,
@@ -236,8 +363,11 @@ def download_day(
 
     try:
         validate_gzip_file(part)
-    except InvalidGzipError:
+        source_schema = read_source_schema(part)
+    except (InvalidGzipError, SourceSchemaError):
         part.unlink(missing_ok=True)
+        if partition.is_dir() and not any(partition.iterdir()):
+            partition.rmdir()
         raise
 
     payload_sha = sha256_file(part)
@@ -248,7 +378,7 @@ def download_day(
         "date": day.isoformat(),
         "filename": name,
         "market": "spot",
-        "schema_version": BRONZE_SCHEMA_VERSION,
+        "schema_version": source_schema,
         "sha256": payload_sha,
         "source_url": url,
         "symbol": symbol,

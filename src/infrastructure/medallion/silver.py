@@ -13,6 +13,11 @@ Invariantes (skill medallion-market-data + ADR-0005/0007 + reglas M4):
   partición), pero el orden del matching engine para eventos con igual
   timestamp no es demostrable con esta fuente.
 - SHA-256 del Bronze de entrada debe coincidir con su manifest (FAIL CLOSED).
+- El schema de la fuente se detecta del header real de cada archivo
+  (V1 = 5 columnas, V2 = 6 columnas con ``rpi`` final) y se registra en el
+  linaje como ``source_schema_version``. La salida canónica es SIEMPRE la
+  misma para V1 y V2: ``rpi`` no se propaga ni se reinterpreta. Un
+  ``schema_version`` de manifiesto que contradiga al archivo ⇒ FAIL CLOSED.
 - Cualquier fila inválida ⇒ FAIL CLOSED sin dejar output parcial.
 - Escritura ``.part`` + validación round-trip + manifest atómico + rename
   atómico; misma entrada ⇒ mismo SHA-256 de salida.
@@ -33,10 +38,15 @@ from datetime import UTC, date, datetime
 from pathlib import Path
 
 from infrastructure.medallion.bronze import (
+    SOURCE_HEADERS,
+    SOURCE_SCHEMA_V1,
     BronzeError,
     HashConflictError,
+    SourceSchemaError,
     bronze_filename,
+    detect_source_schema,
     load_manifest,
+    read_source_schema,
     sha256_file,
     validate_filename,
     validate_gzip_file,
@@ -51,13 +61,16 @@ __all__ = [
     "InvalidRowError",
     "SilverError",
     "SilverResult",
+    "SilverSchemaBackfillResult",
+    "backfill_source_schema",
     "transform_day",
     "transform_days",
 ]
 
 SILVER_SCHEMA_VERSION = "bybit-spot-trades-silver-v1"
 ORDERING_FIDELITY = "PARTIAL"
-BRONZE_HEADER = ("id", "timestamp", "price", "volume", "side")
+# Compatibilidad: el header histórico de 5 columnas es el schema V1 de la fuente.
+BRONZE_HEADER = SOURCE_HEADERS[SOURCE_SCHEMA_V1]
 SILVER_HEADER = (
     "event_timestamp",
     "symbol",
@@ -111,13 +124,14 @@ def _append_ops(symbol_dir: Path, event: dict[str, object]) -> None:
 
 def _read_bronze_rows(
     bronze_path: Path, source_file: str
-) -> tuple[list[tuple[str, str, str, str, str, str]], int, int, bool]:
+) -> tuple[list[tuple[str, str, str, str, str, str]], int, int, bool, str]:
     """Valida y lee todas las filas; FAIL CLOSED ante la primera fila inválida.
 
-    Devuelve ``(rows, min_ts, max_ts, source_order_preserved)`` donde
-    ``source_order_preserved`` es ``True`` si las filas de origen ya estaban en
-    orden (timestamp) no decreciente — es decir, el orden canónico coincide
-    exactamente con el orden físico publicado.
+    Detecta el schema real del archivo (V1/V2) y valida el ancho contra ese
+    schema. Devuelve ``(rows, min_ts, max_ts, source_order_preserved, schema)``
+    donde ``source_order_preserved`` es ``True`` si las filas de origen ya
+    estaban en orden (timestamp) no decreciente — es decir, el orden canónico
+    coincide exactamente con el orden físico publicado.
     """
     validate_gzip_file(bronze_path)
     rows: list[tuple[str, str, str, str, str, str]] = []
@@ -131,12 +145,18 @@ def _read_bronze_rows(
             header = tuple(next(reader))
         except StopIteration as exc:
             raise InvalidRowError(f"{source_file}: archivo vacío") from exc
-        if header != BRONZE_HEADER:
-            raise InvalidRowError(f"{source_file}: header {header} != {BRONZE_HEADER}")
+        try:
+            source_schema = detect_source_schema(header)
+        except SourceSchemaError as exc:
+            raise InvalidRowError(f"{source_file}: {exc}") from exc
+        expected_columns = len(SOURCE_HEADERS[source_schema])
         for row_number, row in enumerate(reader, start=1):
-            if len(row) != 5:
-                raise InvalidRowError(f"{source_file}:{row_number}: {len(row)} columnas != 5")
-            native_id, timestamp, price, quantity, taker_side = row
+            if len(row) != expected_columns:
+                raise InvalidRowError(
+                    f"{source_file}:{row_number}: {len(row)} columnas != {expected_columns}"
+                )
+            # ``rpi`` (solo V2) existe en el origen pero JAMÁS se propaga
+            native_id, timestamp, price, quantity, taker_side = row[:5]
             if not _RX_UINT.match(native_id):
                 raise InvalidRowError(f"{source_file}:{row_number}: id {native_id!r}")
             if not _RX_UINT.match(timestamp):
@@ -158,7 +178,7 @@ def _read_bronze_rows(
             rows.append((timestamp, price, quantity, taker_side, native_id, str(row_number)))
     if not rows:
         raise InvalidRowError(f"{source_file}: sin filas de datos")
-    return rows, min_ts, max_ts, source_order_preserved
+    return rows, min_ts, max_ts, source_order_preserved, source_schema
 
 
 def _write_silver_gz(
@@ -259,7 +279,15 @@ def transform_day(
         _append_ops(silver_dir, {"event": "skipped", "filename": name})
         return SilverResult(name, "skipped", local_sha, int(entry["row_count"]))
 
-    rows, min_ts, max_ts, source_order_preserved = _read_bronze_rows(bronze_path, partition)
+    rows, min_ts, max_ts, source_order_preserved, source_schema = _read_bronze_rows(
+        bronze_path, partition
+    )
+    recorded_schema = bronze_entry.get("schema_version")
+    if isinstance(recorded_schema, str) and recorded_schema != source_schema:
+        raise HashConflictError(
+            f"{name}: schema_version manifest {recorded_schema!r} != detectado "
+            f"{source_schema!r} (metadata Bronze sin backfill)"
+        )
 
     output.parent.mkdir(parents=True, exist_ok=True)
     output_part = output.with_name(output.name + ".part")
@@ -286,6 +314,7 @@ def transform_day(
         "source_bronze_path": partition,
         "source_bronze_sha256": bronze_sha,
         "source_order_preserved": source_order_preserved,
+        "source_schema_version": source_schema,
         "symbol": symbol,
     }
     silver_manifest["files"] = dict(sorted(silver_files.items()))
@@ -303,3 +332,76 @@ def transform_days(
 ) -> list[SilverResult]:
     # El split guard de cada día corre ANTES de crear el directorio destino.
     return [transform_day(bronze_dir, silver_dir, symbol, day) for day in days]
+
+
+@dataclass(frozen=True)
+class SilverSchemaBackfillResult:
+    scanned: int
+    changed: int
+    v1: int
+    v2: int
+
+
+def backfill_source_schema(
+    bronze_dir: Path, silver_dir: Path, symbol: str
+) -> SilverSchemaBackfillResult:
+    """Completa ``source_schema_version`` de las entradas Silver existentes (M9-A1).
+
+    Lee el header REAL del Bronze de origen (no reinterpreta), verifica que el
+    linaje ``source_bronze_sha256`` siga vigente y reescribe SOLO
+    ``manifest.json`` de forma atómica: NUNCA toca los ``.csv.gz`` Silver ya
+    transformados.
+    """
+    manifest = load_manifest(silver_dir)
+    files = manifest["files"]
+    assert isinstance(files, dict)
+    scanned = 0
+    changed = 0
+    v1 = 0
+    v2 = 0
+    for name in sorted(files):
+        entry = files[name]
+        if not isinstance(entry, dict):
+            raise BronzeError(f"entrada inválida en manifest Silver: {name!r}")
+        day_raw = entry.get("date")
+        source_path = entry.get("source_bronze_path")
+        recorded_sha = entry.get("source_bronze_sha256")
+        if (
+            not isinstance(day_raw, str)
+            or not isinstance(source_path, str)
+            or not isinstance(recorded_sha, str)
+        ):
+            raise BronzeError(f"entrada Silver incompleta: {name!r}")
+        try:
+            day = date.fromisoformat(day_raw)
+        except ValueError as exc:
+            raise BronzeError(f"fecha inválida en manifest Silver: {name!r}") from exc
+        ensure_development_day(day)
+        validate_filename(name, symbol, day)
+        if source_path.startswith("/") or ".." in source_path.split("/"):
+            raise BronzeError(f"source_bronze_path inválido: {source_path!r}")
+        bronze_path = bronze_dir / source_path
+        if not bronze_path.is_file():
+            raise HashConflictError(f"{name}: Bronze de origen ausente: {bronze_path}")
+        local_sha = sha256_file(bronze_path)
+        if local_sha != recorded_sha:
+            raise HashConflictError(
+                f"{name}: Bronze de origen alterado ({local_sha} != {recorded_sha!r})"
+            )
+        schema = read_source_schema(bronze_path)
+        scanned += 1
+        if schema == SOURCE_SCHEMA_V1:
+            v1 += 1
+        else:
+            v2 += 1
+        if entry.get("source_schema_version") != schema:
+            entry["source_schema_version"] = schema
+            changed += 1
+    if changed:
+        manifest["files"] = dict(sorted(files.items()))
+        _write_silver_manifest(silver_dir, manifest)
+        _append_ops(
+            silver_dir,
+            {"event": "schema_backfill", "changed": changed, "v1": v1, "v2": v2},
+        )
+    return SilverSchemaBackfillResult(scanned=scanned, changed=changed, v1=v1, v2=v2)

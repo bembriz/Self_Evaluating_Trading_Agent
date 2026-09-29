@@ -1,0 +1,12 @@
+# evidencia: m9a1-06-failclosed-pre-backfill
+fecha: 2026-09-28T19:34:33-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a1/run.sh /tmp/opencode/m9a1/06-failclosed-remote.sh
+== M9A1 FAIL CLOSED ANTES DEL BACKfill (transform de 2025-03-13) ==
+ERROR: ETHUSDT_2025-03-13.csv.gz: schema_version manifest 'bybit-spot-trades-csv-gz-v1' != detectado 'bybit-spot-trades-csv-gz-v2' (metadata Bronze sin backfill)
+PRE_BACKFILL_EXIT=1 (esperado 1)
+NO_PARTIAL_OUTPUT=YES
+STALE_PART_FILES=0
+SILVER_OUTPUTS_TRAS_INTENTO=551
+M9A1_FAILCLOSED_PRE=PASS
+exit=0

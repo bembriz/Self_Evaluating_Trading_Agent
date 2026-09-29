@@ -1,0 +1,12 @@
+# evidencia: m9a1-05b-downstream-baseline
+fecha: 2026-09-28T19:34:24-06:00
+fase: 23
+comando: bash /tmp/opencode/m9a1/run.sh /tmp/opencode/m9a1/05b-downstream-baseline-remote.sh
+== M9A1 BASELINE DOWNSTREAM (candles + gold, antes de tocar nada) ==
+/srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3/
+320948e200203efae05d64aa6bf553d16a8e86daab202caefbfec54d7062a70f  /srv/data/medallion/silver/candles/ETHUSDT/manifest.json
+9411a4e01a5adccbb448df062f0eca857213e8259441535b5812ee4688af99df  /srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3/manifest.json
+be8aae2df45670e1f987ab11e68f1471d0cb89104c0e53483d2d0de90fa18314  /srv/data/medallion/gold/replay-datasets/ETHUSDT/gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3/replay-config.json
+DOWNSTREAM_BASELINE_LINES=3
+M9A1_DOWNSTREAM_BASELINE=PASS
+exit=0

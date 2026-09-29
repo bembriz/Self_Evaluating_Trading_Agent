@@ -116,15 +116,16 @@ def test_stale_part_is_recoverable(tmp_path: Path) -> None:
 
 
 def test_hash_conflict_fails_closed(tmp_path: Path) -> None:
-    payload_a = _payload("contenido A\n")
+    payload_a = _payload("id,timestamp,price,volume,side\n1,100,1.0,1,buy\n")
     download_day(tmp_path, "ETHUSDT", DEV_DAY, fetcher=FakeFetcher(payload_a))
     final = _partition(tmp_path)
-    final.write_bytes(_payload("contenido B\n"))
+    final.write_bytes(_payload("id,timestamp,price,volume,side\n2,200,2.0,2,sell\n"))
 
     with pytest.raises(HashConflictError):
         download_day(tmp_path, "ETHUSDT", DEV_DAY, fetcher=NoCallFetcher())
 
-    assert final.read_bytes() == _payload("contenido B\n")
+    tampered = _payload("id,timestamp,price,volume,side\n2,200,2.0,2,sell\n")
+    assert final.read_bytes() == tampered
     assert (
         sha256_file(final)
         != json.loads((tmp_path / "manifest.json").read_text())["files"][
