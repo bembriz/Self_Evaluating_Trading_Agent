@@ -1,0 +1,55 @@
+# evidencia: m10-final-audit
+fecha: 2026-09-29T13:52:18-06:00
+fase: 23
+comando: bash /tmp/opencode/m10-final-audit.sh
+== 0. Contexto ==
+BRANCH=medalion
+HEAD=a26f3eaa804af4266f60483a9b21f20a01d5c2a4
+MAIN=962c971249fd34671d0ace323100aac984fd44ff
+COMMITS_MAIN..HEAD=18
+FAST_FORWARD_POSSIBLE=YES
+WORKTREE_DIRTY_LINES=6
+
+== 1. Secret scan (git diff main...HEAD) ==
+PRIVATE_KEY HITS=0
+AWS_AKIA HITS=0
+CREDS_LITERAL HITS=0
+BEARER HITS=0
+URL_CREDS HITS=0
+SENSITIVE_FILES_IN_STATUS=0
+-- hex-64 en ficheros .py cambiados (fuera de logs/json):
+HEX64_IN_PY HITS=0
+
+== 2. Data leakage / splits ==
+ENV_WF_HOLDOUT_VARS=0
+HOLDOUT_STATE=PRISTINE
+HOLDOUT_STATE_PRISTINE=YES
+WALK_FORWARD_READS=0
+FINAL_HOLDOUT_READS=0
+
+== 3. Paper / certification (repo) ==
+PAPER_CERT_CODE_CHANGED=NO
+RISK_ENGINE_UNCHANGED=YES
+PAPER_ENGINE_UNCHANGED=YES
+
+== 4. lenovosrv: paper container / holdout / legacy ledger ==
+PAPER_BASELINE=2026-09-19T04:00:04.763010163Z|running
+PAPER_NOW=2026-09-19T04:00:04.763010163Z|running
+PAPER_CONTAINER_CHANGED=NO
+CERTIFICATION_TOUCHED=NO
+HOLDOUT_DATASETS_PRESENT=0
+LEGACY_M7_LEDGER_SHA=6d64b62b48575bdbcda19eb0dbbc46d53a7351606eb5fd93a9c038643a83e625
+LEGACY_M7_LEDGER_IDENTICAL=YES
+
+== 5. Checklist aceptacion arquitectura Phase23 (§26) — referencia a evidencia ==
+bronze_idempotent=covered by m3-06-uat-run2-idempotent.log
+silver_trades_deterministic=covered by m4-07-uat-run2.log
+candles_deterministic=covered by m5-07-uat-run2-determinism.log
+gold_manifest_immutable=covered by m6-06-uat-run2-determinism.log
+replay_two_clock_no_lookahead=covered by m7-07-uat-verify.log + tests/test_trade_replay.py
+m8_isolation_deploy=covered by m8-06/m8-07/m8-08
+m9_old_vs_new_development=covered by m9b-full-03-verify.log + m9b-review-consistency.log
+paper_certification_intact=covered by section 3-4 above
+
+M10_FINAL_AUDIT=PASS
+exit=0

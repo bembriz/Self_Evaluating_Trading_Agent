@@ -650,3 +650,7 @@ echo "CMD: fin"` · exit=`0` · artifact: docs/phases/23/evidence/m9b2a-cc014-se
 - `2026-09-29T13:15:19-06:00` **m9b-cand016-secret-scan** → `bash /tmp/opencode/m9b-cand016-secret-scan.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9b-cand016-secret-scan.log
 - `2026-09-29T13:15:45-06:00` **m9b-cand016-secret-scan** → `bash /tmp/opencode/m9b-cand016-secret-scan.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9b-cand016-secret-scan.log
 - `2026-09-29T13:15:46-06:00` **m9b-cand016-staged-final** → `bash /tmp/opencode/m9b-cand016-staged-final.sh` · exit=`0` · artifact: docs/phases/23/evidence/m9b-cand016-staged-final.log
+- `2026-09-29T13:51:24-06:00` **coverage-src** → `uv run pytest tests --ignore=tests/integration -o addopts= -q --cov=src --cov-branch --cov-report=json:docs/phases/23/evidence/coverage.json --cov-fail-under=90` · exit=`0` · artifact: docs/phases/23/evidence/coverage-src.log
+- `2026-09-29T13:51:32-06:00` **lint** → `bash -c uv run ruff check . && uv run ruff format --check .` · exit=`0` · artifact: docs/phases/23/evidence/lint.log
+- `2026-09-29T13:51:33-06:00` **typing** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/23/evidence/typing.log
+- `2026-09-29T13:52:20-06:00` **m10-final-audit** → `bash /tmp/opencode/m10-final-audit.sh` · exit=`0` · artifact: docs/phases/23/evidence/m10-final-audit.log
