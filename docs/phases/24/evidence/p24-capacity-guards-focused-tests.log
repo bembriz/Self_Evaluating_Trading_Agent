@@ -1,0 +1,23 @@
+# evidencia: p24-capacity-guards-focused-tests
+fecha: 2026-09-29T19:52:35-06:00
+fase: 24
+comando: uv run pytest tests/test_medallion_capacity_guards.py tests/test_medallion_refresh.py tests/test_medallion_systemd_units.py --cov=infrastructure.medallion.capacity_guards --cov=infrastructure.medallion.refresh --cov-report=term-missing
+................................                                         [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /home/xuum/Documentos/proyectos/Self-Evaluating_Trading_Agent/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.13-final-0 _______________
+
+Name                                              Stmts   Miss Branch BrPart  Cover   Missing
+---------------------------------------------------------------------------------------------
+src/infrastructure/medallion/capacity_guards.py     163     17     62      6    87%   89, 92-93, 102, 106-114, 142-143, 166, 180->179, 211
+src/infrastructure/medallion/refresh.py             213      5     56      4    97%   185-186, 307, 313, 348->350, 394
+---------------------------------------------------------------------------------------------
+TOTAL                                               376     22    118     10    92%
+Required test coverage of 90.0% reached. Total coverage: 92.31%
+32 passed, 1 warning in 1.28s
+exit=0

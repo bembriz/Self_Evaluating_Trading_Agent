@@ -1,0 +1,6 @@
+# evidencia: p24-capacity-guards-ruff
+fecha: 2026-09-29T19:52:45-06:00
+fase: 24
+comando: uv run ruff check src/infrastructure/medallion/capacity_guards.py src/infrastructure/medallion/refresh.py tests/test_medallion_capacity_guards.py tests/test_medallion_refresh.py tests/test_medallion_systemd_units.py
+All checks passed!
+exit=0

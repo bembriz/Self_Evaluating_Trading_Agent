@@ -18,11 +18,18 @@ from typing import Protocol
 
 from infrastructure.medallion import bronze, candles, silver
 from infrastructure.medallion.bronze import DEFAULT_BASE_URL
+from infrastructure.medallion.capacity_guards import (
+    CapacityGuardConfig,
+    CapacityGuardError,
+    CapacityProbe,
+    run_capacity_preflight,
+)
 from infrastructure.medallion.split_guard import DEVELOPMENT_FIRST_DAY, DEVELOPMENT_LAST_DAY
 
 __all__ = [
     "AccessBlockedError",
     "AccessClass",
+    "CapacityGuardError",
     "DefaultRefreshOperations",
     "Layer",
     "RefreshConfig",
@@ -81,6 +88,7 @@ class RefreshConfig:
     start_day: date
     target_day: date
     bronze_base_url: str = DEFAULT_BASE_URL
+    capacity_guard: CapacityGuardConfig | None = None
 
 
 @dataclass(frozen=True)
@@ -325,6 +333,7 @@ def run_refresh(
     *,
     operations: RefreshOperations | None = None,
     dry_run: bool = False,
+    capacity_probe: CapacityProbe | None = None,
 ) -> RefreshResult:
     plan = plan_refresh(config)
     if plan.blocked_days:
@@ -344,6 +353,28 @@ def run_refresh(
         )
 
     completed = _load_completed_steps(config.status_path)
+    if config.capacity_guard is not None:
+        try:
+            run_capacity_preflight(
+                config.capacity_guard,
+                probe=capacity_probe,
+                allow_purge=not dry_run,
+            )
+        except CapacityGuardError:
+            if not dry_run:
+                write_status_atomic(
+                    config.status_path,
+                    _status_payload(
+                        config,
+                        "FAIL_GUARD",
+                        plan,
+                        completed,
+                        dry_run=False,
+                        executed_steps=0,
+                    ),
+                )
+            raise
+
     if dry_run:
         return RefreshResult(
             result="OK_NOOP" if not plan.steps else "OK",

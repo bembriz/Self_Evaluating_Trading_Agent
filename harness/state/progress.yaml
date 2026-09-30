@@ -1135,8 +1135,11 @@ phases:
       - tests/test_medallion_systemd_units.py
     - id: p24-capacity-guards
       descripcion: SSD free-space/cache quota guards and retention policy
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - src/infrastructure/medallion/capacity_guards.py
+      - src/infrastructure/medallion/refresh.py
+      - tests/test_medallion_capacity_guards.py
     - id: p24-tests-uat
       descripcion: Unit/integration/UAT evidence for refresh automation
       estado: pending
@@ -2056,4 +2059,8 @@ time_log:
   fase: '24'
   evento: done
   detalle: p24-systemd-units
+- fecha: '2026-09-29'
+  fase: '24'
+  evento: done
+  detalle: p24-capacity-guards
 blockers: []

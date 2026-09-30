@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import date
 from pathlib import Path
 
 import pytest
 
-from infrastructure.medallion import bronze, candles, refresh, silver
+from infrastructure.medallion import bronze, candles, capacity_guards, refresh, silver
 from infrastructure.medallion.bronze import DEFAULT_BASE_URL
+
+GIB = 1024**3
 
 
 def _write_manifest(root: Path, filenames: list[str]) -> None:
@@ -57,6 +59,40 @@ class FakeOps:
     def transform_candles(self, day: date) -> str:
         self._record("candles", day)
         return "done"
+
+
+@dataclass
+class FakeGuardProbe:
+    free_bytes: int = 100 * GIB
+    removed: list[Path] = field(default_factory=list)
+
+    def disk_usage(self, path: Path) -> capacity_guards.DiskUsage:
+        return capacity_guards.DiskUsage(total=500 * GIB, used=0, free=self.free_bytes)
+
+    def is_mount(self, path: Path) -> bool:
+        return True
+
+    def read_text(self, path: Path) -> str:
+        return '{"label":"LENOVO_DATA","uuid":"uuid-ok"}'
+
+    def volume_identity(self, path: Path) -> capacity_guards.VolumeIdentity:
+        return capacity_guards.VolumeIdentity(label="LENOVO_DATA", uuid="uuid-ok")
+
+    def remove_tree(self, path: Path) -> None:
+        self.removed.append(path)
+        path.unlink()
+
+
+def _guard_config(tmp_path: Path) -> capacity_guards.CapacityGuardConfig:
+    return capacity_guards.CapacityGuardConfig(
+        data_mount=tmp_path / "srv" / "data",
+        marker_path=tmp_path / "srv" / "data" / ".lenovosrv-data-volume",
+        expected_label="LENOVO_DATA",
+        expected_uuid="uuid-ok",
+        ssd_path=tmp_path / "srv" / "fast",
+        cache_path=tmp_path / "srv" / "fast" / "medallion",
+        disposable_subdirs=("cache",),
+    )
 
 
 def test_classifies_refresh_days_by_frozen_split_boundaries() -> None:
@@ -262,3 +298,42 @@ def test_empty_range_is_noop(tmp_path: Path) -> None:
 
     assert result.result == "OK_NOOP"
     assert result.planned_steps == 0
+
+
+def test_capacity_guard_failure_happens_before_layer_operations(tmp_path: Path) -> None:
+    cfg = replace(
+        _config(tmp_path, start=date(2025, 6, 16), target=date(2025, 6, 16)),
+        capacity_guard=_guard_config(tmp_path),
+    )
+    ops = FakeOps()
+
+    with pytest.raises(capacity_guards.CapacityGuardError, match="SSD_MIN_FREE_GB"):
+        refresh.run_refresh(
+            cfg,
+            operations=ops,
+            capacity_probe=FakeGuardProbe(free_bytes=49 * GIB),
+        )
+
+    assert ops.calls == []
+    payload = json.loads(cfg.status_path.read_text(encoding="utf-8"))
+    assert payload["result"] == "FAIL_GUARD"
+
+
+def test_capacity_guard_dry_run_does_not_purge_or_write_status(tmp_path: Path) -> None:
+    guard_config = _guard_config(tmp_path)
+    cfg = replace(
+        _config(tmp_path, start=date(2025, 6, 16), target=date(2025, 6, 16)),
+        capacity_guard=guard_config,
+    )
+    disposable = guard_config.cache_path / "cache" / "old.bin"
+    disposable.parent.mkdir(parents=True)
+    with disposable.open("wb") as fh:
+        fh.truncate(65 * GIB)
+    probe = FakeGuardProbe()
+
+    with pytest.raises(capacity_guards.CapacityGuardError, match="SSD_CACHE_MAX_GB"):
+        refresh.run_refresh(cfg, operations=FakeOps(), dry_run=True, capacity_probe=probe)
+
+    assert disposable.exists()
+    assert probe.removed == []
+    assert not cfg.status_path.exists()

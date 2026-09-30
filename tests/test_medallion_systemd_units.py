@@ -32,7 +32,9 @@ def test_service_is_oneshot_and_delegates_to_existing_refresh() -> None:
     assert "Restart=on-failure" in text
     assert "StandardOutput=journal" in text
     assert "StandardError=journal" in text
+    assert "from infrastructure.medallion.capacity_guards import CapacityGuardConfig" in text
     assert "from infrastructure.medallion.refresh import RefreshConfig, run_refresh" in text
+    assert "capacity_guard=CapacityGuardConfig()" in text
     assert "run_refresh(cfg)" in text
     assert "ExecStart=" in text
     assert "paper" not in text.lower()

@@ -1,0 +1,6 @@
+# evidencia: p24-capacity-guards-format
+fecha: 2026-09-29T19:52:45-06:00
+fase: 24
+comando: uv run ruff format --check src/infrastructure/medallion/capacity_guards.py src/infrastructure/medallion/refresh.py tests/test_medallion_capacity_guards.py tests/test_medallion_refresh.py tests/test_medallion_systemd_units.py
+5 files already formatted
+exit=0
