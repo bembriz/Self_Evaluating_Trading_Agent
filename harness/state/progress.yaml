@@ -1120,8 +1120,10 @@ phases:
       - docs/design/phase-24-medallion-refresh-automation.md
     - id: p24-refresh-orchestrator
       descripcion: Stdlib refresh orchestrator, planner and access guards
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - src/infrastructure/medallion/refresh.py
+      - tests/test_medallion_refresh.py
     - id: p24-systemd-units
       descripcion: systemd service and timer plus install/rollback wrapper
       estado: pending
@@ -2041,4 +2043,8 @@ time_log:
   fase: '24'
   evento: done
   detalle: p24-design
+- fecha: '2026-09-29'
+  fase: '24'
+  evento: done
+  detalle: p24-refresh-orchestrator
 blockers: []

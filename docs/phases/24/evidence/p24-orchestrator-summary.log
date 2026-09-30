@@ -1,0 +1,18 @@
+# evidencia: p24-orchestrator-summary
+fecha: 2026-09-29T18:33:00-06:00
+fase: 24
+comando: python3 -c print("ruff=PASS"); print("format=PASS"); print("mypy=PASS"); print("medallion_tests=161 PASS"); print("orchestrator_coverage=96.48%"); print("planner=PASS"); print("dry_run=PASS"); print("idempotencia=PASS"); print("resume=PASS"); print("WF_HOLDOUT_BLOCKED=YES"); print("UNASSIGNED_RESEARCH_READS=0"); print("PAPER_IMPACT=NO"); print("full_pytest_local=1310 PASS + 15 errors: PostgreSQL 127.0.0.1:5433 connection refused")
+ruff=PASS
+format=PASS
+mypy=PASS
+medallion_tests=161 PASS
+orchestrator_coverage=96.48%
+planner=PASS
+dry_run=PASS
+idempotencia=PASS
+resume=PASS
+WF_HOLDOUT_BLOCKED=YES
+UNASSIGNED_RESEARCH_READS=0
+PAPER_IMPACT=NO
+full_pytest_local=1310 PASS + 15 errors: PostgreSQL 127.0.0.1:5433 connection refused
+exit=0
