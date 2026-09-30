@@ -1,0 +1,16 @@
+# evidencia: p24-uat-systemd-state
+fecha: 2026-09-29T21:15:01-06:00
+fase: 24
+comando: ssh -o BatchMode=yes -o ConnectTimeout=10 administrador@192.168.100.24 systemctl is-enabled medallion-refresh.timer; systemctl is-active medallion-refresh.timer; systemctl list-timers medallion-refresh.timer --no-pager; systemctl show medallion-refresh.service -p ActiveState -p SubState -p Result -p ExecMainStatus
+enabled
+active
+NEXT                            LEFT LAST PASSED UNIT                    ACTIVATES
+Wed 2026-09-30 06:33:14 UTC 3h 18min -         - medallion-refresh.timer medallion-refresh.service
+
+1 timers listed.
+Pass --all to see loaded but inactive timers, too.
+Result=success
+ExecMainStatus=0
+ActiveState=inactive
+SubState=dead
+exit=0

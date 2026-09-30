@@ -1,0 +1,64 @@
+# evidencia: p24-uat-negative-guards
+fecha: 2026-09-29T21:15:17-06:00
+fase: 24
+comando: ssh -o BatchMode=yes -o ConnectTimeout=10 administrador@192.168.100.24 PYTHONPATH=/opt/seta-medallion/src python3 - <<"PY"
+from datetime import date
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from infrastructure.medallion.capacity_guards import (
+    CapacityGuardConfig, CapacityGuardError, DiskUsage, VolumeIdentity, run_capacity_preflight,
+)
+from infrastructure.medallion.split_guard import (
+    SplitGuardError, ensure_ingest_allowed, PHASE24_INGEST_SCOPE, DEFAULT_INGEST_SCOPE,
+)
+
+GIB = 1024**3
+
+class P:
+    def __init__(self, free=396*GIB, mount=True, label="LENOVO_DATA", uuid="10fff707-60e4-4321-afa0-a3c4704d9e8d", marker="LENOVO_DATA"):
+        self.free=free; self.mount=mount; self.label=label; self.uuid=uuid; self.marker=marker
+    def disk_usage(self, p): return DiskUsage(total=500*GIB, used=1, free=self.free)
+    def is_mount(self, p): return self.mount
+    def read_text(self, p): return self.marker
+    def volume_identity(self, p): return VolumeIdentity(label=self.label, uuid=self.uuid)
+    def remove_tree(self, p): raise AssertionError("purge attempted")
+
+def blocked(label, fn):
+    try:
+        fn(); print(label + ": NOT_BLOCKED")
+    except (CapacityGuardError, SplitGuardError) as e:
+        print(label + ": BLOCKED " + type(e).__name__)
+
+with TemporaryDirectory() as td:
+    def cfg():
+        return CapacityGuardConfig(
+            data_mount=Path(td)/"srv/data", marker_path=Path(td)/"m",
+            expected_label="LENOVO_DATA",
+            expected_uuid="10fff707-60e4-4321-afa0-a3c4704d9e8d",
+            ssd_path=Path(td)/"fast", cache_path=Path(td)/"cache",
+        )
+    blocked("invalid_marker_empty", lambda: run_capacity_preflight(cfg(), probe=P(marker="")))
+    blocked("wrong_label", lambda: run_capacity_preflight(cfg(), probe=P(label="WRONG")))
+    blocked("uuid_mismatch", lambda: run_capacity_preflight(cfg(), probe=P(uuid="deadbeef")))
+    blocked("not_mountpoint", lambda: run_capacity_preflight(cfg(), probe=P(mount=False)))
+    blocked("insufficient_free_space", lambda: run_capacity_preflight(cfg(), probe=P(free=1*GIB)))
+    blocked("wf_2025_06_17", lambda: ensure_ingest_allowed(date(2025,6,17), scope=PHASE24_INGEST_SCOPE))
+    blocked("holdout_2026_03_15", lambda: ensure_ingest_allowed(date(2026,3,15), scope=PHASE24_INGEST_SCOPE))
+    blocked("holdout_last_2026_08_23", lambda: ensure_ingest_allowed(date(2026,8,23), scope=PHASE24_INGEST_SCOPE))
+    blocked("future_without_scope", lambda: ensure_ingest_allowed(date(2026,8,24), scope=DEFAULT_INGEST_SCOPE))
+    ensure_ingest_allowed(date(2026,8,24), scope=PHASE24_INGEST_SCOPE)
+    print("future_2026_08_24_with_scope: ALLOWED")
+print("REAL_MARKER=" + Path("/srv/data/.lenovosrv-data-volume").read_text().splitlines()[0])
+PY
+invalid_marker_empty: BLOCKED CapacityGuardError
+wrong_label: BLOCKED CapacityGuardError
+uuid_mismatch: BLOCKED CapacityGuardError
+not_mountpoint: BLOCKED CapacityGuardError
+insufficient_free_space: BLOCKED CapacityGuardError
+wf_2025_06_17: BLOCKED SplitGuardError
+holdout_2026_03_15: BLOCKED SplitGuardError
+holdout_last_2026_08_23: BLOCKED SplitGuardError
+future_without_scope: BLOCKED SplitGuardError
+future_2026_08_24_with_scope: ALLOWED
+REAL_MARKER=LENOVO_DATA
+exit=0

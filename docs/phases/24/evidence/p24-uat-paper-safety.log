@@ -1,0 +1,10 @@
+# evidencia: p24-uat-paper-safety
+fecha: 2026-09-29T21:16:15-06:00
+fase: 24
+comando: ssh -o BatchMode=yes -o ConnectTimeout=10 administrador@192.168.100.24 docker inspect --format 'ID={{.Id}} IMAGE={{.Config.Image}} STARTED={{.State.StartedAt}} RUNNING={{.State.Running}} RESTARTS={{.RestartCount}}' self-evaluating-trading-agent-paper-runner-1; docker inspect --format '{{range .Mounts}}{{.Source}}->{{.Destination}} rw={{.RW}}{{"\n"}}{{end}}' self-evaluating-trading-agent-paper-runner-1
+ID=b061332c35724a2147df3c76acdd8ba4cace12157b958766e2d66cb3f34e22bb IMAGE=self-evaluating-trading-agent-paper-runner:0.2.0 STARTED=2026-09-19T04:00:04.763010163Z RUNNING=true RESTARTS=3
+/srv/docker/self-evaluating-trading-agent/certification->/app/certification rw=true
+/srv/docker/self-evaluating-trading-agent/safeguard->/app/safeguard rw=true
+/srv/docker/self-evaluating-trading-agent/reports->/app/reports rw=true
+
+exit=0

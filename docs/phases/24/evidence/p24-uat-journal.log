@@ -1,0 +1,14 @@
+# evidencia: p24-uat-journal
+fecha: 2026-09-29T21:15:02-06:00
+fase: 24
+comando: ssh -o BatchMode=yes -o ConnectTimeout=10 administrador@192.168.100.24 journalctl -u medallion-refresh.service --no-pager | tail -20
+sep 30 03:03:20 lenovosrv systemd[1]: Starting medallion-refresh.service - SETA Medallion daily refresh...
+sep 30 03:07:55 lenovosrv python3[3867929]: medallion refresh OK: planned=111 executed=111 completed=111
+sep 30 03:07:55 lenovosrv systemd[1]: medallion-refresh.service: Deactivated successfully.
+sep 30 03:07:55 lenovosrv systemd[1]: Finished medallion-refresh.service - SETA Medallion daily refresh.
+sep 30 03:07:55 lenovosrv systemd[1]: medallion-refresh.service: Consumed 4min 8.776s CPU time.
+sep 30 03:08:20 lenovosrv systemd[1]: Starting medallion-refresh.service - SETA Medallion daily refresh...
+sep 30 03:08:20 lenovosrv python3[3869713]: medallion refresh OK_NOOP: planned=0 executed=0 completed=111
+sep 30 03:08:20 lenovosrv systemd[1]: medallion-refresh.service: Deactivated successfully.
+sep 30 03:08:20 lenovosrv systemd[1]: Finished medallion-refresh.service - SETA Medallion daily refresh.
+exit=0

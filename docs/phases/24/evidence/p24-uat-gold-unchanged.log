@@ -1,0 +1,9 @@
+# evidencia: p24-uat-gold-unchanged
+fecha: 2026-09-29T21:15:03-06:00
+fase: 24
+comando: ssh -o BatchMode=yes -o ConnectTimeout=10 administrador@192.168.100.24 ls /srv/data/medallion/gold/replay-datasets/ETHUSDT; echo gold_files_since_apply=$(find /srv/data/medallion/gold -newermt '2026-09-30 03:00' -type f | wc -l)
+gold-replay-5ca68f44c37d2321f56a10ecbc08bc0584d70c17826f07604dbba77a8b71134a
+gold-replay-a8c49e0be9154194841a97c4f26225a76cef9fba8d9a6d080198359c124ebdc3
+ops-gold.jsonl
+gold_files_since_apply=0
+exit=0
