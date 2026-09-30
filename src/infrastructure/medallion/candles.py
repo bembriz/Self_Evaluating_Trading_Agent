@@ -46,7 +46,11 @@ from infrastructure.medallion.bronze import (
     validate_gzip_file,
 )
 from infrastructure.medallion.silver import SILVER_HEADER, SILVER_SCHEMA_VERSION
-from infrastructure.medallion.split_guard import ensure_development_day
+from infrastructure.medallion.split_guard import (
+    DEFAULT_INGEST_SCOPE,
+    IngestScope,
+    ensure_ingest_allowed,
+)
 
 __all__ = [
     "CANDLE_HEADER",
@@ -307,9 +311,14 @@ def transform_day(
     candles_dir: Path,
     symbol: str,
     day: date,
+    *,
+    scope: IngestScope = DEFAULT_INGEST_SCOPE,
 ) -> list[CandleResult]:
-    """Genera los 7 timeframes para un día. Determinista e idempotente."""
-    ensure_development_day(day)
+    """Genera los 7 timeframes para un día. Determinista e idempotente.
+
+    ``scope`` es la autorización explícita de acceso; por defecto solo DEVELOPMENT.
+    """
+    ensure_ingest_allowed(day, scope=scope)
 
     trades_filename = bronze_filename(symbol, day)
     partition = f"date={day.isoformat()}/{trades_filename}"
@@ -453,7 +462,11 @@ def transform_days(
     candles_dir: Path,
     symbol: str,
     days: Iterable[date],
+    *,
+    scope: IngestScope = DEFAULT_INGEST_SCOPE,
 ) -> list[CandleResult]:
     return [
-        result for day in days for result in transform_day(trades_dir, candles_dir, symbol, day)
+        result
+        for day in days
+        for result in transform_day(trades_dir, candles_dir, symbol, day, scope=scope)
     ]

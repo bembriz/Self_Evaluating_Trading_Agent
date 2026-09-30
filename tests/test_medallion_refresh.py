@@ -267,10 +267,10 @@ def test_default_candle_operation_reports_skipped_for_no_or_all_skipped_results(
     class OneStatus:
         status: str
 
-    monkeypatch.setattr(candles, "transform_day", lambda *args: [])
+    monkeypatch.setattr(candles, "transform_day", lambda *args, **kwargs: [])
     assert ops.transform_candles(date(2025, 6, 16)) == "skipped"
 
-    monkeypatch.setattr(candles, "transform_day", lambda *args: [OneStatus("skipped")])
+    monkeypatch.setattr(candles, "transform_day", lambda *args, **kwargs: [OneStatus("skipped")])
     assert ops.transform_candles(date(2025, 6, 16)) == "skipped"
 
 

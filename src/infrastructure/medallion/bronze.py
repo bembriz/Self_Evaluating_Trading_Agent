@@ -36,7 +36,13 @@ from datetime import UTC, date, datetime
 from pathlib import Path
 from urllib.request import Request, urlopen
 
-from infrastructure.medallion.split_guard import SplitGuardError, ensure_development_day
+from infrastructure.medallion.split_guard import (
+    DEFAULT_INGEST_SCOPE,
+    IngestScope,
+    SplitGuardError,
+    ensure_development_day,
+    ensure_ingest_allowed,
+)
 
 __all__ = [
     "BRONZE_HEADER_V1",
@@ -330,9 +336,13 @@ def download_day(
     *,
     fetcher: Fetcher | None = None,
     base_url: str = DEFAULT_BASE_URL,
+    scope: IngestScope = DEFAULT_INGEST_SCOPE,
 ) -> DownloadResult:
-    """Descarga (u omite) un día de Bronze. Split guard ANTES de la red."""
-    ensure_development_day(day)
+    """Descarga (u omite) un día de Bronze. Split guard ANTES de la red.
+
+    ``scope`` es la autorización explícita de acceso; por defecto solo DEVELOPMENT.
+    """
+    ensure_ingest_allowed(day, scope=scope)
 
     name = bronze_filename(symbol, day)
     validate_filename(name, symbol, day)
@@ -397,9 +407,12 @@ def download_days(
     *,
     fetcher: Fetcher | None = None,
     base_url: str = DEFAULT_BASE_URL,
+    scope: IngestScope = DEFAULT_INGEST_SCOPE,
 ) -> list[DownloadResult]:
     symbol_dir.mkdir(parents=True, exist_ok=True)
     results: list[DownloadResult] = []
     for day in days:
-        results.append(download_day(symbol_dir, symbol, day, fetcher=fetcher, base_url=base_url))
+        results.append(
+            download_day(symbol_dir, symbol, day, fetcher=fetcher, base_url=base_url, scope=scope)
+        )
     return results

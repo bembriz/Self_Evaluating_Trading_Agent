@@ -24,7 +24,17 @@ from infrastructure.medallion.capacity_guards import (
     CapacityProbe,
     run_capacity_preflight,
 )
-from infrastructure.medallion.split_guard import DEVELOPMENT_FIRST_DAY, DEVELOPMENT_LAST_DAY
+from infrastructure.medallion.split_guard import (
+    DEFAULT_INGEST_SCOPE,
+    DEVELOPMENT_FIRST_DAY,
+    DEVELOPMENT_LAST_DAY,
+    FINAL_HOLDOUT_FIRST_DAY,
+    FINAL_HOLDOUT_LAST_DAY,
+    WALK_FORWARD_FIRST_DAY,
+    IngestClass,
+    IngestScope,
+    classify_ingest_day,
+)
 
 __all__ = [
     "AccessBlockedError",
@@ -42,10 +52,6 @@ __all__ = [
     "run_refresh",
     "write_status_atomic",
 ]
-
-WALK_FORWARD_FIRST_DAY = date(2025, 6, 17)
-FINAL_HOLDOUT_FIRST_DAY = date(2026, 3, 14)
-FINAL_HOLDOUT_LAST_DAY = date(2026, 8, 23)
 
 
 class AccessClass(StrEnum):
@@ -89,6 +95,7 @@ class RefreshConfig:
     target_day: date
     bronze_base_url: str = DEFAULT_BASE_URL
     capacity_guard: CapacityGuardConfig | None = None
+    ingest_scope: IngestScope = DEFAULT_INGEST_SCOPE
 
 
 @dataclass(frozen=True)
@@ -128,12 +135,21 @@ class DefaultRefreshOperations:
 
     config: RefreshConfig
 
+    def _scope_for(self, day: date) -> IngestScope:
+        # Solo los días FUTURE_COLLECTION pueden usar el scope ampliado del
+        # orquestador; DEVELOPMENT siempre permanece en el scope por defecto y
+        # WF/HOLDOUT los bloquea split_guard de forma incondicional.
+        if classify_ingest_day(day) is IngestClass.FUTURE_COLLECTION:
+            return self.config.ingest_scope
+        return DEFAULT_INGEST_SCOPE
+
     def download_bronze(self, day: date) -> str:
         result = bronze.download_day(
             self.config.bronze_dir,
             self.config.symbol,
             day,
             base_url=self.config.bronze_base_url,
+            scope=self._scope_for(day),
         )
         return result.status
 
@@ -143,6 +159,7 @@ class DefaultRefreshOperations:
             self.config.silver_dir,
             self.config.symbol,
             day,
+            scope=self._scope_for(day),
         )
         return result.status
 
@@ -152,6 +169,7 @@ class DefaultRefreshOperations:
             self.config.candles_dir,
             self.config.symbol,
             day,
+            scope=self._scope_for(day),
         )
         if not results:
             return "skipped"

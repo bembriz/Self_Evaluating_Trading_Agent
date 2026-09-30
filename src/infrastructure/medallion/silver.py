@@ -51,7 +51,12 @@ from infrastructure.medallion.bronze import (
     validate_filename,
     validate_gzip_file,
 )
-from infrastructure.medallion.split_guard import ensure_development_day
+from infrastructure.medallion.split_guard import (
+    DEFAULT_INGEST_SCOPE,
+    IngestScope,
+    ensure_development_day,
+    ensure_ingest_allowed,
+)
 
 __all__ = [
     "BRONZE_HEADER",
@@ -232,9 +237,14 @@ def transform_day(
     silver_dir: Path,
     symbol: str,
     day: date,
+    *,
+    scope: IngestScope = DEFAULT_INGEST_SCOPE,
 ) -> SilverResult:
-    """Transforma una partición Bronze → Silver. Determinista e idempotente."""
-    ensure_development_day(day)
+    """Transforma una partición Bronze → Silver. Determinista e idempotente.
+
+    ``scope`` es la autorización explícita de acceso; por defecto solo DEVELOPMENT.
+    """
+    ensure_ingest_allowed(day, scope=scope)
 
     name = bronze_filename(symbol, day)
     validate_filename(name, symbol, day)
@@ -329,9 +339,11 @@ def transform_days(
     silver_dir: Path,
     symbol: str,
     days: Iterable[date],
+    *,
+    scope: IngestScope = DEFAULT_INGEST_SCOPE,
 ) -> list[SilverResult]:
     # El split guard de cada día corre ANTES de crear el directorio destino.
-    return [transform_day(bronze_dir, silver_dir, symbol, day) for day in days]
+    return [transform_day(bronze_dir, silver_dir, symbol, day, scope=scope) for day in days]
 
 
 @dataclass(frozen=True)
