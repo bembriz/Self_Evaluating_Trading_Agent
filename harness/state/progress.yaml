@@ -1108,9 +1108,9 @@ phases:
         de producto.'
   '24':
     titulo: Automated Medallion Refresh
-    estado: in_progress
+    estado: done
     iniciada: '2026-09-29'
-    cerrada: null
+    cerrada: '2026-09-29'
     entregables:
     - id: p24-design
       descripcion: Approved design and ADR for automated Medallion refresh
@@ -1146,9 +1146,11 @@ phases:
       evidencia:
       - docs/uat/phase-24-uat.md
     gate_fase:
-      estado: requested
+      estado: approved
       solicitado: '2026-09-29'
-      resuelto: null
+      resuelto: '2026-09-29'
+      comentario: 'UAT APPROVED 2026-09-30: apply+first run+idempotency+guards+paper
+        safety verificados en lenovosrv'
 time_log:
 - fecha: '2026-08-22'
   fase: '00'
@@ -2072,4 +2074,9 @@ time_log:
   fase: '24'
   evento: gate_requested
   detalle: ''
+- fecha: '2026-09-29'
+  fase: '24'
+  evento: gate_approved
+  detalle: 'UAT APPROVED 2026-09-30: apply+first run+idempotency+guards+paper safety
+    verificados en lenovosrv'
 blockers: []

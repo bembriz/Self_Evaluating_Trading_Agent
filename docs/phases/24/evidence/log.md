@@ -82,3 +82,5 @@ with TemporaryDirectory() as td:
 print("REAL_MARKER=" + Path("/srv/data/.lenovosrv-data-volume").read_text().splitlines()[0])
 PY` · exit=`0` · artifact: docs/phases/24/evidence/p24-uat-negative-guards.log
 - `2026-09-29T21:16:16-06:00` **p24-uat-paper-safety** → `ssh -o BatchMode=yes -o ConnectTimeout=10 administrador@192.168.100.24 docker inspect --format 'ID={{.Id}} IMAGE={{.Config.Image}} STARTED={{.State.StartedAt}} RUNNING={{.State.Running}} RESTARTS={{.RestartCount}}' self-evaluating-trading-agent-paper-runner-1; docker inspect --format '{{range .Mounts}}{{.Source}}->{{.Destination}} rw={{.RW}}{{"\n"}}{{end}}' self-evaluating-trading-agent-paper-runner-1` · exit=`0` · artifact: docs/phases/24/evidence/p24-uat-paper-safety.log
+- `2026-09-29T21:35:50-06:00` **lint** → `bash -c uv run ruff check . && uv run ruff format --check .` · exit=`0` · artifact: docs/phases/24/evidence/lint.log
+- `2026-09-29T21:35:52-06:00` **typing** → `uv run mypy src tests` · exit=`0` · artifact: docs/phases/24/evidence/typing.log
