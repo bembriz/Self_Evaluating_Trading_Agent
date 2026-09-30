@@ -1,0 +1,7 @@
+# evidencia: p24-systemd-units-systemd-verify
+fecha: 2026-09-29T19:25:18-06:00
+fase: 24
+comando: bash -c if command -v systemd-analyze >/dev/null 2>&1; then systemd-analyze verify deployment/medallion/systemd/medallion-refresh.service deployment/medallion/systemd/medallion-refresh.timer; else printf "systemd-analyze not available\\n"; exit 64; fi
+/etc/systemd/system/teamviewerd.service:9: PIDFile= references a path below legacy directory /var/run/, updating /var/run/teamviewerd.pid → /run/teamviewerd.pid; please update the unit file accordingly.
+/etc/systemd/system/anydesk.service:9: PIDFile= references a path below legacy directory /var/run/, updating /var/run/anydesk.pid → /run/anydesk.pid; please update the unit file accordingly.
+exit=0

@@ -1,0 +1,6 @@
+# evidencia: p24-systemd-units-format
+fecha: 2026-09-29T19:25:18-06:00
+fase: 24
+comando: uv run ruff format --check tests/test_medallion_systemd_units.py
+1 file already formatted
+exit=0

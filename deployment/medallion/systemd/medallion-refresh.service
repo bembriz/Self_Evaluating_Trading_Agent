@@ -1,0 +1,24 @@
+[Unit]
+Description=SETA Medallion daily refresh
+Documentation=file:/srv/docker/medallion/deployment/medallion/README.md
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=30m
+StartLimitBurst=2
+
+[Service]
+Type=oneshot
+User=administrador
+WorkingDirectory=/srv/docker/medallion
+Environment=PYTHONPATH=/srv/docker/medallion/src
+Environment=MEDALLION_SYMBOL=ETHUSDT
+Environment=MEDALLION_ROOT=/srv/data/medallion
+Environment=MEDALLION_STATUS_PATH=/srv/fast/medallion/refresh/status.json
+ExecStart=/usr/bin/python3 -c "import os; from datetime import date, datetime, timedelta, timezone; from pathlib import Path; from infrastructure.medallion.refresh import RefreshConfig, run_refresh; symbol = os.environ.get('MEDALLION_SYMBOL', 'ETHUSDT'); root = Path(os.environ.get('MEDALLION_ROOT', '/srv/data/medallion')); status_path = Path(os.environ.get('MEDALLION_STATUS_PATH', '/srv/fast/medallion/refresh/status.json')); target_day = date.fromisoformat(os.environ['MEDALLION_TARGET_DAY']) if os.environ.get('MEDALLION_TARGET_DAY') else datetime.now(timezone.utc).date() - timedelta(days=1); cfg = RefreshConfig(symbol=symbol, bronze_dir=Path(os.environ.get('MEDALLION_BRONZE_DIR', str(root / 'bronze' / 'bybit' / 'spot'))), silver_dir=Path(os.environ.get('MEDALLION_SILVER_DIR', str(root / 'silver' / 'trades' / symbol))), candles_dir=Path(os.environ.get('MEDALLION_CANDLES_DIR', str(root / 'silver' / 'candles' / symbol))), gold_dir=Path(os.environ.get('MEDALLION_GOLD_DIR', str(root / 'gold'))), status_path=status_path, start_day=date.fromisoformat(os.environ.get('MEDALLION_START_DAY', '2023-09-09')), target_day=target_day); status_path.parent.mkdir(parents=True, exist_ok=True); result = run_refresh(cfg); print(f'medallion refresh {result.result}: planned={result.planned_steps} executed={result.executed_steps} completed={len(result.completed_steps)}')"
+Restart=on-failure
+RestartSec=5m
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

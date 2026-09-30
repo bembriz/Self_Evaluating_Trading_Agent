@@ -1126,8 +1126,13 @@ phases:
       - tests/test_medallion_refresh.py
     - id: p24-systemd-units
       descripcion: systemd service and timer plus install/rollback wrapper
-      estado: pending
-      evidencia: []
+      estado: done
+      evidencia:
+      - deployment/medallion/systemd/install.sh
+      - deployment/medallion/systemd/medallion-refresh.service
+      - deployment/medallion/systemd/medallion-refresh.timer
+      - deployment/medallion/systemd/uninstall.sh
+      - tests/test_medallion_systemd_units.py
     - id: p24-capacity-guards
       descripcion: SSD free-space/cache quota guards and retention policy
       estado: pending
@@ -2047,4 +2052,8 @@ time_log:
   fase: '24'
   evento: done
   detalle: p24-refresh-orchestrator
+- fecha: '2026-09-29'
+  fase: '24'
+  evento: done
+  detalle: p24-systemd-units
 blockers: []

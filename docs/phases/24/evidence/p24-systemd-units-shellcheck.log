@@ -1,0 +1,6 @@
+# evidencia: p24-systemd-units-shellcheck
+fecha: 2026-09-29T19:25:19-06:00
+fase: 24
+comando: bash -c if command -v shellcheck >/dev/null 2>&1; then shellcheck deployment/medallion/systemd/install.sh deployment/medallion/systemd/uninstall.sh; else printf "shellcheck not available / not installed\\n"; fi
+shellcheck not available / not installed
+exit=0

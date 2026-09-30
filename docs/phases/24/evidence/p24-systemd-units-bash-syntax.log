@@ -1,0 +1,5 @@
+# evidencia: p24-systemd-units-bash-syntax
+fecha: 2026-09-29T19:25:18-06:00
+fase: 24
+comando: bash -n deployment/medallion/systemd/install.sh deployment/medallion/systemd/uninstall.sh
+exit=0

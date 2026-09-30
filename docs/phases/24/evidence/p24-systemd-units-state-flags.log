@@ -1,0 +1,7 @@
+# evidencia: p24-systemd-units-state-flags
+fecha: 2026-09-29T19:25:19-06:00
+fase: 24
+comando: bash -c printf "SERVER_CHANGED=NO\\nPAPER_IMPACT=NO\\n"
+SERVER_CHANGED=NO
+PAPER_IMPACT=NO
+exit=0
